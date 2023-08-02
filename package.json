@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "prepare": "husky install",
-    "lint:fix": "eslint ./**/*.{js,jsx,ts,tsx} --cache --fix"
+    "lint:fix": "eslint ./**/*.{js,jsx,ts,tsx} --cache --fix",
+    "lint-staged": "lint-staged"
   },
   "dependencies": {
     "@types/node": "20.4.5",
