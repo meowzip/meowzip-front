@@ -6,7 +6,7 @@
     "preinstall": "npx only-allow pnpm",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8080",
     "lint": "next lint",
     "prepare": "husky install",
     "lint:fix": "eslint ./**/*.{js,jsx,ts,tsx} --cache --fix",
