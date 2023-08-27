@@ -1,0 +1,63 @@
+name: 빌드/배포
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  #첫번째 작업 : 슬랙에 이벤트 발생했다는 알림 보내기
+  event-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              attachments: [{
+                color: '#4401fe',
+                text: `깃 : ${process.env.AS_REPO}\n브랜치 : ${process.env.AS_REF === 'refs/heads/dev' ? 'develop' : ''}\n커밋 번호 : ${process.env.AS_COMMIT}\n작성자 : ${process.env.AS_AUTHOR}\n발생 이벤트 : ${process.env.GITHUB_EVENT_NAME}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
+
+  build:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: [self-hosted, Linux, X64, 런너이름]
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+      - run: pnpm ci --legacy-peer-deps
+      - run: pnpm run build --if-present
+      - run: pm2 restart "meowhanynag-front"
+
+      - name: action-slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              attachments: [{
+                color: '${{ job.status }}' === 'success' ? '#81be83' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+                text: `깃 : ${process.env.AS_REPO}\n브랜치 : ${process.env.AS_REF === 'refs/heads/dev' ? 'develop' : ''}\n커밋 번호 : ${process.env.AS_COMMIT}\n작성자 : ${process.env.AS_AUTHOR}\n결과 : ${{ job.status }}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
