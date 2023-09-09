@@ -3,5 +3,5 @@
 #!/bin/sh
 cd ../
 mkdir output
-cp -R ./meowzip/meowzip-front/* ./output
-cp -R ./output ./meowzip/meowzip-front/
+cp -R ./meowzip-front/* ./output
+cp -R ./output ./meowzip-front/
