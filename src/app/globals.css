@@ -33,6 +33,45 @@
     --ring: 222.2 84% 4.9%;
  
     --radius: 0.5rem;
+
+    /* primary color */
+    --pr-900:#072A5B;
+    --pr-800: #143393;
+    --pr-700:#0F5FCE;
+    --pr-600: #0C6CF1;
+    --pr-500:#4183FE;
+    --pr-400:#6FA0FC;
+    --pr-300:#8CBCFE;
+    --pr-200:#C5D9FF;
+    --pr-100:#DEE9FB;
+    --pr-50:#EBF3FE;
+    /* semantic color */
+    --sm-info-700:#0F5FCE;
+    --sm-info-500:#4183FE;
+    --sm-info-50:#EBF3FE;
+    --sm-confirm-700:#009E6C;
+    --sm-confirm-500:#4BD37B;
+    --sm-confirm-50:#DDFAE5;
+    --sm-error-700:#D43B3B;
+    --sm-error-500:#FF5353;
+    --sm-error-50:#FFECEC;
+    --sm-warning-700:#DEAE3A;
+    --sm-warning-500:#FECC55;
+    --sm-warning-50:#FFEECD;
+    /* gray scale */
+    --gr-black:#121212;
+    --gr-900:#222222;
+    --gr-800:#333536;
+    --gr-700:#45474A;
+    --gr-600:#585B62;
+    --gr-500:#6D727B;
+    --gr-400:#818796;
+    --gr-300:#A6AEB7;
+    --gr-200:#CACDD2;
+    --gr-100:#E4E7EC;
+    --gr-50:#F2F4F6;
+    --gr-10:#F8FAFC;
+    --gr-white:#ffffff;
   }
  
   .dark {
