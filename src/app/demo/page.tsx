@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import React from 'react';
 
@@ -10,14 +12,18 @@ const page = () => {
           <Button
             variant="primary"
             size="lg"
-            // onClick={() => console.log('pr lg')}
+            onClick={() => console.log('pr lg')}
           >
             primary
           </Button>
           <Button variant="primary" size="lg" disabled>
             primary
           </Button>
-          <Button variant="secondary" size="md">
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => console.log('sc md')}
+          >
             secondary
           </Button>
           <Button variant="thirdary" size="sm">
@@ -27,6 +33,9 @@ const page = () => {
             thirdary
           </Button>
           <Button variant="outline">outline</Button>
+          <Button variant="text" icon="/src/assets/images/icons/arrow.svg">
+            outline
+          </Button>
         </div>
       </section>
     </div>
