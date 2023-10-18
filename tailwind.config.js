@@ -87,23 +87,23 @@ module.exports = {
         'gr-white': 'var(--gr-white)'
       },
       fontSize: {
-        'heading-1': ['24px', { lineHeight: '140%', fontWeight: 'bold' }],
-        'heading-2': ['20px', { lineHeight: '140%', fontWeight: 'bold' }],
-        'heading-3': ['18px', { lineHeight: '120%', fontWeight: 'bold' }],
-        'heading-4': ['16px', { lineHeight: '120%', fontWeight: 'bold' }],
-        'heading-5': ['14px', { lineHeight: '120%', fontWeight: 'bold' }],
-        'heading-6': ['12px', { lineHeight: '120%', fontWeight: 'bold' }],
-        'sub-heading-1': ['14px', { lineHeight: '120%', fontWeight: 'medium' }],
-        'sub-heading-2': ['12px', { lineHeight: '120%', fontWeight: 'medium' }],
-        'body-1': ['18px', { lineHeight: '130%', fontWeight: 'regular' }],
-        'body-2': ['16px', { lineHeight: '130%', fontWeight: 'regular' }],
-        'body-3': ['14px', { lineHeight: '130%', fontWeight: 'regular' }],
-        'body-4': ['12px', { lineHeight: '130%', fontWeight: 'regular' }],
-        'label-1': ['16px', { lineHeight: '150%', fontWeight: 'regular' }],
-        'label-2': ['14px', { lineHeight: '150%', fontWeight: 'regular' }],
-        'btn-1': ['16px', { lineHeight: '200%', fontWeight: 'semi-bold' }],
-        'btn-2': ['14px', { lineHeight: '200%', fontWeight: 'semi-bold' }],
-        'btn-3': ['12px', { lineHeight: '100%', fontWeight: 'medium' }]
+        'heading-1': ['24px', { lineHeight: '140%', fontWeight: '700' }],
+        'heading-2': ['20px', { lineHeight: '140%', fontWeight: '700' }],
+        'heading-3': ['18px', { lineHeight: '120%', fontWeight: '700' }],
+        'heading-4': ['16px', { lineHeight: '120%', fontWeight: '700' }],
+        'heading-5': ['14px', { lineHeight: '120%', fontWeight: '700' }],
+        'heading-6': ['12px', { lineHeight: '120%', fontWeight: '700' }],
+        'sub-heading-1': ['14px', { lineHeight: '120%', fontWeight: '500' }],
+        'sub-heading-2': ['12px', { lineHeight: '120%', fontWeight: '500' }],
+        'body-1': ['18px', { lineHeight: '130%', fontWeight: '400' }],
+        'body-2': ['16px', { lineHeight: '130%', fontWeight: '400' }],
+        'body-3': ['14px', { lineHeight: '130%', fontWeight: '400' }],
+        'body-4': ['12px', { lineHeight: '130%', fontWeight: '400' }],
+        'label-1': ['16px', { lineHeight: '150%', fontWeight: '400' }],
+        'label-2': ['14px', { lineHeight: '150%', fontWeight: '400' }],
+        'btn-1': ['16px', { lineHeight: '200%', fontWeight: '600' }],
+        'btn-2': ['14px', { lineHeight: '200%', fontWeight: '600' }],
+        'btn-3': ['12px', { lineHeight: '100%', fontWeight: '500' }]
       },
       fontWeight: {
         bold: '700',
@@ -112,9 +112,9 @@ module.exports = {
         regular: '400'
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)'
+        lg: '16px',
+        md: '8px',
+        sm: '4px'
       },
       keyframes: {
         'accordion-down': {
