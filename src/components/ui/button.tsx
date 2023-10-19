@@ -6,12 +6,12 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center rounded-md disabled:pointer-events-none',
+  'inline-flex items-center justify-center disabled:pointer-events-none',
   {
     variants: {
       variant: {
         primary: 'bg-pr-500 text-gr-10 disabled:bg-gr-200',
-        secondary: 'border bg-gr-white border border-gr-100 text-gr-800',
+        secondary: 'bg-gr-white text-gr-800 border border-gr-100',
         thirdary:
           'bg-gr-50 text-gr-500 border-[1.6px] border-gr-50 active:text-pr-500 active:bg-gr-white active:border-[1.6px] active:border-pr-500',
         outline: 'bg-gr-white text-pr-500 border border-pr-500',
@@ -52,7 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           onClick={onClick}
           {...props}
         />
-        {icon && <img src={icon} alt="icon" className="w-4 h-4" />}
+        {icon && <Image src={icon} alt="icon" width={24} height={24} />}
       </div>
     );
   }

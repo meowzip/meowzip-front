@@ -33,7 +33,7 @@ const page = () => {
             thirdary
           </Button>
           <Button variant="outline">outline</Button>
-          <Button variant="text" icon="/src/assets/images/icons/arrow.svg">
+          <Button variant="text" icon="/images/icons/arrow.svg">
             outline
           </Button>
         </div>
