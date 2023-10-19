@@ -13,7 +13,7 @@ const buttonVariants = cva(
         primary: 'bg-pr-500 text-gr-10 disabled:bg-gr-200',
         secondary: 'bg-gr-white text-gr-800 border border-gr-100',
         thirdary:
-          'bg-gr-50 text-gr-500 border-[1.6px] border-gr-50 active:text-pr-500 active:bg-gr-white active:border-[1.6px] active:border-pr-500',
+          'bg-gr-50 text-gr-500 border-16 border-gr-50 active:text-pr-500 active:bg-gr-white active:border-[1.6px] active:border-pr-500',
         outline: 'bg-gr-white text-pr-500 border border-pr-500',
         text: 'text-pr-500 disabled:text-gr-200'
       },
