@@ -1,9 +1,21 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import React from 'react';
+import Chip from '@/components/ui/Chip';
+import React, { useState } from 'react';
 
 const page = () => {
+  // const [chipObj, setChipObj] = useState({
+  //   key: '1',
+  //   content: 'chip1',
+  //   checked: false
+  // });
+  // const [chipObj2, setChipObj2] = useState({
+  //   key: '2',
+  //   content: 'chip2',
+  //   checked: false
+  // });
+
   return (
     <div className="p-4">
       <section className="border-b p-3">
@@ -36,6 +48,24 @@ const page = () => {
           <Button variant="text" icon="/images/icons/arrow.svg">
             outline
           </Button>
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐱 Chip</h1>
+        <div className="flex gap-2">
+          {/* <Chip
+            item={chipObj}
+            onClick={() =>
+              setChipObj(prev => ({ ...prev, checked: !prev.checked }))
+            }
+          />
+          <Chip
+            item={chipObj2}
+            onClick={() =>
+              setChipObj2(prev => ({ ...prev, checked: !prev.checked }))
+            }
+            icon="/images/icons/time.svg"
+          /> */}
         </div>
       </section>
     </div>
