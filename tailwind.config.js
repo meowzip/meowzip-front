@@ -116,6 +116,10 @@ module.exports = {
         md: '8px',
         sm: '4px'
       },
+      borderWidth: {
+        12: '1.2px',
+        16: '1.6px'
+      },
       keyframes: {
         'accordion-down': {
           from: { height: 0 },
