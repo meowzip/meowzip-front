@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface ChipProps {
-  item: {
+  propObj: {
     key: string;
     content: string;
     checked: boolean;
@@ -10,14 +10,14 @@ interface ChipProps {
   onClick: () => void;
 }
 
-const Chip = ({ item, icon, onClick }: ChipProps) => {
+const Chip = ({ propObj, icon, onClick }: ChipProps) => {
   return (
     <button
-      id={item.key}
+      id={propObj.key}
       className={`px-[14px] py-[5px] border-12 rounded-[20px] text-btn-2  ${
         icon && 'flex items-center gap-1'
       } ${
-        item.checked
+        propObj.checked
           ? 'text-pr-500 bg-gr-white border-pr-500'
           : 'text-gr-500 bg-gr-50 border-gr-50'
       }`}
@@ -32,7 +32,7 @@ const Chip = ({ item, icon, onClick }: ChipProps) => {
           className="w-5 h-5"
         />
       )}
-      <p>{item.content}</p>
+      <p>{propObj.content}</p>
     </button>
   );
 };
