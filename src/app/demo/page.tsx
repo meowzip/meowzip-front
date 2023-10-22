@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import Chip from '@/components/ui/Chip';
 import React, { useState } from 'react';
-
+import { buttonVariants } from '@/components/ui/button';
 const page = () => {
   // const [chipObj, setChipObj] = useState({
   //   key: '1',
@@ -25,6 +25,7 @@ const page = () => {
             variant="primary"
             size="lg"
             onClick={() => console.log('pr lg')}
+            className={buttonVariants()}
           >
             primary
           </Button>

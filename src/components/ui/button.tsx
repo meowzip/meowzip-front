@@ -10,6 +10,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
+        default: 'bg-[#0044ff] text-[#ffffff]',
         primary: 'bg-pr-500 text-gr-10 disabled:bg-gr-200',
         secondary: 'bg-gr-white text-gr-800 border border-gr-100',
         thirdary:
@@ -21,12 +22,13 @@ const buttonVariants = cva(
         lg: 'rounded-lg px-4 py-2 text-btn-1',
         md: 'rounded-full px-4 py-[5px] text-btn-2',
         sm: 'rounded-full px-3 py-2 text-btn-3',
-        icon: 'rounded-md h-6 w-6 p-[6px]'
+        icon: 'rounded-md h-6 w-6 p-[6px]',
+        default: ''
       }
     },
     defaultVariants: {
-      variant: 'primary',
-      size: 'lg'
+      variant: 'default',
+      size: 'default'
     }
   }
 );
