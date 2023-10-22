@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import Label from '@/components/ui/Label';
+import Badge from '@/components/ui/Badge';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -102,6 +103,18 @@ const Page = () => {
             type="icon"
             icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/time.svg"
           />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐰 Badge</h1>
+        <div className="flex gap-2">
+          <Badge type="default" color="bg-pr-500" />
+          <Badge
+            type="icon"
+            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/time.svg"
+            color="bg-pr-500"
+          />
+          <Badge type="text" text="A" color="bg-pr-500" />
         </div>
       </section>
     </div>

@@ -1,36 +1,25 @@
-import * as React from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
-
-import { cn } from '@/lib/utils';
-
-const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
-  {
-    variants: {
-      variant: {
-        default:
-          'border-transparent bg-primary text-primary-foreground hover:bg-primary/80',
-        secondary:
-          'border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        destructive:
-          'border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80',
-        outline: 'text-foreground'
-      }
-    },
-    defaultVariants: {
-      variant: 'default'
-    }
-  }
-);
-
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof badgeVariants> {}
-
-function Badge({ className, variant, ...props }: BadgeProps) {
-  return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
-  );
+interface BagdeProps {
+  type: 'default' | 'text' | 'icon';
+  text?: string;
+  icon?: string;
+  color: string;
 }
 
-export { Badge, badgeVariants };
+const badgeTypeVariants = {
+  default: 'w-2 h-2 rounded-full',
+  text: 'w-5 h-5 text-btn-3 px-2 py-1 rounded-full',
+  icon: 'w-5 h-5 rounded-full'
+};
+
+const Badge = ({ type, text, icon, color }: BagdeProps) => {
+  return (
+    <div
+      className={`flex items-center justify-center ${color} ${badgeTypeVariants[type]}`}
+    >
+      {icon && <img src={icon} alt="label-icon" />}
+      {text && <p className={`text-gr-white text-btn-3`}>{text}</p>}
+    </div>
+  );
+};
+
+export default Badge;
