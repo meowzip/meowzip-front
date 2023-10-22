@@ -1,20 +1,25 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import Chip from '@/components/ui/Chip';
 import React, { useState } from 'react';
-import { buttonVariants } from '@/components/ui/button';
-const page = () => {
-  // const [chipObj, setChipObj] = useState({
-  //   key: '1',
-  //   content: 'chip1',
-  //   checked: false
-  // });
-  // const [chipObj2, setChipObj2] = useState({
-  //   key: '2',
-  //   content: 'chip2',
-  //   checked: false
-  // });
+import { Button, buttonVariants } from '@/components/ui/button';
+import Chip from '@/components/ui/Chip';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+const Page = () => {
+  const [chipObj, setChipObj] = useState({
+    key: '1',
+    content: 'chip1',
+    checked: false
+  });
+  const [chipObj2, setChipObj2] = useState({
+    key: '2',
+    content: 'chip2',
+    checked: false
+  });
+  const [tabs, setTabs] = useState([
+    { key: 'tab1', content: 'tab1 content' },
+    { key: 'tab2', content: 'tab2 content' }
+  ]);
 
   return (
     <div className="p-4">
@@ -25,7 +30,6 @@ const page = () => {
             variant="primary"
             size="lg"
             onClick={() => console.log('pr lg')}
-            className={buttonVariants()}
           >
             primary
           </Button>
@@ -39,22 +43,24 @@ const page = () => {
           >
             secondary
           </Button>
-          <Button variant="thirdary" size="sm">
-            thirdary
+          <Button variant="tertiary" size="sm">
+            tertiary
           </Button>
-          <Button variant="thirdary" size="sm">
-            thirdary
-          </Button>
-          <Button variant="outline">outline</Button>
-          <Button variant="text" icon="/images/icons/arrow.svg">
+          <Button variant="outline" size="lg">
             outline
+          </Button>
+          <Button variant="text" icon="/images/icons/arrow.svg">
+            text
+          </Button>
+          <Button variant="text" disabled>
+            text
           </Button>
         </div>
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐱 Chip</h1>
         <div className="flex gap-2">
-          {/* <Chip
+          <Chip
             item={chipObj}
             onClick={() =>
               setChipObj(prev => ({ ...prev, checked: !prev.checked }))
@@ -66,11 +72,28 @@ const page = () => {
               setChipObj2(prev => ({ ...prev, checked: !prev.checked }))
             }
             icon="/images/icons/time.svg"
-          /> */}
+          />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐭 Tabs</h1>
+        <div className="flex gap-2">
+          <Tabs defaultValue="account" className="w-[400px]">
+            <TabsList>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="password">Password</TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">
+              Make changes to your account here.
+            </TabsContent>
+            <TabsContent value="password">
+              Change your password here.
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
     </div>
   );
 };
 
-export default page;
+export default Page;
