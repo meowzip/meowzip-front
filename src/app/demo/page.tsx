@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -16,10 +16,6 @@ const Page = () => {
     content: 'chip2',
     checked: false
   });
-  const [tabs, setTabs] = useState([
-    { key: 'tab1', content: 'tab1 content' },
-    { key: 'tab2', content: 'tab2 content' }
-  ]);
 
   return (
     <div className="p-4">
