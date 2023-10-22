@@ -6,6 +6,8 @@ import Chip from '@/components/ui/Chip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import Label from '@/components/ui/Label';
 import Badge from '@/components/ui/Badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import Profile from '@/components/ui/Profile';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -18,6 +20,38 @@ const Page = () => {
     content: 'chip2',
     checked: false
   });
+  const [profiles, setProfiles] = useState([
+    {
+      key: '1',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute '
+    },
+    {
+      key: '2',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute left-[20px]'
+    },
+    {
+      key: '3',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute left-[40px]'
+    },
+    {
+      key: '4',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute left-[60px]'
+    },
+    {
+      key: '5',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute left-[80px]'
+    },
+    {
+      key: '6',
+      src: 'https://github.com/shadcn.png',
+      style: 'w-10 h-10 absolute left-[100px]'
+    }
+  ]);
 
   return (
     <div className="p-4">
@@ -115,6 +149,24 @@ const Page = () => {
             color="bg-pr-500"
           />
           <Badge type="text" text="A" color="bg-pr-500" />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐰 Profile</h1>
+        <div className="flex gap-2 h-[50px]">
+          <Profile
+            items={[
+              {
+                key: '1',
+                src: 'https://github.com/shadcn.png',
+                style: 'w-10 h-10'
+              }
+            ]}
+            lastLeft="left-[100px]"
+          />
+        </div>
+        <div className="flex gap-2 h-[50px]">
+          <Profile items={profiles} lastLeft="left-[100px]" />
         </div>
       </section>
     </div>
