@@ -16,7 +16,7 @@ const buttonVariants = cva(
         text: 'text-pr-500 disabled:text-gr-200'
       },
       size: {
-        lg: 'rounded-lg px-4 py-2 text-btn-1',
+        lg: 'rounded-16 px-4 py-2 text-btn-1',
         md: 'rounded-full px-4 py-[5px] text-btn-2',
         sm: 'rounded-full px-3 py-2 text-btn-3',
         icon: 'rounded-md h-6 w-6 p-[6px]'
