@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
-
-import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 const buttonVariants = cva(
@@ -10,10 +8,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[#0044ff] text-[#ffffff]',
         primary: 'bg-pr-500 text-gr-10 disabled:bg-gr-200',
         secondary: 'bg-gr-white text-gr-800 border border-gr-100',
-        thirdary:
+        tertiary:
           'bg-gr-50 text-gr-500 border-16 border-gr-50 active:text-pr-500 active:bg-gr-white active:border-[1.6px] active:border-pr-500',
         outline: 'bg-gr-white text-pr-500 border border-pr-500',
         text: 'text-pr-500 disabled:text-gr-200'
@@ -22,13 +19,12 @@ const buttonVariants = cva(
         lg: 'rounded-lg px-4 py-2 text-btn-1',
         md: 'rounded-full px-4 py-[5px] text-btn-2',
         sm: 'rounded-full px-3 py-2 text-btn-3',
-        icon: 'rounded-md h-6 w-6 p-[6px]',
-        default: ''
+        icon: 'rounded-md h-6 w-6 p-[6px]'
       }
     },
     defaultVariants: {
-      variant: 'default',
-      size: 'default'
+      variant: 'primary',
+      size: 'lg'
     }
   }
 );
@@ -47,9 +43,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const Comp = asChild ? Slot : 'button';
     return (
-      <div className={icon && 'flex items-center justify-center'}>
+      <div className="flex items-center justify-center">
         <Comp
-          className={cn(buttonVariants({ variant, size, className }))}
+          className={buttonVariants({ variant, size, className })}
           ref={ref}
           onClick={onClick}
           {...props}
