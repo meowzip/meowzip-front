@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import Label from '@/components/ui/Label';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -57,13 +58,13 @@ const Page = () => {
         <h1 className="pb-1">🐱 Chip</h1>
         <div className="flex gap-2">
           <Chip
-            item={chipObj}
+            propObj={chipObj}
             onClick={() =>
               setChipObj(prev => ({ ...prev, checked: !prev.checked }))
             }
           />
           <Chip
-            item={chipObj2}
+            propObj={chipObj2}
             onClick={() =>
               setChipObj2(prev => ({ ...prev, checked: !prev.checked }))
             }
@@ -86,6 +87,21 @@ const Page = () => {
               Change your password here.
             </TabsContent>
           </Tabs>
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐻 Label</h1>
+        <div className="flex gap-2">
+          <Label
+            type="default"
+            content="default label"
+            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/home.svg"
+          />
+          <Label type="text" content="text label" />
+          <Label
+            type="icon"
+            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/time.svg"
+          />
         </div>
       </section>
     </div>
