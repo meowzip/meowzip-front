@@ -3,11 +3,12 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Label from '@/components/ui/Label';
 import Badge from '@/components/ui/Badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Profile from '@/components/ui/Profile';
+import Carousel from '@/components/ui/Carousel';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -167,6 +168,24 @@ const Page = () => {
         </div>
         <div className="flex gap-2 h-[50px]">
           <Profile items={profiles} lastLeft="left-[100px]" />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐯 Carousel</h1>
+        <div className="flex gap-2 h-[300px]">
+          <Carousel
+            images={[
+              'https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&cs=tinysrgb&h=350',
+              'http://www.catster.com/wp-content/uploads/2017/08/Pixiebob-cat.jpg',
+              'http://www.catster.com/wp-content/uploads/2017/08/A-fluffy-cat-looking-funny-surprised-or-concerned.jpg',
+              'https://www.cats.org.uk/uploads/images/featurebox_sidebar_kids/grief-and-loss.jpg',
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Cat03.jpg/1200px-Cat03.jpg',
+              'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Cat-eating-prey.jpg/220px-Cat-eating-prey.jpg',
+              'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg',
+              'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
+            ]}
+          />
         </div>
       </section>
     </div>
