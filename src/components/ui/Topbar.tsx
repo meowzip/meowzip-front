@@ -2,9 +2,10 @@ import Image from 'next/image';
 
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
+  title?: string;
 }
 
-const Topbar = ({ type }: BaseProps) => {
+const Topbar = ({ type, title }: BaseProps) => {
   const CONTENT_LIST = [
     {
       type: 'home',
@@ -37,7 +38,7 @@ const Topbar = ({ type }: BaseProps) => {
     {
       type: 'page',
       content: {
-        left: <p>title</p>,
+        left: <p>{title}</p>,
         center: '',
         right: (
           <div className="flex">
@@ -77,7 +78,7 @@ const Topbar = ({ type }: BaseProps) => {
             />
           </div>
         ),
-        center: <p>title</p>,
+        center: <p>{title}</p>,
         right: (
           <div className="px-[10px] py-1">
             <Image
@@ -123,7 +124,7 @@ const Topbar = ({ type }: BaseProps) => {
       type: 'bottom',
       content: {
         left: '',
-        center: <p>title</p>,
+        center: <p>{title}</p>,
         right: ''
       }
     }

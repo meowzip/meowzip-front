@@ -192,10 +192,10 @@ const Page = () => {
         <h1 className="pb-1">🐻 Topbar</h1>
         <div className="flex flex-col gap-2">
           <Topbar type="home" />
-          <Topbar type="page" />
-          <Topbar type="modal" />
+          <Topbar type="page" title="title 1" />
+          <Topbar type="modal" title="title 2" />
           <Topbar type="search" />
-          <Topbar type="bottom" />
+          <Topbar type="bottom" title="title 3" />
         </div>
       </section>
     </div>
