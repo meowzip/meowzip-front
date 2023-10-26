@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Label from '@/components/ui/Label';
 import Badge from '@/components/ui/Badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
+import Topbar from '@/components/ui/Topbar';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -153,7 +153,7 @@ const Page = () => {
         </div>
       </section>
       <section className="border-b p-3">
-        <h1 className="pb-1">🐰 Profile</h1>
+        <h1 className="pb-1">🦊 Profile</h1>
         <div className="flex gap-2 h-[50px]">
           <Profile
             items={[
@@ -186,6 +186,16 @@ const Page = () => {
               'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
             ]}
           />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐻 Topbar</h1>
+        <div className="flex flex-col gap-2">
+          <Topbar type="home" />
+          <Topbar type="page" />
+          <Topbar type="modal" />
+          <Topbar type="search" />
+          <Topbar type="bottom" />
         </div>
       </section>
     </div>
