@@ -9,8 +9,11 @@ import Badge from '@/components/ui/Badge';
 import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
+import { Toaster } from '@/components/ui/Toaster';
+import { useToast } from '@/components/ui/use-toast';
 
 const Page = () => {
+  const { toast } = useToast();
   const [chipObj, setChipObj] = useState({
     key: '1',
     content: 'chip1',
@@ -196,6 +199,22 @@ const Page = () => {
           <Topbar type="modal" title="title 2" />
           <Topbar type="search" />
           <Topbar type="bottom" title="title 3" />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦦 Toast</h1>
+        <div className="flex flex-col gap-2">
+          <Toaster />
+          <Button
+            onClick={() => {
+              toast({
+                title: 'Toast Title',
+                description: '🦦 This is Toaster Text.'
+              });
+            }}
+          >
+            Show Toast
+          </Button>
         </div>
       </section>
     </div>
