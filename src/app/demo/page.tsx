@@ -11,6 +11,7 @@ import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
 import ActionButton from '@/components/ui/ActionButton';
 import Textarea from '@/components/ui/Textarea';
+import FloatingActionButton from '@/components/ui/FloatingActionButton';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -218,6 +219,10 @@ const Page = () => {
           }}
           onChange={e => setTextareaContent(e)}
         />
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐨 FloatingActionButton</h1>
+        <FloatingActionButton image="/next.svg" />
       </section>
     </div>
   );
