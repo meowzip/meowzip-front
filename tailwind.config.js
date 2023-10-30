@@ -112,6 +112,7 @@ module.exports = {
         regular: '400'
       },
       borderRadius: {
+        14: '14px',
         16: '16px'
       },
       borderWidth: {
