@@ -9,6 +9,7 @@ import Badge from '@/components/ui/Badge';
 import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
+import ActionButton from '@/components/ui/ActionButton';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -196,6 +197,13 @@ const Page = () => {
           <Topbar type="modal" title="title 2" />
           <Topbar type="search" />
           <Topbar type="bottom" title="title 3" />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐼 ActionButton</h1>
+        <div className="flex flex-col gap-2">
+          <ActionButton icon="/images/icons/edit.svg" content="수정하기" />
+          <ActionButton icon="/images/icons/delete.svg" content="삭제하기" />
         </div>
       </section>
     </div>
