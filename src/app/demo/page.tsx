@@ -10,6 +10,7 @@ import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
 import ActionButton from '@/components/ui/ActionButton';
+import Textarea from '@/components/ui/Textarea';
 
 const Page = () => {
   const [chipObj, setChipObj] = useState({
@@ -54,6 +55,7 @@ const Page = () => {
       style: 'w-10 h-10 absolute left-[100px]'
     }
   ]);
+  const [textareaContent, setTextareaContent] = useState('');
 
   return (
     <div className="p-4">
@@ -205,6 +207,17 @@ const Page = () => {
           <ActionButton icon="/images/icons/edit.svg" content="수정하기" />
           <ActionButton icon="/images/icons/delete.svg" content="삭제하기" />
         </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐻‍❄️ Textarea</h1>
+        <Textarea
+          propObj={{
+            placeholder: 'Placeholder',
+            content: textareaContent,
+            maxLength: 500
+          }}
+          onChange={e => setTextareaContent(e)}
+        />
       </section>
     </div>
   );
