@@ -12,8 +12,12 @@ import Topbar from '@/components/ui/Topbar';
 import ActionButton from '@/components/ui/ActionButton';
 import Textarea from '@/components/ui/Textarea';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
+import { Toaster } from '@/components/ui/Toaster';
+import { useToast } from '@/components/ui/use-toast';
+import { Input } from '@/components/ui/Input';
 
 const Page = () => {
+  const { toast } = useToast();
   const [chipObj, setChipObj] = useState({
     key: '1',
     content: 'chip1',
@@ -223,6 +227,37 @@ const Page = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 FloatingActionButton</h1>
         <FloatingActionButton image="/next.svg" />
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦦 Toast</h1>
+        <div className="flex flex-col gap-2">
+          <Toaster />
+          <Button
+            onClick={() => {
+              toast({
+                title: 'Toast Title',
+                description: '🦦 This is Toaster Text.'
+              });
+            }}
+          >
+            Show Toast
+          </Button>
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦤 Input</h1>
+        <div className="flex flex-col gap-2">
+          <h1>default</h1>
+          <Input />
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1>inactive</h1>
+          <Input disabled />
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1>error state</h1>
+          <Input />
+        </div>
       </section>
     </div>
   );

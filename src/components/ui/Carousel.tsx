@@ -20,7 +20,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
       el: '.fraction',
       type: 'custom',
       clickable: true,
-      renderCustom: function (current, total) {
+      renderCustom: function (swiper, current, total) {
         return `
             ${current}/${total}`;
       }
@@ -72,7 +72,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         ))}
         <div
           ref={swiperPagination}
-          className="fraction w-1/2 relative bottom-5 text-body-4 bottom-10 bg-gr-300 rounded-16 pl-[5px] pr-[4px] text-center text-gr-white absolute right-0 z-10"
+          className="fraction w-1/2 relative bottom-5 text-body-4 bottom-10 bg-gr-300 rounded-16 px-[4px] text-center text-gr-white absolute right-0 z-10"
         ></div>
       </Swiper>
     </>
