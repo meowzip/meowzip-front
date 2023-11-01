@@ -9,8 +9,12 @@ import Badge from '@/components/ui/Badge';
 import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
+import ActionButton from '@/components/ui/ActionButton';
+import Textarea from '@/components/ui/Textarea';
+import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/use-toast';
+import { Input } from '@/components/ui/Input';
 
 const Page = () => {
   const { toast } = useToast();
@@ -56,6 +60,7 @@ const Page = () => {
       style: 'w-10 h-10 absolute left-[100px]'
     }
   ]);
+  const [textareaContent, setTextareaContent] = useState('');
 
   return (
     <div className="p-4">
@@ -202,6 +207,28 @@ const Page = () => {
         </div>
       </section>
       <section className="border-b p-3">
+        <h1 className="pb-1">🐼 ActionButton</h1>
+        <div className="flex flex-col gap-2">
+          <ActionButton icon="/images/icons/edit.svg" content="수정하기" />
+          <ActionButton icon="/images/icons/delete.svg" content="삭제하기" />
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐻‍❄️ Textarea</h1>
+        <Textarea
+          propObj={{
+            placeholder: 'Placeholder',
+            content: textareaContent,
+            maxLength: 500
+          }}
+          onChange={e => setTextareaContent(e)}
+        />
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐨 FloatingActionButton</h1>
+        <FloatingActionButton image="/next.svg" />
+      </section>
+      <section className="border-b p-3">
         <h1 className="pb-1">🦦 Toast</h1>
         <div className="flex flex-col gap-2">
           <Toaster />
@@ -215,6 +242,21 @@ const Page = () => {
           >
             Show Toast
           </Button>
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦤 Input</h1>
+        <div className="flex flex-col gap-2">
+          <h1>default</h1>
+          <Input />
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1>inactive</h1>
+          <Input disabled />
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1>error state</h1>
+          <Input />
         </div>
       </section>
     </div>
