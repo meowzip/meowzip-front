@@ -17,7 +17,7 @@ const Badge = ({ type, text, icon, color }: BagdeProps) => {
       className={`flex items-center justify-center ${color} ${badgeTypeVariants[type]}`}
     >
       {icon && <img src={icon} alt="label-icon" />}
-      {text && <p className={`text-gr-white text-btn-3`}>{text}</p>}
+      {text && <p className={`text-btn-3 text-gr-white`}>{text}</p>}
     </div>
   );
 };

@@ -6,7 +6,7 @@ interface FloatingActionButtonProps {
 
 const FloatingActionButton = ({ image }: FloatingActionButtonProps) => {
   return (
-    <button className="fixed z-10 bottom-5 right-5 w-12 h-12 rounded-full border bg-gr-white flex justify-center items-center">
+    <button className="fixed bottom-5 right-5 z-10 flex h-12 w-12 items-center justify-center rounded-full border bg-gr-white">
       <Image src={image} alt="icon" width={48} height={48} />
     </button>
   );

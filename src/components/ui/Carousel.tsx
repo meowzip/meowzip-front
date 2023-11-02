@@ -63,7 +63,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         {images.map((image, index) => (
           <SwiperSlide key={index} className="p-5">
             <img
-              className="object-contain h-full"
+              className="h-full object-contain"
               src={image}
               alt={`slide-${index}`}
               style={{ width: '100%' }}
@@ -72,7 +72,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         ))}
         <div
           ref={swiperPagination}
-          className="fraction w-1/2 relative bottom-5 text-body-4 bottom-10 bg-gr-300 rounded-16 px-[4px] text-center text-gr-white absolute right-0 z-10"
+          className="fraction absolute relative bottom-10 bottom-5 right-0 z-10 w-1/2 rounded-16 bg-gr-300 px-[4px] text-center text-body-4 text-gr-white"
         ></div>
       </Swiper>
     </>
