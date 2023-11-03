@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { Button } from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import Label from '@/components/ui/Label';
-import Badge from '@/components/ui/Badge';
 import Profile from '@/components/ui/Profile';
 import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
@@ -15,6 +12,9 @@ import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/Input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Badge } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 const Page = () => {
   const { toast } = useToast();
@@ -152,17 +152,11 @@ const Page = () => {
         <h1 className="pb-1">🐰 Badge</h1>
         <div className="flex gap-2">
           <Badge type="default" color="bg-pr-500" />
-          <Badge
-            type="icon"
-            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/time.svg"
-            color="bg-pr-500"
-          />
-          <Badge type="text" text="A" color="bg-pr-500" />
         </div>
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🦊 Profile</h1>
-        <div className="flex gap-2 h-[50px]">
+        <div className="flex h-[50px] gap-2">
           <Profile
             items={[
               {
@@ -174,13 +168,13 @@ const Page = () => {
             lastLeft="left-[100px]"
           />
         </div>
-        <div className="flex gap-2 h-[50px]">
+        <div className="flex h-[50px] gap-2">
           <Profile items={profiles} lastLeft="left-[100px]" />
         </div>
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐯 Carousel</h1>
-        <div className="flex gap-2 h-[300px]">
+        <div className="flex h-[300px] gap-2">
           <Carousel
             images={[
               'https://images.pexels.com/photos/617278/pexels-photo-617278.jpeg?auto=compress&cs=tinysrgb&h=350',

@@ -1,16 +1,18 @@
-import Profile from '../ui/Profile';
+import Profile from '@/components/ui/Profile';
+import Badge from '@/components/ui/Badge';
 
 interface FilterProps {
   propObj: {
     key: string;
     image: string;
+    share: boolean;
   };
 }
 
 const Filter = ({ propObj }: FilterProps) => {
   return (
     <>
-      <div className="rounded-3xl border-2 border-pr-500 w-16 h-16 bg-gr-white flex justify-center items-center">
+      <button className="relative flex h-16 w-16 items-center justify-center rounded-3xl border-2 border-gr-100 bg-gr-white active:border-pr-500">
         <Profile
           items={[
             {
@@ -19,9 +21,17 @@ const Filter = ({ propObj }: FilterProps) => {
               style: 'w-14 h-14 rounded-[20px] border border-gr-50'
             }
           ]}
-          lastLeft="left-[100px]"
         />
-      </div>
+        {propObj.share && (
+          <div className="absolute bottom-0 right-0 rounded-full border-15 border-gr-white">
+            <Badge
+              type="icon"
+              icon="/images/icons/share.svg"
+              bgColor="bg-gradient-01"
+            />
+          </div>
+        )}
+      </button>
     </>
   );
 };

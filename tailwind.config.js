@@ -86,6 +86,9 @@ module.exports = {
         'gr-10': 'var(--gr-10)',
         'gr-white': 'var(--gr-white)'
       },
+      backgroundImage: {
+        'gradient-01': 'linear-gradient(180deg, #8CBCFE 0%, #0C6CF1 100%)'
+      },
       fontSize: {
         'heading-1': ['24px', { lineHeight: '140%', fontWeight: '700' }],
         'heading-2': ['20px', { lineHeight: '140%', fontWeight: '700' }],
@@ -117,6 +120,7 @@ module.exports = {
       },
       borderWidth: {
         12: '1.2px',
+        15: '1.5px',
         16: '1.6px'
       },
       keyframes: {
