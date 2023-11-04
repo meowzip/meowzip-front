@@ -242,7 +242,7 @@ const Page = () => {
         <h1 className="pb-1">🦤 Input</h1>
         <div className="flex flex-col gap-2">
           <h1>default</h1>
-          <Input />
+          <Input helperText="Helper Text" />
         </div>
         <div className="flex flex-col gap-2">
           <h1>inactive</h1>
@@ -250,7 +250,7 @@ const Page = () => {
         </div>
         <div className="flex flex-col gap-2">
           <h1>error state</h1>
-          <Input />
+          <Input helperText="Error Message" error />
         </div>
       </section>
     </div>
