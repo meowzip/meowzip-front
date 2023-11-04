@@ -38,3 +38,6 @@ next-env.d.ts
 .swc/
 .*.env
 next-env.d.ts
+
+# asdf
+.tool-versions
