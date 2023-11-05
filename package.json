@@ -1,5 +1,5 @@
 {
-  "name": "meowhanyang-front",
+  "name": "meowzip-front",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "autoprefixer": "10.4.14",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "framer-motion": "^10.16.4",
     "lucide-react": "^0.274.0",
     "next": "13.5.7-canary.14",
     "next-auth": "^4.22.3",
