@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Badge } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import BottomSheet from '@/components/ui/BottomSheet';
 
 const Page = () => {
   const { toast } = useToast();
@@ -61,6 +62,9 @@ const Page = () => {
     }
   ]);
   const [textareaContent, setTextareaContent] = useState('');
+  // bottomSheet
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleBottomSheet = () => setIsVisible(!isVisible);
 
   return (
     <div className="p-4">
@@ -252,6 +256,22 @@ const Page = () => {
           <h1>error state</h1>
           <Input helperText="Error Message" error />
         </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦤 BottomSheet</h1>
+        <button
+          onClick={toggleBottomSheet}
+          className="rounded bg-blue-500 p-2 text-white hover:bg-blue-700"
+        >
+          Toggle Bottom Sheet
+        </button>
+        <BottomSheet
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          topBar={<div>Drag Bar</div>}
+        >
+          <div>Your Content Here</div>
+        </BottomSheet>
       </section>
     </div>
   );
