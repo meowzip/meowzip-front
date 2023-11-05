@@ -1,6 +1,6 @@
-# Meowhanyang
+# Meowzip
 
-머하냥?
+냥.zip
 
 ## Tech Stack
 
