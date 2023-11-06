@@ -13,9 +13,9 @@ import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/Input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { Badge } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
+import Badge from '@/components/ui/Badge';
 
 const Page = () => {
   const { toast } = useToast();
@@ -155,7 +155,7 @@ const Page = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐰 Badge</h1>
         <div className="flex gap-2">
-          <Badge type="default" color="bg-pr-500" />
+          <Badge type="default" bgColor="bg-pr-500" />
         </div>
       </section>
       <section className="border-b p-3">
