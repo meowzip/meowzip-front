@@ -1,5 +1,6 @@
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
+import ImageUploader from '@/components/diary/ImageUploader';
 
 const page = () => {
   return (
@@ -60,6 +61,9 @@ const page = () => {
             }
           ]}
         />
+      </section>
+      <section>
+        <ImageUploader />
       </section>
     </>
   );
