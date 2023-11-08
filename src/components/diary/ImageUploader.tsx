@@ -2,6 +2,8 @@
 
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
+import 'cropperjs/dist/cropper.css';
+import ImageCropper from './ImageCropper';
 
 const ImageUploader = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
@@ -71,6 +73,13 @@ const ImageUploader = () => {
             width={24}
             height={24}
           />
+        )}
+      </section>
+      <section className="w-full">
+        {imageSrc && (
+          <div className="fixed top-0 z-[1] ">
+            <ImageCropper imageSrc={imageSrc} />
+          </div>
         )}
       </section>
     </div>
