@@ -10,7 +10,7 @@ import ActionButton from '@/components/ui/ActionButton';
 import Textarea from '@/components/ui/Textarea';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { Toaster } from '@/components/ui/Toaster';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/hooks/useToast';
 import { Input } from '@/components/ui/Input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';

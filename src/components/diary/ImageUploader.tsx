@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { ChangeEvent, useRef, useState } from 'react';
 import { Button } from '../ui/Button';
-import useCropper from '@/lib/useCropper';
+import useCropper from '@/components/ui/hooks/useCropper';
 
 const ImageUploader = () => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);

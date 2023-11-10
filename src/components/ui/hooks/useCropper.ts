@@ -2,8 +2,6 @@ import { MutableRefObject, useEffect, useState } from 'react';
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
-// text 주석
-
 interface CropperImageElement extends HTMLImageElement {
   cropper: Cropper;
 }
