@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
 import Badge from '@/components/ui/Badge';
+import { Checkbox } from '@/components/ui/Checkbox';
 
 const Page = () => {
   const { toast } = useToast();
@@ -272,6 +273,27 @@ const Page = () => {
         >
           <div>Your Content Here</div>
         </BottomSheet>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐣 Checkbox</h1>
+        <div className="flex items-center space-x-2">
+          <Checkbox id="hasBg" kind="hasBg" />
+          <label
+            htmlFor="noBg"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            hasBg : checkbox label
+          </label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Checkbox id="noBg" kind="noBg" />
+          <label
+            htmlFor="noBg"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            noBg : checkbox label
+          </label>
+        </div>
       </section>
     </div>
   );
