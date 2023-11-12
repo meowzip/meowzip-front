@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Chip from '@/components/ui/Chip';
 import Label from '@/components/ui/Label';
 import Profile from '@/components/ui/Profile';
@@ -300,19 +300,24 @@ const Page = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐝 Tooltip</h1>
         <div className="relative flex items-center space-x-2">
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={() => setOpenTooltip(true)}
-          >
-            Tooltip Btn
-          </Button>
-          {openTooltip && (
-            <Tooltip
-              content="이것은 툴팁입니다."
-              onClick={() => setOpenTooltip(false)}
-            />
-          )}
+          <Tooltip
+            content="이것은 툴팁입니다."
+            trigger={
+              <Button variant="primary" size="lg">
+                Tooltip Btn1
+              </Button>
+            }
+          />
+        </div>
+        <div className="relative flex items-center justify-end">
+          <Tooltip
+            content="This is a Tooltip."
+            trigger={
+              <Button variant="primary" size="lg">
+                Tooltip Btn2
+              </Button>
+            }
+          />
         </div>
       </section>
     </div>
