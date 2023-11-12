@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
 import Badge from '@/components/ui/Badge';
 import { Checkbox } from '@/components/ui/Checkbox';
+import Tooltip from '@/components/ui/Tooltip';
 
 const Page = () => {
   const { toast } = useToast();
@@ -66,6 +67,7 @@ const Page = () => {
   // bottomSheet
   const [isVisible, setIsVisible] = useState(false);
   const toggleBottomSheet = () => setIsVisible(!isVisible);
+  const [openTooltip, setOpenTooltip] = useState(false);
 
   return (
     <div className="p-4">
@@ -293,6 +295,24 @@ const Page = () => {
           >
             noBg : checkbox label
           </label>
+        </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐝 Tooltip</h1>
+        <div className="relative flex items-center space-x-2">
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => setOpenTooltip(true)}
+          >
+            Tooltip Btn
+          </Button>
+          {openTooltip && (
+            <Tooltip
+              content="이것은 툴팁입니다."
+              onClick={() => setOpenTooltip(false)}
+            />
+          )}
         </div>
       </section>
     </div>
