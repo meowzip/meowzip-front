@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Chip from '@/components/ui/Chip';
 import Label from '@/components/ui/Label';
 import Profile from '@/components/ui/Profile';
@@ -18,6 +18,7 @@ import BottomSheet from '@/components/ui/BottomSheet';
 import Badge from '@/components/ui/Badge';
 import { Checkbox } from '@/components/ui/Checkbox';
 import Tooltip from '@/components/ui/Tooltip';
+import Modal from '@/components/ui/Modal';
 
 const Page = () => {
   const { toast } = useToast();
@@ -67,13 +68,13 @@ const Page = () => {
   // bottomSheet
   const [isVisible, setIsVisible] = useState(false);
   const toggleBottomSheet = () => setIsVisible(!isVisible);
-  const [openTooltip, setOpenTooltip] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   return (
     <div className="p-4">
       <section className="border-b p-3">
         <h1 className="pb-1">🐶 Button</h1>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2 ">
           <Button
             variant="primary"
             size="lg"
@@ -319,6 +320,39 @@ const Page = () => {
             }
           />
         </div>
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🦋 Modal</h1>
+        <div className="relative flex items-center">
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={() => setOpenModal(true)}
+          >
+            primary
+          </Button>
+        </div>
+        {openModal && (
+          <Modal
+            contents={{ title: '알림', body: 'Text를 입력하세요.' }}
+            scrim={true}
+            buttons={[
+              {
+                variant: 'primary',
+                size: 'lg',
+                content: 'Confirm',
+                style: 'w-full rounded-[16px] px-4 py-2'
+              },
+              {
+                variant: 'primary',
+                size: 'lg',
+                content: 'Cancel',
+                style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700'
+              }
+            ]}
+            onClose={() => setOpenModal(false)}
+          />
+        )}
       </section>
     </div>
   );

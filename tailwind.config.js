@@ -84,7 +84,8 @@ module.exports = {
         'gr-100': 'var(--gr-100)',
         'gr-50': 'var(--gr-50)',
         'gr-10': 'var(--gr-10)',
-        'gr-white': 'var(--gr-white)'
+        'gr-white': 'var(--gr-white)',
+        scrim: 'rgba(0, 0, 0, 0.70)'
       },
       backgroundImage: {
         'gradient-01': 'linear-gradient(180deg, #8CBCFE 0%, #0C6CF1 100%)'
@@ -122,6 +123,9 @@ module.exports = {
         12: '1.2px',
         15: '1.5px',
         16: '1.6px'
+      },
+      boxShadow: {
+        modal: '0px 8px 20px 0px rgba(14, 31, 53, 0.20)'
       },
       keyframes: {
         'accordion-down': {
