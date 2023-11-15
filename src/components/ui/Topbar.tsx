@@ -17,7 +17,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </div>
         ),
@@ -29,7 +29,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </div>
         )
@@ -48,7 +48,7 @@ const Topbar = ({ type, title }: BaseProps) => {
                 alt="calendar"
                 width={24}
                 height={24}
-                className="w-6 h-6"
+                className="h-6 w-6"
               />
             </div>
             <div className="px-[10px] py-1">
@@ -57,7 +57,7 @@ const Topbar = ({ type, title }: BaseProps) => {
                 alt="calendar"
                 width={24}
                 height={24}
-                className="w-6 h-6"
+                className="h-6 w-6"
               />
             </div>
           </div>
@@ -74,7 +74,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </div>
         ),
@@ -86,7 +86,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </div>
         )
@@ -102,7 +102,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={20}
               height={20}
-              className="w-5 h-5"
+              className="h-5 w-5"
             />
           </div>
         ),
@@ -114,7 +114,7 @@ const Topbar = ({ type, title }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="w-6 h-6"
+              className="h-6 w-6"
             />
           </div>
         )
@@ -133,7 +133,7 @@ const Topbar = ({ type, title }: BaseProps) => {
   const currentItem = CONTENT_LIST.find(item => item.type === type);
 
   return (
-    <div className="flex justify-between items-center w-full px-[6px] bg-gr-100 h-12">
+    <div className="flex h-12 w-full items-center justify-between bg-gr-white px-[6px]">
       <section>{currentItem?.content.left}</section>
       <section>{currentItem?.content.center}</section>
       <section>{currentItem?.content.right}</section>

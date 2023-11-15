@@ -14,9 +14,12 @@ const Profile = ({ items, lastLeft }: ProfileProps) => {
 
   return (
     <>
-      <div className="relative">
+      <div className="flex items-center justify-between">
         {fiveItems.map(item => (
-          <Avatar key={item.key} className={`${item.style} text-gr-white`}>
+          <Avatar
+            key={item.key}
+            className={`${item.style} flex items-center text-gr-white`}
+          >
             <AvatarImage src={item.src} />
           </Avatar>
         ))}
