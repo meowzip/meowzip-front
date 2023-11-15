@@ -42,10 +42,12 @@ const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
   };
 
   return (
-    <div className="rounded-16 bg-gr-white">
-      <section className="flex h-[300px] gap-2">
-        {images && <Carousel images={images} />}
-      </section>
+    <div className="mb-4 rounded-16 bg-gr-white">
+      {images && images?.length > 0 && (
+        <section className="flex h-[300px] gap-2">
+          <Carousel images={images} />
+        </section>
+      )}
       <section className="p-4">
         <article className="mb-2 flex items-center justify-start gap-1">
           {labels.map((label, index) => (
