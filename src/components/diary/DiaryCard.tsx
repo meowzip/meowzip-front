@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import Carousel from '../ui/Carousel';
 import Label from '../ui/Label';
 import Profile from '../ui/Profile';
 
 interface DiaryCardProps {
-  images: string[];
+  images?: string[];
   labels: {
     type: 'default' | 'text' | 'icon';
     content?: string;
@@ -20,6 +21,8 @@ interface DiaryCardProps {
 }
 
 const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
+  const [showMore, setShowMore] = useState(false);
+
   /**
    * @description 시간 포맷
    * @returns 오후/오전 HH:MM
@@ -39,11 +42,11 @@ const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
   };
 
   return (
-    <>
+    <div className="rounded-16 bg-gr-white">
       <section className="flex h-[300px] gap-2">
-        <Carousel images={images} />
+        {images && <Carousel images={images} />}
       </section>
-      <section>
+      <section className="p-4">
         <article className="mb-2 flex items-center justify-start gap-1">
           {labels.map((label, index) => (
             <Label
@@ -55,19 +58,32 @@ const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
           ))}
         </article>
         <article className="mb-2">
-          <div className="mb-1 text-body-3 text-gr-black">{content}</div>
+          <div
+            className={`mb-1 text-body-3 text-gr-black ${
+              showMore ? 'line-clamp-0' : 'line-clamp-3'
+            }`}
+          >
+            {content}
+          </div>
           <div className="flex justify-start">
-            <button className="text-body-3 text-gr-300">더보기</button>
+            <button
+              className="text-body-3 text-gr-300"
+              onClick={() => setShowMore(!showMore)}
+            >
+              {showMore ? '닫기' : '더보기'}
+            </button>
           </div>
         </article>
-      </section>
-      <section className="flex justify-between">
-        <Profile items={profiles} lastLeft="left-[100px]" />
-        <article className="text-body-4 text-gr-500">
-          아이디 • {formatTime(new Date())}
+        <article className="flex h-6 items-center justify-between">
+          <div className="relative">
+            <Profile items={profiles} lastLeft="left-[100px]" />
+          </div>
+          <h5 className="text-body-4 text-gr-500">
+            아이디 • {formatTime(new Date())}
+          </h5>
         </article>
       </section>
-    </>
+    </div>
   );
 };
 

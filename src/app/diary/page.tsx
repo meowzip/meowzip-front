@@ -1,17 +1,27 @@
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
 import ImageUploader from '@/components/diary/ImageUploader';
+import DiaryListLayout from '@/components/diary/DiaryListLayout';
 
 const page = () => {
   return (
-    <>
-      <section className="flex justify-start gap-3">
+    <DiaryListLayout>
+      <section className="flex justify-start gap-4 bg-gr-white">
+        <Filter
+          propObj={{
+            key: '1',
+            image: 'bg-gr-400',
+            share: true,
+            label: '전체보기'
+          }}
+        />
         <Filter
           propObj={{
             key: '1',
             image:
               'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-            share: true
+            share: true,
+            label: '식빵이'
           }}
         />
         <Filter
@@ -19,7 +29,8 @@ const page = () => {
             key: '2',
             image:
               'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-            share: false
+            share: false,
+            label: '꼬기'
           }}
         />
       </section>
@@ -42,30 +53,30 @@ const page = () => {
               icon: 'https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/home.svg'
             }
           ]}
-          content="오늘도 먼지는 귀엽다냥 🧡 내용이 길어도 세 줄까지만 보여짐 냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥"
+          content="오늘도 먼지는 귀엽다냥 🧡 내용이 길어도 세 줄까지만 보여짐 냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥"
           profiles={[
             {
               key: '1',
               src: 'https://github.com/shadcn.png',
-              style: 'w-10 h-10 absolute'
+              style: 'w-6 h-6 absolute border border-gr-white'
             },
             {
               key: '2',
               src: 'https://github.com/shadcn.png',
-              style: 'w-10 h-10 absolute left-[30px]'
+              style: 'w-6 h-6 absolute left-[20px] border border-gr-white'
             },
             {
               key: '3',
               src: 'https://github.com/shadcn.png',
-              style: 'w-10 h-10 absolute left-[60px]'
+              style: 'w-6 h-6 absolute left-[40px] border border-gr-white'
             }
           ]}
         />
       </section>
-      <section>
+      {/* <section>
         <ImageUploader />
-      </section>
-    </>
+      </section> */}
+    </DiaryListLayout>
   );
 };
 
