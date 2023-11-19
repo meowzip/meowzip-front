@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/Input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
-import Badge from '@/components/ui/Badge';
+// import Badge from '@/components/ui/Badge';
 import { Checkbox } from '@/components/ui/Checkbox';
 import Tooltip from '@/components/ui/Tooltip';
 import Modal from '@/components/ui/Modal';
@@ -159,7 +159,7 @@ const Page = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐰 Badge</h1>
         <div className="flex gap-2">
-          <Badge type="default" bgColor="bg-pr-500" />
+          {/* <Badge type="default" bgColor="bg-pr-500" /> */}
         </div>
       </section>
       <section className="border-b p-3">
