@@ -1,5 +1,5 @@
 import Profile from '@/components/ui/Profile';
-// import Badge from '@/components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 
 interface FilterProps {
   propObj: {
@@ -26,11 +26,11 @@ const Filter = ({ propObj }: FilterProps) => {
           />
           {propObj.share && (
             <div className="absolute bottom-0 right-0 rounded-full border-15 border-gr-white">
-              {/* <Badge
+              <Badge
                 type="icon"
                 icon="/images/icons/share.svg"
                 bgColor="bg-gradient-01"
-              /> */}
+              />
             </div>
           )}
         </button>

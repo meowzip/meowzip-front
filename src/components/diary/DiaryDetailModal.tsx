@@ -4,38 +4,27 @@ import React from 'react';
 import Topbar from '@/components/ui/Topbar';
 import Carousel from '@/components/ui/Carousel';
 import Label from '@/components/ui/Label';
-import FemaleIcon from '../../../public/images/icons/gender-female.svg';
-import MaleIcon from '../../../public/images/icons/gender-male.svg';
+import { DiaryPageProps } from '@/app/diary/diaryType';
 
-interface DiaryDetailModalProps {
-  images?: string[];
-  labels: {
-    type: 'default' | 'text' | 'icon';
-    content?: string;
-    icon?: string;
-  }[];
-  content: string;
-  profiles: {
-    key: string;
-    src: string;
-    style: string;
-    name: string;
-    gender: 'female' | 'male';
-  }[];
+interface DiaryDetailModalProps extends DiaryPageProps {
+  onClose: () => void;
 }
 
 const DiaryDetailModal = ({
   images,
   labels,
   content,
-  profiles
+  profiles,
+  onClose
 }: DiaryDetailModalProps) => {
   return (
-    <div className="fixed left-0 top-0">
-      <Topbar type="home" title="날짜 props" />
+    <div className="fixed left-0 top-0 z-10 h-screen overflow-y-auto bg-gr-white">
+      <Topbar type="modal" title="날짜 props" onClose={onClose} />
       <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-4">
-        <h5 className="text-body-4 text-gr-500">아이디 • 7시간 전</h5>
-        {images && <Carousel images={images} />}
+        <h5 className="text-end text-body-4 text-gr-500">아이디 • 7시간 전</h5>
+        <div className="h-[300px w-[90vw]">
+          {images && <Carousel images={images} />}
+        </div>
         <h4 className="text-body-3 text-gr-black">{content}</h4>
         <article className="mb-2 flex items-center justify-start gap-1">
           {labels.map((label, index) => (
@@ -63,7 +52,6 @@ const DiaryDetailModal = ({
             />
             <div className="flex items-center gap-2">
               <h4 className="text-body-3 text-gr-900">{item.name}</h4>
-              <h5>{item.gender}</h5>
               <img
                 src={`/images/icons/gender-${item.gender}.svg`}
                 alt=""

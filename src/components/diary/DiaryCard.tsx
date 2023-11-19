@@ -4,23 +4,19 @@ import { useState } from 'react';
 import Carousel from '../ui/Carousel';
 import Label from '../ui/Label';
 import Profile from '../ui/Profile';
+import { DiaryPageProps } from '@/app/diary/diaryType';
 
-interface DiaryCardProps {
-  images?: string[];
-  labels: {
-    type: 'default' | 'text' | 'icon';
-    content?: string;
-    icon?: string;
-  }[];
-  content: string;
-  profiles: {
-    key: string;
-    src: string;
-    style: string;
-  }[];
+interface DiaryCardProps extends DiaryPageProps {
+  onClick: () => void;
 }
 
-const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
+const DiaryCard = ({
+  images,
+  labels,
+  content,
+  profiles,
+  onClick
+}: DiaryCardProps) => {
   const [showMore, setShowMore] = useState(false);
 
   /**
@@ -42,7 +38,7 @@ const DiaryCard = ({ images, labels, content, profiles }: DiaryCardProps) => {
   };
 
   return (
-    <div className="mb-4 rounded-16 bg-gr-white">
+    <div className="mb-4 rounded-16 bg-gr-white" onClick={onClick}>
       {images && images?.length > 0 && (
         <section className="flex h-[300px] gap-2">
           <Carousel images={images} />
