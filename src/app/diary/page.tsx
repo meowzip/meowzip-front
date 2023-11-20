@@ -1,7 +1,12 @@
+'use client';
+
+import { DiaryPageProps } from '@/app/diary/diaryType';
+import { useState } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
-import ImageUploader from '@/components/diary/ImageUploader';
+// import ImageUploader from '@/components/diary/ImageUploader';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
+import DiaryDetailModal from '@/components/diary/DiaryDetailModal';
 
 const mockup = [
   {
@@ -29,17 +34,23 @@ const mockup = [
       {
         key: '1',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute border border-gr-white'
+        style: 'w-6 h-6 absolute border border-gr-white',
+        name: '식빵이',
+        gender: 'female' as const
       },
       {
         key: '2',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute left-[20px] border border-gr-white'
+        style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
+        name: '콩이',
+        gender: 'male' as const
       },
       {
         key: '3',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute left-[40px] border border-gr-white'
+        style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
+        name: '백설이',
+        gender: 'female' as const
       }
     ]
   },
@@ -64,69 +75,96 @@ const mockup = [
       {
         key: '1',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute border border-gr-white'
+        style: 'w-6 h-6 absolute border border-gr-white',
+        name: '킁킁이',
+        gender: 'female' as const
       },
       {
         key: '2',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute left-[20px] border border-gr-white'
+        style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
+        name: '동식이',
+        gender: 'male' as const
       },
       {
         key: '3',
         src: 'https://github.com/shadcn.png',
-        style: 'w-6 h-6 absolute left-[40px] border border-gr-white'
+        style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
+        name: '치즈',
+        gender: 'female' as const
       }
     ]
   }
 ];
 
-const page = () => {
+const Page = () => {
+  const [showDetailModal, setShowDetailModal] = useState(false);
+
+  const openDetailModal = (item: DiaryPageProps) => {
+    console.log('item', item);
+    setShowDetailModal(true);
+  };
+
   return (
-    <DiaryListLayout>
-      <section className="flex justify-start gap-4 bg-gr-white">
-        <Filter
-          propObj={{
-            key: '1',
-            image: 'bg-gr-400',
-            share: true,
-            label: '전체보기'
-          }}
-        />
-        <Filter
-          propObj={{
-            key: '1',
-            image:
-              'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-            share: true,
-            label: '식빵이'
-          }}
-        />
-        <Filter
-          propObj={{
-            key: '2',
-            image:
-              'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-            share: false,
-            label: '꼬기'
-          }}
-        />
-      </section>
-      <section className="p-4">
-        {mockup.map(item => (
-          <DiaryCard
-            key={item.pk}
-            images={item.images}
-            labels={item.labels}
-            content={item.content}
-            profiles={item.profiles}
+    <>
+      <DiaryListLayout>
+        <section className="flex justify-start bg-gr-white">
+          <Filter
+            propObj={{
+              key: '1',
+              image: 'bg-gr-400',
+              share: true,
+              label: '전체보기'
+            }}
           />
-        ))}
-      </section>
-      {/* <section>
+          <Filter
+            propObj={{
+              key: '1',
+              image:
+                'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
+              share: true,
+              label: '식빵이'
+            }}
+          />
+          <Filter
+            propObj={{
+              key: '2',
+              image:
+                'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
+              share: false,
+              label: '꼬기'
+            }}
+          />
+        </section>
+        <section className="p-4">
+          {mockup.map(item => (
+            <DiaryCard
+              key={item.pk}
+              images={item.images}
+              labels={item.labels}
+              content={item.content}
+              profiles={item.profiles}
+              onClick={() => openDetailModal(item)}
+            />
+          ))}
+        </section>
+        {/* <section>
         <ImageUploader />
       </section> */}
-    </DiaryListLayout>
+      </DiaryListLayout>
+      {showDetailModal && (
+        <section>
+          <DiaryDetailModal
+            images={mockup[0].images}
+            labels={mockup[0].labels}
+            content={mockup[0].content}
+            profiles={mockup[0].profiles}
+            onClose={() => setShowDetailModal(false)}
+          />
+        </section>
+      )}
+    </>
   );
 };
 
-export default page;
+export default Page;

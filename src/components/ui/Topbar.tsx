@@ -3,9 +3,10 @@ import Image from 'next/image';
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
   title?: string;
+  onClose?: () => void;
 }
 
-const Topbar = ({ type, title }: BaseProps) => {
+const Topbar = ({ type, title, onClose }: BaseProps) => {
   const CONTENT_LIST = [
     {
       type: 'home',
@@ -68,9 +69,9 @@ const Topbar = ({ type, title }: BaseProps) => {
       type: 'modal',
       content: {
         left: (
-          <div className="flex px-[10px] py-1">
+          <div className="flex px-[10px] py-1" onClick={onClose}>
             <Image
-              src="/next.svg"
+              src="/images/icons/back.svg"
               alt="calendar"
               width={24}
               height={24}
