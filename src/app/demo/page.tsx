@@ -358,12 +358,7 @@ const Page = () => {
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 Calendar</h1>
-        <Calendar
-          mode="single"
-          selected={date}
-          onSelect={setDate}
-          className="rounded-md border"
-        />
+        <Calendar mode="single" selected={date} onSelect={setDate} />
       </section>
     </div>
   );
