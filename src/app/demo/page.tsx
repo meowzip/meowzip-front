@@ -228,7 +228,7 @@ const Page = () => {
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 FloatingActionButton</h1>
-        <FloatingActionButton image="/next.svg" />
+        <FloatingActionButton image="/next.svg" onClick={() => {}} />
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🦦 Toast</h1>
