@@ -41,21 +41,21 @@ const DiaryDetailModal = ({
         <h3 className="py-3 text-heading-5 text-gr-900">
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
-        {profiles.map(item => (
-          <article key={item.key} className="flex items-center gap-4 py-2">
+        {profiles.map(cat => (
+          <article key={cat.key} className="flex items-center gap-4 py-2">
             <img
-              src={item.src}
-              height={48}
-              width={48}
+              src={cat.src}
               alt="cat-image"
-              className="rounded-full"
+              className="h-12 w-12 rounded-full"
             />
             <div className="flex items-center gap-2">
-              <h4 className="text-body-3 text-gr-900">{item.name}</h4>
+              <h4 className="text-body-3 text-gr-900">{cat.name}</h4>
               <img
-                src={`/images/icons/gender-${item.gender}.svg`}
+                src={`/images/icons/gender-${cat.gender}.svg`}
                 alt=""
-                className="rounded-full bg-[#FFF2F1]"
+                className={`rounded-full ${
+                  cat.gender === 'female' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                }`}
               />
             </div>
           </article>

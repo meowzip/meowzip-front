@@ -4,9 +4,10 @@ import { DiaryPageProps } from '@/app/diary/diaryType';
 import { useState } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
-// import ImageUploader from '@/components/diary/ImageUploader';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
 import DiaryDetailModal from '@/components/diary/DiaryDetailModal';
+import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
+import FloatingActionButton from '@/components/ui/FloatingActionButton';
 
 const mockup = [
   {
@@ -99,6 +100,7 @@ const mockup = [
 
 const Page = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
+  const [showWriteModal, setShowWriteModal] = useState(false);
 
   const openDetailModal = (item: DiaryPageProps) => {
     console.log('item', item);
@@ -148,20 +150,23 @@ const Page = () => {
             />
           ))}
         </section>
-        {/* <section>
-        <ImageUploader />
-      </section> */}
       </DiaryListLayout>
+      <FloatingActionButton
+        image="/next.svg"
+        onClick={() => setShowWriteModal(true)}
+      />
+
       {showDetailModal && (
-        <section>
-          <DiaryDetailModal
-            images={mockup[0].images}
-            labels={mockup[0].labels}
-            content={mockup[0].content}
-            profiles={mockup[0].profiles}
-            onClose={() => setShowDetailModal(false)}
-          />
-        </section>
+        <DiaryDetailModal
+          images={mockup[0].images}
+          labels={mockup[0].labels}
+          content={mockup[0].content}
+          profiles={mockup[0].profiles}
+          onClose={() => setShowDetailModal(false)}
+        />
+      )}
+      {showWriteModal && (
+        <DiaryWriteModal onClose={() => setShowWriteModal(false)} />
       )}
     </>
   );
