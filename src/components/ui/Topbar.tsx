@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import BackIcon from '../../../public/images/icons/back.svg';
 
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
@@ -70,13 +71,7 @@ const Topbar = ({ type, title, onClose }: BaseProps) => {
       content: {
         left: (
           <div className="flex px-[10px] py-1" onClick={onClose}>
-            <Image
-              src="/images/icons/back.svg"
-              alt="calendar"
-              width={24}
-              height={24}
-              className="h-6 w-6"
-            />
+            <BackIcon width={24} height={24} stroke="var(--gr-black)" />
           </div>
         ),
         center: <p>{title}</p>,
