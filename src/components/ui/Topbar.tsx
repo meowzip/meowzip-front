@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import BackIcon from '../../../public/images/icons/back.svg';
 
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
@@ -71,14 +72,13 @@ const Topbar = ({ type, title, onClose, onClick }: BaseProps) => {
       type: 'modal',
       content: {
         left: (
-          <div className="flex px-[10px] py-1">
-            <Image
-              onClick={onClose}
-              src="/images/icons/back.svg"
-              alt="calendar"
+          <div className="flex px-[10px] py-1" onClick={onClose}>
+            <BackIcon
               width={24}
               height={24}
-              className="h-6 w-6 cursor-pointer"
+              stroke="var(--gr-black)"
+              className="cursor-pointer"
+              onClick={onClick}
             />
           </div>
         ),
