@@ -19,6 +19,7 @@ import Badge from '@/components/ui/Badge';
 import { Checkbox } from '@/components/ui/Checkbox';
 import Tooltip from '@/components/ui/Tooltip';
 import Modal from '@/components/ui/Modal';
+import { Calendar } from '@/components/ui/Calendar';
 
 const Page = () => {
   const { toast } = useToast();
@@ -69,6 +70,7 @@ const Page = () => {
   const [isVisible, setIsVisible] = useState(false);
   const toggleBottomSheet = () => setIsVisible(!isVisible);
   const [openModal, setOpenModal] = useState(false);
+  const [date, setDate] = React.useState<Date | undefined>(new Date());
 
   return (
     <div className="p-4">
@@ -353,6 +355,10 @@ const Page = () => {
             onClose={() => setOpenModal(false)}
           />
         )}
+      </section>
+      <section className="border-b p-3">
+        <h1 className="pb-1">🐨 Calendar</h1>
+        <Calendar mode="single" selected={date} onSelect={setDate} />
       </section>
     </div>
   );

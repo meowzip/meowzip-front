@@ -5,9 +5,10 @@ interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
   title?: string;
   onClose?: () => void;
+  onClick?: () => void;
 }
 
-const Topbar = ({ type, title, onClose }: BaseProps) => {
+const Topbar = ({ type, title, onClose, onClick }: BaseProps) => {
   const CONTENT_LIST = [
     {
       type: 'home',
@@ -31,7 +32,8 @@ const Topbar = ({ type, title, onClose }: BaseProps) => {
               alt="calendar"
               width={24}
               height={24}
-              className="h-6 w-6"
+              className="h-6 w-6 cursor-pointer"
+              onClick={onClick}
             />
           </div>
         )
@@ -71,10 +73,16 @@ const Topbar = ({ type, title, onClose }: BaseProps) => {
       content: {
         left: (
           <div className="flex px-[10px] py-1" onClick={onClose}>
-            <BackIcon width={24} height={24} stroke="var(--gr-black)" />
+            <BackIcon
+              width={24}
+              height={24}
+              stroke="var(--gr-black)"
+              className="cursor-pointer"
+              onClick={onClick}
+            />
           </div>
         ),
-        center: <p>{title}</p>,
+        center: <p onClick={onClick}>{title}</p>,
         right: (
           <div className="px-[10px] py-1">
             <Image
