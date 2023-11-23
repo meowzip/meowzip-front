@@ -94,7 +94,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
         {isVisible && (
           <motion.div
             ref={bottomSheetRef}
-            initial={{ y: initialHeight }} // 여기에서 초기 y값을 접힌 상태 높이로 설정
+            // initial={{ y: initialHeight }} // 여기에서 초기 y값을 접힌 상태 높이로 설정
             animate={{
               y: initialHeight,
               transition: {
