@@ -6,7 +6,7 @@ interface FilterProps {
     id: string;
     image: string;
     share: boolean;
-    label?: string;
+    name?: string;
   };
 }
 
@@ -34,7 +34,7 @@ const Filter = ({ propObj }: FilterProps) => {
             </div>
           )}
         </button>
-        <div className="text-body-4">{propObj.label}</div>
+        <div className="text-body-4">{propObj.name}</div>
       </section>
     </>
   );

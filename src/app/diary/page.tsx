@@ -116,7 +116,7 @@ const Page = () => {
               id: '1',
               image: 'bg-gr-400',
               share: true,
-              label: '전체보기'
+              name: '전체보기'
             }}
           />
           <Filter
@@ -125,7 +125,7 @@ const Page = () => {
               image:
                 'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
               share: true,
-              label: '식빵이'
+              name: '식빵이'
             }}
           />
           <Filter
@@ -134,7 +134,7 @@ const Page = () => {
               image:
                 'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
               share: false,
-              label: '꼬기'
+              name: '꼬기'
             }}
           />
         </section>
