@@ -35,32 +35,32 @@ const Page = () => {
   const [profiles, setProfiles] = useState([
     {
       key: '1',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute '
     },
     {
       key: '2',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[20px]'
     },
     {
       key: '3',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[40px]'
     },
     {
       key: '4',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[60px]'
     },
     {
       key: '5',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[80px]'
     },
     {
       key: '6',
-      src: 'https://github.com/shadcn.png',
+      image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[100px]'
     }
   ]);
@@ -169,7 +169,7 @@ const Page = () => {
             items={[
               {
                 key: '1',
-                src: 'https://github.com/shadcn.png',
+                image: 'https://github.com/shadcn.png',
                 style: 'w-10 h-10'
               }
             ]}

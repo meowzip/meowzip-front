@@ -44,7 +44,7 @@ const DiaryDetailModal = ({
         {profiles.map(cat => (
           <article key={cat.key} className="flex items-center gap-4 py-2">
             <img
-              src={cat.src}
+              src={cat.image}
               alt="cat-image"
               className="h-12 w-12 rounded-full"
             />

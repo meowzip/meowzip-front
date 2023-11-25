@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 interface ProfileProps {
   items: {
     key: string;
-    src: string;
+    image: string;
     style: string;
   }[];
   lastLeft?: string;
@@ -20,7 +20,7 @@ const Profile = ({ items, lastLeft }: ProfileProps) => {
             key={item.key}
             className={`${item.style} flex items-center text-gr-white`}
           >
-            <AvatarImage src={item.src} />
+            <AvatarImage src={item.image} />
           </Avatar>
         ))}
         {fiveItems.length >= 5 && (

@@ -8,7 +8,7 @@ export interface DiaryPageProps {
   content: string;
   profiles: {
     key: string;
-    src: string;
+    image: string;
     style: string;
     name: string;
     gender: 'female' | 'male';

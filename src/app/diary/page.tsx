@@ -34,21 +34,21 @@ const mockup = [
     profiles: [
       {
         key: '1',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute border border-gr-white',
         name: '식빵이',
         gender: 'female' as const
       },
       {
         key: '2',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
         name: '콩이',
         gender: 'male' as const
       },
       {
         key: '3',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
         name: '백설이',
         gender: 'female' as const
@@ -75,21 +75,21 @@ const mockup = [
     profiles: [
       {
         key: '1',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute border border-gr-white',
         name: '킁킁이',
         gender: 'female' as const
       },
       {
         key: '2',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
         name: '동식이',
         gender: 'male' as const
       },
       {
         key: '3',
-        src: 'https://github.com/shadcn.png',
+        image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
         name: '치즈',
         gender: 'female' as const

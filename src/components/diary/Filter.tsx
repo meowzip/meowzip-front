@@ -19,7 +19,7 @@ const Filter = ({ propObj }: FilterProps) => {
             items={[
               {
                 key: propObj.key,
-                src: propObj.image,
+                image: propObj.image,
                 style: 'w-14 h-14 rounded-[20px] border border-gr-50'
               }
             ]}
