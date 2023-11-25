@@ -35,32 +35,32 @@ const Page = () => {
   });
   const [profiles, setProfiles] = useState([
     {
-      key: '1',
+      id: '1',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute '
     },
     {
-      key: '2',
+      id: '2',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[20px]'
     },
     {
-      key: '3',
+      id: '3',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[40px]'
     },
     {
-      key: '4',
+      id: '4',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[60px]'
     },
     {
-      key: '5',
+      id: '5',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[80px]'
     },
     {
-      key: '6',
+      id: '6',
       image: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[100px]'
     }
@@ -170,7 +170,7 @@ const Page = () => {
           <Profile
             items={[
               {
-                key: '1',
+                id: '1',
                 image: 'https://github.com/shadcn.png',
                 style: 'w-10 h-10'
               }

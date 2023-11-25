@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 
 interface ProfileProps {
   items: {
-    key: string;
+    id: string;
     image: string;
     style: string;
   }[];
@@ -17,7 +17,7 @@ const Profile = ({ items, lastLeft }: ProfileProps) => {
       <div className="flex items-center justify-between">
         {fiveItems.map(item => (
           <Avatar
-            key={item.key}
+            key={item.id}
             className={`${item.style} flex items-center text-gr-white`}
           >
             <AvatarImage src={item.image} />

@@ -3,7 +3,7 @@ import Badge from '@/components/ui/Badge';
 
 interface FilterProps {
   propObj: {
-    key: string;
+    id: string;
     image: string;
     share: boolean;
     label?: string;
@@ -18,7 +18,7 @@ const Filter = ({ propObj }: FilterProps) => {
           <Profile
             items={[
               {
-                key: propObj.key,
+                id: propObj.id,
                 image: propObj.image,
                 style: 'w-14 h-14 rounded-[20px] border border-gr-50'
               }

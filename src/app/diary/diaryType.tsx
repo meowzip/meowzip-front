@@ -7,7 +7,7 @@ export interface DiaryPageProps {
   }[];
   content: string;
   profiles: {
-    key: string;
+    id: string;
     image: string;
     style: string;
     name: string;

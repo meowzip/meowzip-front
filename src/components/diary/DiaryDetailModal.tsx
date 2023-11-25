@@ -42,7 +42,7 @@ const DiaryDetailModal = ({
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
         {profiles.map(cat => (
-          <article key={cat.key} className="flex items-center gap-4 py-2">
+          <article key={cat.id} className="flex items-center gap-4 py-2">
             <img
               src={cat.image}
               alt="cat-image"

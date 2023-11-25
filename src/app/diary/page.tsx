@@ -33,21 +33,21 @@ const mockup = [
       '오늘도 먼지는 귀엽다냥 🧡 내용이 길어도 세 줄까지만 보여짐 냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥',
     profiles: [
       {
-        key: '1',
+        id: '1',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute border border-gr-white',
         name: '식빵이',
         gender: 'female' as const
       },
       {
-        key: '2',
+        id: '2',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
         name: '콩이',
         gender: 'male' as const
       },
       {
-        key: '3',
+        id: '3',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
         name: '백설이',
@@ -74,21 +74,21 @@ const mockup = [
       '오늘도 먼지는 귀엽다냥 🧡 내용이 길어도 세 줄까지만 보여짐 냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥',
     profiles: [
       {
-        key: '1',
+        id: '1',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute border border-gr-white',
         name: '킁킁이',
         gender: 'female' as const
       },
       {
-        key: '2',
+        id: '2',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
         name: '동식이',
         gender: 'male' as const
       },
       {
-        key: '3',
+        id: '3',
         image: 'https://github.com/shadcn.png',
         style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
         name: '치즈',
@@ -113,7 +113,7 @@ const Page = () => {
         <section className="flex justify-start bg-gr-white">
           <Filter
             propObj={{
-              key: '1',
+              id: '1',
               image: 'bg-gr-400',
               share: true,
               label: '전체보기'
@@ -121,7 +121,7 @@ const Page = () => {
           />
           <Filter
             propObj={{
-              key: '1',
+              id: '1',
               image:
                 'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
               share: true,
@@ -130,7 +130,7 @@ const Page = () => {
           />
           <Filter
             propObj={{
-              key: '2',
+              id: '2',
               image:
                 'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
               share: false,
