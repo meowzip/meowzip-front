@@ -31,7 +31,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
 
   useEffect(() => {
     setWindowHeight(window.innerHeight);
-    const height = window.innerHeight * 0.5; // 사용자가 BottomSheet를 절반으로 열었을 때의 높이 설정
+    const height = window.innerHeight * 0.2; // 사용자가 BottomSheet를 절반으로 열었을 때의 높이 설정
     setInitialHeight(height);
     y.set(height);
   }, [y]);
@@ -87,16 +87,29 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
           onClick={handleClickOutside}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit="hidden"
         />
       )}
       <AnimatePresence>
         {isVisible && (
           <motion.div
             ref={bottomSheetRef}
-            initial={{ y: initialHeight }} // 여기에서 초기 y값을 접힌 상태 높이로 설정
-            animate={{ y: initialHeight }} // 여기에서도 animate를 접힌 상태 높이로 설정
-            exit="hidden"
+            // initial={{ y: initialHeight }} // 여기에서 초기 y값을 접힌 상태 높이로 설정
+            animate={{
+              y: initialHeight,
+              transition: {
+                type: 'tween', // Changed to tween for smoother animation
+                ease: 'easeInOut', // You can experiment with different easing functions
+                duration: 0.3 // Duration of the animation
+              }
+            }}
+            // exit="hidden"
+            exit={{
+              y: '100%',
+              transition: {
+                type: 'tween'
+              }
+            }}
             variants={bottomSheetVariants}
             drag="y"
             dragConstraints={{ top: 0 }}
@@ -105,10 +118,12 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             className="fixed inset-x-0 bottom-0 z-50 overflow-hidden rounded-tl-3xl rounded-tr-3xl bg-white shadow-lg"
             {...props}
           >
-            <div className="topBar relative p-4 text-center">
-              <div className="drag-bar mx-auto my-2 h-1 w-10 rounded-full bg-gray-300"></div>
-              {topBar}
-            </div>
+            {topBar && (
+              <div className="topBar relative p-4 text-center">
+                <div className="drag-bar mx-auto my-2 h-1 w-10 rounded-full bg-gray-300"></div>
+                {topBar}
+              </div>
+            )}
             <div className="content overflow-auto p-6">{children}</div>
           </motion.div>
         )}
