@@ -124,7 +124,9 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
                 {topBar}
               </div>
             )}
-            <div className="content overflow-auto p-6">{children}</div>
+            <div className="content overflow-auto overflow-x-hidden p-8 ">
+              {children}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
