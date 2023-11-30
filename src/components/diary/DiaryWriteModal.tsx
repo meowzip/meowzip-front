@@ -6,13 +6,17 @@ import React, { useState } from 'react';
 import BackIcon from '../../../public/images/icons/back.svg';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import TimeInput from '@/components/diary/TimeInput';
 interface DiaryWriteModalProps {
   onClose: () => void;
 }
 
 const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
   const [textareaContent, setTextareaContent] = useState('');
+  const [currentTime, setCurrentTime] = useState({
+    hour: new Date().getHours().toString().padStart(2, '0'),
+    minute: new Date().getMinutes().toString().padStart(2, '0')
+  });
   const [chipObjList, setChipObjList] = useState([
     { key: 'food', content: '🐟 사료', checked: false },
     { key: 'water', content: '💧 물', checked: false }
@@ -26,6 +30,13 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
     { key: '4', src: 'image', style: '', name: '감자', gender: 'male' }
   ]);
 
+  const displayTime = () => {
+    const { hour, minute } = currentTime;
+    const formattedHour = hour.padStart(2, '0');
+    const formattedMinute = minute.padStart(2, '0');
+    return `${formattedHour}:${formattedMinute}`;
+  };
+
   return (
     <div className="fixed left-0 top-0 z-10 h-screen w-full overflow-y-auto bg-gr-white">
       <Topbar type="modal" title="일지쓰기" onClose={onClose} />
@@ -38,7 +49,7 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             setSelectTimeBottomSheet(!selectTimeBottomSheet);
           }}
         >
-          09:00
+          {displayTime()}
         </Button>
       </section>
       <section className="flex flex-col gap-4">
@@ -94,45 +105,14 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
               setSelectTimeBottomSheet(!selectTimeBottomSheet)
             }
           >
-            <div>
-              <div className="padding-[0 6px] flex h-[48px] items-center justify-between self-stretch">
-                돌봄 시간을 입력하세요.
-              </div>
-              <div className="p-[16px 16px 40px 16px] flex-col items-center justify-center gap-4 self-stretch">
-                <Tabs defaultValue="account">
-                  <TabsList>
-                    <TabsTrigger value="account">오전</TabsTrigger>
-                    <TabsTrigger value="password">오후</TabsTrigger>
-                  </TabsList>
-                  {/* <TabsContent value="account">
-                    Make changes to your account here.
-                  </TabsContent>
-                  <TabsContent value="password">
-                    Change your password here.
-                  </TabsContent> */}
-                  <div className="flex">
-                    <Button
-                      variant="secondary"
-                      size="lg"
-                      onClick={() => {
-                        setSelectTimeBottomSheet(!selectTimeBottomSheet);
-                      }}
-                    >
-                      취소
-                    </Button>
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={() => {
-                        setSelectTimeBottomSheet(!selectTimeBottomSheet);
-                      }}
-                    >
-                      입력하기
-                    </Button>
-                  </div>
-                </Tabs>
-              </div>
+            <div className="padding-[0 6px] flex h-[48px] items-center justify-center">
+              돌봄 시간을 입력하세요.
             </div>
+            <TimeInput
+              time={currentTime}
+              setTime={setCurrentTime}
+              setSelectTimeBottomSheet={setSelectTimeBottomSheet}
+            />
           </BottomSheet>
         </article>
         <article>
