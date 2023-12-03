@@ -6,10 +6,11 @@ import { Button } from '../../components/ui/Button';
 import { debounce } from 'lodash';
 
 const Page = () => {
-  const [password, setPassword] = useState('');
-  const [passwordCheck, setPasswordCheck] = useState('');
-  const [pwdError, setPwdError] = useState('');
-  const [pwdCheckError, setPwdCheckError] = useState('');
+  const [password, setPassword] = useState({ value: '', error: false });
+  const [passwordCheck, setPasswordCheck] = useState({
+    value: '',
+    error: false
+  });
 
   /**
    * @description 비밀번호 유효성 검사
@@ -27,35 +28,26 @@ const Page = () => {
    */
   const debouncePwd = useCallback(
     debounce(pwd => {
-      const isValid = validatePwd(pwd);
-      setPwdError(!isValid ? '8자 이상 / 영문, 숫자, 특수문자 가능' : '');
+      setPassword(prev => ({ ...prev, error: !validatePwd(pwd) }));
     }, 500),
     []
   );
 
-  const handlePwdChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPassword(e.target.value);
+  const handlePwdChange = (e: { target: { value: string } }) => {
+    setPassword(prev => ({ ...prev, value: e.target.value }));
     debouncePwd(e.target.value);
   };
 
-  /**
-   * @description debounce pwdCheck input
-   */
-  const debouncePwdCheck = useCallback(
-    debounce((pwdCheck, pwd) => {
-      const isValid = pwdCheck === pwd ? true : false;
-      setPwdCheckError(!isValid ? '비밀번호를 확인해주세요' : '');
-    }, 250),
-    []
-  );
+  const handlePwdCheckChange = (e: { target: { value: string } }) => {
+    setPasswordCheck(prev => ({ ...prev, value: e.target.value }));
+    setPasswordCheck(prev => ({
+      ...prev,
+      error: e.target.value !== password.value ? true : false
+    }));
+  };
 
-  const handlePwdCheckChange = (e: {
-    target: { value: React.SetStateAction<string> };
-  }) => {
-    setPasswordCheck(e.target.value);
-    debouncePwdCheck(e.target.value, password);
+  const openTermsBottomSheet = () => {
+    console.log('open terms bottom sheet');
   };
 
   return (
@@ -66,17 +58,19 @@ const Page = () => {
       </article>
       <article className="flex flex-col gap-2">
         <Input
-          helperText={pwdError}
-          value={password}
+          helperText={
+            password.error ? '8자 이상 / 영문, 숫자, 특수문자 가능' : ''
+          }
+          value={password.value}
           placeholder="8자 이상 / 영문, 숫자, 특수문자 가능"
-          error={pwdError ? true : false}
+          error={password.error ? true : false}
           onChange={handlePwdChange}
         />
         <Input
-          helperText={pwdCheckError}
-          value={passwordCheck}
+          helperText={passwordCheck.error ? '비밀번호를 확인해주세요' : ''}
+          value={passwordCheck.value}
           placeholder="비밀번호 확인"
-          error={pwdCheckError ? true : false}
+          error={passwordCheck.error ? true : false}
           onChange={handlePwdCheckChange}
         />
       </article>
@@ -85,7 +79,15 @@ const Page = () => {
           variant="primary"
           size="lg"
           className="w-full"
-          onClick={() => console.log('sign up')}
+          disabled={
+            !password.value ||
+            !passwordCheck.value ||
+            password.error ||
+            passwordCheck.error
+              ? true
+              : false
+          }
+          onClick={openTermsBottomSheet}
         >
           가입하기
         </Button>
