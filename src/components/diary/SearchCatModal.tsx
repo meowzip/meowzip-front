@@ -58,19 +58,15 @@ export default function SearchCatModal({
           <ul className="flex flex-col gap-2 px-2 py-2">
             {filteredCatList.map(cat => (
               <li key={cat.key} className="flex items-center gap-4 py-2">
-                <Image
-                  width={50}
-                  height={50}
+                <img
                   src="/vercel.svg"
                   // src={cat.src }
                   alt="cat-image"
-                  className="rounded-full border"
+                  className="h-12 w-12 rounded-full border"
                 />
                 <div className="flex gap-2">
                   <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
-                  <Image
-                    width={16}
-                    height={10}
+                  <img
                     src={`/images/icons/gender-${cat.gender}.svg`}
                     alt="tag cat"
                     className={`rounded-full ${
