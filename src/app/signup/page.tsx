@@ -17,7 +17,8 @@ const Page = () => {
    */
   const validatePwd = (pwd: string): boolean => {
     const pwdRegex =
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}":;'?<>.,]).{9,}$/;
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}":;'?<>.,~`₩\-=/\[\]\\|]).{9,}$/;
+
     return pwdRegex.test(pwd);
   };
 
@@ -46,7 +47,7 @@ const Page = () => {
     debounce((pwdCheck, pwd) => {
       const isValid = pwdCheck === pwd ? true : false;
       setPwdCheckError(!isValid ? '비밀번호를 확인해주세요' : '');
-    }, 500),
+    }, 250),
     []
   );
 
