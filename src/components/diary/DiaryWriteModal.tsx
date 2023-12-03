@@ -7,6 +7,8 @@ import BackIcon from '../../../public/images/icons/back.svg';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
 import TimeInput from '@/components/diary/TimeInput';
+import SearchCatModal from './SearchCatModal';
+import Image from 'next/image';
 interface DiaryWriteModalProps {
   onClose: () => void;
 }
@@ -118,29 +120,34 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
         <article>
           <div className="flex items-center justify-between p-4">
             <h5 className="text-heading-5 text-gr-900">
-              고양이 태그<span className="pl-1 text-pr-500 ">6</span>
+              고양이 태그
+              <span className="pl-1 text-pr-500 ">{tagCatList.length}</span>
             </h5>
             <BackIcon
               width={16}
               height={16}
               stroke="var(--gr-black)"
               className="rotate-180"
-              onClick={() => setSearchCatModal(false)}
+              onClick={() => setSearchCatModal(true)}
             />
           </div>
           <ul className="px-4 py-1 pb-20">
             {tagCatList.map(cat => {
               return (
                 <li key={cat.key} className="flex items-center gap-4 py-2">
-                  <img
+                  <Image
                     src="/vercel.svg"
+                    width={50}
+                    height={50}
                     // src={cat.src }
                     alt="cat-image"
-                    className="h-12 w-12 rounded-full border"
+                    className="rounded-full border"
                   />
                   <div className="flex gap-2">
                     <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
-                    <img
+                    <Image
+                      width={16}
+                      height={10}
                       src={`/images/icons/gender-${cat.gender}.svg`}
                       alt="tag cat"
                       className={`rounded-full ${
@@ -155,6 +162,12 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             })}
           </ul>
         </article>
+        {searchCatModal && (
+          <SearchCatModal
+            setSearchCatModal={setSearchCatModal}
+            searchCatModal={searchCatModal}
+          />
+        )}
       </section>
     </div>
   );
