@@ -1,14 +1,16 @@
 import Image from 'next/image';
 import BackIcon from '../../../public/images/icons/back.svg';
+import { Input } from '@/components/ui/Input';
 
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
   title?: string;
   onClose?: () => void;
   onClick?: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Topbar = ({ type, title, onClose, onClick }: BaseProps) => {
+const Topbar = ({ type, title, onClose, onClick, onChange }: BaseProps) => {
   const CONTENT_LIST = [
     {
       type: 'home',
@@ -101,27 +103,42 @@ const Topbar = ({ type, title, onClose, onClick }: BaseProps) => {
       content: {
         left: (
           <div className="px-[10px] py-1">
-            <Image
-              src="/next.svg"
-              alt="calendar"
-              width={20}
-              height={20}
-              className="h-5 w-5"
+            <BackIcon
+              width={24}
+              height={24}
+              stroke="var(--gr-black)"
+              className="cursor-pointer"
+              onClick={onClose}
             />
           </div>
         ),
-        center: <p>search input</p>,
-        right: (
-          <div className="px-[10px] py-1">
-            <Image
-              src="/images/icons/search.svg"
-              alt="calendar"
-              width={24}
-              height={24}
-              className="h-6 w-6"
-            />
-          </div>
+        center: (
+          <Input
+            variant="search"
+            placeholder="고양이 검색..."
+            onChange={onChange}
+            // iconEnd={
+            //   <Image
+            //     src="/images/icons/close-btn.svg"
+            //     alt="close-btn"
+            //     width={24}
+            //     height={24}
+            //     className="h-6 w-6"
+            //   />
+            // }
+          />
         )
+        // right: (
+        //   <div className="px-[10px] py-1">
+        //     <Image
+        //       src="/images/icons/close-btn.svg"
+        //       alt="close-btn"
+        //       width={24}
+        //       height={24}
+        //       className="h-6 w-6"
+        //     />
+        //   </div>
+        // )
       }
     },
     {
@@ -137,7 +154,11 @@ const Topbar = ({ type, title, onClose, onClick }: BaseProps) => {
   const currentItem = CONTENT_LIST.find(item => item.type === type);
 
   return (
-    <div className="flex h-12 w-full items-center justify-between bg-gr-white px-[6px]">
+    <div
+      className={`flex h-12 w-full items-center bg-gr-white px-[6px] ${
+        type == 'search' ? 'justify-normal border-b-2' : 'justify-between'
+      }`}
+    >
       <section>{currentItem?.content.left}</section>
       <section>{currentItem?.content.center}</section>
       <section>{currentItem?.content.right}</section>

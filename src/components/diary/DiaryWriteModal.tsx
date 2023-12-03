@@ -7,6 +7,8 @@ import BackIcon from '../../../public/images/icons/back.svg';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
 import TimeInput from '@/components/diary/TimeInput';
+import SearchCatModal from './SearchCatModal';
+import Image from 'next/image';
 interface DiaryWriteModalProps {
   onClose: () => void;
 }
@@ -118,14 +120,15 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
         <article>
           <div className="flex items-center justify-between p-4">
             <h5 className="text-heading-5 text-gr-900">
-              고양이 태그<span className="pl-1 text-pr-500 ">6</span>
+              고양이 태그
+              <span className="pl-1 text-pr-500 ">{tagCatList.length}</span>
             </h5>
             <BackIcon
               width={16}
               height={16}
               stroke="var(--gr-black)"
               className="rotate-180"
-              onClick={() => setSearchCatModal(false)}
+              onClick={() => setSearchCatModal(true)}
             />
           </div>
           <ul className="px-4 py-1 pb-20">
@@ -155,6 +158,12 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             })}
           </ul>
         </article>
+        {searchCatModal && (
+          <SearchCatModal
+            setSearchCatModal={setSearchCatModal}
+            searchCatModal={searchCatModal}
+          />
+        )}
       </section>
     </div>
   );

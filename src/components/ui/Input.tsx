@@ -4,7 +4,7 @@ import HelperText from './HelperText';
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
-  variant?: 'default' | 'outlined' | 'filled';
+  variant?: 'default' | 'outlined' | 'filled' | 'search';
   inputSize?: 'small' | 'medium' | 'large';
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
@@ -19,6 +19,8 @@ export interface InputProps
   prefix?: string | React.ReactNode;
   suffix?: string | React.ReactNode;
   autocomplete?: string;
+  placeholder?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -40,6 +42,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       prefix,
       suffix,
       autocomplete,
+      placeholder,
       type = 'text',
       ...props
     },
@@ -47,10 +50,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const sizeClass = inputSize ? `input-${inputSize}` : '';
     const inputClassName = cn(
-      'flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 focus:border-2 focus:border-pr-500',
+      'flex h-10 w-full rounded-md px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 focus:border-2 focus:border-pr-500',
       {
         'border-input bg-background': variant !== 'outlined',
-        'border-2 focus:border-sm-error-500': error
+        'focus:border-sm-error-500': error,
+        'border-none': variant === 'search'
       },
       sizeClass,
       className
@@ -78,6 +82,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           className={inputClassName}
           ref={ref}
+          placeholder={placeholder}
           onChange={handleChange}
           autoComplete={autocomplete}
           {...props}
