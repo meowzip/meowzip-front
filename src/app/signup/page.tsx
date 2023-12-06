@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { debounce } from 'lodash';
@@ -12,7 +12,7 @@ const Page = () => {
     value: '',
     error: false
   });
-  const [openAgreeBottom, setOpenAgreeBottom] = useState(true);
+  const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
 
   /**
    * @description 비밀번호 유효성 검사
