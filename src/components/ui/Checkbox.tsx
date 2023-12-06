@@ -25,6 +25,7 @@ const Checkbox = React.forwardRef<
           : 'bg-gr-white',
         className
       )}
+      checked={isChecked}
       {...props}
       onClick={onClick}
     >

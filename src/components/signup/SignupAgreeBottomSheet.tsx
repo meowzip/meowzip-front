@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import BottomSheet from '../ui/BottomSheet';
+import { useEffect, useState } from 'react';
 import { Checkbox } from '../ui/Checkbox';
 import { Button } from '../ui/Button';
+import BottomSheet from '../ui/BottomSheet';
 
 interface SignupAgreeBottomSheetProps {
   open: boolean;
@@ -23,22 +23,17 @@ const SignupAgreeBottomSheet = ({
     console.log('openPrivacy');
   };
 
+  // 개별 동의 변경시 실행
   useEffect(() => {
-    if (agreeAll) {
-      setAgreeTerms(true);
-      setAgreePrivacy(true);
-    } else {
-      setAgreeTerms(false);
-      setAgreePrivacy(false);
-    }
-  }, [agreeAll]);
-  useEffect(() => {
-    if (agreeTerms && agreePrivacy) {
-      setAgreeAll(true);
-    } else {
-      setAgreeAll(false);
-    }
+    setAgreeAll(agreeTerms && agreePrivacy);
   }, [agreeTerms, agreePrivacy]);
+
+  // 전체 동의 변경시 실행
+  const handleAgreeAllChange = () => {
+    setAgreeAll(!agreeAll);
+    setAgreeTerms(!agreeAll);
+    setAgreePrivacy(!agreeAll);
+  };
 
   return (
     <BottomSheet isVisible={open} setIsVisible={setIsVisible}>
@@ -47,7 +42,7 @@ const SignupAgreeBottomSheet = ({
           id="agreeAll"
           kind="hasBg"
           isChecked={agreeAll}
-          onClick={() => setAgreeAll(!agreeAll)}
+          onClick={handleAgreeAllChange}
         />
         <label
           htmlFor="agreeAll"
