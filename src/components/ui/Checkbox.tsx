@@ -1,5 +1,3 @@
-// 'use client';
-
 import * as React from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import CheckIcon from '../../../public/images/icons/check.svg';
@@ -9,18 +7,14 @@ import { cn } from '@/lib/utils';
 export interface CheckboxProps {
   id: string;
   kind: 'hasBg' | 'noBg';
+  isChecked: boolean;
+  onClick: () => void;
 }
 
 const Checkbox = React.forwardRef<
   React.ElementRef<typeof CheckboxPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & CheckboxProps
->(({ className, kind, ...props }, ref) => {
-  const [isChecked, setIsChecked] = React.useState(false);
-
-  const handleClick = () => {
-    setIsChecked(!isChecked);
-  };
-
+>(({ className, kind, isChecked, onClick, ...props }, ref) => {
   return (
     <CheckboxPrimitive.Root
       ref={ref}
@@ -32,7 +26,7 @@ const Checkbox = React.forwardRef<
         className
       )}
       {...props}
-      onClick={handleClick}
+      onClick={onClick}
     >
       <div className="flex items-center justify-center text-current">
         <CheckIcon

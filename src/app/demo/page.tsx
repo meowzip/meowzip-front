@@ -282,7 +282,12 @@ const Page = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐣 Checkbox</h1>
         <div className="flex items-center space-x-2">
-          <Checkbox id="hasBg" kind="hasBg" />
+          <Checkbox
+            id="hasBg"
+            kind="hasBg"
+            isChecked={false}
+            onClick={() => {}}
+          />
           <label
             htmlFor="noBg"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -291,7 +296,12 @@ const Page = () => {
           </label>
         </div>
         <div className="flex items-center space-x-2">
-          <Checkbox id="noBg" kind="noBg" />
+          <Checkbox
+            id="noBg"
+            kind="noBg"
+            isChecked={false}
+            onClick={() => {}}
+          />
           <label
             htmlFor="noBg"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
