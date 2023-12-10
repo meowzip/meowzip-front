@@ -18,18 +18,18 @@ function Calendar({
       onMonthChange={onMonthChange}
       selected={undefined}
       footer={null}
-      className={cn('p-3', className)}
+      className={cn(className)}
       classNames={{
         caption: 'hidden',
         months:
           'flex justify-center items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
-        month: 'space-y-4',
+        month: 'space-y-4  w-full',
         table: 'w-full border-collapse space-y-1',
-        head_row: 'flex',
+        head_row: 'flex justify-around',
         head_cell:
           'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
-        row: 'flex w-full mt-2',
-        cell: 'h-10 w-9 text-center rounded-full text-sm p-0 relative [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:h-[20px] [&:has([aria-selected])]:bg-pr-500 first:[&:has([aria-selected])]:rounded-full focus-within:relative focus-within:z-20',
+        row: 'flex w-full justify-around mt-3',
+        cell: 'w-[26px] h-10 w-9 text-center rounded-full text-sm p-0 relative [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:h-[20px] [&:has([aria-selected])]:bg-pr-500 first:[&:has([aria-selected])]:rounded-full focus-within:relative focus-within:z-20',
         day: cn(
           'w-[26px] pt-[0] bg-[url("/images/mockup/cat-face.svg")] bg-no-repeat max-w-[30px] rounded-none bg-bottom pb-[1.5rem] text-[12px]'
         ),

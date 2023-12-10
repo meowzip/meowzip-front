@@ -1,6 +1,5 @@
 import { Calendar } from '../ui/Calendar';
 import Modal from '@/components/ui/Modal';
-import Topbar from '@/components/ui/Topbar';
 import BottomSheet from '@/components/ui/BottomSheet';
 import { useState } from 'react';
 import { useToast } from '../ui/hooks/useToast';
@@ -8,17 +7,25 @@ import { useToast } from '../ui/hooks/useToast';
 interface CalendarModalProps {
   isOpen: boolean;
   onClose: () => void;
+  setBottomSheetVisible: (bottomSheetVisible: boolean) => void;
+  bottomSheetVisible: boolean;
+  selectedMonth: Date;
+  setSelectedMonth: (date: Date) => void;
 }
 
-const CalendarModal = ({ isOpen, onClose }: CalendarModalProps) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
+const CalendarModal = ({
+  isOpen,
+  onClose,
+  setBottomSheetVisible,
+  bottomSheetVisible,
+  selectedMonth,
+  setSelectedMonth
+}: CalendarModalProps) => {
   const initialDays: Date[] = [];
   const [days, setDays] = useState<Date[] | undefined>(initialDays);
   const { toast } = useToast();
 
   const months = Array.from({ length: 12 }, (_, i) => i + 1); // 1월부터 12월까지의 배열 생성
-  const toggleBottomSheet = () => setIsVisible(!isVisible);
 
   const goToPreviousYear = () => {
     setSelectedMonth(
@@ -42,19 +49,9 @@ const CalendarModal = ({ isOpen, onClose }: CalendarModalProps) => {
       });
     } else {
       setSelectedMonth(newDate);
-      setIsVisible(false);
+      setBottomSheetVisible(false);
     }
   };
-
-  const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long'
-    };
-    return date.toLocaleDateString('ko-KR', options);
-  };
-
-  const formattedMonth = formatDate(selectedMonth);
 
   const handleSelectDate = (selectedDates: Date[] | undefined) => {
     const currentDate = new Date();
@@ -74,19 +71,16 @@ const CalendarModal = ({ isOpen, onClose }: CalendarModalProps) => {
       <Modal
         customContent={
           <div>
-            <Topbar
-              type="modal"
-              title={formattedMonth}
-              onClick={toggleBottomSheet}
-              onClose={onClose}
-            />
             <Calendar
               selected={days}
               onSelect={handleSelectDate}
               mode="multiple"
               month={selectedMonth}
             />
-            <BottomSheet isVisible={isVisible} setIsVisible={setIsVisible}>
+            <BottomSheet
+              isVisible={bottomSheetVisible}
+              setIsVisible={setBottomSheetVisible}
+            >
               <div className="pb-5">
                 <button onClick={goToPreviousYear}>{'<'}</button>
                 <span className="text-md mx-4 font-semibold">
