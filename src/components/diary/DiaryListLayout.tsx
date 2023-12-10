@@ -7,14 +7,39 @@ interface DiaryListLayoutProps {
 
 const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
   const toggleCalendar = () => setCalendarOpen(!isCalendarOpen);
+  const toggleBottomSheet = () => setBottomSheetVisible(!bottomSheetVisible);
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+
+  const formatDate = (date: Date): string => {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long'
+    };
+    return date.toLocaleDateString('ko-KR', options);
+  };
+  const formattedMonth = formatDate(selectedMonth);
 
   return (
     <>
-      <Topbar type="home" title="title 1" onClick={toggleCalendar} />
+      {isCalendarOpen ? (
+        <Topbar
+          type="modal"
+          title={formattedMonth}
+          onClick={toggleBottomSheet}
+          onClose={() => setCalendarOpen(false)}
+        />
+      ) : (
+        <Topbar type="home" title="title 1" onClick={toggleCalendar} />
+      )}
       <CalendarModal
         isOpen={isCalendarOpen}
         onClose={() => setCalendarOpen(false)}
+        setBottomSheetVisible={setBottomSheetVisible}
+        bottomSheetVisible={bottomSheetVisible}
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
       />
       <main className="bg-gr-100">{children}</main>
     </>

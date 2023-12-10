@@ -155,7 +155,8 @@ const Topbar = ({ type, title, onClose, onClick, onChange }: BaseProps) => {
 
   return (
     <div
-      className={`flex h-12 w-full items-center bg-gr-white px-[6px] ${
+      className={`relative z-[100] flex h-12 w-full items-center
+      bg-gr-white px-[6px] ${
         type == 'search' ? 'justify-normal border-b-2' : 'justify-between'
       }`}
     >
