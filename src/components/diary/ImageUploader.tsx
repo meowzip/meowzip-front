@@ -1,11 +1,23 @@
 'use client';
 
+import { ChangeEvent, ReactNode, useRef, useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
-import { ChangeEvent, useRef, useState } from 'react';
-import { Button } from '../ui/Button';
 import useCropper from '@/components/ui/hooks/useCropper';
 
-const ImageUploader = () => {
+interface ImageUploaderProps {
+  width?: string;
+  height?: string;
+  radius?: string;
+  preview?: ReactNode;
+}
+
+const ImageUploader = ({
+  width,
+  height,
+  radius,
+  preview
+}: ImageUploaderProps) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +46,11 @@ const ImageUploader = () => {
   );
 
   return (
-    <div className="relative flex h-[90px] w-[90px] flex-col items-center justify-center gap-1 rounded-16 bg-gr-50">
+    <div
+      className={`${width || 'w-[90px]'} ${height || 'h-[90px]'} ${
+        radius || 'rounded-16'
+      } relative flex  flex-col items-center justify-center bg-gr-50 `}
+    >
       {/* 파일 업로드 */}
       {!imageSrc && (
         <input
@@ -47,21 +63,24 @@ const ImageUploader = () => {
       )}
       {/* 업로드 버튼 겸 이미지 프리뷰 */}
       <section
-        className="flex h-full w-full items-center justify-center rounded-16 bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300"
+        className={`flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300 ${
+          radius || 'rounded-16'
+        }`}
         style={{ backgroundImage: `url(${croppedImage})` }}
         onClick={() => fileInputRef.current?.click()}
       >
-        {!croppedImage && (
-          <div className="flex flex-col items-center justify-center gap-1">
-            <Image
-              src="/images/icons/camera.svg"
-              alt="icon"
-              width={24}
-              height={24}
-            />
-            <p className="text-btn-3 text-gr-300">사진 추가</p>
-          </div>
-        )}
+        {!croppedImage &&
+          (preview || (
+            <div className="flex flex-col items-center justify-center gap-1">
+              <Image
+                src="/images/icons/camera.svg"
+                alt="icon"
+                width={24}
+                height={24}
+              />
+              <p className="text-btn-3 text-gr-300">사진 추가</p>
+            </div>
+          ))}
       </section>
       {/* 삭제 버튼 */}
       {croppedImage && (
@@ -80,7 +99,7 @@ const ImageUploader = () => {
       {/* crop image */}
       <section className="w-full">
         {imageSrc && !croppedImage && (
-          <div className="fixed top-0 z-[1] ">
+          <div className="fixed left-0 top-0 z-[1] ">
             <div className="h-screen w-screen bg-gr-white">
               <Image
                 ref={imageElement}
