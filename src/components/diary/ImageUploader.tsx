@@ -99,7 +99,7 @@ const ImageUploader = ({
       {/* crop image */}
       <section className="w-full">
         {imageSrc && !croppedImage && (
-          <div className="fixed left-0 top-0 z-[1] ">
+          <div className="fixed left-0 top-0 z-[200] ">
             <div className="h-screen w-screen bg-gr-white">
               <Image
                 ref={imageElement}
