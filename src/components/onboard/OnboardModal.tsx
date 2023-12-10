@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import OnboardProfile from '@/components/onboard/OnboardProfile';
 import Topbar from '@/components/ui/Topbar';
+import Image from 'next/image';
 
 interface OnboardModalProps {
   onClose: () => void;
@@ -76,6 +77,19 @@ const OnboardModal = ({ onClose }: OnboardModalProps) => {
             placeholder="닉네입을 입력해주세요."
             error={nickname.error ? true : false}
             onChange={handleNickname}
+            iconEnd={
+              <div
+                onClick={() => setNickname(prev => ({ ...prev, value: '' }))}
+              >
+                <Image
+                  src="/images/icons/close-btn.svg"
+                  alt="close-btn"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6"
+                />
+              </div>
+            }
           />
         </section>
       </div>
