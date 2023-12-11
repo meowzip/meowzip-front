@@ -5,12 +5,22 @@ import { Input } from '@/components/ui/Input';
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
   title?: string;
+  hideLeft?: boolean;
+  hideRight?: boolean;
   onClose?: () => void;
   onClick?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const Topbar = ({ type, title, onClose, onClick, onChange }: BaseProps) => {
+const Topbar = ({
+  type,
+  title,
+  hideLeft,
+  hideRight,
+  onClose,
+  onClick,
+  onChange
+}: BaseProps) => {
   const CONTENT_LIST = [
     {
       type: 'home',
@@ -152,6 +162,7 @@ const Topbar = ({ type, title, onClose, onClick, onChange }: BaseProps) => {
   ];
 
   const currentItem = CONTENT_LIST.find(item => item.type === type);
+  const emptyElement = <div className="px-[10px] py-1"></div>;
 
   return (
     <div
@@ -160,9 +171,13 @@ const Topbar = ({ type, title, onClose, onClick, onChange }: BaseProps) => {
         type == 'search' ? 'justify-normal border-b-2' : 'justify-between'
       }`}
     >
-      <section>{currentItem?.content.left}</section>
+      {hideLeft ? emptyElement : <section>{currentItem?.content.left}</section>}
       <section>{currentItem?.content.center}</section>
-      <section>{currentItem?.content.right}</section>
+      {hideRight ? (
+        emptyElement
+      ) : (
+        <section>{currentItem?.content.right}</section>
+      )}
     </div>
   );
 };

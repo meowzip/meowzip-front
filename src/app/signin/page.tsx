@@ -4,9 +4,9 @@ import Image from 'next/image';
 
 export default function LoginPage() {
   return (
-    <div className="max-[640px] p-[40px 16px 0px 16px] flex-[1 0 0] flex-col items-center self-stretch">
-      <div className=" flex-col items-center justify-center gap-4">
-        <div className="px-10 text-center text-heading-2">
+    <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
+      <div className="w-full">
+        <div className="flex flex-col items-center px-10 text-center text-heading-2">
           <p>
             당신이 마주친
             <br /> 모든 길냥이들을 위해

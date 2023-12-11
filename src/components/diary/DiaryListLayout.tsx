@@ -29,6 +29,7 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
           title={formattedMonth}
           onClick={toggleBottomSheet}
           onClose={() => setCalendarOpen(false)}
+          hideRight
         />
       ) : (
         <Topbar type="home" title="title 1" onClick={toggleCalendar} />
