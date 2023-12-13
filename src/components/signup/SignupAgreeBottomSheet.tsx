@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Checkbox } from '../ui/Checkbox';
-import { Button } from '../ui/Button';
-import BottomSheet from '../ui/BottomSheet';
+import { Checkbox } from '@/components/ui/Checkbox';
+import { Button } from '@/components/ui/Button';
+import { useRouter } from 'next/navigation';
+import BottomSheet from '@/components/ui/BottomSheet';
 
 interface SignupAgreeBottomSheetProps {
   open: boolean;
@@ -12,6 +13,8 @@ const SignupAgreeBottomSheet = ({
   open,
   setIsVisible
 }: SignupAgreeBottomSheetProps) => {
+  const router = useRouter();
+
   const [agreeAll, setAgreeAll] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
@@ -107,7 +110,7 @@ const SignupAgreeBottomSheet = ({
         size="lg"
         className="w-full"
         disabled={!agreeAll ? true : false}
-        onClick={() => {}}
+        onClick={() => router.push('/onboard')}
       >
         동의하고 시작하기
       </Button>

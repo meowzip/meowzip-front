@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '../../components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import OnboardModal from '@/components/onboard/OnboardModal';
+import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
 
 const Page = () => {
   const router = useRouter();
@@ -52,7 +52,7 @@ const Page = () => {
         </article>
       </section>
       {showProfileModal && (
-        <OnboardModal onClose={() => setShowProfileModal(false)} />
+        <OnboardProfileModal onClose={() => setShowProfileModal(false)} />
       )}
     </>
   );

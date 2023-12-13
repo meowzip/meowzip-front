@@ -1,15 +1,15 @@
 import { useCallback, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
-import OnboardProfile from '@/components/onboard/OnboardProfile';
+import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
 
-interface OnboardModalProps {
+interface OnboardProfileModalProps {
   onClose: () => void;
 }
 
-const OnboardModal = ({ onClose }: OnboardModalProps) => {
+const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
   const [nickname, setNickname] = useState({
     value: '',
     error: false,
@@ -66,7 +66,7 @@ const OnboardModal = ({ onClose }: OnboardModalProps) => {
       <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
         <Topbar type="modal" title="프로필 설정" onClose={onClose} />
         <section className="px-6 pt-5">
-          <OnboardProfile propObj={{ edit: true }} />
+          <OnboardProfileUploader propObj={{ edit: true }} />
           <div className="py-6 text-center text-body-4 text-gr-black">
             <h6>사용하실 프로필과 닉네임을 설정하세요.</h6>
             <h6>닉네임은 띄어쓰기 포함 최대 12자까지 가능합니다.</h6>
@@ -97,4 +97,4 @@ const OnboardModal = ({ onClose }: OnboardModalProps) => {
   );
 };
 
-export default OnboardModal;
+export default OnboardProfileModal;

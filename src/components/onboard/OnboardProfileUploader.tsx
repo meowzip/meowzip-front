@@ -1,14 +1,14 @@
 import React from 'react';
-import Badge from '../../components/ui/Badge';
+import Badge from '@/components/ui/Badge';
 import ImageUploader from '@/components/diary/ImageUploader';
 
-interface OnboardProfileProps {
+interface OnboardProfileUploaderProps {
   propObj: {
     edit: boolean;
   };
 }
 
-const OnboardProfile = ({ propObj }: OnboardProfileProps) => {
+const OnboardProfileUploader = ({ propObj }: OnboardProfileUploaderProps) => {
   return (
     <>
       <section className="flex flex-col items-center justify-center gap-2 bg-gr-white px-2 py-3">
@@ -35,4 +35,4 @@ const OnboardProfile = ({ propObj }: OnboardProfileProps) => {
   );
 };
 
-export default OnboardProfile;
+export default OnboardProfileUploader;
