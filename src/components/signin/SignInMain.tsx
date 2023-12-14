@@ -16,6 +16,7 @@ export default function SignInMain({ setStep }: SignInMainProps) {
             <br /> 모든 길냥이들을 위해
           </p>
           <Image
+            className="my-4"
             src="https://i.pinimg.com/564x/dc/fe/e5/dcfee5f8b2eea184af2fbff4e15a2b7b.jpg"
             alt="cat-image"
             width={300}
