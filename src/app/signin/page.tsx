@@ -4,6 +4,9 @@ import React from 'react';
 export type NonEmptyArray<T> = readonly [T, ...T[]];
 import SignInMain from '@/components/signin/SignInMain';
 import { useFunnel } from '@/components/common/Funnel';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+
 export default function LoginPage() {
   const [Funnel, setStep] = useFunnel(
     ['main', 'email', 'accountInfo', 'password', 'complete'] as const,
@@ -16,9 +19,17 @@ export default function LoginPage() {
           <SignInMain setStep={() => setStep('email')} />
         </Funnel.Step>
         <Funnel.Step name="email">
-          <div>이메일을 입력하여 로그인해 주세요</div>
-          <h2 onClick={() => setStep('password')}>go Password step</h2>
-          <h2 onClick={() => setStep('accountInfo')}>계정 확인하기</h2>
+          <section className="w-full px-[16px] text-[24px] font-bold text-gray-800">
+            <div>
+              이메일을 입력하여
+              <br /> 로그인해 주세요
+            </div>
+            <Input variant="outlined" />
+            {/* <h2 onClick={() => setStep('password')}>go Password step</h2> */}
+            <Button onClick={() => setStep('accountInfo')}>
+              계정 확인하기
+            </Button>
+          </section>
         </Funnel.Step>
         <Funnel.Step name="accountInfo">
           <div>이전에 가입한 계정을 확인하세요</div>
