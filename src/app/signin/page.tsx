@@ -1,11 +1,13 @@
 'use client';
 
 import React from 'react';
-export type NonEmptyArray<T> = readonly [T, ...T[]];
-import SignInMain from '@/components/signin/SignInMain';
 import { useFunnel } from '@/components/common/Funnel';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
+import Email from '@/components/signin/Email';
+import Password from '@/components/signin/Password';
+import CheckAccount from '@/components/signin/CheckAccount';
+import SignInMain from '@/components/signin/SignInMain';
+import Complete from '@/components/signin/Complete';
+export type NonEmptyArray<T> = readonly [T, ...T[]];
 
 export default function LoginPage() {
   const [Funnel, setStep] = useFunnel(
@@ -19,29 +21,16 @@ export default function LoginPage() {
           <SignInMain setStep={() => setStep('email')} />
         </Funnel.Step>
         <Funnel.Step name="email">
-          <section className="w-full px-[16px] text-[24px] font-bold text-gray-800">
-            <div>
-              이메일을 입력하여
-              <br /> 로그인해 주세요
-            </div>
-            <Input variant="outlined" />
-            {/* <h2 onClick={() => setStep('password')}>go Password step</h2> */}
-            <Button onClick={() => setStep('accountInfo')}>
-              계정 확인하기
-            </Button>
-          </section>
+          <Email setStep={() => setStep('accountInfo')} />
         </Funnel.Step>
         <Funnel.Step name="accountInfo">
-          <div>이전에 가입한 계정을 확인하세요</div>
-          <div>기존 계정으로 로그인하기</div>
-          <h2 onClick={() => setStep('main')}>메인으로 가좍</h2>
+          <CheckAccount setStep={() => setStep('complete')} />
         </Funnel.Step>
         <Funnel.Step name="password">
-          <div>비밀번호를 입력하여 로그인해 주세요</div>
-          <h3 onClick={() => setStep('complete')}>password</h3>
+          <Password setStep={() => setStep('complete')} />
         </Funnel.Step>
         <Funnel.Step name="complete">
-          <h4 onClick={() => console.log('완료')}>complete</h4>
+          <Complete />
         </Funnel.Step>
       </Funnel>
     </div>

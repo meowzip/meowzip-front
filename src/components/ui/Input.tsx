@@ -50,11 +50,10 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ) => {
     const sizeClass = inputSize ? `input-${inputSize}` : '';
     const inputClassName = cn(
-      'flex h-10 w-full rounded-md px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 focus:border-2 focus:border-pr-500',
+      'flex h-10 w-full rounded-md border px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 focus:border-2 focus:border-pr-500',
       {
         'border-input bg-background': variant !== 'outlined',
-        'focus:border-sm-error-500': error,
-        'border-none': variant === 'search'
+        'border-2 focus:border-sm-error-500': error
       },
       sizeClass,
       className
