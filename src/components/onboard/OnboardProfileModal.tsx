@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
+import { NICKNAME } from '@/components/onboard/NICKNAME';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -39,6 +40,15 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
       }));
     }
 
+    const bannedNickname = NICKNAME.find(item => item.includes(name));
+    if (bannedNickname) {
+      return setNickname(prev => ({
+        ...prev,
+        error: true,
+        msg: '사용 불가능한 닉네임입니다.'
+      }));
+    }
+
     return setNickname(prev => ({
       ...prev,
       error: false,
@@ -74,7 +84,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
           <Input
             helperText={nickname.msg}
             value={nickname.value}
-            placeholder="닉네입을 입력해주세요."
+            placeholder="닉네임을 입력해주세요."
             error={nickname.error ? true : false}
             onChange={handleNickname}
             iconEnd={
