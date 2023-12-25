@@ -11,7 +11,7 @@ export default function Email({ setStep }: EmailProps) {
         이메일을 입력하여 <br /> 로그인해 주세요
       </div>
       <div className="pb-4">
-        <Input variant="outlined" placeholder="이메일을 입력하세요" />
+        <Input variant="outlined" placeholder="이메일을 입력하세요" disabled />
       </div>
       <Button onClick={setStep} className="w-full">
         계정 확인하기
