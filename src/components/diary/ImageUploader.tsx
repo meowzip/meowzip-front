@@ -4,19 +4,25 @@ import { ChangeEvent, ReactNode, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import useCropper from '@/components/ui/hooks/useCropper';
+import CloseIcon from '../../../public/images/icons/close.svg';
+import PencilIcon from '../../../public/images/icons/pencil.svg';
 
 interface ImageUploaderProps {
   width?: string;
   height?: string;
   radius?: string;
   preview?: ReactNode;
+  editBtn?: boolean;
+  deleteBtn?: boolean;
 }
 
 const ImageUploader = ({
   width,
   height,
   radius,
-  preview
+  preview,
+  editBtn,
+  deleteBtn
 }: ImageUploaderProps) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +43,13 @@ const ImageUploader = ({
   const deleteImage = () => {
     setImageSrc(null);
     setCroppedImage(null);
+  };
+
+  const editImage = () => {
+    console.log('이미지 있으면 시스템 시트 or 삭제 버튼');
+    const triggerFileInput = () => {
+      fileInputRef.current?.click();
+    };
   };
 
   const imageElement = useRef(null);
@@ -82,8 +95,8 @@ const ImageUploader = ({
             </div>
           ))}
       </section>
-      {/* 삭제 버튼 */}
-      {croppedImage && (
+      {/* 상단 삭제 버튼 */}
+      {croppedImage && deleteBtn && (
         <section
           className="absolute -right-1 -top-1 cursor-pointer"
           onClick={deleteImage}
@@ -94,6 +107,28 @@ const ImageUploader = ({
             width={24}
             height={24}
           />
+        </section>
+      )}
+      {/* 하단 수정/삭제 버튼 */}
+      {editBtn && (
+        <section className="absolute bottom-0 right-0 rounded-16">
+          <div className="h-full w-full rounded-full border-[1.5px] border-gr-white bg-gr-700 p-1">
+            {croppedImage ? (
+              <CloseIcon
+                width={16}
+                height={16}
+                stroke="var(--gr-white)"
+                onClick={deleteImage}
+              />
+            ) : (
+              <PencilIcon
+                width={16}
+                height={16}
+                stroke="var(--gr-white)"
+                onClick={() => fileInputRef.current?.click()}
+              />
+            )}
+          </div>
         </section>
       )}
       {/* crop image */}

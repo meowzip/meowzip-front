@@ -73,9 +73,9 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             사진 <span className="text-pr-500">2</span>/3
           </h5>
           <div className="flex gap-3 px-4">
-            <ImageUploader />
-            <ImageUploader />
-            <ImageUploader />
+            <ImageUploader deleteBtn />
+            <ImageUploader deleteBtn />
+            <ImageUploader deleteBtn />
           </div>
         </article>
         <article>
