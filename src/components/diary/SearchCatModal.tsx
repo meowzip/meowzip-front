@@ -1,9 +1,7 @@
 import Topbar from '@/components/ui/Topbar';
 import { useState } from 'react';
-import Image from 'next/image';
 
 interface SearchCatModalProps {
-  searchCatModal: boolean;
   setSearchCatModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -16,7 +14,6 @@ type Cat = {
 };
 
 export default function SearchCatModal({
-  searchCatModal,
   setSearchCatModal
 }: SearchCatModalProps) {
   const [filteredCatList, setFilteredCatList] = useState<Cat[]>([]);
@@ -52,7 +49,7 @@ export default function SearchCatModal({
 
   return (
     <article>
-      <div className="fixed left-0 top-0 z-10 h-screen w-full overflow-y-auto bg-gr-white">
+      <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto  bg-gr-white">
         <Topbar type="search" onClose={onClose} onChange={handleOnChange} />
         {showCatList && (
           <ul className="flex flex-col gap-2 px-2 py-2">
