@@ -3,5 +3,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className="mt-16">{children}</section>;
+  return (
+    <section className="mt-16">
+      <div>{children}</div>
+    </section>
+  );
 }

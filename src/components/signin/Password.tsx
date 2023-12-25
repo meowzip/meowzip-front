@@ -8,12 +8,16 @@ interface PasswordProps {
 
 export default function Password({ setStep }: PasswordProps) {
   return (
-    <section className="w-full px-[16px] text-[24px] font-bold text-gray-800">
-      <div>
+    <section className="w-full px-6 text-[24px] font-bold text-gray-800">
+      <div className="mb-[32px]">
         비밀번호를 입력하여 <br /> 로그인해 주세요
       </div>
-      <Input variant="outlined" placeholder="비밀번호를 입력하세요" disabled />
-      <Button onClick={setStep}>로그인하기</Button>
+      <div className="pb-4">
+        <Input variant="outlined" placeholder="비밀번호를 입력하세요" />
+      </div>
+      <Button onClick={setStep} className="w-full">
+        로그인하기
+      </Button>
     </section>
   );
 }
