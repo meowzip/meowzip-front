@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { forwardRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import HelperText from './HelperText';
 
@@ -9,7 +9,6 @@ export interface InputProps
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
   onClear?: () => void;
-  // validator: () => void;
   error?: boolean;
   helperText?: string;
   loading?: boolean;
@@ -21,9 +20,10 @@ export interface InputProps
   autocomplete?: string;
   placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // validator: () => void;
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
+const Input = forwardRef<HTMLInputElement, InputProps>(
   (
     {
       className,
@@ -32,6 +32,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       iconStart,
       iconEnd,
       onClear,
+      disabled,
       // validator,
       error,
       helperText,
@@ -48,13 +49,18 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const [isInputActive, setInputActive] = useState(!disabled);
+
+    const enableInput = (e: React.MouseEvent) => {
+      setInputActive(true);
+    };
+
     const sizeClass = inputSize ? `input-${inputSize}` : '';
     const inputClassName = cn(
-      'flex h-10 w-full rounded-md px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 focus:border-2 focus:border-pr-500',
+      'common-input flex h-12 font-normal w-full rounded-md border px-4 py-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 disabled:font-regular focus:border-2 focus:border-pr-500',
       {
         'border-input bg-background': variant !== 'outlined',
-        'focus:border-sm-error-500': error,
-        'border-none': variant === 'search'
+        'border-2 focus:border-sm-error-500': error
       },
       sizeClass,
       className
@@ -79,6 +85,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </span>
         )}
         <input
+          disabled={!isInputActive}
           type={type}
           className={inputClassName}
           ref={ref}
@@ -87,6 +94,19 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           autoComplete={autocomplete}
           {...props}
         />
+        {!isInputActive && (
+          <div
+            style={{
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              cursor: 'pointer'
+            }}
+            onClick={enableInput}
+          />
+        )}
         {suffix && (
           <span className="absolute inset-y-0 right-0 flex items-center pr-3">
             {suffix}

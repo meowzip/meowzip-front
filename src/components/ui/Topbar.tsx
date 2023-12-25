@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import BackIcon from '../../../public/images/icons/back.svg';
 import { Input } from '@/components/ui/Input';
+import { cn } from '@/lib/utils';
 
 interface BaseProps {
   type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
@@ -164,13 +165,17 @@ const Topbar = ({
   const currentItem = CONTENT_LIST.find(item => item.type === type);
   const emptyElement = <div className="px-[10px] py-1"></div>;
 
+  const topbarClassName = cn(
+    'relative z-10 flex h-12 w-full items-center bg-grey-white px-[6px]',
+    {
+      'z-[60]': type === 'modal',
+      'justify-normal border-b-2': type === 'search',
+      'justify-between': type !== 'search'
+    }
+  );
+
   return (
-    <div
-      className={`relative z-[100] flex h-12 w-full items-center
-      bg-gr-white px-[6px] ${
-        type == 'search' ? 'justify-normal border-b-2' : 'justify-between'
-      }`}
-    >
+    <div className={topbarClassName}>
       {hideLeft ? emptyElement : <section>{currentItem?.content.left}</section>}
       <section>{currentItem?.content.center}</section>
       {hideRight ? (
