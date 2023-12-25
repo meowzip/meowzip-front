@@ -1,14 +1,7 @@
 import React from 'react';
-import Badge from '@/components/ui/Badge';
 import ImageUploader from '@/components/diary/ImageUploader';
 
-interface OnboardProfileUploaderProps {
-  propObj: {
-    edit: boolean;
-  };
-}
-
-const OnboardProfileUploader = ({ propObj }: OnboardProfileUploaderProps) => {
+const OnboardProfileUploader = () => {
   return (
     <>
       <section className="flex flex-col items-center justify-center gap-2 bg-gr-white px-2 py-3">
@@ -18,17 +11,8 @@ const OnboardProfileUploader = ({ propObj }: OnboardProfileUploaderProps) => {
             height="h-[120px]"
             radius="rounded-[48px]"
             preview={<></>}
+            editBtn
           />
-          {propObj.edit && (
-            <div className="absolute bottom-0 right-0 rounded-16">
-              <Badge
-                type="icon"
-                icon="/images/icons/pencil.svg"
-                bgColor="bg-gr-700"
-                iconStyle="p-1 border-gr-white border-[1.5px] border-gr-white rounded-full"
-              />
-            </div>
-          )}
         </article>
       </section>
     </>
