@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/Button';
+
 interface CheckAccountProps {
   setStep: () => void;
 }
