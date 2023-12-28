@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "dev": "next dev",
+    "dev": "node server.js",
     "build": "next build",
     "start": "next start -p 8080",
     "lint": "next lint",
