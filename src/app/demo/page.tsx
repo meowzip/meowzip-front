@@ -21,7 +21,7 @@ import Tooltip from '@/components/ui/Tooltip';
 import Modal from '@/components/ui/Modal';
 import { Calendar } from '@/components/ui/Calendar';
 
-const Page = () => {
+const DemoPage = () => {
   const { toast } = useToast();
   const [chipObj, setChipObj] = useState({
     key: '1',
@@ -374,4 +374,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default DemoPage;

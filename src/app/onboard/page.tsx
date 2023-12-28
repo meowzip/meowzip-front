@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
 
-const Page = () => {
+const OnBoardPage = () => {
   const router = useRouter();
 
   const [userName, setUserName] = useState('명랑한캔따개310');
@@ -58,4 +58,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default OnBoardPage;

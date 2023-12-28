@@ -6,7 +6,7 @@ import { Button } from '../../components/ui/Button';
 import { debounce } from 'lodash';
 import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
 
-const Page = () => {
+const SignupPage = () => {
   const [password, setPassword] = useState({ value: '', error: false });
   const [passwordCheck, setPasswordCheck] = useState({
     value: '',
@@ -104,4 +104,4 @@ const Page = () => {
     </section>
   );
 };
-export default Page;
+export default SignupPage;

@@ -98,7 +98,7 @@ const mockup = [
   }
 ];
 
-const Page = () => {
+const DiaryPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
 
@@ -172,4 +172,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default DiaryPage;
