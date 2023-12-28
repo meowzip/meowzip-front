@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { useFunnel } from '@/components/common/Funnel';
 import Email from '@/components/signin/Email';
 import Password from '@/components/signin/Password';
 import CheckAccount from '@/components/signin/CheckAccount';
@@ -9,6 +8,7 @@ import SignInMain from '@/components/signin/SignInMain';
 import Complete from '@/components/signin/Complete';
 import Topbar from '@/components/ui/Topbar';
 export type NonEmptyArray<T> = readonly [T, ...T[]];
+import { useFunnel } from '@/components/common/Funnel';
 
 export default function SigninPage() {
   const [Funnel, setStep] = useFunnel(
@@ -24,7 +24,27 @@ export default function SigninPage() {
             <SignInMain setStep={() => setStep('email')} />
           </Funnel.Step>
           <Funnel.Step name="email">
-            <Email setStep={() => setStep('accountInfo')} />
+            <Email
+              setStep={() => {
+                // fetch(
+                //   )}`,
+                //   {
+                //     method: 'GET',
+                //     headers: {
+                //       'Content-Type': 'application/json'
+                //     },
+                //     credentials: 'include'
+                //   }
+                // )
+                //   .then(response => {
+                //     response.json();
+                //     console.log(response, 'response');
+                //   })
+                //   .then(data => console.log(data))
+                //   .catch(error => console.error('Error:', error));
+                setStep('accountInfo');
+              }}
+            />
           </Funnel.Step>
           <Funnel.Step name="accountInfo">
             <div className="fixed top-0 w-full">
