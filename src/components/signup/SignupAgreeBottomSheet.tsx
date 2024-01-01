@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
+import { signupOnServer } from '@/services/signup';
 import BottomSheet from '@/components/ui/BottomSheet';
 
 interface SignupAgreeBottomSheetProps {
   open: boolean;
+  password: string;
   setIsVisible: (isVisible: boolean) => void;
 }
 
 const SignupAgreeBottomSheet = ({
   open,
+  password,
   setIsVisible
 }: SignupAgreeBottomSheetProps) => {
   const router = useRouter();
@@ -36,6 +39,12 @@ const SignupAgreeBottomSheet = ({
     setAgreeAll(!agreeAll);
     setAgreeTerms(!agreeAll);
     setAgreePrivacy(!agreeAll);
+  };
+
+  const signUp = () => {
+    const data = signupOnServer({ email: 'asdf', password: password });
+    console.log('data', data);
+    // router.push('/onboard');
   };
 
   return (
@@ -110,7 +119,7 @@ const SignupAgreeBottomSheet = ({
         size="lg"
         className="w-full"
         disabled={!agreeAll ? true : false}
-        onClick={() => router.push('/onboard')}
+        onClick={signUp}
       >
         동의하고 시작하기
       </Button>

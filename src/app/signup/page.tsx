@@ -100,6 +100,7 @@ const SignupPage = () => {
       <SignupAgreeBottomSheet
         open={openAgreeBottom}
         setIsVisible={setOpenAgreeBottom}
+        password={password.value}
       />
     </section>
   );
