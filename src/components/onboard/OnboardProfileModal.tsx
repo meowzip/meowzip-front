@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
+import { validateNicknameOnServer } from '@/services/signup';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -41,6 +42,9 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     }
 
     const bannedNickname = NICKNAME.find(item => item.includes(name));
+    const res = validateNicknameOnServer(name);
+    console.log('res', res);
+
     if (bannedNickname) {
       return setNickname(prev => ({
         ...prev,
