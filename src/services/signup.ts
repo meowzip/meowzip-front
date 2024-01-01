@@ -64,3 +64,29 @@ export const signupOnServer = async (reqObj: {
     }
   }
 };
+
+export const resetPwdOnServer = async (reqObj: {
+  password: string;
+  token: string;
+}) => {
+  try {
+    const requestBody = JSON.stringify({ reqObj });
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: requestBody
+    };
+
+    const response = await apiClient('/members/sign-up', requestOptions);
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('닉네임 유효성 검사 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('닉네임 유효성 검사 중 오류 발생:');
+    }
+  }
+};
