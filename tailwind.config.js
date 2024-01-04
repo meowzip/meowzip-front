@@ -125,7 +125,8 @@ module.exports = {
         16: '1.6px'
       },
       boxShadow: {
-        modal: '0px 8px 20px 0px rgba(14, 31, 53, 0.20)'
+        modal: '0px 8px 20px 0px rgba(14, 31, 53, 0.20)',
+        bottomNav: '0px -2px 8px 0px rgba(165, 165, 165, 0.16)'
       },
       keyframes: {
         'accordion-down': {

@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/Toaster';
+import BottomNavBar from '../components/ui/BottomNavBar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,9 +18,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} w-full bg-slate-100`}>
+      <body className={`${inter.className} relative w-full bg-slate-100`}>
         <div className="m-auto h-screen max-w-[600px] bg-white">{children}</div>
         <Toaster />
+        <div className="fixed bottom-0">
+          <BottomNavBar />
+        </div>
       </body>
     </html>
   );
