@@ -1,34 +1,19 @@
-import httpClient from '@/utils/fetcher';
+import returnFetchJson from '@/utils/returnFetchJson';
 
-type RequestInterceptor = (
-  url: RequestInfo,
-  config: RequestInit
-) => RequestInit;
-
-type ResponseInterceptor = (response: Response) => Promise<Response>;
-const requestInterceptor: RequestInterceptor = (url, config) => {
-  return config;
-};
-const responseInterceptor: ResponseInterceptor = async response => {
-  return response;
-};
-
-export const apiClient = httpClient({
-  baseUrl: 'http://13.125.131.2:8080/api/public/v1.0.0',
-  interceptors: {
-    request: requestInterceptor,
-    response: responseInterceptor
-  }
+export const fetchExtended = returnFetchJson({
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  headers: { Accept: 'application/json' }
 });
 
 export const validateNicknameOnServer = async (nickname: string) => {
   try {
-    const response = await apiClient(
+    const response = await fetchExtended(
       `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
     );
-    const data = await response.json();
 
-    return data;
+    console.log(response.body, 'validateNicknameOnServer');
+
+    return response.body;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
@@ -44,17 +29,15 @@ export const signupOnServer = async (reqObj: {
   password: string;
 }) => {
   try {
-    const requestBody = JSON.stringify({ reqObj });
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: requestBody
+      body: reqObj
     };
 
-    const response = await apiClient('/members/sign-up', requestOptions);
-    const data = await response.json();
+    const response = await fetchExtended('/members/sign-up', requestOptions);
+    console.log(response.body, 'signupOnServer');
 
-    return data;
+    return response.body;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
@@ -70,17 +53,19 @@ export const resetPwdOnServer = async (reqObj: {
   token: string;
 }) => {
   try {
-    const requestBody = JSON.stringify({ reqObj });
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: requestBody
+      body: reqObj,
+      headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await apiClient('/members/sign-up', requestOptions);
-    const data = await response.json();
+    const response = await fetchExtended(
+      '/members/reset-password',
+      requestOptions
+    );
+    console.log(response.body, 'resetPwdOnServer');
 
-    return data;
+    return response.body;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
