@@ -1,44 +1,35 @@
-import httpClient from '@/utils/fetcher';
+import returnFetchJson from '@/utils/returnFetchJson';
 
-type RequestInterceptor = (
-  url: RequestInfo,
-  config: RequestInit
-) => RequestInit;
-
-type ResponseInterceptor = (response: Response) => Promise<Response>;
-const requestInterceptor: RequestInterceptor = (url, config) => {
-  return config;
-};
-const responseInterceptor: ResponseInterceptor = async response => {
-  return response;
-};
-
-export const apiClient = httpClient({
-  baseUrl: 'http://13.125.131.2:8080/api/public/v1.0.0',
-  interceptors: {
-    request: requestInterceptor,
-    response: responseInterceptor
-  }
+const fetchExtended = returnFetchJson({
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  headers: { Accept: 'application/json' }
+  // interceptors: {
+  //   request: async args => {
+  //     console.log('********* before sending request *********');
+  //     console.log('url:', args[0].toString());
+  //     console.log('requestInit:', args[1], '\n\n');
+  //     return args;
+  //   },
+  //   response: async (response, requestArgs) => {
+  //     console.log('********* after receiving response *********');
+  //     console.log('url:', requestArgs[0].toString());
+  //     console.log('requestInit:', requestArgs[1], '\n\n');
+  //     return response;
+  //   }
+  // }
 });
 
 export const checkMembershipByEmail = async (email: string) => {
   try {
-    const response = await apiClient(
-      `/members/email-exists?email=${encodeURIComponent(email)}`
+    const response = await fetchExtended(
+      `/members/email-exists?email=${encodeURIComponent(email)}`,
+      {
+        method: 'GET'
+      }
     );
-    const data = await response.json();
 
-    return data;
+    console.log(response, 'response');
   } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error(
-        'An error occurred while checking membership by email: ' + error.message
-      );
-    } else {
-      throw new Error(
-        'An unknown error occurred while checking membership by email'
-      );
-    }
+    console.error('Error:', error);
   }
 };
