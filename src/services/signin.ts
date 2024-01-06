@@ -23,12 +23,11 @@ export const checkMembershipByEmail = async (email: string) => {
   try {
     const response = await fetchExtended(
       `/members/email-exists?email=${encodeURIComponent(email)}`,
-      {
-        method: 'GET'
-      }
+      { method: 'GET' }
     );
 
-    console.log(response, 'response');
+    const isEmailExist = (response.body as any).isEmailExist;
+    return isEmailExist;
   } catch (error) {
     console.error('Error:', error);
   }

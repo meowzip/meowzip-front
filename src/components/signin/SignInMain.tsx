@@ -6,7 +6,7 @@ interface SignInMainProps {
   setStep: () => void;
 }
 
-export default function SignInMain({ setStep }: SignInMainProps) {
+const SignInMain = ({ setStep }: SignInMainProps) => {
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
       <div className="w-full">
@@ -41,4 +41,7 @@ export default function SignInMain({ setStep }: SignInMainProps) {
       </div>
     </div>
   );
-}
+};
+
+SignInMain.displayName = 'SignInMain';
+export default SignInMain;

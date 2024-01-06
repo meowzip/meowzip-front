@@ -13,11 +13,7 @@ export default function Password({ setStep }: PasswordProps) {
         비밀번호를 입력하여 <br /> 로그인해 주세요
       </div>
       <div className="pb-4">
-        <Input
-          variant="outlined"
-          placeholder="비밀번호를 입력하세요"
-          disabled
-        />
+        <Input variant="outlined" placeholder="비밀번호를 입력하세요" />
       </div>
       <Button onClick={setStep} className="w-full">
         로그인하기
