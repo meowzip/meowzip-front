@@ -3,17 +3,38 @@
 import { useState } from 'react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
-import usePasswordHandler from '@/utils/usePasswordHandler';
 // import { useUser } from '@/contexts/EmailContext';
 import { useAtom } from 'jotai';
 import { emailAtom } from '@/atoms/emailAtom';
+import { useMutation } from '@tanstack/react-query';
+import { signUpOnServer } from '@/services/signup';
+import { nicknameAtom } from '@/atoms/nicknameAtom';
+import { useRouter } from 'next/navigation';
+import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
+import usePasswordHandler from '@/utils/usePasswordHandler';
+import Modal from '@/components/ui/Modal';
+
+interface SignUpResponse {
+  status: string;
+  result?: number;
+  message?: string;
+  data?: {
+    generatedNickname: string;
+  };
+}
+
 const SignUpPage = () => {
+  const router = useRouter();
+
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
+  const [registerEmail, setRegisterEmail] = useAtom(emailAtom);
+  const [openModal, setOpenModal] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [nickname, setNickname] = useAtom(nicknameAtom);
+
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
   // const { email } = useUser();
-  const [registerEmail, setRegisterEmail] = useAtom(emailAtom);
 
   const openTermsOfUseModal = () => {
     console.log('openTermsOfUse');
@@ -22,8 +43,29 @@ const SignUpPage = () => {
     console.log('openPrivacy');
   };
 
-  // console.log(email, 'email');
-  console.log(registerEmail, 'registerEmail');
+  const signUp = () => {
+    signupMutation.mutate({
+      email: 'test7@gmail.com',
+      password: password.value
+    });
+  };
+
+  /**
+   * @description API - GET arabia token
+   */
+  const signupMutation = useMutation({
+    mutationFn: (reqObj: { email: string; password: string }) =>
+      signUpOnServer(reqObj),
+    onSuccess: (data: any) => {
+      if (data.status !== 'OK') {
+        data.message && setErrorMsg(data.message);
+        setOpenModal(true);
+      } else {
+        data.data && setNickname(data.data.generatedNickname);
+        router.push('/onboard');
+      }
+    }
+  });
 
   return (
     <section className="px-4 pt-10">
@@ -70,8 +112,25 @@ const SignUpPage = () => {
       <SignupAgreeBottomSheet
         open={openAgreeBottom}
         setIsVisible={setOpenAgreeBottom}
-        password={password.value}
+        onClick={signUp}
       />
+      {openModal && (
+        <Modal
+          contents={{ title: '알림', body: errorMsg }}
+          scrim={true}
+          buttons={[
+            {
+              variant: 'primary',
+              size: 'lg',
+              content: '확인',
+              style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700'
+            }
+          ]}
+          onClose={() => {
+            setOpenModal(false), setOpenAgreeBottom(false);
+          }}
+        />
+      )}
     </section>
   );
 };

@@ -5,13 +5,17 @@ export const fetchExtended = returnFetchJson({
   headers: { Accept: 'application/json' }
 });
 
-export const validateNicknameOnServer = async (nickname: string) => {
+export const signUpOnServer = async (reqObj: {
+  email: string;
+  password: string;
+}) => {
   try {
-    const response = await fetchExtended(
-      `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
-    );
+    const requestOptions = {
+      method: 'POST',
+      body: reqObj
+    };
 
-    console.log(response.body, 'validateNicknameOnServer');
+    const response = await fetchExtended('/members/sign-up', requestOptions);
 
     return response.body;
   } catch (error) {
@@ -24,18 +28,13 @@ export const validateNicknameOnServer = async (nickname: string) => {
   }
 };
 
-export const signupOnServer = async (reqObj: {
-  email: string;
-  password: string;
-}) => {
+export const validateNicknameOnServer = async (nickname: string) => {
   try {
-    const requestOptions = {
-      method: 'POST',
-      body: reqObj
-    };
+    const response = await fetchExtended(
+      `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
+    );
 
-    const response = await fetchExtended('/members/sign-up', requestOptions);
-    console.log(response.body, 'signupOnServer');
+    console.log(response.body, 'validateNicknameOnServer');
 
     return response.body;
   } catch (error) {

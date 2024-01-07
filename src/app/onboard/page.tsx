@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
+import { useAtom } from 'jotai';
+import { nicknameAtom } from '@/atoms/nicknameAtom';
 import Image from 'next/image';
 import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
 
 const OnBoardPage = () => {
   const router = useRouter();
 
-  const [userName, setUserName] = useState('명랑한캔따개310');
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [nickname, setNickname] = useAtom(nicknameAtom);
 
   return (
     <>
@@ -26,7 +28,7 @@ const OnBoardPage = () => {
         </article>
         <article className="text-bg-black flex flex-col items-center justify-center gap-2 py-8 text-heading-1">
           <h1>
-            <span className="text-pr-500">{userName}</span>님,
+            <span className="text-pr-500">{nickname}</span>님,
           </h1>
           <h1>환영합니다.</h1>
         </article>
