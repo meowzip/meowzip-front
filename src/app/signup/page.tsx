@@ -5,12 +5,15 @@ import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
 import usePasswordHandler from '@/utils/usePasswordHandler';
-
-const SignupPage = () => {
+// import { useUser } from '@/contexts/EmailContext';
+import { useAtom } from 'jotai';
+import { emailAtom } from '@/atoms/emailAtom';
+const SignUpPage = () => {
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
-
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
+  // const { email } = useUser();
+  const [registerEmail, setRegisterEmail] = useAtom(emailAtom);
 
   const openTermsOfUseModal = () => {
     console.log('openTermsOfUse');
@@ -18,6 +21,9 @@ const SignupPage = () => {
   const openPrivacyModal = () => {
     console.log('openPrivacy');
   };
+
+  // console.log(email, 'email');
+  console.log(registerEmail, 'registerEmail');
 
   return (
     <section className="px-4 pt-10">
@@ -69,4 +75,6 @@ const SignupPage = () => {
     </section>
   );
 };
-export default SignupPage;
+
+SignUpPage.displayName = 'SignUpPage';
+export default SignUpPage;

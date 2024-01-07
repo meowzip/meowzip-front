@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import Email from '@/components/signin/Email';
 import Password from '@/components/signin/Password';
 import CheckAccount from '@/components/signin/CheckAccount';
@@ -9,13 +8,19 @@ import Complete from '@/components/signin/Complete';
 import Topbar from '@/components/ui/Topbar';
 export type NonEmptyArray<T> = readonly [T, ...T[]];
 import { useFunnel } from '@/components/common/Funnel';
-import { checkMembershipByEmail } from '@/services/signin';
 
-export default function SigninPage() {
-  const [Funnel, setStep] = useFunnel(
-    ['main', 'email', 'accountInfo', 'password', 'complete'] as const,
-    'main'
-  );
+const SignInPage = () => {
+  const steps = [
+    'main',
+    'email',
+    'accountInfo',
+    'password',
+    'complete'
+  ] as const;
+
+  type Step = (typeof steps)[number];
+
+  const [Funnel, setStep] = useFunnel(steps, 'main');
 
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
@@ -25,12 +30,7 @@ export default function SigninPage() {
             <SignInMain setStep={() => setStep('email')} />
           </Funnel.Step>
           <Funnel.Step name="email">
-            <Email
-              setStep={() => {
-                checkMembershipByEmail('geniushyeon8@gmail.com');
-                setStep('accountInfo');
-              }}
-            />
+            <Email setStep={(nextStep: Step) => setStep(nextStep)} />
           </Funnel.Step>
           <Funnel.Step name="accountInfo">
             <div className="fixed top-0 w-full">
@@ -53,4 +53,7 @@ export default function SigninPage() {
       </div>
     </div>
   );
-}
+};
+
+SignInPage.displayName = 'SignInPage';
+export default SignInPage;
