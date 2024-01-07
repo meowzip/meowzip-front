@@ -1,8 +1,10 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
 import { validateNicknameOnServer } from '@/services/signup';
+import { useAtom } from 'jotai';
+import { nicknameAtom } from '@/atoms/nicknameAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -12,11 +14,16 @@ interface OnboardProfileModalProps {
 }
 
 const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
-  const [nickname, setNickname] = useState({
+  const [nickname, setNickname] = useAtom(nicknameAtom);
+  const [nicknameObj, setNicknameObj] = useState({
     value: '',
     error: false,
     msg: ''
   });
+
+  useEffect(() => {
+    setNicknameObj(prev => ({ ...prev, value: nickname }));
+  }, []);
 
   /**
    * @description nickname 유효성 검사
@@ -24,7 +31,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
    */
   const validateNickname = (name: string) => {
     if (name.length < 2) {
-      return setNickname(prev => ({
+      return setNicknameObj(prev => ({
         ...prev,
         error: true,
         msg: '닉네임은 2자 이상 입력해주세요.'
@@ -34,7 +41,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     const pattern = /^[가-힣A-Za-z0-9]{2,12}$/;
 
     if (!pattern.test(name)) {
-      return setNickname(prev => ({
+      return setNicknameObj(prev => ({
         ...prev,
         error: true,
         msg: '닉네임은 띄어쓰기 없이 한글, 영문, 숫자만 가능해요.'
@@ -46,14 +53,14 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     console.log('res', res);
 
     if (bannedNickname) {
-      return setNickname(prev => ({
+      return setNicknameObj(prev => ({
         ...prev,
         error: true,
         msg: '사용 불가능한 닉네임입니다.'
       }));
     }
 
-    return setNickname(prev => ({
+    return setNicknameObj(prev => ({
       ...prev,
       error: false,
       msg: ''
@@ -71,7 +78,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
   );
 
   const handleNickname = (e: { target: { value: string } }) => {
-    setNickname(prev => ({ ...prev, value: e.target.value }));
+    setNicknameObj(prev => ({ ...prev, value: e.target.value }));
     debounceNickname(e.target.value);
   };
 
@@ -86,14 +93,14 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
             <h6>닉네임은 띄어쓰기 포함 최대 12자까지 가능합니다.</h6>
           </div>
           <Input
-            helperText={nickname.msg}
-            value={nickname.value}
+            helperText={nicknameObj.msg}
+            value={nicknameObj.value}
             placeholder="닉네임을 입력해주세요."
-            error={nickname.error ? true : false}
+            error={nicknameObj.error ? true : false}
             onChange={handleNickname}
             iconEnd={
               <div
-                onClick={() => setNickname(prev => ({ ...prev, value: '' }))}
+                onClick={() => setNicknameObj(prev => ({ ...prev, value: '' }))}
               >
                 <Image
                   src="/images/icons/close-btn.svg"
