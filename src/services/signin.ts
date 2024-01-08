@@ -25,10 +25,36 @@ export const checkMembershipByEmail = async (email: string) => {
       `/members/email-exists?email=${encodeURIComponent(email)}`,
       { method: 'GET' }
     );
-
-    const isEmailExist = (response.body as any).isEmailExist;
-    return isEmailExist;
+    const isSuccess = (response.body as any).status;
+    if (isSuccess) {
+      const data = (response.body as any).data;
+      return data;
+    } else {
+      console.error('이메일로 가입 여부 확인 중 오류:');
+    }
   } catch (error) {
     console.error('Error:', error);
+  }
+};
+
+export const signInOnServer = async (reqObj: {
+  email: string;
+  password: string;
+}) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: reqObj
+    };
+    const response = await fetchExtended('/members/login', requestOptions);
+    console.log(response.body, 'signInOnServer');
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('로그인 요청 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('로그인 요청 중 오류 발생');
+    }
   }
 };

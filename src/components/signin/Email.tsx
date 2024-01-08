@@ -3,10 +3,14 @@ import { Input } from '@/components/ui/Input';
 import useEmailHandler from '@/utils/useEmailHandler';
 import { checkMembershipByEmail } from '@/services/signin';
 import { useRouter } from 'next/navigation';
-// import { useUser } from '@/contexts/EmailContext';
-type Step = 'email' | 'accountInfo' | 'password' | 'main' | 'complete';
-import { useAtom } from 'jotai';
-import { emailAtom } from '@/atoms/emailAtom';
+import { useUser } from '@/contexts/EmailContext';
+type Step =
+  | 'email'
+  | 'accountInfo'
+  | 'password'
+  | 'main'
+  | 'complete'
+  | 'kakao';
 
 interface EmailProps {
   setStep: (step: Step) => void;
@@ -14,19 +18,24 @@ interface EmailProps {
 
 const Email = ({ setStep }: EmailProps) => {
   const router = useRouter();
-  // TODO: email state atom으로 변경하기
   const { email, handleEmailChange } = useEmailHandler();
-  // const { setEmail } = useUser();
-  const [registerEmail, setRegisterEmail] = useAtom(emailAtom);
+  const { setEmail } = useUser();
 
   const handleVerifyAccount = async () => {
-    const userExists = await checkMembershipByEmail(email.value);
-    if (userExists) {
-      // 소셜 로그인 여부 확인 후 계정정보 or password Funnel로 보내기
-      setStep('accountInfo');
+    const signInInfo = await checkMembershipByEmail(email.value);
+
+    if (signInInfo && signInInfo.isEmailExists) {
+      switch (signInInfo.loginType) {
+        case 'EMAIL':
+          setEmail(email.value);
+          setStep('password');
+          break;
+        case 'KAKAO':
+          setStep('kakao');
+          break;
+      }
     } else {
-      // setEmail(email.value);
-      setRegisterEmail(email.value);
+      setEmail(email.value);
       router.push('/signup', { scroll: false });
     }
   };
