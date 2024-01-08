@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
-import { validateNicknameOnServer } from '@/services/signup';
+import { validateNicknameOnServer } from '@/services/nickname';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';

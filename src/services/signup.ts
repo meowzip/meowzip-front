@@ -1,6 +1,6 @@
 import returnFetchJson from '@/utils/returnFetchJson';
 
-export const fetchExtended = returnFetchJson({
+export const fetchExtendedPublic = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
   headers: { Accept: 'application/json' }
 });
@@ -15,26 +15,10 @@ export const signUpOnServer = async (reqObj: {
       body: reqObj
     };
 
-    const response = await fetchExtended('/members/sign-up', requestOptions);
-
-    return response.body;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('닉네임 유효성 검사 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('닉네임 유효성 검사 중 오류 발생:');
-    }
-  }
-};
-
-export const validateNicknameOnServer = async (nickname: string) => {
-  try {
-    const response = await fetchExtended(
-      `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
+    const response = await fetchExtendedPublic(
+      '/members/sign-up',
+      requestOptions
     );
-
-    console.log(response.body, 'validateNicknameOnServer');
 
     return response.body;
   } catch (error) {
@@ -58,7 +42,7 @@ export const resetPwdOnServer = async (reqObj: {
       headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await fetchExtended(
+    const response = await fetchExtendedPublic(
       '/members/reset-password',
       requestOptions
     );
