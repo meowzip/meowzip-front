@@ -5,7 +5,7 @@ export type ReturnFetch = typeof returnFetch;
 export type ReturnFetchDefaultOptions = {
   fetch?: ReturnType<ReturnFetch>;
   baseUrl?: string | URL;
-  headers?: HeadersInit;
+  headers?: HeadersInit | any;
   interceptors?: {
     request?: (
       requestArgs: FetchArgs,
