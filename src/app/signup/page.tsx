@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
-// import { useUser } from '@/contexts/EmailContext';
+import { useUser } from '@/contexts/EmailContext';
 import { useAtom } from 'jotai';
-import { emailAtom } from '@/atoms/emailAtom';
 import { useMutation } from '@tanstack/react-query';
 import { signUpOnServer } from '@/services/signup';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
@@ -27,14 +26,14 @@ const SignUpPage = () => {
   const router = useRouter();
 
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
-  const [registerEmail, setRegisterEmail] = useAtom(emailAtom);
   const [openModal, setOpenModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [nickname, setNickname] = useAtom(nicknameAtom);
 
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
-  // const { email } = useUser();
+
+  const { email } = useUser();
 
   const openTermsOfUseModal = () => {
     console.log('openTermsOfUse');
@@ -44,7 +43,7 @@ const SignUpPage = () => {
   };
 
   const signUp = () => {
-    signupMutation.mutate({
+    signUpMutation.mutate({
       email: 'test7@gmail.com',
       password: password.value
     });
@@ -53,7 +52,7 @@ const SignUpPage = () => {
   /**
    * @description API - GET arabia token
    */
-  const signupMutation = useMutation({
+  const signUpMutation = useMutation({
     mutationFn: (reqObj: { email: string; password: string }) =>
       signUpOnServer(reqObj),
     onSuccess: (data: any) => {
