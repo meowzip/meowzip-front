@@ -1,7 +1,7 @@
 import returnFetchJson from '@/utils/returnFetchJson';
 
 const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MjcsImlhdCI6MTcwNDcxNjgxMywiZXhwIjoxNzA0NzIwNDEzfQ.s02LuLselithAsTOLsamHl-3Muyj071YitSwhb-S2U4';
+  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MjcsImlhdCI6MTcwNDgxMDQ1NCwiZXhwIjoxNzA0ODE0MDU0fQ.-eiPmP1YaKn9xNzpo5AauZeESDY8w1lstlXAgGLDuSI';
 
 export const fetchExtendedAuth = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
@@ -13,8 +13,6 @@ export const validateNicknameOnServer = async (nickname: string) => {
     const response = await fetchExtendedAuth(
       `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
     );
-
-    console.log(response.body, 'validateNicknameOnServer');
 
     return response.body;
   } catch (error) {

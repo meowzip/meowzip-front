@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
-import { validateNicknameOnServer } from '@/services/nickname';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
+import { useNickname } from '@/app/onboard/hooks/useNickname';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -20,6 +20,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     error: false,
     msg: ''
   });
+  const [debouncedNickname, setDebouncedNickname] = useState('');
 
   useEffect(() => {
     setNicknameObj(prev => ({ ...prev, value: nickname }));
@@ -31,40 +32,36 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
    */
   const validateNickname = (name: string) => {
     if (name.length < 2) {
-      return setNicknameObj(prev => ({
-        ...prev,
+      return {
+        value: name,
         error: true,
         msg: '닉네임은 2자 이상 입력해주세요.'
-      }));
+      };
     }
 
     const pattern = /^[가-힣A-Za-z0-9]{2,12}$/;
-
     if (!pattern.test(name)) {
-      return setNicknameObj(prev => ({
-        ...prev,
+      return {
+        value: name,
         error: true,
         msg: '닉네임은 띄어쓰기 없이 한글, 영문, 숫자만 가능해요.'
-      }));
+      };
     }
 
     const bannedNickname = NICKNAME.find(item => item.includes(name));
-    const res = validateNicknameOnServer(name);
-    console.log('res', res);
-
     if (bannedNickname) {
-      return setNicknameObj(prev => ({
-        ...prev,
+      return {
+        value: name,
         error: true,
         msg: '사용 불가능한 닉네임입니다.'
-      }));
+      };
     }
 
-    return setNicknameObj(prev => ({
-      ...prev,
+    return {
+      value: name,
       error: false,
       msg: ''
-    }));
+    };
   };
 
   /**
@@ -72,7 +69,9 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
    */
   const debounceNickname = useCallback(
     debounce(name => {
-      validateNickname(name);
+      const nickObj = validateNickname(name);
+      nickObj && setNicknameObj(nickObj);
+      setDebouncedNickname(name);
     }, 500),
     []
   );
@@ -81,6 +80,14 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     setNicknameObj(prev => ({ ...prev, value: e.target.value }));
     debounceNickname(e.target.value);
   };
+
+  const { nickObj } = useNickname(
+    debouncedNickname,
+    debouncedNickname.length > 0
+  );
+  useEffect(() => {
+    setNicknameObj(nickObj);
+  }, [nickObj]);
 
   return (
     <>
