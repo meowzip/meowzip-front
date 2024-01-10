@@ -2,9 +2,10 @@ import Image from 'next/image';
 import BackIcon from '../../../public/images/icons/back.svg';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/Button';
 
 interface BaseProps {
-  type: 'home' | 'page' | 'modal' | 'search' | 'bottom';
+  type: 'home' | 'page' | 'modal' | 'search' | 'bottom' | 'save';
   title?: string;
   hideLeft?: boolean;
   hideRight?: boolean;
@@ -158,6 +159,33 @@ const Topbar = ({
         left: '',
         center: <p>{title}</p>,
         right: ''
+      }
+    },
+    {
+      type: 'save',
+      content: {
+        left: (
+          <div className="flex px-[10px] py-1" onClick={onClose}>
+            <BackIcon
+              width={24}
+              height={24}
+              stroke="var(--gr-black)"
+              className="cursor-pointer"
+              onClick={onClick}
+            />
+          </div>
+        ),
+        center: <p onClick={onClick}>{title}</p>,
+        right: (
+          <Button
+            variant="text"
+            size="md"
+            className="text-pr-500"
+            onClick={onClick}
+          >
+            완료
+          </Button>
+        )
       }
     }
   ];
