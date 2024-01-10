@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import Badge from '@/components/ui/Badge';
 
 const BOTTOM_NAV = [
   {
@@ -52,13 +53,18 @@ const BottomNavBar = () => {
   return (
     <div className="flex w-screen justify-center rounded-t-[20px] bg-gr-white px-2 pb-[34px] pt-2 shadow-bottomNav">
       {BOTTOM_NAV.map(nav => (
-        <Link key={nav.key} href={nav.key} className="px-4">
+        <Link key={nav.key} href={nav.key} className="relative px-4">
+          {nav.key === 'profile' && (
+            <div className="absolute right-4">
+              <Badge type="default" bgColor="bg-pr-500" />
+            </div>
+          )}
           <Image
             src={nav.key === activeNav ? nav.img.active : nav.img.default}
             alt={nav.key}
             width={40}
             height={40}
-            className="h-auto w-auto rounded-full"
+            className="rounded-full p-[3px]"
           />
           <h5 className="text-center text-[10px] font-normal text-gr-800">
             {nav.value}
