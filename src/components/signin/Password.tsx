@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import usePasswordHandler from '@/utils/usePasswordHandler';
@@ -5,6 +7,7 @@ import { useUser } from '@/contexts/EmailContext';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { signInOnServer } from '@/services/signin';
+import { useRouter } from 'next/navigation';
 
 interface PasswordProps {
   setStep: () => void;
@@ -14,6 +17,7 @@ export default function Password({ setStep }: PasswordProps) {
   const { password, handlePwdChange } = usePasswordHandler();
   const { email } = useUser();
   const [errorMsg, setErrorMsg] = useState('');
+  const router = useRouter();
 
   const signIn = () => {
     signInMutation.mutate({
@@ -28,9 +32,9 @@ export default function Password({ setStep }: PasswordProps) {
     },
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
-        console.log('data', data);
-        data.message && setErrorMsg(data.message);
+        router.push('/');
       } else {
+        data.message && setErrorMsg(data.message);
       }
     }
   });
@@ -43,6 +47,7 @@ export default function Password({ setStep }: PasswordProps) {
       <div className="pb-4">
         <Input
           variant="outlined"
+          type="password"
           placeholder="비밀번호를 입력하세요"
           helperText={password.error ? '비밀번호를 확인해주세요' : ''}
           value={password.value}
