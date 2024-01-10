@@ -19,6 +19,12 @@ const nextConfig = {
         hostname: 'i.natgeofe.com',
         port: '',
         pathname: '/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'github.com',
+        port: '',
+        pathname: '/**'
       }
     ]
   },
