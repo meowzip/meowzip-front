@@ -2,6 +2,25 @@ import returnFetchJson from '@/utils/returnFetchJson';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  headers: { Accept: 'application/json', credentials: 'include' }
+  // interceptors: {
+  //   request: async args => {
+  //     console.log('********* before sending request *********');
+  //     console.log('url:', args[0].toString());
+  //     console.log('requestInit:', args[1], '\n\n');
+  //     return args;
+  //   },
+  //   response: async (response, requestArgs) => {
+  //     console.log('********* after receiving response *********');
+  //     console.log('url:', requestArgs[0].toString());
+  //     console.log('requestInit:', requestArgs[1], '\n\n');
+  //     return response;
+  //   }
+  // }
+});
+
+const fetchExtendedOauth = returnFetchJson({
+  baseUrl: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_API,
   headers: { Accept: 'application/json' }
   // interceptors: {
   //   request: async args => {
@@ -47,8 +66,15 @@ export const signInOnServer = async (reqObj: {
       body: reqObj
     };
     const response = await fetchExtended('/members/login', requestOptions);
-    console.log(response.body, 'signInOnServer');
-    return response.body;
+    const token = response.headers.get('Authorization');
+
+    if (token) {
+      document.cookie = `Authorization=${token}; path=/; max-age=3600; secure;`;
+    } else {
+      throw new Error('Authorization token not found in the response');
+    }
+    console.log(response, 'signInOnServer');
+    return response;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
@@ -58,3 +84,14 @@ export const signInOnServer = async (reqObj: {
     }
   }
 };
+
+// export const googleSignInOnServer = async () => {
+//   try {
+//     const requestOptions = {
+//       method: 'POST'
+//     };
+//     const response = await fetchExtendedOauth('/google', requestOptions);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };

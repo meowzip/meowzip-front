@@ -1,6 +1,6 @@
-import React from 'react';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface SignInMainProps {
   setStep: () => void;
@@ -34,7 +34,13 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
           </div>
           <div className="flex items-end justify-center gap-6">
             <button>카톡</button>
-            <button>구글</button>
+            <button>
+              <Link
+                href={`${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_API + '/google'}`}
+              >
+                구글
+              </Link>
+            </button>
             <button>애플</button>
           </div>
         </div>
