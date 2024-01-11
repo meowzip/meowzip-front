@@ -2,7 +2,7 @@ import returnFetchJson from '@/utils/returnFetchJson';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
-  headers: { Accept: 'application/json' }
+  headers: { Accept: 'application/json', credentials: 'include' }
   // interceptors: {
   //   request: async args => {
   //     console.log('********* before sending request *********');
@@ -85,14 +85,13 @@ export const signInOnServer = async (reqObj: {
   }
 };
 
-export const googleSignInOnServer = async () => {
-  try {
-    const requestOptions = {
-      method: 'POST'
-    };
-    const response = await fetchExtendedOauth('/google', requestOptions);
-    console.log(response, 'googleSignInOnServer');
-  } catch (error) {
-    console.error(error);
-  }
-};
+// export const googleSignInOnServer = async () => {
+//   try {
+//     const requestOptions = {
+//       method: 'POST'
+//     };
+//     const response = await fetchExtendedOauth('/google', requestOptions);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
