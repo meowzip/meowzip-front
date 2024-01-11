@@ -19,6 +19,8 @@ export const useNickname = (query: string, enabled: boolean) => {
   });
 
   useEffect(() => {
+    if (!data) return;
+
     const response = data as unknown as { status: string; message: string };
 
     setNickObj({

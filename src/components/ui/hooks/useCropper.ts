@@ -1,4 +1,6 @@
-import { MutableRefObject, useEffect, useState } from 'react';
+import { MutableRefObject, useEffect } from 'react';
+import { useAtom } from 'jotai';
+import { croppedImageAtom } from '@/atoms/imageAtom';
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
@@ -10,7 +12,7 @@ const useCropper = (
   imageSrc: string | null,
   imageElement: MutableRefObject<CropperImageElement | null>
 ) => {
-  const [croppedImage, setCroppedImage] = useState<string | null>(null);
+  const [croppedImage, setCroppedImage] = useAtom(croppedImageAtom);
 
   useEffect(() => {
     if (imageElement.current && imageSrc) {

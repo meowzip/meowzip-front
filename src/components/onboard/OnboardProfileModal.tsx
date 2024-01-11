@@ -5,6 +5,7 @@ import { NICKNAME } from '@/components/onboard/NICKNAME';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
 import { useNickname } from '@/app/onboard/hooks/useNickname';
+import { croppedImageAtom } from '@/atoms/imageAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -21,6 +22,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     msg: ''
   });
   const [debouncedNickname, setDebouncedNickname] = useState('');
+  const [croppedImage, setCroppedImage] = useAtom(croppedImageAtom);
 
   useEffect(() => {
     setNicknameObj(prev => ({ ...prev, value: nickname }));
@@ -89,10 +91,23 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     setNicknameObj(nickObj);
   }, [nickObj]);
 
+  /**
+   * @description profile 저장
+   */
+  const updateProfile = () => {
+    const params = {
+      nickname: nickObj.value || null,
+      profileImage: croppedImage
+    };
+    console.log('params', params);
+
+    onClose();
+  };
+
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-        <Topbar type="modal" title="프로필 설정" onClose={onClose} />
+        <Topbar type="save" title="프로필 설정" onClose={updateProfile} />
         <section className="px-6 pt-5">
           <OnboardProfileUploader />
           <div className="py-6 text-center text-body-4 text-gr-black">
