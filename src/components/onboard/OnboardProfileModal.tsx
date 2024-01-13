@@ -9,6 +9,8 @@ import { croppedImageAtom } from '@/atoms/imageAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
+import { updateProfileOnServer } from '@/services/nickname';
+import { useMutation } from '@tanstack/react-query';
 
 interface OnboardProfileModalProps {
   onClose: () => void;
@@ -96,18 +98,37 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
    */
   const updateProfile = () => {
     const params = {
-      nickname: nickObj.value || null,
+      nickname: nickObj.value,
       profileImage: croppedImage
     };
-    console.log('params', params);
+
+    profileMutation.mutate(params);
 
     onClose();
   };
 
+  const profileMutation = useMutation({
+    mutationFn: (reqObj: { nickname: string; profileImage: string | null }) =>
+      updateProfileOnServer(reqObj),
+    onSuccess: (data: any) => {
+      if (data.status !== 'OK') {
+        console.log('111 data', data);
+      } else {
+        console.log('222 data', data);
+        // router.push('/onboard');
+      }
+    }
+  });
+
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-        <Topbar type="save" title="프로필 설정" onClose={updateProfile} />
+        <Topbar
+          type="save"
+          title="프로필 설정"
+          onClose={onClose}
+          onClick={updateProfile}
+        />
         <section className="px-6 pt-5">
           <OnboardProfileUploader />
           <div className="py-6 text-center text-body-4 text-gr-black">

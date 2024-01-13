@@ -171,7 +171,7 @@ const Topbar = ({
               height={24}
               stroke="var(--gr-black)"
               className="cursor-pointer"
-              onClick={onClick}
+              onClick={onClose}
             />
           </div>
         ),
