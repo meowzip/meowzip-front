@@ -51,7 +51,7 @@ const SignUpPage = () => {
   };
 
   /**
-   * @description API - GET arabia token
+   * @description API - GET token
    */
   const signupMutation = useMutation({
     mutationFn: (reqObj: { email: string; password: string }) =>
