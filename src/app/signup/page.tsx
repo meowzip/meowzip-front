@@ -50,7 +50,7 @@ const SignUpPage = () => {
   };
 
   /**
-   * @description API - GET token
+   * @description API - POST signup
    */
   const signUpMutation = useMutation({
     mutationFn: (reqObj: { email: string; password: string }) =>
