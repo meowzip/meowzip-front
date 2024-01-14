@@ -46,7 +46,6 @@ export const resetPwdOnServer = async (reqObj: {
       '/members/reset-password',
       requestOptions
     );
-    console.log(response.body, 'resetPwdOnServer');
 
     return response.body;
   } catch (error) {
