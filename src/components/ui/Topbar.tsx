@@ -129,28 +129,8 @@ const Topbar = ({
             variant="search"
             placeholder="고양이 검색..."
             onChange={onChange}
-            // iconEnd={
-            //   <Image
-            //     src="/images/icons/close-btn.svg"
-            //     alt="close-btn"
-            //     width={24}
-            //     height={24}
-            //     className="h-6 w-6"
-            //   />
-            // }
           />
         )
-        // right: (
-        //   <div className="px-[10px] py-1">
-        //     <Image
-        //       src="/images/icons/close-btn.svg"
-        //       alt="close-btn"
-        //       width={24}
-        //       height={24}
-        //       className="h-6 w-6"
-        //     />
-        //   </div>
-        // )
       }
     },
     {
