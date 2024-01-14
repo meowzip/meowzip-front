@@ -63,6 +63,9 @@ export default function Password({ setStep }: PasswordProps) {
       >
         로그인하기
       </Button>
+      <Button variant="secondary" size="sm" className="mt-8">
+        비밀번호를 잊으셨나요?
+      </Button>
     </section>
   );
 }
