@@ -22,7 +22,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} relative w-full bg-slate-100`}>
+      <body
+        className={`${inter.className} relative w-full bg-slate-100 pb-[100px]`}
+      >
         <div className="m-auto h-screen max-w-[600px] bg-white">
           <Providers>
             <JotaiProvider>
