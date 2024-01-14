@@ -46,7 +46,7 @@ const applyDefaultOptions = (
   ];
 };
 
-const mergeRequestObjectWithRequestInit = (
+const mergeRequestObjectWithRequestInit = async (
   request: Request,
   requestInit?: RequestInit
 ): Promise<RequestInit> => {
@@ -106,7 +106,6 @@ const returnFetch =
 
     const response = await fetchProvided(...requestInterceptorAppliedArgs);
 
-    // apply response interceptor
     return (
       defaultOptions?.interceptors?.response?.(
         response,

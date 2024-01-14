@@ -30,11 +30,12 @@ export default function Password({ setStep }: PasswordProps) {
     mutationFn: (reqObj: { email: string; password: string }) => {
       return signInOnServer(reqObj);
     },
-    onSuccess: (data: any) => {
-      if (data.status !== 'OK') {
-        router.push('/');
+    onSuccess: (response: any) => {
+      if (response.status === 200) {
+        router.push('/diary');
       } else {
-        data.message && setErrorMsg(data.message);
+        console.error('로그인 중 오류:', response.message);
+        router.push('/signin');
       }
     }
   });
@@ -61,6 +62,9 @@ export default function Password({ setStep }: PasswordProps) {
         disabled={!password.value || password.error}
       >
         로그인하기
+      </Button>
+      <Button variant="secondary" size="sm" className="mt-8">
+        비밀번호를 잊으셨나요?
       </Button>
     </section>
   );
