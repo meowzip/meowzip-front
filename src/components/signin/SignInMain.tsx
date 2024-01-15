@@ -1,12 +1,15 @@
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { signIn, signOut, useSession } from 'next-auth/react';
 
 interface SignInMainProps {
   setStep: () => void;
 }
 
 const SignInMain = ({ setStep }: SignInMainProps) => {
+  const { data: session } = useSession();
+
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
       <div className="w-full">
@@ -42,6 +45,7 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
               </Link>
             </button>
             <button>애플</button>
+            <button onClick={() => signIn()}>Sign In</button>
           </div>
         </div>
       </div>
