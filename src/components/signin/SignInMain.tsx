@@ -37,15 +37,8 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
           </div>
           <div className="flex items-end justify-center gap-6">
             <button>카톡</button>
-            <button>
-              <Link
-                href={`${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_API + '/google'}`}
-              >
-                구글
-              </Link>
-            </button>
+            <button onClick={() => signIn('google')}>구글</button>
             <button>애플</button>
-            <button onClick={() => signIn()}>Sign In</button>
           </div>
         </div>
       </div>
