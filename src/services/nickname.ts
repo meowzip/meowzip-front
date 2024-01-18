@@ -1,7 +1,7 @@
 import returnFetchJson from '@/utils/returnFetchJson';
 
 const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MjcsImlhdCI6MTcwNTEzMTA0OCwiZXhwIjoxNzA1MTM0NjQ4fQ.flP5mYbjxpBvK9mTjaWF8ct4bpSMkdXCCITK6I4sPfQ';
+  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MzYsImlhdCI6MTcwNTU4MzA1OSwiZXhwIjoxNzA1NTg2NjU5fQ.Rmhog4wDUi9mpAJDD8wGYif752Zhxuqy1nY4146Lqpo';
 
 export const fetchExtendedAuth = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
@@ -25,17 +25,41 @@ export const validateNicknameOnServer = async (nickname: string) => {
   }
 };
 
+export const fetchExtendedForm = returnFetchJson({
+  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
+  headers: { Authorization: token }
+});
+
 export const updateProfileOnServer = async (reqObj: {
   nickname: string;
   profileImage: string | null;
 }) => {
-  try {
-    const requestOptions = {
-      method: 'PATCH',
-      body: reqObj
-    };
+  console.log('reqObj', reqObj);
 
-    const response = await fetchExtendedAuth('/members', requestOptions);
+  const file = base64ToFile(reqObj.profileImage, 'image.jpg');
+
+  let formData = new FormData();
+  formData.append('nickname', reqObj.nickname);
+  file && formData.append('profileImage', file);
+
+  // for (const entry of formData) {
+  //   console.log('FormData Entry:', entry);
+  // }
+
+  // Generate a unique boundary string
+  const boundary = Math.random().toString(16).substring(2);
+
+  const requestOptions = {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'multipart/form-data; boundary=' + boundary
+    },
+    body: formData
+    // body: requestData
+  };
+
+  try {
+    const response = await fetchExtendedForm('/members', requestOptions);
 
     return response.body;
   } catch (error) {
@@ -46,4 +70,26 @@ export const updateProfileOnServer = async (reqObj: {
       throw new Error('프로필 수정 중 오류 발생:');
     }
   }
+};
+
+const base64ToFile = (base64String: string | null, filename: string) => {
+  // Split the base64 string into parts
+  if (!base64String) return;
+
+  const parts = base64String.split(';base64,');
+  const decodedData = window.atob(parts[1]); // Decode base64 string
+
+  // Convert decoded data to binary
+  const uint8Array = new Uint8Array(decodedData.length);
+  for (let i = 0; i < decodedData.length; ++i) {
+    uint8Array[i] = decodedData.charCodeAt(i);
+  }
+
+  // Create a Blob from the binary data
+  const blob = new Blob([uint8Array]);
+
+  // Create a File from the Blob
+  const file = new File([blob], filename);
+
+  return file;
 };
