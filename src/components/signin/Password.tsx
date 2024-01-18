@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { signInOnServer } from '@/services/signin';
 import { useRouter } from 'next/navigation';
+import Modal from '../ui/Modal';
 
 interface PasswordProps {
   setStep: () => void;
@@ -16,8 +17,8 @@ interface PasswordProps {
 export default function Password({ setStep }: PasswordProps) {
   const { password, handlePwdChange } = usePasswordHandler();
   const { email } = useUser();
-  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   const signIn = () => {
     signInMutation.mutate({
@@ -37,6 +38,10 @@ export default function Password({ setStep }: PasswordProps) {
         console.error('로그인 중 오류:', response.message);
         router.push('/signin');
       }
+    },
+    onError: (error: any) => {
+      setShowModal(true);
+      console.error('로그인 중 오류:', error);
     }
   });
 
@@ -66,6 +71,26 @@ export default function Password({ setStep }: PasswordProps) {
       <Button variant="secondary" size="sm" className="mt-8">
         비밀번호를 잊으셨나요?
       </Button>
+      {showModal && (
+        <Modal
+          contents={{
+            title: '알림',
+            body: '입력하신 정보를 다시 한번 확인해주세요'
+          }}
+          scrim={true}
+          buttons={[
+            {
+              variant: 'primary',
+              size: 'lg',
+              content: '확인',
+              style: 'w-full rounded-[16px] px-4 py-2'
+            }
+          ]}
+          onClose={() => {
+            setShowModal(false);
+          }}
+        />
+      )}
     </section>
   );
 }

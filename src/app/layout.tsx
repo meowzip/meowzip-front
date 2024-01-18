@@ -7,6 +7,7 @@ import Providers from './providers';
 import UserProvider from '@/providers/UserInfoProvider';
 import JotaiProvider from '@/providers/JotaiProvider';
 import React from 'react';
+import AuthSession from '@/providers/AuthSession';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -27,9 +28,11 @@ export default function RootLayout({
       >
         <div className="m-auto h-screen max-w-[600px] bg-white">
           <Providers>
-            <JotaiProvider>
-              <UserProvider>{children}</UserProvider>
-            </JotaiProvider>
+            <AuthSession>
+              <JotaiProvider>
+                <UserProvider>{children}</UserProvider>
+              </JotaiProvider>
+            </AuthSession>
           </Providers>
         </div>
         <Toaster />
