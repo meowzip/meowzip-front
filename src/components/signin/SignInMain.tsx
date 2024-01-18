@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
-import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 interface SignInMainProps {
@@ -36,9 +35,30 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
             SNS 계정으로 간편하게 시작하기
           </div>
           <div className="flex items-end justify-center gap-6">
-            <button>카톡</button>
-            <button onClick={() => signIn('google')}>구글</button>
-            <button>애플</button>
+            <button>
+              <Image
+                width={48}
+                height={48}
+                src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/social-login/kakao.svg"
+                alt="google-icon"
+              />
+            </button>
+            <button onClick={() => signIn('google')}>
+              <Image
+                width={48}
+                height={48}
+                src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/social-login/google.svg"
+                alt="google-icon"
+              />
+            </button>
+            <button>
+              <Image
+                width={48}
+                height={48}
+                src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/social-login/apple.svg"
+                alt="google-icon"
+              />
+            </button>
           </div>
         </div>
       </div>

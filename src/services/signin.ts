@@ -55,7 +55,6 @@ export const signInOnServer = async (reqObj: {
     } else {
       throw new Error('Authorization token not found in the response');
     }
-    console.log(response, 'signInOnServer');
     return response;
   } catch (error) {
     console.error(error);

@@ -74,6 +74,7 @@ const SignUpPage = () => {
       </article>
       <article className="flex flex-col gap-2">
         <Input
+          type="password"
           helperText={
             password.error ? '8자 이상 / 영문, 숫자, 특수문자 가능' : ''
           }
@@ -83,6 +84,7 @@ const SignUpPage = () => {
           onChange={handlePwdChange}
         />
         <Input
+          type="password"
           helperText={passwordCheck.error ? '비밀번호를 확인해주세요' : ''}
           value={passwordCheck.value}
           placeholder="비밀번호 확인"
