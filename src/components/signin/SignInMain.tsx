@@ -35,7 +35,14 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
             SNS 계정으로 간편하게 시작하기
           </div>
           <div className="flex items-end justify-center gap-6">
-            <button>
+            <button
+              onClick={() =>
+                signIn('google', {
+                  callbackUrl: 'http://localhost:3000/signin/kakao',
+                  redirect: false
+                })
+              }
+            >
               <Image
                 width={48}
                 height={48}
@@ -43,7 +50,13 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
                 alt="google-icon"
               />
             </button>
-            <button onClick={() => signIn('google')}>
+            <button
+              onClick={() =>
+                signIn('google', {
+                  callbackUrl: 'http://localhost:3000/signin/google'
+                })
+              }
+            >
               <Image
                 width={48}
                 height={48}
