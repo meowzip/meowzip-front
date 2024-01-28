@@ -1,6 +1,7 @@
 import React, { ReactNode, useState } from 'react';
 import Topbar from '../ui/Topbar';
 import { CalendarModal } from './CalendarModal';
+
 interface DiaryListLayoutProps {
   children: ReactNode;
 }
@@ -42,7 +43,7 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
       />
-      <main className="bg-gr-100">{children}</main>
+      <main className="bg-gr-50">{children}</main>
     </>
   );
 };
