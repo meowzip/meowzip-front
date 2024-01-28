@@ -41,7 +41,7 @@ const DiaryCard = ({
     <div className="mb-4 rounded-16 bg-gr-white" onClick={onClick}>
       {images && images?.length > 0 && (
         <section className="flex h-[300px] gap-2">
-          <Carousel images={images} />
+          <Carousel images={images} style="rounded-t-2xl" />
         </section>
       )}
       <section className="p-4">

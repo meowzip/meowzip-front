@@ -22,8 +22,8 @@ const DiaryDetailModal = ({
       <Topbar type="modal" title="날짜 props" onClose={onClose} />
       <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-4">
         <h5 className="text-end text-body-4 text-gr-500">아이디 • 7시간 전</h5>
-        <div className="h-[300px w-[90vw]">
-          {images && <Carousel images={images} />}
+        <div className="flex h-[300px] w-[90vw]">
+          {images && <Carousel images={images} style="rounded-16" />}
         </div>
         <h4 className="text-body-3 text-gr-black">{content}</h4>
         <article className="mb-2 flex items-center justify-start gap-1">

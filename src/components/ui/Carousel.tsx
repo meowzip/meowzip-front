@@ -10,9 +10,10 @@ import 'swiper/css/pagination';
 
 interface CarouselProps {
   images: string[];
+  style?: string;
 }
 
-const Carousel: React.FC<CarouselProps> = ({ images }) => {
+const Carousel: React.FC<CarouselProps> = ({ images, style }) => {
   const swiperRef = useRef<SwiperCore>();
 
   const params: SwiperOptions = {
@@ -49,7 +50,7 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
           .swiper-pagination-custom {
             width:auto;
             position:absolute;
-            right: 0;
+            right: 10px;
             left: auto;
           }
         `}
@@ -61,9 +62,9 @@ const Carousel: React.FC<CarouselProps> = ({ images }) => {
         }}
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index} className="p-5">
+          <SwiperSlide key={index}>
             <img
-              className="h-full object-contain"
+              className={`h-full object-cover ${style}`}
               src={image}
               alt={`slide-${index}`}
               style={{ width: '100%' }}
