@@ -151,10 +151,7 @@ const DiaryPage = () => {
           ))}
         </section>
       </DiaryListLayout>
-      <FloatingActionButton
-        image="/next.svg"
-        onClick={() => setShowWriteModal(true)}
-      />
+      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
 
       {showDetailModal && (
         <DiaryDetailModal
