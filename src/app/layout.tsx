@@ -22,10 +22,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.className} relative w-full bg-slate-100 pb-[100px]`}
-      >
-        <div className="m-auto h-screen max-w-[600px] bg-white">
+      <body className={`${inter.className} relative w-full pb-[100px]`}>
+        <div className="m-auto h-full max-w-[600px] bg-white">
           <Providers>
             <JotaiProvider>
               <UserProvider>{children}</UserProvider>
@@ -33,7 +31,7 @@ export default function RootLayout({
           </Providers>
         </div>
         <Toaster />
-        <div className="fixed bottom-0">
+        <div className="fixed bottom-0 z-[100]">
           <BottomNavBar />
         </div>
       </body>
