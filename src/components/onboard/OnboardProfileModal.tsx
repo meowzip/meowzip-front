@@ -103,18 +103,19 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     };
 
     profileMutation.mutate(params);
-
-    onClose();
   };
 
   const profileMutation = useMutation({
     mutationFn: (reqObj: { nickname: string; profileImage: string | null }) =>
       updateProfileOnServer(reqObj),
     onSuccess: (data: any) => {
-      if (data.status !== 'OK') {
-        console.log('111 data', data);
+      if (data.status === 'OK') {
+        console.log('ok data', data);
+        setNickname(data.data.nickname);
+        setCroppedImage(data.data.profileImage);
+        onClose();
       } else {
-        console.log('222 data', data);
+        console.log('error data', data);
         // router.push('/onboard');
       }
     }

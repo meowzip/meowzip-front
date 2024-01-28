@@ -7,24 +7,31 @@ import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
 import Image from 'next/image';
 import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
+import { croppedImageAtom } from '@/atoms/imageAtom';
 
 const OnBoardPage = () => {
   const router = useRouter();
 
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [nickname, setNickname] = useAtom(nicknameAtom);
+  const [croppedImage, setCroppedImage] = useAtom(croppedImageAtom);
 
   return (
     <>
       <section className="px-4 pt-[60px]">
         <article className="flex items-center justify-center">
-          <Image
-            src="https://i.pinimg.com/564x/dc/fe/e5/dcfee5f8b2eea184af2fbff4e15a2b7b.jpg"
+          <img
+            src={croppedImage || ''}
+            alt=""
+            className="h-[120px] w-[120px] rounded-[48px]"
+          />
+          {/* <Image
+            src={croppedImage || ''}
             alt="profile"
             width={120}
             height={120}
             className="h-[120px] w-[120px] rounded-[48px]"
-          />
+          /> */}
         </article>
         <article className="text-bg-black flex flex-col items-center justify-center gap-2 py-8 text-heading-1">
           <h1>
