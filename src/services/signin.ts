@@ -3,20 +3,6 @@ import returnFetchJson from '@/utils/returnFetchJson';
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
   headers: { Accept: 'application/json' }
-  // interceptors: {
-  //   request: async args => {
-  //     console.log('********* before sending request *********');
-  //     console.log('url:', args[0].toString()); // eslint-disable-line
-  //     console.log('requestInit:', args[1], '\n\n');
-  //     return args;
-  //   },
-  //   response: async (response, requestArgs) => {
-  //     console.log('********* after receiving response *********');
-  //     console.log('url:', requestArgs[0].toString());
-  //     console.log('requestInit:', requestArgs[1], '\n\n');
-  //     return response;
-  //   }
-  // }
 });
 
 export const checkMembershipByEmail = async (email: string) => {
@@ -28,6 +14,7 @@ export const checkMembershipByEmail = async (email: string) => {
     const isSuccess = (response.body as any).status;
     if (isSuccess) {
       const data = (response.body as any).data;
+      console.log('이메일로 가입 여부 확인 결과:', data);
       return data;
     } else {
       console.error('이메일로 가입 여부 확인 중 오류:');

@@ -3,25 +3,10 @@ import GoogleProvider from 'next-auth/providers/google';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
   headers: { Accept: 'application/json' }
-  // interceptors: {
-  //   request: async args => {
-  //     console.log('********* before sending request *********');
-  //     console.log('url:', args[0].toString()); // eslint-disable-line
-  //     console.log('requestInit:', args[1], '\n\n');
-  //     return args;
-  //   },
-  //   response: async (response, requestArgs) => {
-  //     console.log('********* after receiving response *********');
-  //     console.log('url:', requestArgs[0].toString());
-  //     console.log('requestInit:', requestArgs[1], '\n\n');
-  //     return response;
-  //   }
-  // }
 });
 
 // import KakaoProvider from 'next-auth/providers/kakao';
@@ -97,7 +82,6 @@ const signInOnServer = async (reqObj: { email: string; password: string }) => {
     const response = await fetchExtended('/members/login', requestOptions);
     const token = response.headers.get('Authorization');
     const setCookies = response.headers.get('set-cookie');
-    console.log(setCookies, 'setCookie');
 
     cookies().set({
       name: 'Authorization',

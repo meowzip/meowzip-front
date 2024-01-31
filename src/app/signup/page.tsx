@@ -45,7 +45,8 @@ const SignUpPage = () => {
   const signUp = () => {
     signUpMutation.mutate({
       email: 'test7@gmail.com',
-      password: password.value
+      password: password.value,
+      loginType: 'EMAIL'
     });
   };
 
@@ -53,8 +54,11 @@ const SignUpPage = () => {
    * @description API - POST signup
    */
   const signUpMutation = useMutation({
-    mutationFn: (reqObj: { email: string; password: string }) =>
-      signUpOnServer(reqObj),
+    mutationFn: (reqObj: {
+      email: string;
+      password: string;
+      loginType: string;
+    }) => signUpOnServer(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
         data.message && setErrorMsg(data.message);
