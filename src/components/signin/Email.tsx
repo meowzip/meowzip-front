@@ -4,13 +4,7 @@ import useEmailHandler from '@/utils/useEmailHandler';
 import { checkMembershipByEmail } from '@/services/signin';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/contexts/EmailContext';
-type Step =
-  | 'email'
-  | 'accountInfo'
-  | 'password'
-  | 'main'
-  | 'complete'
-  | 'kakao';
+type Step = 'email' | 'accountInfo' | 'password' | 'main' | 'complete';
 
 interface EmailProps {
   setStep: (step: Step) => void;
@@ -19,23 +13,20 @@ interface EmailProps {
 const Email = ({ setStep }: EmailProps) => {
   const router = useRouter();
   const { email, handleEmailChange } = useEmailHandler();
-  const { setEmail } = useUser();
+  const { setEmail, setLoginType } = useUser();
 
   const handleVerifyAccount = async () => {
     const signInInfo = await checkMembershipByEmail(email.value);
 
     if (signInInfo && signInInfo.isEmailExists) {
-      switch (signInInfo.loginType) {
-        case 'EMAIL':
-          setEmail(email.value);
-          setStep('password');
-          break;
-        case 'KAKAO':
-          setStep('kakao');
-          break;
+      setEmail(email.value);
+      if (signInInfo.loginType === 'EMAIL') {
+        setStep('password');
+      } else {
+        setStep('accountInfo');
+        setLoginType(signInInfo.loginType);
       }
     } else {
-      setEmail(email.value);
       router.push('/signup', { scroll: false });
     }
   };

@@ -6,7 +6,6 @@ import CheckAccount from '@/components/signin/CheckAccount';
 import SignInMain from '@/components/signin/SignInMain';
 import Complete from '@/components/signin/Complete';
 import Topbar from '@/components/ui/Topbar';
-import KakaoLogin from '@/components/signin/KakaoLogin';
 
 export type NonEmptyArray<T> = readonly [T, ...T[]];
 import { useFunnel } from '@/components/common/Funnel';
@@ -17,8 +16,7 @@ const SignInPage = () => {
     'email',
     'accountInfo',
     'password',
-    'complete',
-    'kakao'
+    'complete'
   ] as const;
 
   type Step = (typeof steps)[number];
@@ -51,9 +49,6 @@ const SignInPage = () => {
           </Funnel.Step>
           <Funnel.Step name="complete">
             <Complete />
-          </Funnel.Step>
-          <Funnel.Step name="kakao">
-            <KakaoLogin />
           </Funnel.Step>
         </Funnel>
       </div>

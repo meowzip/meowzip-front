@@ -5,6 +5,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface UserContextState {
   email: string;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
+  loginType: string;
+  setLoginType: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const UserContext = createContext<UserContextState | null>(null);
@@ -15,8 +17,9 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [email, setEmail] = useState('');
+  const [loginType, setLoginType] = useState('');
 
-  const contextValue = { email, setEmail };
+  const contextValue = { email, setEmail, loginType, setLoginType };
 
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>
