@@ -3,14 +3,13 @@ import GoogleProvider from 'next-auth/providers/google';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { headers } from 'next/headers';
+import { checkMembershipByEmail } from '@/services/signin';
+import { signUpOnServer } from '@/services/signup';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
   headers: { Accept: 'application/json' }
 });
-
-// import KakaoProvider from 'next-auth/providers/kakao';
-// import NaverProvider from 'next-auth/providers/naver';
 
 const handler = NextAuth({
   providers: [
@@ -18,24 +17,27 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || ''
     })
-    // KakaoProvider({
-    //   clientId: process.env.KAKAO_CLIENT_ID || '',
-    //   clientSecret: process.env.KAKAO_CLIENT_SECRET || ''
-    // }),
-    // NaverProvider({
-    //   clientId: process.env.NAVER_CLIENT_ID || '',
-    //   clientSecret: process.env.NAVER_CLIENT_SECRET || ''
-    // })
   ],
   callbacks: {
     async signIn({ user, account }) {
-      const email = user.email || '';
-      const token = await signInOnServer({
-        email: 'abc@gmail.com',
-        password: 'qwer12345!'
-      });
+      const signInInfo = await checkMembershipByEmail(user.email || '');
 
-      return true;
+      if (signInInfo && signInInfo.isEmailExists) {
+        // 소셜 로그인 처리
+        signInOnServerWithSocial({
+          email: user.email || '',
+          password: user.id || ''
+        });
+        return true;
+      } else {
+        // 회원가입 처리
+        signUpOnServerWithSocialLogin({
+          email: user.email || '',
+          oauthId: user.id || '',
+          loginType: account?.provider.toUpperCase() || ''
+        });
+        return true;
+      }
     },
 
     async redirect({ url, baseUrl }) {
@@ -71,7 +73,10 @@ const handler = NextAuth({
   }
 });
 
-const signInOnServer = async (reqObj: { email: string; password: string }) => {
+const signInOnServerWithSocial = async (reqObj: {
+  email: string;
+  password: string;
+}) => {
   try {
     const requestOptions = {
       method: 'POST',
@@ -80,6 +85,46 @@ const signInOnServer = async (reqObj: { email: string; password: string }) => {
     };
 
     const response = await fetchExtended('/members/login', requestOptions);
+    const token = response.headers.get('Authorization');
+    const setCookies = response.headers.get('set-cookie');
+    console.log('response:', response);
+    console.log('token:', token);
+    console.log('setCookies:', setCookies);
+
+    cookies().set({
+      name: 'Authorization',
+      value: token || '',
+      path: '/'
+    });
+
+    cookies().set({
+      name: 'Authorization-Refresh',
+      value: setCookies || '',
+      httpOnly: true
+    });
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('로그인 요청 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('로그인 요청 중 오류 발생');
+    }
+  }
+};
+
+const signUpOnServerWithSocialLogin = async (reqObj: {
+  email: string;
+  oauthId: string;
+  loginType: string;
+}) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: reqObj,
+      credentials: 'include' as RequestCredentials
+    };
+
+    const response = await fetchExtended('/members/sign-up', requestOptions);
     const token = response.headers.get('Authorization');
     const setCookies = response.headers.get('set-cookie');
 
@@ -94,11 +139,6 @@ const signInOnServer = async (reqObj: { email: string; password: string }) => {
     });
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      throw new Error('로그인 요청 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('로그인 요청 중 오류 발생');
-    }
   }
 };
 

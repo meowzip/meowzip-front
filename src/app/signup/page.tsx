@@ -44,7 +44,7 @@ const SignUpPage = () => {
 
   const signUp = () => {
     signUpMutation.mutate({
-      email: 'test7@gmail.com',
+      email: email,
       password: password.value,
       loginType: 'EMAIL'
     });

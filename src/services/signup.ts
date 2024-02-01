@@ -8,6 +8,7 @@ export const fetchExtendedPublic = returnFetchJson({
 export const signUpOnServer = async (reqObj: {
   email: string;
   password: string;
+  loginType: string;
 }) => {
   try {
     const requestOptions = {
