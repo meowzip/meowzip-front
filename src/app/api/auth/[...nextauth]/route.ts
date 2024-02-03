@@ -4,7 +4,6 @@ import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { headers } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
-import { signUpOnServer } from '@/services/signup';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
@@ -24,16 +23,17 @@ const handler = NextAuth({
 
       if (signInInfo && signInInfo.isEmailExists) {
         // 소셜 로그인 처리
-        signInOnServerWithSocial({
+        await signInOnServerWithSocial({
           email: user.email || '',
           password: user.id || ''
         });
+
         return true;
       } else {
         // 회원가입 처리
-        signUpOnServerWithSocialLogin({
+        await signUpOnServerWithSocialLogin({
           email: user.email || '',
-          oauthId: user.id || '',
+          password: user.id || '',
           loginType: account?.provider.toUpperCase() || ''
         });
         return true;
@@ -87,20 +87,21 @@ const signInOnServerWithSocial = async (reqObj: {
     const response = await fetchExtended('/members/login', requestOptions);
     const token = response.headers.get('Authorization');
     const setCookies = response.headers.get('set-cookie');
-    console.log('response:', response);
-    console.log('token:', token);
-    console.log('setCookies:', setCookies);
+    const parsedCookie = parseCookieString(setCookies || '');
 
     cookies().set({
       name: 'Authorization',
       value: token || '',
-      path: '/'
+      secure: true,
+      maxAge: 60 * 60 * 4
     });
 
     cookies().set({
       name: 'Authorization-Refresh',
-      value: setCookies || '',
-      httpOnly: true
+      value: parsedCookie.token || '',
+      maxAge: parseInt(parsedCookie.maxAge, 10),
+      httpOnly: true,
+      secure: true
     });
   } catch (error) {
     console.error(error);
@@ -114,7 +115,7 @@ const signInOnServerWithSocial = async (reqObj: {
 
 const signUpOnServerWithSocialLogin = async (reqObj: {
   email: string;
-  oauthId: string;
+  password: string;
   loginType: string;
 }) => {
   try {
@@ -123,23 +124,74 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
       body: reqObj,
       credentials: 'include' as RequestCredentials
     };
-
     const response = await fetchExtended('/members/sign-up', requestOptions);
     const token = response.headers.get('Authorization');
     const setCookies = response.headers.get('set-cookie');
 
     cookies().set({
       name: 'Authorization',
-      value: token || ''
+      value: token || '',
+      secure: true,
+      maxAge: 60 * 60 * 4
     });
 
     cookies().set({
       name: 'Authorization-Refresh',
-      value: setCookies || ''
+      value: setCookies || '',
+      httpOnly: true,
+      secure: true
     });
   } catch (error) {
     console.error(error);
   }
+};
+
+interface CookieAttributes {
+  token: string;
+  path: string;
+  maxAge: string;
+  expires: string;
+  secure: boolean;
+  httpOnly: boolean;
+  sameSite: string;
+}
+
+const parseCookieString = (cookieString: string): CookieAttributes => {
+  const attributes: Partial<CookieAttributes> = {};
+  const parts = cookieString.split(';').map(part => part.trim());
+
+  const tokenPart = parts.shift();
+  if (tokenPart) {
+    const [name, token] = tokenPart.split('=');
+    if (name === 'Authorization-Refresh') {
+      attributes.token = token;
+    }
+  }
+
+  parts.forEach(part => {
+    const [key, value] = part.split('=');
+    switch (key) {
+      case 'Path':
+        attributes.path = value;
+        break;
+      case 'Max-Age':
+        attributes.maxAge = value;
+        break;
+      case 'Expires':
+        attributes.expires = value;
+        break;
+      case 'Secure':
+        attributes.secure = true;
+        break;
+      case 'HttpOnly':
+        attributes.httpOnly = true;
+        break;
+      case 'SameSite':
+        attributes.sameSite = value;
+        break;
+    }
+  });
+  return attributes as CookieAttributes;
 };
 
 export { handler as GET, handler as POST };
