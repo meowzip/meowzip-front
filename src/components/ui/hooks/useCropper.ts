@@ -1,6 +1,5 @@
-import { MutableRefObject, useEffect } from 'react';
-import { useAtom } from 'jotai';
-import { croppedImageAtom } from '@/atoms/imageAtom';
+import { Dispatch, MutableRefObject, SetStateAction, useEffect } from 'react';
+import { ImageUploadData } from '@/atoms/imageAtom';
 import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
 
@@ -9,11 +8,11 @@ interface CropperImageElement extends HTMLImageElement {
 }
 
 const useCropper = (
+  key: string,
   imageSrc: string | null,
-  imageElement: MutableRefObject<CropperImageElement | null>
+  imageElement: MutableRefObject<CropperImageElement | null>,
+  onUpload: Dispatch<SetStateAction<ImageUploadData[]>>
 ) => {
-  const [croppedImage, setCroppedImage] = useAtom(croppedImageAtom);
-
   useEffect(() => {
     if (imageElement.current && imageSrc) {
       const cropper = new Cropper(imageElement.current, {
@@ -35,11 +34,15 @@ const useCropper = (
       const croppedCanvas = cropper.getCroppedCanvas();
       const croppedImage = croppedCanvas.toDataURL('image/jpeg');
 
-      return setCroppedImage(croppedImage);
+      onUpload(prevList =>
+        prevList.map(item =>
+          item.key === key ? { ...item, croppedImage } : item
+        )
+      );
     }
   };
 
-  return { handleCrop, croppedImage, setCroppedImage };
+  return { handleCrop };
 };
 
 export default useCropper;

@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
 import TimeInput from '@/components/diary/TimeInput';
 import SearchCatModal from './SearchCatModal';
+import { useAtom } from 'jotai';
+import { diaryImageListAtom } from '@/atoms/imageAtom';
 interface DiaryWriteModalProps {
   onClose: () => void;
 }
@@ -30,6 +32,7 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
     { key: '3', src: 'image', style: '', name: '뚱쭝이', gender: 'female' },
     { key: '4', src: 'image', style: '', name: '감자', gender: 'male' }
   ]);
+  const [diaryImageList, setDiaryImageList] = useAtom(diaryImageListAtom);
 
   const displayTime = () => {
     const { hour, minute } = currentTime;
@@ -72,9 +75,29 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             사진 <span className="text-pr-500">2</span>/3
           </h5>
           <div className="flex gap-3 px-4">
-            <ImageUploader deleteBtn />
-            <ImageUploader deleteBtn />
-            <ImageUploader deleteBtn />
+            {diaryImageList.map((diary, idx: number) => {
+              if (diary.key === '1') {
+                return (
+                  <ImageUploader
+                    key={diary.key}
+                    data={diary}
+                    deleteBtn
+                    onUpload={setDiaryImageList}
+                  />
+                );
+              } else {
+                if (diaryImageList[idx - 1].croppedImage) {
+                  return (
+                    <ImageUploader
+                      key={diary.key}
+                      data={diary}
+                      deleteBtn
+                      onUpload={setDiaryImageList}
+                    />
+                  );
+                }
+              }
+            })}
           </div>
         </article>
         <article>
