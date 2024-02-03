@@ -230,7 +230,7 @@ const DemoPage = () => {
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 FloatingActionButton</h1>
-        <FloatingActionButton image="/next.svg" onClick={() => {}} />
+        <FloatingActionButton onClick={() => {}} />
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🦦 Toast</h1>

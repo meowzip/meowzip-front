@@ -1,7 +1,8 @@
+import returnFetch from '@/utils/returnFetch';
 import returnFetchJson from '@/utils/returnFetchJson';
 
 const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6MzYsImlhdCI6MTcwNTU4MzA1OSwiZXhwIjoxNzA1NTg2NjU5fQ.Rmhog4wDUi9mpAJDD8wGYif752Zhxuqy1nY4146Lqpo';
+  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6NDUsImlhdCI6MTcwNjc5NTMyMiwiZXhwIjoxNzA2Nzk4OTIyfQ.xfCUoBHxUpc2Wwvu2rXgEHz0fn2Lc-WGXBpKHPi5b2s';
 
 export const fetchExtendedAuth = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
@@ -25,37 +26,24 @@ export const validateNicknameOnServer = async (nickname: string) => {
   }
 };
 
-export const fetchExtendedForm = returnFetchJson({
+export const fetchExtendedForm = returnFetch({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
-  headers: { Authorization: token }
+  headers: { Authorization: `Bearer ${token}` }
 });
 
 export const updateProfileOnServer = async (reqObj: {
   nickname: string;
   profileImage: string | null;
 }) => {
-  console.log('reqObj', reqObj);
+  const formData = new FormData();
+  formData.append('nickname', reqObj.nickname);
 
   const file = base64ToFile(reqObj.profileImage, 'image.jpg');
-
-  let formData = new FormData();
-  formData.append('nickname', reqObj.nickname);
   file && formData.append('profileImage', file);
-
-  // for (const entry of formData) {
-  //   console.log('FormData Entry:', entry);
-  // }
-
-  // Generate a unique boundary string
-  const boundary = Math.random().toString(16).substring(2);
 
   const requestOptions = {
     method: 'PATCH',
-    headers: {
-      'Content-Type': 'multipart/form-data; boundary=' + boundary
-    },
     body: formData
-    // body: requestData
   };
 
   try {

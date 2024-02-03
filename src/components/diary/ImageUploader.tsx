@@ -1,11 +1,18 @@
 'use client';
 
-import { ChangeEvent, ReactNode, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useRef
+} from 'react';
 import { Button } from '@/components/ui/Button';
 import Image from 'next/image';
 import useCropper from '@/components/ui/hooks/useCropper';
 import CloseIcon from '../../../public/images/icons/close.svg';
 import PencilIcon from '../../../public/images/icons/pencil.svg';
+import { ImageUploadData } from '@/atoms/imageAtom';
 
 interface ImageUploaderProps {
   width?: string;
@@ -14,6 +21,8 @@ interface ImageUploaderProps {
   preview?: ReactNode;
   editBtn?: boolean;
   deleteBtn?: boolean;
+  data: ImageUploadData;
+  onUpload: Dispatch<SetStateAction<ImageUploadData[]>>;
 }
 
 const ImageUploader = ({
@@ -22,40 +31,45 @@ const ImageUploader = ({
   radius,
   preview,
   editBtn,
-  deleteBtn
+  deleteBtn,
+  data,
+  onUpload
 }: ImageUploaderProps) => {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageElement = useRef(null);
 
-  const selectImage = (e: ChangeEvent<HTMLInputElement>) => {
+  const selectImage = (e: ChangeEvent<HTMLInputElement>, key: string) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImageSrc(reader.result as string);
+        onUpload(prevList =>
+          prevList.map(item =>
+            item.key === key
+              ? { ...item, imageSrc: reader.result as string }
+              : item
+          )
+        );
       };
       reader.readAsDataURL(file);
-    } else {
-      setImageSrc(null);
     }
   };
 
-  const deleteImage = () => {
-    setImageSrc(null);
-    setCroppedImage(null);
+  const deleteImage = (key: string) => {
+    onUpload(prevList =>
+      prevList.map(item =>
+        item.key === key
+          ? { ...item, imageSrc: null, croppedImage: null }
+          : item
+      )
+    );
   };
 
-  const editImage = () => {
-    console.log('이미지 있으면 시스템 시트 or 삭제 버튼');
-    const triggerFileInput = () => {
-      fileInputRef.current?.click();
-    };
-  };
-
-  const imageElement = useRef(null);
-  const { handleCrop, croppedImage, setCroppedImage } = useCropper(
-    imageSrc,
-    imageElement
+  const { handleCrop } = useCropper(
+    data?.key,
+    data?.imageSrc,
+    imageElement,
+    onUpload
   );
 
   return (
@@ -65,12 +79,13 @@ const ImageUploader = ({
       } relative flex  flex-col items-center justify-center bg-gr-50 `}
     >
       {/* 파일 업로드 */}
-      {!imageSrc && (
+      {!data?.imageSrc && (
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
-          onChange={selectImage}
+          onChange={e => selectImage(e, data?.key)}
+          id={data?.key}
           className="hidden"
         />
       )}
@@ -79,10 +94,10 @@ const ImageUploader = ({
         className={`flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300 ${
           radius || 'rounded-16'
         }`}
-        style={{ backgroundImage: `url(${croppedImage})` }}
+        style={{ backgroundImage: `url(${data?.croppedImage})` }}
         onClick={() => fileInputRef.current?.click()}
       >
-        {!croppedImage &&
+        {!data?.croppedImage &&
           (preview || (
             <div className="flex flex-col items-center justify-center gap-1">
               <Image
@@ -96,10 +111,10 @@ const ImageUploader = ({
           ))}
       </section>
       {/* 상단 삭제 버튼 */}
-      {croppedImage && deleteBtn && (
+      {data?.croppedImage && deleteBtn && (
         <section
           className="absolute -right-1 -top-1 cursor-pointer"
-          onClick={deleteImage}
+          onClick={() => deleteImage(data?.key)}
         >
           <Image
             src="/images/icons/close-bg.svg"
@@ -113,7 +128,7 @@ const ImageUploader = ({
       {editBtn && (
         <section className="absolute bottom-0 right-0 rounded-16">
           <div className="h-full w-full rounded-full border-[1.5px] border-gr-white bg-gr-700 p-1">
-            {croppedImage ? (
+            {data?.croppedImage ? (
               <CloseIcon
                 width={16}
                 height={16}
@@ -133,12 +148,12 @@ const ImageUploader = ({
       )}
       {/* crop image */}
       <section className="w-full">
-        {imageSrc && !croppedImage && (
+        {data?.imageSrc && !data?.croppedImage && (
           <div className="fixed left-0 top-0 z-[200] ">
             <div className="h-screen w-screen bg-gr-white">
               <Image
                 ref={imageElement}
-                src={imageSrc}
+                src={data?.imageSrc}
                 alt="cropped-image"
                 width={24}
                 height={24}

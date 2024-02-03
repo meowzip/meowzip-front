@@ -5,7 +5,7 @@ import { NICKNAME } from '@/components/onboard/NICKNAME';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
 import { useNickname } from '@/app/onboard/hooks/useNickname';
-import { croppedImageAtom } from '@/atoms/imageAtom';
+import { profileImageAtom } from '@/atoms/imageAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -24,7 +24,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
     msg: ''
   });
   const [debouncedNickname, setDebouncedNickname] = useState('');
-  const [croppedImage, setCroppedImage] = useAtom(croppedImageAtom);
+  const [profileImage, setProfileImage] = useAtom(profileImageAtom);
 
   useEffect(() => {
     setNicknameObj(prev => ({ ...prev, value: nickname }));
@@ -99,7 +99,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
   const updateProfile = () => {
     const params = {
       nickname: nickObj.value,
-      profileImage: croppedImage
+      profileImage: profileImage[0].croppedImage
     };
 
     profileMutation.mutate(params);
@@ -112,7 +112,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
       if (data.status === 'OK') {
         console.log('ok data', data);
         setNickname(data.data.nickname);
-        setCroppedImage(data.data.profileImage);
+        setProfileImage(data.data.profileImage);
         onClose();
       } else {
         console.log('error data', data);
@@ -131,7 +131,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
           onClick={updateProfile}
         />
         <section className="px-6 pt-5">
-          <OnboardProfileUploader />
+          <OnboardProfileUploader data={profileImage} />
           <div className="py-6 text-center text-body-4 text-gr-black">
             <h6>사용하실 프로필과 닉네임을 설정하세요.</h6>
             <h6>닉네임은 띄어쓰기 포함 최대 12자까지 가능합니다.</h6>

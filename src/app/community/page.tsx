@@ -1,8 +1,13 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
+import FloatingActionButton from '@/components/ui/FloatingActionButton';
+import FeedWriteModal from '@/components/community/FeedWriteModal';
 
 const CommunityPage = () => {
-  const mockup = [
+  const [showWriteModal, setShowWriteModal] = useState(false);
+  const [feedList, setFeedList] = useState([
     {
       id: 1,
       profile: 'https://github.com/shadcn.png',
@@ -31,13 +36,21 @@ const CommunityPage = () => {
       like: 220,
       comment: 95
     }
-  ];
+  ]);
 
   return (
     <>
-      {mockup.map(feed => (
+      <h1 className="flex h-12 items-center pl-4 align-middle text-heading-3 text-gr-900">
+        커뮤니티
+      </h1>
+      {feedList.map(feed => (
         <FeedCard key={feed.id} content={feed} />
       ))}
+      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
+
+      {showWriteModal && (
+        <FeedWriteModal onClose={() => setShowWriteModal(false)} />
+      )}
     </>
   );
 };
