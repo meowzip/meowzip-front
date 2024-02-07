@@ -15,10 +15,12 @@ interface FeedCardProps {
     like: number;
     comment: number;
   };
+  onClick: () => void;
 }
 
-const FeedCard = ({ content }: FeedCardProps) => {
+const FeedCard = ({ content, onClick }: FeedCardProps) => {
   const [showMore, setMore] = useState(false);
+  const [openBottomSheet, setOpenBottomSheet] = useState(false);
 
   const clickLike = () => {
     console.log('click like interaction');
@@ -34,7 +36,11 @@ const FeedCard = ({ content }: FeedCardProps) => {
 
   return (
     <div className="border-b border-gr-100 px-4 pt-4">
-      <UserArea nickname={content.nickname} profile={content.profile} />
+      <UserArea
+        nickname={content.nickname}
+        profile={content.profile}
+        onClick={onClick}
+      />
       <section className="flex flex-col items-start gap-1">
         <p
           className={`pt-4 text-body-3 text-gr-black ${

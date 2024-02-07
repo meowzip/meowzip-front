@@ -4,9 +4,13 @@ import React, { useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
+import BottomSheet from '@/components/ui/BottomSheet';
+import ActionButton from '@/components/ui/ActionButton';
 
 const CommunityPage = () => {
   const [showWriteModal, setShowWriteModal] = useState(false);
+  const [editBottomSheet, setEditBottomSheet] = useState(false);
+  const [isMyFeed, setIsMyFeed] = useState(true);
   const [feedList, setFeedList] = useState([
     {
       id: 1,
@@ -44,13 +48,51 @@ const CommunityPage = () => {
         커뮤니티
       </h1>
       {feedList.map(feed => (
-        <FeedCard key={feed.id} content={feed} />
+        <FeedCard
+          key={feed.id}
+          content={feed}
+          onClick={() => setEditBottomSheet(true)}
+        />
       ))}
       <FloatingActionButton onClick={() => setShowWriteModal(true)} />
 
       {showWriteModal && (
         <FeedWriteModal onClose={() => setShowWriteModal(false)} />
       )}
+
+      <BottomSheet
+        isVisible={editBottomSheet}
+        setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+        topBar={true}
+      >
+        {isMyFeed ? (
+          <>
+            <ActionButton
+              icon="/images/icons/edit.svg"
+              content="수정하기"
+              onClick={() => console.log('open modal:EDIT')}
+            />
+            <ActionButton
+              icon="/images/icons/delete.svg"
+              content="삭제하기"
+              onClick={() => console.log('open modal:DELETE')}
+            />
+          </>
+        ) : (
+          <>
+            <ActionButton
+              icon="/images/icons/edit.svg"
+              content="게시물 신고하기"
+              onClick={() => console.log('open modal:REPORT')}
+            />
+            <ActionButton
+              icon="/images/icons/delete.svg"
+              content="작성자 차단하기"
+              onClick={() => console.log('open modal:BLOCK')}
+            />
+          </>
+        )}
+      </BottomSheet>
     </>
   );
 };
