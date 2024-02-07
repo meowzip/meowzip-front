@@ -213,8 +213,16 @@ const DemoPage = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐼 ActionButton</h1>
         <div className="flex flex-col gap-2">
-          <ActionButton icon="/images/icons/edit.svg" content="수정하기" />
-          <ActionButton icon="/images/icons/delete.svg" content="삭제하기" />
+          <ActionButton
+            icon="/images/icons/edit.svg"
+            content="수정하기"
+            onClick={() => {}}
+          />
+          <ActionButton
+            icon="/images/icons/delete.svg"
+            content="삭제하기"
+            onClick={() => {}}
+          />
         </div>
       </section>
       <section className="border-b p-3">
