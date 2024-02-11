@@ -17,9 +17,9 @@ const Email = ({ setStep }: EmailProps) => {
 
   const handleVerifyAccount = async () => {
     const signInInfo = await checkMembershipByEmail(email.value);
+    setEmail(email.value);
 
     if (signInInfo && signInInfo.isEmailExists) {
-      setEmail(email.value);
       if (signInInfo.loginType === 'EMAIL') {
         setStep('password');
       } else {

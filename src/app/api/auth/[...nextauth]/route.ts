@@ -2,7 +2,6 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
-import { headers } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
 
 const fetchExtended = returnFetchJson({
@@ -20,20 +19,18 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       const signInInfo = await checkMembershipByEmail(user.email || '');
-
       if (signInInfo && signInInfo.isEmailExists) {
         // 소셜 로그인 처리
         await signInOnServerWithSocial({
           email: user.email || '',
           password: user.id || ''
         });
-
         return true;
       } else {
         // 회원가입 처리
         await signUpOnServerWithSocialLogin({
           email: user.email || '',
-          password: user.id || '',
+          oauthId: user.id || '',
           loginType: account?.provider.toUpperCase() || ''
         });
         return true;
@@ -115,7 +112,7 @@ const signInOnServerWithSocial = async (reqObj: {
 
 const signUpOnServerWithSocialLogin = async (reqObj: {
   email: string;
-  password: string;
+  oauthId: string;
   loginType: string;
 }) => {
   try {
@@ -126,7 +123,9 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
     };
     const response = await fetchExtended('/members/sign-up', requestOptions);
     const token = response.headers.get('Authorization');
+
     const setCookies = response.headers.get('set-cookie');
+    const parsedCookie = parseCookieString(setCookies || '');
 
     cookies().set({
       name: 'Authorization',
@@ -137,7 +136,8 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
 
     cookies().set({
       name: 'Authorization-Refresh',
-      value: setCookies || '',
+      value: parsedCookie.token || '',
+      maxAge: parseInt(parsedCookie.maxAge, 10),
       httpOnly: true,
       secure: true
     });

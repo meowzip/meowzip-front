@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import UserArea from './feed/UserArea';
 import Carousel from '@/components/ui/Carousel';
 import ButtonArea from '@/components/community/feed/ButtonArea';
-
+import { useRouter } from 'next/navigation';
 interface FeedCardProps {
+  variant?: 'detail';
   content: {
     profile: string;
     nickname: string;
@@ -14,20 +15,23 @@ interface FeedCardProps {
     images: string[];
     like: number;
     comment: number;
+    id: number;
   };
   onClick: () => void;
 }
 
-const FeedCard = ({ content, onClick }: FeedCardProps) => {
+const FeedCard = ({ variant, content, onClick }: FeedCardProps) => {
   const [showMore, setMore] = useState(false);
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
+  const router = useRouter();
 
   const clickLike = () => {
     console.log('click like interaction');
   };
 
   const clickComment = () => {
-    console.log('피드 상세로 이동');
+    if (variant === 'detail') return;
+    router.push(`/community/${content.id}`);
   };
 
   const clickBookmark = () => {
@@ -46,6 +50,7 @@ const FeedCard = ({ content, onClick }: FeedCardProps) => {
           className={`pt-4 text-body-3 text-gr-black ${
             showMore ? 'line-clamp-none' : 'line-clamp-3'
           }`}
+          onClick={clickComment}
         >
           {content.text}
         </p>
@@ -57,7 +62,7 @@ const FeedCard = ({ content, onClick }: FeedCardProps) => {
         </button>
       </section>
       {content.images && content.images?.length > 0 && (
-        <section className="flex h-[300px] gap-2 pt-4">
+        <section className="flex h-[300px] gap-2 pt-4" onClick={clickComment}>
           <Carousel images={content.images} style="rounded-b-lg" />
         </section>
       )}

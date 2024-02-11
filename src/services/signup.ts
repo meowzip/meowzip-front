@@ -1,8 +1,12 @@
 import returnFetchJson from '@/utils/returnFetchJson';
+import { getCookie, removeCookie } from '@/utils/common';
 
 export const fetchExtendedPublic = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
   headers: { Accept: 'application/json' }
+});
+export const fetchExtendedAuth = returnFetchJson({
+  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API
 });
 
 export const signUpOnServer = async (reqObj: {
@@ -55,6 +59,34 @@ export const resetPwdOnServer = async (reqObj: {
       throw new Error('닉네임 유효성 검사 중 오류 발생:' + error.message);
     } else {
       throw new Error('닉네임 유효성 검사 중 오류 발생:');
+    }
+  }
+};
+
+export const deleteAccountOnServer = async () => {
+  try {
+    const memberToken = getCookie('Authorization');
+    const requestOptions = {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${memberToken}`
+      }
+    };
+    const response = await fetchExtendedAuth('/members', requestOptions);
+    console.log(response, 'response');
+    if (response.status === 200) {
+      removeCookie('Authorization');
+      location.replace('/signin');
+    }
+
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('회원 탈퇴 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('회원 탈퇴 중 오류 발생:');
     }
   }
 };

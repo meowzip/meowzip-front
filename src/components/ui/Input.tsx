@@ -4,7 +4,7 @@ import HelperText from './HelperText';
 
 export interface InputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix'> {
-  variant?: 'default' | 'outlined' | 'filled' | 'search';
+  variant?: 'default' | 'outlined' | 'filled' | 'search' | 'comment';
   inputSize?: 'small' | 'medium' | 'large';
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
@@ -60,7 +60,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       'common-input flex h-12 font-normal w-full rounded-md border px-4 py-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-gr-50 disabled:font-regular focus:border-2 focus:border-pr-500',
       {
         'border-input bg-background': variant !== 'outlined',
-        'border-2 focus:border-sm-error-500': error
+        'bg-gr-50 border-none focus:border-none max-h-[60px]':
+          variant === 'comment',
+        'border-2 focus:border-sm-error-500': error,
+        'pr-12': suffix
       },
       sizeClass,
       className
@@ -78,7 +81,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     };
 
     return (
-      <div className="relative">
+      <div className={`relative ${variant === 'comment' && 'w-full'}`}>
         {prefix && (
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             {prefix}
@@ -108,7 +111,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
         )}
         {suffix && (
-          <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+          <span
+            className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
+              variant === 'comment' &&
+              !isInputActive &&
+              'font-semi-bold text-gr-300'
+            } ${variant === 'comment' && isInputActive && 'text-pr-500'} `}
+          >
             {suffix}
           </span>
         )}
