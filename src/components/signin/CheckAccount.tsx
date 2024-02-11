@@ -11,7 +11,6 @@ interface CheckAccountProps {
 export default function Email({ setStep }: CheckAccountProps) {
   const { email, loginType } = useUser();
   const hiddenEmail = hideEmail(email);
-  const loginTypeLowerCased = loginType.toLowerCase();
 
   return (
     <div className="w-full px-6">
@@ -28,14 +27,7 @@ export default function Email({ setStep }: CheckAccountProps) {
         />
         <div className="ml-4 text-heading-5 font-regular">{hiddenEmail}</div>
       </div>
-      <Button
-        onClick={() =>
-          signIn(loginTypeLowerCased, {
-            callbackUrl: `http://localhost:3000/signin/${loginTypeLowerCased}`
-          })
-        }
-        className="w-full"
-      >
+      <Button onClick={() => signIn()} className="w-full">
         기존 계정으로 로그인하기
       </Button>
     </div>
