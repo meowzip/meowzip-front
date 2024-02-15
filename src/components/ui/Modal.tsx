@@ -43,10 +43,12 @@ const Modal = ({ contents, buttons, scrim, customContent }: ModalProps) => {
     >
       <div ref={modalRef} className={modalClassName}>
         <section className="px-2 pb-6 pt-4 text-center">
-          <h2 className="pb-2 text-center text-heading-3 text-gr-black">
+          <h2 className="whitespace-pre pb-2 text-center text-heading-3 text-gr-black">
             {contents?.title}
           </h2>
-          <h5 className="text-body-2 text-gr-600">{contents?.body}</h5>
+          <h5 className="whitespace-pre text-body-2 text-gr-600">
+            {contents?.body}
+          </h5>
           {customContent}
         </section>
         <section className="flex flex-col gap-2">

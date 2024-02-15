@@ -179,7 +179,10 @@ const CommunityPage = () => {
 
       {showBlockModal && (
         <Modal
-          contents={{ title: `${name}님을 \n 차단하시겠습니까?` }}
+          contents={{
+            title: `${name}님을 \n 차단하시겠습니까?`,
+            body: '차단된 사용자의 게시글과 댓글을 회원님께 \n 더이상 표시하지 않습니다.'
+          }}
           scrim={true}
           buttons={[
             {
