@@ -98,12 +98,10 @@ const ResetPwdPage = () => {
               variant: 'primary',
               size: 'lg',
               content: '확인',
-              style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700'
+              style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700',
+              onClick: () => setOpenModal(false)
             }
           ]}
-          onClose={() => {
-            setOpenModal(false);
-          }}
         />
       )}
     </section>

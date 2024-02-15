@@ -6,7 +6,6 @@ import { useToast } from '../ui/hooks/useToast';
 
 interface CalendarModalProps {
   isOpen: boolean;
-  onClose: () => void;
   setBottomSheetVisible: (bottomSheetVisible: boolean) => void;
   bottomSheetVisible: boolean;
   selectedMonth: Date;
@@ -15,7 +14,6 @@ interface CalendarModalProps {
 
 const CalendarModal = ({
   isOpen,
-  onClose,
   setBottomSheetVisible,
   bottomSheetVisible,
   selectedMonth,
@@ -106,7 +104,6 @@ const CalendarModal = ({
             </BottomSheet>
           </div>
         }
-        onClose={() => onClose}
       />
     </div>
   );

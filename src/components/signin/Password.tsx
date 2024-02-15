@@ -83,12 +83,10 @@ export default function Password({ setStep }: PasswordProps) {
               variant: 'primary',
               size: 'lg',
               content: '확인',
-              style: 'w-full rounded-[16px] px-4 py-2'
+              style: 'w-full rounded-[16px] px-4 py-2',
+              onClick: () => setShowModal(false)
             }
           ]}
-          onClose={() => {
-            setShowModal(false);
-          }}
         />
       )}
     </section>

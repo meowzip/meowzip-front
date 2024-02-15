@@ -37,7 +37,6 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
       )}
       <CalendarModal
         isOpen={isCalendarOpen}
-        onClose={() => setCalendarOpen(false)}
         setBottomSheetVisible={setBottomSheetVisible}
         bottomSheetVisible={bottomSheetVisible}
         selectedMonth={selectedMonth}

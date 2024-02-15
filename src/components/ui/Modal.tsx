@@ -12,19 +12,13 @@ interface ModalProps {
     size: 'lg' | 'md' | 'sm' | 'icon';
     content: string;
     style: string;
+    onClick?: () => void;
   }[];
   scrim?: boolean;
-  onClose: () => void;
   customContent?: ReactNode; // New prop for custom JSX content
 }
 
-const Modal = ({
-  contents,
-  buttons,
-  scrim,
-  onClose,
-  customContent
-}: ModalProps) => {
+const Modal = ({ contents, buttons, scrim, customContent }: ModalProps) => {
   const modalRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -43,7 +37,7 @@ const Modal = ({
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] ${
+      className={`fixed bottom-0 left-0 right-0 top-0 z-[999] h-full min-w-[320px] ${
         scrim && 'bg-scrim'
       }`}
     >
@@ -62,7 +56,7 @@ const Modal = ({
               variant={btn.variant}
               size={btn.size}
               className={`${btn.style}`}
-              onClick={onClose}
+              onClick={btn.onClick}
             >
               {btn.content}
             </Button>
