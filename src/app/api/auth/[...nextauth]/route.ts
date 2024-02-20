@@ -40,7 +40,10 @@ const handler = NextAuth({
     async redirect({ url, baseUrl }) {
       const cookieList = cookies();
       const isMember = cookieList.get('Authorization');
-      const redirectUrl = isMember ? '/' : '/signin';
+      const redirectUrl = isMember ? '/diary' : '/signin';
+      if (url) {
+        return url;
+      }
       return redirectUrl;
     },
     async session({ session, user, token }) {
@@ -86,20 +89,22 @@ const signInOnServerWithSocial = async (reqObj: {
     const setCookies = response.headers.get('set-cookie');
     const parsedCookie = parseCookieString(setCookies || '');
 
-    cookies().set({
-      name: 'Authorization',
-      value: token || '',
-      secure: true,
-      maxAge: 60 * 60 * 4
-    });
+    if (response.status === 200) {
+      cookies().set({
+        name: 'Authorization',
+        value: token || '',
+        secure: true,
+        maxAge: 60 * 60 * 4
+      });
 
-    cookies().set({
-      name: 'Authorization-Refresh',
-      value: parsedCookie.token || '',
-      maxAge: parseInt(parsedCookie.maxAge, 10),
-      httpOnly: true,
-      secure: true
-    });
+      cookies().set({
+        name: 'Authorization-Refresh',
+        value: parsedCookie.token || '',
+        maxAge: parseInt(parsedCookie.maxAge, 10),
+        httpOnly: true,
+        secure: true
+      });
+    }
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
@@ -121,26 +126,15 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
       body: reqObj,
       credentials: 'include' as RequestCredentials
     };
+
     const response = await fetchExtended('/members/sign-up', requestOptions);
-    const token = response.headers.get('Authorization');
 
-    const setCookies = response.headers.get('set-cookie');
-    const parsedCookie = parseCookieString(setCookies || '');
-
-    cookies().set({
-      name: 'Authorization',
-      value: token || '',
-      secure: true,
-      maxAge: 60 * 60 * 4
-    });
-
-    cookies().set({
-      name: 'Authorization-Refresh',
-      value: parsedCookie.token || '',
-      maxAge: parseInt(parsedCookie.maxAge, 10),
-      httpOnly: true,
-      secure: true
-    });
+    if (response.status === 200) {
+      await signInOnServerWithSocial({
+        email: reqObj.email || '',
+        password: reqObj.oauthId || ''
+      });
+    }
   } catch (error) {
     console.error(error);
   }

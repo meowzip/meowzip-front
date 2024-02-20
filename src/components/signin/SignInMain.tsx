@@ -39,7 +39,7 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
               onClick={() =>
                 signIn('google', {
                   // callbackUrl: 'http://localhost:3000/signin/kakao',
-                  // redirect: false
+                  redirect: true
                 })
               }
             >
@@ -53,7 +53,8 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
             <button
               onClick={() =>
                 signIn('google', {
-                  // callbackUrl: 'http://localhost:3000/signin/google'
+                  // callbackUrl: 'http://localhost:3000/signin/google',
+                  redirect: true
                 })
               }
             >
