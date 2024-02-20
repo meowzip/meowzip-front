@@ -133,7 +133,7 @@ const ImageUploader = ({
                 width={16}
                 height={16}
                 stroke="var(--gr-white)"
-                onClick={deleteImage}
+                onClick={() => deleteImage(data?.key)}
               />
             ) : (
               <PencilIcon
