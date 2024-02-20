@@ -1,12 +1,15 @@
+'use server';
+
 import returnFetch from '@/utils/returnFetch';
 import returnFetchJson from '@/utils/returnFetchJson';
+import { cookies } from 'next/headers';
 
-const token =
-  'eyJhbGciOiJIUzI1NiJ9.eyJtZW1iZXJJZCI6NDUsImlhdCI6MTcwNjc5NTMyMiwiZXhwIjoxNzA2Nzk4OTIyfQ.xfCUoBHxUpc2Wwvu2rXgEHz0fn2Lc-WGXBpKHPi5b2s';
+const cookieStore = cookies();
+const token = cookieStore.get('Authorization');
 
 export const fetchExtendedAuth = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
-  headers: { Accept: 'application/json', Authorization: token }
+  headers: { Accept: 'application/json', Authorization: token?.value }
 });
 
 export const validateNicknameOnServer = async (nickname: string) => {
@@ -28,7 +31,7 @@ export const validateNicknameOnServer = async (nickname: string) => {
 
 export const fetchExtendedForm = returnFetch({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
-  headers: { Authorization: `Bearer ${token}` }
+  headers: { Authorization: `Bearer ${token?.value}` }
 });
 
 export const updateProfileOnServer = async (reqObj: {

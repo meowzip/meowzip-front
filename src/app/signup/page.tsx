@@ -13,6 +13,7 @@ import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomShe
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
 import { signInOnServer } from '@/services/signin';
+
 interface SignUpResponse {
   status: string;
   result?: number;
@@ -69,8 +70,28 @@ const SignUpPage = () => {
           password: password.value
         });
         data.data && setNickname(data.data.generatedNickname);
-        router.push('/onboard');
+        signInMutation.mutate({ email: email, password: password.value });
       }
+    }
+  });
+
+  /**
+   * @description API - POST signin
+   */
+  const signInMutation = useMutation({
+    mutationFn: (reqObj: { email: string; password: string }) => {
+      return signInOnServer(reqObj);
+    },
+    onSuccess: (response: any) => {
+      if (response.status === 200) {
+        router.push('/onboard');
+      } else {
+        console.error('로그인 중 오류:', response.message);
+        router.push('/signin');
+      }
+    },
+    onError: (error: any) => {
+      console.error('로그인 중 오류:', error);
     }
   });
 
