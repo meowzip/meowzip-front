@@ -1,19 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// const protectedRoutes = ['/diary', ];
+const protectedRoutes = ['/diary'];
 const publicRoutes = ['/signin', '/signup'];
 
 export function middleware(request: NextRequest) {
   const token = getTokenFromCookies(request);
   const currentPath = request.nextUrl.pathname;
 
-  // if (!token && protectedRoutes.includes(currentPath)) {
-  //   console.log('redirecting to signin');
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = '/signin';
-  //   return NextResponse.redirect(url);
-  // }
+  if (!token && protectedRoutes.includes(currentPath)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/signin';
+    return NextResponse.redirect(url);
+  }
 
   if (token && publicRoutes.includes(currentPath)) {
     const url = request.nextUrl.clone();

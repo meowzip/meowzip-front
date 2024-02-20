@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
-
+import { signInOnServer } from '@/services/signin';
 interface SignUpResponse {
   status: string;
   result?: number;
@@ -64,6 +64,10 @@ const SignUpPage = () => {
         data.message && setErrorMsg(data.message);
         setOpenModal(true);
       } else {
+        signInOnServer({
+          email: email,
+          password: password.value
+        });
         data.data && setNickname(data.data.generatedNickname);
         router.push('/onboard');
       }
