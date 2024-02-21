@@ -19,6 +19,7 @@ export interface InputProps
   suffix?: string | React.ReactNode;
   autocomplete?: string;
   placeholder?: string;
+  suffixClickHandler?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   // validator: () => void;
 }
@@ -45,6 +46,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       autocomplete,
       placeholder,
       type = 'text',
+      suffixClickHandler,
       ...props
     },
     ref
@@ -112,6 +114,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         {suffix && (
           <span
+            onClick={suffixClickHandler}
             className={`absolute inset-y-0 right-0 flex items-center pr-3 ${
               variant === 'comment' &&
               !isInputActive &&

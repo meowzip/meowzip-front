@@ -1,9 +1,12 @@
 import { Input } from '../../ui/Input';
 import Profile from '../../ui/Profile';
+import { useState } from 'react';
 
 export default function WriteComment() {
+  const [comment, setComment] = useState('');
+
   return (
-    <div className="flex items-center gap-2 px-4 py-2">
+    <div className="fixed bottom-0 flex w-full items-center gap-2 border-t-[1px] border-gray-300 bg-white px-4 py-2">
       <Profile
         items={[
           {
@@ -19,6 +22,8 @@ export default function WriteComment() {
         disabled
         suffix="등록"
         placeholder="댓글을 남겨주세요."
+        onChange={e => setComment(e.target.value)}
+        suffixClickHandler={() => console.log('등록')}
       />
     </div>
   );
