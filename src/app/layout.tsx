@@ -34,9 +34,7 @@ export default function RootLayout({
           </Providers>
         </div>
         <Toaster />
-        <div className="fixed bottom-0 z-[100]">
-          <BottomNavBar />
-        </div>
+        <div className="fixed bottom-0 z-[100]">{/* <BottomNavBar /> */}</div>
       </body>
     </html>
   );

@@ -5,6 +5,7 @@ import FeedCard from '@/components/community/FeedCard';
 import BottomSheet from '@/components/ui/BottomSheet';
 import ActionButton from '@/components/ui/ActionButton';
 import { Fragment } from 'react';
+import Comment from '@/components/community/detail/Comment';
 
 type PageParams = {
   slug: string;
@@ -33,7 +34,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
     {
       type: 'comment',
       commentId: 1,
-      writerId: 1,
+      writerId: 'NAME',
       writerNickname: 'NAME',
       content:
         '치즈냥이 너무 귀엽네용 골골대니 순하디순한냥인가봐요. 우리집 애기랑 똑같이 생겼어요~ 맞팔하고 자주 소통해요 😄',
@@ -43,15 +44,16 @@ export default function DetailPage({ params }: { params: PageParams }) {
     {
       type: 'reply',
       commentId: 2,
-      writerId: 2,
+      writerId: 'NAME2',
       writerNickname: '발랄한캔따개',
       content: '그쵸. 완전 순해요~ 맞팔했습니당 🙌🏻',
       writerProfile: '',
       registerTime: '5분 전'
     },
     {
+      type: 'comment',
       commentId: 3,
-      writerId: 3,
+      writerId: 'NAME3',
       writerNickname: '발랄한캔따개',
       content: '저희 아이도 치즈냥이에요~ 애교 진짜 많죠!?',
       writerProfile: '',
@@ -61,13 +63,27 @@ export default function DetailPage({ params }: { params: PageParams }) {
 
   return (
     <div>
-      <p>feed Id: {params.slug}</p>
+      {/* <p>feed Id: {params.slug}</p> */}
       <Fragment>
         <FeedCard
           variant="detail"
           content={feed}
           onClick={() => setEditBottomSheet(true)}
         />
+
+        {comments.length === 0 && (
+          <p className="py-8 text-center text-sm text-gr-300">
+            아직 댓글이 없어요
+            <br />
+            가장 먼저 댓글을 남겨보세요.
+          </p>
+        )}
+
+        {comments.map((comment, index) => (
+          <div key={index} className="py-4">
+            <Comment comment={comment} />
+          </div>
+        ))}
         <WriteComment />
       </Fragment>
       <BottomSheet
