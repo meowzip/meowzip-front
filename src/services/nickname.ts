@@ -1,15 +1,15 @@
-'use server';
-
 import returnFetch from '@/utils/returnFetch';
 import returnFetchJson from '@/utils/returnFetchJson';
-import { cookies } from 'next/headers';
+import { getCookie } from '@/utils/common';
 
-const cookieStore = cookies();
-const token = cookieStore.get('Authorization');
+const memberToken = getCookie('Authorization');
 
 export const fetchExtendedAuth = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
-  headers: { Accept: 'application/json', Authorization: token?.value }
+  headers: {
+    Accept: 'application/json',
+    Authorization: `Bearer ${memberToken}`
+  }
 });
 
 export const validateNicknameOnServer = async (nickname: string) => {
@@ -31,7 +31,7 @@ export const validateNicknameOnServer = async (nickname: string) => {
 
 export const fetchExtendedForm = returnFetch({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
-  headers: { Authorization: `Bearer ${token?.value}` }
+  headers: { Authorization: `Bearer ${memberToken}` }
 });
 
 export const updateProfileOnServer = async (reqObj: {
@@ -44,10 +44,7 @@ export const updateProfileOnServer = async (reqObj: {
   const file = base64ToFile(reqObj.profileImage, 'image.jpg');
   file && formData.append('profileImage', file);
 
-  const requestOptions = {
-    method: 'PATCH',
-    body: formData
-  };
+  const requestOptions = { method: 'PATCH', body: formData };
 
   try {
     const response = await fetchExtendedForm('/members', requestOptions);
