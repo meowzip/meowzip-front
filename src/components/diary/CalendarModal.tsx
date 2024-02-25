@@ -79,14 +79,14 @@ const CalendarModal = ({
               isVisible={bottomSheetVisible}
               setIsVisible={setBottomSheetVisible}
             >
-              <div className="pb-5">
+              <div className="p-5">
                 <button onClick={goToPreviousYear}>{'<'}</button>
                 <span className="text-md mx-4 font-semibold">
                   {selectedMonth.getFullYear()}년
                 </span>
                 <button onClick={goToNextYear}>{'>'}</button>
               </div>
-              <div className="month-grid grid grid-cols-3 gap-4">
+              <div className="month-grid grid grid-cols-3 gap-4 px-5">
                 {months.map(monthIndex => (
                   <button
                     key={monthIndex}

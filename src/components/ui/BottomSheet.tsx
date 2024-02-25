@@ -83,7 +83,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
     <>
       {isVisible && (
         <motion.div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50"
+          className="fixed inset-0 z-30 bg-black bg-opacity-50"
           onClick={handleClickOutside}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
