@@ -129,14 +129,16 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
               setSelectTimeBottomSheet(!selectTimeBottomSheet)
             }
           >
-            <div className="padding-[0 6px] flex h-[48px] items-center justify-center">
+            <div className="flex h-12 items-center justify-center text-heading-3">
               돌봄 시간을 입력하세요.
             </div>
-            <TimeInput
-              time={currentTime}
-              setTime={setCurrentTime}
-              setSelectTimeBottomSheet={setSelectTimeBottomSheet}
-            />
+            <div className="px-4 pb-10 pt-4">
+              <TimeInput
+                time={currentTime}
+                setTime={setCurrentTime}
+                setSelectTimeBottomSheet={setSelectTimeBottomSheet}
+              />
+            </div>
           </BottomSheet>
         </article>
         <article>

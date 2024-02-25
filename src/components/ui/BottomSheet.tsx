@@ -119,14 +119,15 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
             {...props}
           >
             {topBar && (
-              <div className="topBar relative p-4 text-center">
+              <div className="topBar relative text-center">
                 <div className="drag-bar mx-auto my-2 h-1 w-10 rounded-full bg-gray-300"></div>
                 {topBar}
               </div>
             )}
-            <div className="content overflow-auto overflow-x-hidden p-8 ">
+            {/* <div className="content overflow-auto overflow-x-hidden p-8 ">
               {children}
-            </div>
+            </div> */}
+            {children}
           </motion.div>
         )}
       </AnimatePresence>

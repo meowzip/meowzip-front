@@ -102,33 +102,35 @@ const CommunityPage = () => {
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         topBar={true}
       >
-        {isMyFeed ? (
-          <>
-            <ActionButton
-              icon="/images/icons/edit.svg"
-              content="수정하기"
-              onClick={() => openModalEdit()}
-            />
-            <ActionButton
-              icon="/images/icons/delete.svg"
-              content="삭제하기"
-              onClick={() => openModalDelete()}
-            />
-          </>
-        ) : (
-          <>
-            <ActionButton
-              icon="/images/icons/edit.svg"
-              content="게시물 신고하기"
-              onClick={() => openModalReport()}
-            />
-            <ActionButton
-              icon="/images/icons/delete.svg"
-              content="작성자 차단하기"
-              onClick={() => openModalBlock()}
-            />
-          </>
-        )}
+        <div className="px-4">
+          {isMyFeed ? (
+            <>
+              <ActionButton
+                icon="/images/icons/edit.svg"
+                content="수정하기"
+                onClick={() => openModalEdit()}
+              />
+              <ActionButton
+                icon="/images/icons/delete.svg"
+                content="삭제하기"
+                onClick={() => openModalDelete()}
+              />
+            </>
+          ) : (
+            <>
+              <ActionButton
+                icon="/images/icons/edit.svg"
+                content="게시물 신고하기"
+                onClick={() => openModalReport()}
+              />
+              <ActionButton
+                icon="/images/icons/delete.svg"
+                content="작성자 차단하기"
+                onClick={() => openModalBlock()}
+              />
+            </>
+          )}
+        </div>
       </BottomSheet>
 
       {showEditModal && (
