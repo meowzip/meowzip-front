@@ -11,11 +11,14 @@ import Modal from '@/components/ui/Modal';
 const CommunityPage = () => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showReportModal, setShowReportModal] = useState(false);
-  const [showBlockModal, setShowBlockModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState<{
+    title: string;
+    body?: string;
+    primaryBtn: { content: string; onClick: () => void };
+  }>();
   const [name, setName] = useState('이치즈');
-  const [isMyFeed, setIsMyFeed] = useState(false);
+  const [isMyFeed, setIsMyFeed] = useState(true);
   const [feedList, setFeedList] = useState([
     {
       id: 1,
@@ -48,35 +51,46 @@ const CommunityPage = () => {
   ]);
 
   const openModalEdit = () => {
-    setShowWriteModal(true);
     setEditBottomSheet(false);
+    setShowWriteModal(true);
   };
   const openModalDelete = () => {
-    setShowEditModal(true);
+    setShowModal(true);
     setEditBottomSheet(false);
+    setModalContent({
+      title: '삭제하시겠습니까?',
+      primaryBtn: { content: '삭제', onClick: () => deleteFeed() }
+    });
   };
   const openModalReport = () => {
-    setShowReportModal(true);
     setEditBottomSheet(false);
-    console.log('open Modal Report');
+    setShowModal(true);
+    setModalContent({
+      title: '해당 게시글을 \n 신고하시겠습니까?',
+      primaryBtn: { content: '신고하기', onClick: () => reportFeed() }
+    });
   };
   const openModalBlock = () => {
-    setShowBlockModal(true);
     setEditBottomSheet(false);
-    console.log('open Modal Block');
+    setShowModal(true);
+    setModalContent({
+      title: `${name}님을 \n 차단하시겠습니까?`,
+      body: '차단된 사용자의 게시글과 댓글을 회원님께 \n 더이상 표시하지 않습니다.',
+      primaryBtn: { content: '차단하기', onClick: () => blockFeed() }
+    });
   };
 
   const deleteFeed = () => {
     console.log('삭제 버튼 클릭');
-    setShowEditModal(false);
+    setShowModal(false);
   };
   const reportFeed = () => {
     console.log('신고 버튼 클릭');
-    setShowReportModal(false);
+    setShowModal(false);
   };
   const blockFeed = () => {
     console.log('차단 버튼 클릭');
-    setShowBlockModal(false);
+    setShowModal(false);
   };
 
   return (
@@ -134,73 +148,24 @@ const CommunityPage = () => {
         </div>
       </BottomSheet>
 
-      {showEditModal && (
+      {showModal && (
         <Modal
-          contents={{ title: '삭제하시겠습니까?' }}
+          contents={{ title: modalContent?.title, body: modalContent?.body }}
           scrim={true}
           buttons={[
             {
               variant: 'primary',
               size: 'lg',
-              content: '삭제',
+              content: modalContent?.primaryBtn.content || '',
               style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700',
-              onClick: () => deleteFeed()
+              onClick: modalContent?.primaryBtn.onClick
             },
             {
               variant: 'text',
               size: 'lg',
               content: '나중에 할게요',
               style: 'w-full rounded-[16px] px-4 py-2 text-gr-300',
-              onClick: () => setShowEditModal(false)
-            }
-          ]}
-        />
-      )}
-
-      {showReportModal && (
-        <Modal
-          contents={{ title: '해당 게시글을 \n 신고하시겠습니까?' }}
-          scrim={true}
-          buttons={[
-            {
-              variant: 'primary',
-              size: 'lg',
-              content: '신고하기',
-              style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700',
-              onClick: () => reportFeed()
-            },
-            {
-              variant: 'text',
-              size: 'lg',
-              content: '나중에 할게요',
-              style: 'w-full rounded-[16px] px-4 py-2 text-gr-300',
-              onClick: () => setShowReportModal(false)
-            }
-          ]}
-        />
-      )}
-
-      {showBlockModal && (
-        <Modal
-          contents={{
-            title: `${name}님을 \n 차단하시겠습니까?`,
-            body: '차단된 사용자의 게시글과 댓글을 회원님께 \n 더이상 표시하지 않습니다.'
-          }}
-          scrim={true}
-          buttons={[
-            {
-              variant: 'primary',
-              size: 'lg',
-              content: '신고하기',
-              style: 'w-full rounded-[16px] px-4 py-2 bg-sm-error-700',
-              onClick: () => blockFeed()
-            },
-            {
-              variant: 'text',
-              size: 'lg',
-              content: '나중에 할게요',
-              style: 'w-full rounded-[16px] px-4 py-2 text-gr-300',
-              onClick: () => setShowBlockModal(false)
+              onClick: () => setShowModal(false)
             }
           ]}
         />
