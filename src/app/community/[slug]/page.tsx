@@ -1,11 +1,13 @@
 'use client';
+
 import WriteComment from '@/components/community/detail/WriteComment';
 import { useState } from 'react';
 import FeedCard from '@/components/community/FeedCard';
-import BottomSheet from '@/components/ui/BottomSheet';
-import ActionButton from '@/components/ui/ActionButton';
-import { Fragment } from 'react';
 import Comment from '@/components/community/detail/Comment';
+import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
+import FeedWriteModal from '@/components/community/FeedWriteModal';
+import { useAtom } from 'jotai';
+import { showWriteModalAtom } from '@/atoms/modalAtom';
 
 type PageParams = {
   slug: string;
@@ -13,7 +15,8 @@ type PageParams = {
 
 export default function DetailPage({ params }: { params: PageParams }) {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [isMyFeed, setIsMyFeed] = useState(true);
+  const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
+  const [name, setName] = useState('이치즈');
 
   const feed = {
     id: 1,
@@ -64,7 +67,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
   return (
     <div>
       {/* <p>feed Id: {params.slug}</p> */}
-      <Fragment>
+      <>
         <FeedCard
           variant="detail"
           content={feed}
@@ -85,41 +88,16 @@ export default function DetailPage({ params }: { params: PageParams }) {
           </div>
         ))}
         <WriteComment />
-      </Fragment>
-      <BottomSheet
+      </>
+      {showWriteModal && (
+        <FeedWriteModal onClose={() => setShowWriteModal(false)} />
+      )}
+      <MoreBtnBottomSheet
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-        topBar={true}
-        heightPercent={['70%', '50%']}
-      >
-        {isMyFeed ? (
-          <>
-            <ActionButton
-              icon="/images/icons/edit.svg"
-              content="수정하기"
-              onClick={() => console.log('open modal:EDIT')}
-            />
-            <ActionButton
-              icon="/images/icons/delete.svg"
-              content="삭제하기"
-              onClick={() => console.log('open modal:DELETE')}
-            />
-          </>
-        ) : (
-          <>
-            <ActionButton
-              icon="/images/icons/edit.svg"
-              content="게시물 신고하기"
-              onClick={() => console.log('open modal:REPORT')}
-            />
-            <ActionButton
-              icon="/images/icons/delete.svg"
-              content="작성자 차단하기"
-              onClick={() => console.log('open modal:BLOCK')}
-            />
-          </>
-        )}
-      </BottomSheet>
+        heightPercent={['40%', '40%']}
+        name={name}
+      />
     </div>
   );
 }

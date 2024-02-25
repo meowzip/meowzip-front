@@ -19,7 +19,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   name
 }) => {
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
-  const [isMyFeed, setIsMyFeed] = useState(true);
+  const [isMyFeed, setIsMyFeed] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{
     title: string;

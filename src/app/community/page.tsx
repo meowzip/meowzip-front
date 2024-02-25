@@ -55,10 +55,10 @@ const CommunityPage = () => {
           onClick={() => setEditBottomSheet(true)}
         />
       ))}
+      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
       {showWriteModal && (
         <FeedWriteModal onClose={() => setShowWriteModal(false)} />
       )}
-      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
       <MoreBtnBottomSheet
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
