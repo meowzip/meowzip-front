@@ -52,3 +52,29 @@ export const signInOnServer = async (reqObj: {
     }
   }
 };
+
+export const sendPwdResetEmail = async (reqObj: { email: string }) => {
+  try {
+    const requestOptions = {
+      method: 'POST',
+      body: reqObj,
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    const response = await fetchExtended(
+      '/members/send-password-reset-email',
+      requestOptions
+    );
+
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error(
+        '비밀번호 초기화 메일 전송 중 오류 발생:' + error.message
+      );
+    } else {
+      throw new Error('비밀번호 초기화 메일 전송 중 오류 발생');
+    }
+  }
+};

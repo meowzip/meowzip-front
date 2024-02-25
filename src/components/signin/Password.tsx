@@ -6,7 +6,7 @@ import usePasswordHandler from '@/utils/usePasswordHandler';
 import { useUser } from '@/contexts/EmailContext';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { signInOnServer } from '@/services/signin';
+import { sendPwdResetEmail, signInOnServer } from '@/services/signin';
 import { useRouter } from 'next/navigation';
 import Modal from '../ui/Modal';
 
@@ -19,6 +19,7 @@ export default function Password({ setStep }: PasswordProps) {
   const { email } = useUser();
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
+  const [showFindModal, setShowFindModal] = useState(false);
 
   const signIn = () => {
     signInMutation.mutate({
@@ -45,6 +46,27 @@ export default function Password({ setStep }: PasswordProps) {
     }
   });
 
+  const findPassword = () => {
+    resetPwMutation.mutate(email);
+    setShowFindModal(true);
+  };
+
+  const resetPwMutation = useMutation({
+    mutationFn: (email: string) => {
+      return sendPwdResetEmail({ email });
+    },
+    onSuccess: (response: any) => {
+      if (response.status === 200) {
+      } else {
+        console.error('비밀번호 초기화 메일 전송 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      setShowFindModal(true);
+      console.error('비밀번호 초기화 메일 전송 중 오류:', error);
+    }
+  });
+
   return (
     <section className="w-full px-6 text-[24px] font-bold text-gray-800">
       <div className="mb-[32px]">
@@ -68,7 +90,12 @@ export default function Password({ setStep }: PasswordProps) {
       >
         로그인하기
       </Button>
-      <Button variant="secondary" size="sm" className="mt-8">
+      <Button
+        variant="secondary"
+        size="sm"
+        className="mt-8"
+        onClick={() => findPassword()}
+      >
         비밀번호를 잊으셨나요?
       </Button>
       {showModal && (
@@ -85,6 +112,24 @@ export default function Password({ setStep }: PasswordProps) {
               content: '확인',
               style: 'w-full rounded-[16px] px-4 py-2',
               onClick: () => setShowModal(false)
+            }
+          ]}
+        />
+      )}
+      {showFindModal && (
+        <Modal
+          contents={{
+            title: '비밀번호 재설정을 위한 \n 메일이 전송되었어요',
+            body: '메일을 확인하시고 안내에 따라 \n 비밀번호를 재설정해주세요'
+          }}
+          scrim={true}
+          buttons={[
+            {
+              variant: 'primary',
+              size: 'lg',
+              content: '확인',
+              style: 'w-full rounded-[16px] px-4 py-2',
+              onClick: () => setShowFindModal(false)
             }
           ]}
         />
