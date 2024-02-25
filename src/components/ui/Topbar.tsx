@@ -176,7 +176,7 @@ const Topbar = ({
   const topbarClassName = cn(
     'relative z-10 flex h-12 w-full items-center bg-grey-white px-[6px]',
     {
-      'z-[60]': type === 'modal',
+      'z-[30]': type === 'modal',
       'justify-normal border-b-2': type === 'search',
       'justify-between': type !== 'search'
     }
