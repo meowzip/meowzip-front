@@ -78,6 +78,7 @@ const CalendarModal = ({
             <BottomSheet
               isVisible={bottomSheetVisible}
               setIsVisible={setBottomSheetVisible}
+              heightPercent={['70%', '50%']}
             >
               <div className="p-5">
                 <button onClick={goToPreviousYear}>{'<'}</button>

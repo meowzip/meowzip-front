@@ -101,6 +101,7 @@ const CommunityPage = () => {
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         topBar={true}
+        heightPercent={['40%', '40%']}
       >
         <div className="px-4">
           {isMyFeed ? (

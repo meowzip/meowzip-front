@@ -90,6 +90,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         topBar={true}
+        heightPercent={['70%', '50%']}
       >
         {isMyFeed ? (
           <>

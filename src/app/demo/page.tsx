@@ -283,6 +283,7 @@ const DemoPage = () => {
           isVisible={isVisible}
           setIsVisible={setIsVisible}
           topBar={<div>Drag Bar</div>}
+          heightPercent={['70%', '50%']}
         >
           <div>Your Content Here</div>
         </BottomSheet>

@@ -46,7 +46,11 @@ const SignupAgreeBottomSheet = ({
 
   return (
     <>
-      <BottomSheet isVisible={open} setIsVisible={setIsVisible}>
+      <BottomSheet
+        isVisible={open}
+        setIsVisible={setIsVisible}
+        heightPercent={['70%', '50%']}
+      >
         <div className="p-8">
           <section className="flex items-center space-x-2 rounded-14 bg-gr-50 p-4">
             <Checkbox

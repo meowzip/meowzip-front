@@ -128,6 +128,7 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
             setIsVisible={() =>
               setSelectTimeBottomSheet(!selectTimeBottomSheet)
             }
+            heightPercent={['70%', '50%']}
           >
             <div className="flex h-12 items-center justify-center text-heading-3">
               돌봄 시간을 입력하세요.

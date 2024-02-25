@@ -14,6 +14,7 @@ interface BottomSheetProps extends MotionProps {
   setIsVisible: (isVisible: boolean) => void;
   topBar?: React.ReactNode;
   children: React.ReactNode;
+  heightPercent: string[];
 }
 
 const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -21,6 +22,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   setIsVisible,
   topBar,
   children,
+  heightPercent,
   ...props
 }) => {
   const [windowHeight, setWindowHeight] = useState<number>(0);
@@ -57,7 +59,7 @@ const BottomSheet: React.FC<BottomSheetProps> = ({
   };
 
   // y값에 따른 BottomSheet의 높이 변화를 추적
-  const bottomSheetHeight = useTransform(y, [0, windowHeight], ['70%', '50%']);
+  const bottomSheetHeight = useTransform(y, [0, windowHeight], heightPercent);
 
   const bottomSheetVariants = {
     hidden: {
