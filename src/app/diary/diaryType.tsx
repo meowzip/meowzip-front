@@ -14,3 +14,12 @@ export interface DiaryPageProps {
     gender: 'female' | 'male';
   }[];
 }
+
+export interface DiaryRegisterReqObj {
+  isGivenWater: boolean;
+  isFeed: boolean;
+  content: string;
+  caredDate: string;
+  caredTime: string;
+  catIds?: number[];
+}

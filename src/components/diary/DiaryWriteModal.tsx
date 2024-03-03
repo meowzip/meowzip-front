@@ -10,6 +10,9 @@ import TimeInput from '@/components/diary/TimeInput';
 import SearchCatModal from './SearchCatModal';
 import { useAtom } from 'jotai';
 import { diaryImageListAtom } from '@/atoms/imageAtom';
+import { useMutation } from '@tanstack/react-query';
+import { registerDiaryOnServer } from '@/services/diary';
+import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 interface DiaryWriteModalProps {
   onClose: () => void;
 }
@@ -41,9 +44,48 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
     return `${formattedHour}:${formattedMinute}`;
   };
 
+  const saveDiary = () => {
+    registerDiaryMutation.mutate({
+      diary: {
+        isGivenWater: chipObjList.find(chip => chip.key === 'water')
+          ?.checked as boolean,
+        isFeed: chipObjList.find(chip => chip.key === 'food')
+          ?.checked as boolean,
+        content: textareaContent,
+        caredDate: '2024-02-09',
+        caredTime: '22:30'
+        // caredDate: currentTime.hour,
+        // caredTime: currentTime.hour
+        // catIds: [1, 2]
+      },
+      images: []
+    });
+  };
+
+  const registerDiaryMutation = useMutation({
+    mutationFn: (reqObj: { diary: DiaryRegisterReqObj; images: string[] }) => {
+      return registerDiaryOnServer(reqObj);
+    },
+    onSuccess: (response: any) => {
+      if (response.status === 200) {
+        console.log('response', response);
+      } else {
+        console.error('일지 등록 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('일지 등록 중 오류:', error);
+    }
+  });
+
   return (
     <div className="fixed left-0 top-0 z-10 h-screen w-full overflow-y-auto bg-gr-white">
-      <Topbar type="modal" title="일지쓰기" onClose={onClose} />
+      <Topbar
+        type="save"
+        title="일지쓰기"
+        onClose={onClose}
+        onClick={saveDiary}
+      />
       <section className="flex items-center justify-between px-4 py-2">
         <h5 className="py-2 text-heading-5 text-gr-900">돌봄 시간</h5>
         <Button
