@@ -32,11 +32,23 @@ const useCropper = (
     if (imageElement.current) {
       const cropper = imageElement.current.cropper;
       const croppedCanvas = cropper.getCroppedCanvas();
-      const croppedImage = croppedCanvas.toDataURL('image/jpeg');
+
+      // Canvas 크기 조절
+      const MAX_HEIGHT = 800;
+      const MAX_WIDTH = 800;
+
+      const resizedCanvas = document.createElement('canvas');
+      const ctx = resizedCanvas.getContext('2d');
+      resizedCanvas.width = MAX_WIDTH;
+      resizedCanvas.height = MAX_HEIGHT;
+      ctx?.drawImage(croppedCanvas, 0, 0, MAX_WIDTH, MAX_HEIGHT);
+
+      // Canvas를 이미지로 변환하여 압축 && 이미지 품질 설정
+      const resizedImage = resizedCanvas.toDataURL('image/jpeg', 0.8);
 
       onUpload(prevList =>
         prevList.map(item =>
-          item.key === key ? { ...item, croppedImage } : item
+          item.key === key ? { ...item, croppedImage: resizedImage } : item
         )
       );
     }
