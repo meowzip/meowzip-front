@@ -45,6 +45,10 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
   };
 
   const saveDiary = () => {
+    const images = diaryImageList
+      ?.filter(diary => diary.croppedImage)
+      ?.map(diary => diary.croppedImage);
+
     registerDiaryMutation.mutate({
       diary: {
         isGivenWater: chipObjList.find(chip => chip.key === 'water')
@@ -52,13 +56,13 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
         isFeed: chipObjList.find(chip => chip.key === 'food')
           ?.checked as boolean,
         content: textareaContent,
-        caredDate: '2024-02-09',
+        caredDate: '2024-03-09',
         caredTime: '22:30'
         // caredDate: currentTime.hour,
         // caredTime: currentTime.hour
         // catIds: [1, 2]
       },
-      images: []
+      images: images.filter(image => image !== null) as string[]
     });
   };
 
@@ -67,7 +71,7 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
       return registerDiaryOnServer(reqObj);
     },
     onSuccess: (response: any) => {
-      if (response.status === 200) {
+      if (response.status === 'OK') {
         console.log('response', response);
       } else {
         console.error('일지 등록 중 오류:', response.message);
