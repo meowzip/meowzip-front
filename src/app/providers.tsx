@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const Providers = ({ children }: any): React.JSX.Element => {
   const [queryClient] = useState(
@@ -16,7 +17,10 @@ const Providers = ({ children }: any): React.JSX.Element => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+    </QueryClientProvider>
   );
 };
 

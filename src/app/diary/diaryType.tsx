@@ -1,4 +1,5 @@
 export interface DiaryPageProps {
+  pk: number;
   images?: string[];
   labels: {
     type: 'default' | 'text' | 'icon';

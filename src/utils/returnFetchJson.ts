@@ -50,8 +50,6 @@ const returnFetchJson = (args?: ReturnFetchJsonDefaultOptions) => {
     headers.get('Content-Type') ||
       headers.set('Content-Type', 'application/json');
     headers.get('Accept') || headers.set('Accept', 'application/json');
-    args?.headers &&
-      headers.set('Authorization', `Bearer ${args.headers.Authorization}`);
 
     const response = await fetch(url, {
       ...init,

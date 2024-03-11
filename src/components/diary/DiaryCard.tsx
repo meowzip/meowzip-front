@@ -11,6 +11,7 @@ interface DiaryCardProps extends DiaryPageProps {
 }
 
 const DiaryCard = ({
+  pk,
   images,
   labels,
   content,
@@ -46,7 +47,7 @@ const DiaryCard = ({
       )}
       <section className="p-4">
         <article className="mb-2 flex items-center justify-start gap-1">
-          {labels.map((label, index) => (
+          {labels?.map((label, index) => (
             <Label
               key={index}
               type={label.type}

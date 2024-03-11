@@ -1,6 +1,5 @@
 'use client';
 
-import { DiaryPageProps } from '@/app/diary/diaryType';
 import { useState } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
@@ -8,6 +7,8 @@ import DiaryListLayout from '@/components/diary/DiaryListLayout';
 import DiaryDetailModal from '@/components/diary/DiaryDetailModal';
 import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
+import { DiaryPageProps } from './diaryType';
+import { useDiaries } from '@/hooks/useDiaries';
 
 const mockup = [
   {
@@ -107,54 +108,71 @@ const DiaryPage = () => {
     setShowDetailModal(true);
   };
 
+  const {
+    data: diaryList,
+    error,
+    isLoading
+  } = useDiaries({
+    date: '2024-03-08',
+    page: 0,
+    size: 10,
+    offset: 0
+  });
+
   return (
     <>
-      <DiaryListLayout>
-        <section className="flex justify-start bg-gr-white">
-          <Filter
-            propObj={{
-              id: '1',
-              image: 'bg-gr-400',
-              share: true,
-              name: '전체보기'
-            }}
-          />
-          <Filter
-            propObj={{
-              id: '1',
-              image:
-                'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-              share: true,
-              name: '식빵이'
-            }}
-          />
-          <Filter
-            propObj={{
-              id: '2',
-              image:
-                'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-              share: false,
-              name: '꼬기'
-            }}
-          />
-        </section>
-        <section className="p-4">
-          {mockup.map(item => (
-            <DiaryCard
-              key={item.pk}
-              images={item.images}
-              labels={item.labels}
-              content={item.content}
-              profiles={item.profiles}
-              onClick={() => openDetailModal(item)}
+      {!isLoading && (
+        <DiaryListLayout>
+          <section className="flex justify-start bg-gr-white">
+            <Filter
+              propObj={{
+                id: '1',
+                image: 'bg-gr-400',
+                share: true,
+                name: '전체보기'
+              }}
             />
-          ))}
-        </section>
-      </DiaryListLayout>
+            <Filter
+              propObj={{
+                id: '1',
+                image:
+                  'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
+                share: true,
+                name: '식빵이'
+              }}
+            />
+            <Filter
+              propObj={{
+                id: '2',
+                image:
+                  'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
+                share: false,
+                name: '꼬기'
+              }}
+            />
+          </section>
+          <section className="p-4">
+            {!isLoading &&
+              diaryList?.map((diary: DiaryPageProps, index: number) => (
+                <DiaryCard
+                  key={index}
+                  pk={diary.pk}
+                  images={diary.images}
+                  labels={diary.labels}
+                  content={diary.content}
+                  profiles={diary.profiles}
+                  onClick={() => openDetailModal(diary)}
+                />
+              ))}
+          </section>
+        </DiaryListLayout>
+      )}
+
       <FloatingActionButton onClick={() => setShowWriteModal(true)} />
 
       {showDetailModal && (
         <DiaryDetailModal
+          pk={mockup[0].pk}
           images={mockup[0].images}
           labels={mockup[0].labels}
           content={mockup[0].content}
