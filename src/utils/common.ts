@@ -75,3 +75,36 @@ export const removeCookie = (
 
   document.cookie = cookieString;
 };
+
+export const base64ToFile = (base64String: string | null, filename: string) => {
+  // Split the base64 string into parts
+  if (!base64String) return;
+
+  const parts = base64String.split(';base64,');
+  const decodedData = window.atob(parts[1]); // Decode base64 string
+
+  // Convert decoded data to binary
+  const uint8Array = new Uint8Array(decodedData.length);
+  for (let i = 0; i < decodedData.length; ++i) {
+    uint8Array[i] = decodedData.charCodeAt(i);
+  }
+
+  // Create a Blob from the binary data
+  const blob = new Blob([uint8Array]);
+
+  // Create a File from the Blob
+  const file = new File([blob], filename);
+
+  return file;
+};
+
+export const objectToQueryString = (
+  obj: Record<string, string | number>
+): string => {
+  return Object.entries(obj)
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join('&');
+};

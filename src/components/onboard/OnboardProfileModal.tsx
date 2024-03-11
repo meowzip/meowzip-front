@@ -4,7 +4,7 @@ import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
 import { useAtom } from 'jotai';
 import { nicknameAtom } from '@/atoms/nicknameAtom';
-import { useNickname } from '@/app/onboard/hooks/useNickname';
+import { useNickname } from '@/hooks/useNickname';
 import { profileImageAtom } from '@/atoms/imageAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
