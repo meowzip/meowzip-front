@@ -86,13 +86,13 @@ const Topbar = ({
       type: 'modal',
       content: {
         left: (
-          <div className="flex px-[10px] py-1" onClick={onClose}>
+          <div className="flex px-[10px] py-1">
             <BackIcon
               width={24}
               height={24}
               stroke="var(--gr-black)"
               className="cursor-pointer"
-              onClick={onClick}
+              onClick={onClose}
             />
           </div>
         ),
@@ -105,6 +105,7 @@ const Topbar = ({
               width={24}
               height={24}
               className="h-6 w-6"
+              onClick={onClick}
             />
           </div>
         )
