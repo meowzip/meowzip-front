@@ -1,8 +1,10 @@
 import { Calendar } from '../ui/Calendar';
 import Modal from '@/components/ui/Modal';
 import BottomSheet from '@/components/ui/BottomSheet';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useToast } from '../ui/hooks/useToast';
+import { getDiariesByMonth } from '@/services/diary';
+import { useQuery } from '@tanstack/react-query';
 
 interface CalendarModalProps {
   isOpen: boolean;
@@ -49,6 +51,24 @@ const CalendarModal = ({
       setSelectedMonth(newDate);
       setBottomSheetVisible(false);
     }
+  };
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['diaries', selectedMonth],
+    queryFn: () => getDiariesByMonth(selectedMonth),
+    staleTime: 1000 * 60 * 10
+  });
+
+  useEffect(() => {
+    if (data) {
+      const caredDiaries = data.map((diary: any) => convertDate(diary.date));
+      setDays(caredDiaries);
+    }
+  }, [data]);
+
+  const convertDate = (date: string) => {
+    const dateObj = new Date(date);
+    return dateObj;
   };
 
   const handleSelectDate = (selectedDates: Date[] | undefined) => {
