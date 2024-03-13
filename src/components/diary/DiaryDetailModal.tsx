@@ -28,7 +28,7 @@ const DiaryDetailModal = ({
         </div>
         <h4 className="text-body-3 text-gr-black">{content}</h4>
         <article className="mb-2 flex items-center justify-start gap-1">
-          {labels.map((label, index) => (
+          {labels?.map((label, index) => (
             <Label
               key={index}
               type={label.type}
@@ -42,7 +42,7 @@ const DiaryDetailModal = ({
         <h3 className="py-3 text-heading-5 text-gr-900">
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
-        {profiles.map(cat => (
+        {profiles?.map(cat => (
           <article key={cat.id} className="flex items-center gap-4 py-2">
             <img
               src={cat.image}
