@@ -81,8 +81,7 @@ const DiaryPage = () => {
   } = useDiaries({
     date: dateToString(new Date()),
     page: 0,
-    size: 10,
-    offset: 0
+    size: 10
   });
 
   return (

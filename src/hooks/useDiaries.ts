@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 type DiarySearchOption = {
   page: number;
   size: number;
-  offset?: number;
   date: string;
 };
 
@@ -19,7 +18,7 @@ const fetchExtendedAuth = returnFetch({
   }
 });
 
-export const useDiaries = ({ date, page, size, offset }: DiarySearchOption) => {
+export const useDiaries = ({ date, page, size }: DiarySearchOption) => {
   const fetchDiaries = async (reqObj: DiarySearchOption) => {
     const response = await fetchExtendedAuth(
       `/diaries?${objectToQueryString(reqObj)}`
@@ -33,8 +32,8 @@ export const useDiaries = ({ date, page, size, offset }: DiarySearchOption) => {
   };
 
   return useQuery({
-    queryKey: ['diaries', page, size, offset, date],
-    queryFn: () => fetchDiaries({ date, size, offset, page }),
+    queryKey: ['diaries', page, size, date],
+    queryFn: () => fetchDiaries({ date, size, page }),
     staleTime: 1000 * 60 * 10
   });
 };
