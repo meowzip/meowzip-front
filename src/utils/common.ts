@@ -6,6 +6,7 @@ export const hideEmail = (email: string) => {
 };
 
 export const getCookie = (name: string): string => {
+  if (!document.cookie) return '';
   const cookieValue = document.cookie
     .split('; ')
     .find(row => row.startsWith(`${encodeURIComponent(name)}=`))
