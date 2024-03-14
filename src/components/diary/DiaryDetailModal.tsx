@@ -1,26 +1,65 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Topbar from '@/components/ui/Topbar';
 import Carousel from '@/components/ui/Carousel';
 import Label from '@/components/ui/Label';
 import { DiaryPageProps } from '@/app/diary/diaryType';
+import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
+import { getCookie } from '@/utils/common';
+import { jwtDecode } from 'jwt-decode';
+import { useMutation } from '@tanstack/react-query';
+import { deleteDiaryOnServer } from '@/services/diary';
 
 interface DiaryDetailModalProps extends DiaryPageProps {
   onClose: () => void;
 }
 
 const DiaryDetailModal = ({
+  id,
   images,
   labels,
   content,
   profiles,
   onClose,
-  pk
+  memberId
 }: DiaryDetailModalProps) => {
+  const [editBottomSheet, setEditBottomSheet] = useState(false);
+  const [name, setName] = useState('이치즈');
+  const [isMine, setIsMine] = useState(false);
+
+  useEffect(() => {
+    const token = getCookie('Authorization');
+    const decodedToken: { memberId: number } = jwtDecode(token);
+    setIsMine(decodedToken.memberId === memberId);
+  }, []);
+
+  const deleteDidary = () => {
+    console.log('일지 삭제');
+    deleteDiaryMutation.mutate(id);
+  };
+  const deleteDiaryMutation = useMutation({
+    mutationFn: (id: number) => deleteDiaryOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        onClose();
+      } else {
+        console.error('일지 등록 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('일지 등록 중 오류:', error);
+    }
+  });
+
   return (
     <div className="fixed left-0 top-0 z-10 h-screen overflow-y-auto bg-gr-white">
-      <Topbar type="modal" title="날짜 props" onClose={onClose} />
+      <Topbar
+        type="modal"
+        title="날짜 props"
+        onClose={onClose}
+        onClick={() => setEditBottomSheet(true)}
+      />
       <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-4">
         <h5 className="text-end text-body-4 text-gr-500">아이디 • 7시간 전</h5>
         <div className="flex h-[300px] w-[90vw]">
@@ -62,6 +101,14 @@ const DiaryDetailModal = ({
           </article>
         ))}
       </section>
+      <MoreBtnBottomSheet
+        isVisible={editBottomSheet}
+        setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+        heightPercent={['50%', '40%']}
+        name={name}
+        isMine={isMine}
+        onDelete={deleteDidary}
+      />
     </div>
   );
 };

@@ -64,6 +64,7 @@ const CommunityPage = () => {
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
         name={name}
+        isMine={true}
       />
     </>
   );

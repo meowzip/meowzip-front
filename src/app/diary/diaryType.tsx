@@ -1,5 +1,5 @@
 export interface DiaryPageProps {
-  pk: number;
+  id: number;
   images?: string[];
   labels: {
     type: 'default' | 'text' | 'icon';
@@ -14,6 +14,7 @@ export interface DiaryPageProps {
     name: string;
     gender: 'female' | 'male';
   }[];
+  memberId: number;
 }
 
 export interface DiaryRegisterReqObj {
