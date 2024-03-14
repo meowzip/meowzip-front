@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
@@ -10,7 +10,8 @@ import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryPageProps } from './diaryType';
 import { useDiaries } from '@/hooks/useDiaries';
 import { dateToString } from '@/utils/common';
-
+import { useAtom } from 'jotai';
+import { diaryDateAtom } from '@/atoms/diaryAtom';
 // const mockup = [
 //   {
 //     pk: 1,
@@ -60,6 +61,7 @@ import { dateToString } from '@/utils/common';
 // ];
 
 const DiaryPage = () => {
+  const [diaryDate] = useAtom(diaryDateAtom);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedModal, setSelectedModal] = useState<DiaryPageProps>(
@@ -77,11 +79,12 @@ const DiaryPage = () => {
     error,
     isLoading
   } = useDiaries({
-    date: dateToString(new Date()),
+    date: dateToString(diaryDate),
     page: 0,
     size: 10
   });
 
+  useEffect(() => {}, [diaryDate]);
   return (
     <>
       {!isLoading && (
