@@ -6,12 +6,14 @@ export const hideEmail = (email: string) => {
 };
 
 export const getCookie = (name: string): string => {
-  if (!document.cookie) return '';
-  const cookieValue = document.cookie
-    .split('; ')
-    .find(row => row.startsWith(`${encodeURIComponent(name)}=`))
-    ?.split('=')[1];
-  return cookieValue ? decodeURIComponent(cookieValue) : '';
+  if (typeof document !== 'undefined') {
+    const cookieValue = document.cookie
+      .split('; ')
+      .find(row => row.startsWith(`${encodeURIComponent(name)}=`))
+      ?.split('=')[1];
+    return cookieValue ? decodeURIComponent(cookieValue) : '';
+  }
+  return '';
 };
 
 interface CookieOptions {
