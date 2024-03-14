@@ -11,7 +11,6 @@ interface DiaryCardProps extends DiaryPageProps {
 }
 
 const DiaryCard = ({
-  pk,
   images,
   labels,
   content,

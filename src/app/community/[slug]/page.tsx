@@ -1,7 +1,7 @@
 'use client';
 
 import WriteComment from '@/components/community/detail/WriteComment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
@@ -17,6 +17,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [name, setName] = useState('이치즈');
+  const [isMine, setIsMine] = useState(false);
 
   const feed = {
     id: 1,
@@ -97,6 +98,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['40%', '40%']}
         name={name}
+        isMine={isMine}
       />
     </div>
   );

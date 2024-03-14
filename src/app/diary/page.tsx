@@ -10,6 +10,7 @@ import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryPageProps } from './diaryType';
 import { useDiaries } from '@/hooks/useDiaries';
 import { dateToString } from '@/utils/common';
+
 // const mockup = [
 //   {
 //     pk: 1,
@@ -61,15 +62,12 @@ import { dateToString } from '@/utils/common';
 const DiaryPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
-  const [selectedModal, setSelectedModal] = useState<DiaryPageProps>({
-    pk: 0,
-    images: [],
-    labels: [],
-    content: '',
-    profiles: []
-  });
+  const [selectedModal, setSelectedModal] = useState<DiaryPageProps>(
+    {} as DiaryPageProps
+  );
 
   const openDetailModal = (item: DiaryPageProps) => {
+    console.log('item', item);
     setSelectedModal(item);
     setShowDetailModal(true);
   };
@@ -121,12 +119,13 @@ const DiaryPage = () => {
               diaryList?.map((diary: DiaryPageProps, index: number) => (
                 <DiaryCard
                   key={index}
-                  pk={diary.pk}
+                  id={diary.id}
                   images={diary.images}
                   labels={diary.labels}
                   content={diary.content}
                   profiles={diary.profiles}
                   onClick={() => openDetailModal(diary)}
+                  memberId={selectedModal.memberId}
                 />
               ))}
           </section>
@@ -137,12 +136,13 @@ const DiaryPage = () => {
 
       {showDetailModal && (
         <DiaryDetailModal
-          pk={selectedModal.pk}
+          id={selectedModal.id}
           images={selectedModal.images}
           labels={selectedModal.labels}
           content={selectedModal.content}
           profiles={selectedModal.profiles}
           onClose={() => setShowDetailModal(false)}
+          memberId={selectedModal.memberId}
         />
       )}
       {showWriteModal && (

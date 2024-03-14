@@ -9,17 +9,20 @@ interface MoreBtnBottomSheetProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   heightPercent: string[];
-  name: string;
+  name?: string;
+  isMine: boolean;
+  onDelete?: () => void;
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   isVisible,
   setIsVisible,
   heightPercent,
-  name
+  name,
+  isMine,
+  onDelete
 }) => {
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
-  const [isMyFeed, setIsMyFeed] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{
     title: string;
@@ -36,7 +39,12 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     setShowModal(true);
     setModalContent({
       title: '삭제하시겠습니까?',
-      primaryBtn: { content: '삭제', onClick: () => deleteFeed() }
+      primaryBtn: {
+        content: '삭제',
+        onClick: () => {
+          onDelete && onDelete(), setShowModal(false);
+        }
+      }
     });
   };
   const openModalReport = () => {
@@ -79,7 +87,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
         heightPercent={heightPercent}
       >
         <div className="px-4">
-          {isMyFeed ? (
+          {isMine ? (
             <>
               <ActionButton
                 icon="/images/icons/edit.svg"
