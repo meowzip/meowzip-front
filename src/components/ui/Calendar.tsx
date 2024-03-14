@@ -1,5 +1,5 @@
 import React from 'react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, SelectRangeEventHandler } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
@@ -22,7 +22,7 @@ function Calendar({
       classNames={{
         caption: 'hidden',
         months:
-          'flex justify-center items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
+          'flex justify-ceanter items-center flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4  w-full',
         table: 'w-full border-collapse space-y-1',
         head_row: 'flex justify-around',

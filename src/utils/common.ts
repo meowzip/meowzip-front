@@ -113,5 +113,11 @@ export const objectToQueryString = (
 };
 
 export const dateToString = (date: Date): string => {
-  return date.toISOString().split('T')[0];
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  const year = localDate.getFullYear();
+  const month = (localDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = localDate.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
 };
