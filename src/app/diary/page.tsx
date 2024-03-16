@@ -12,12 +12,13 @@ import { dateToString } from '@/utils/common';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { useQueryClient } from '@tanstack/react-query';
 
 const DiaryPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [diaryDate] = useAtom(diaryDateAtom);
-  const [showDetailModal, setShowDetailModal] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedModal, setSelectedModal] = useState<DiaryPageProps>(
     {} as DiaryPageProps
@@ -38,7 +39,10 @@ const DiaryPage = () => {
     size: 10
   });
 
-  useEffect(() => {}, [diaryDate]);
+  useEffect(() => {
+    if (showWriteModal) return;
+    queryClient.invalidateQueries({ queryKey: ['diaries'] });
+  }, [diaryDate, showWriteModal]);
   return (
     <>
       {!isLoading && (

@@ -13,6 +13,8 @@ import { diaryImageListAtom } from '@/atoms/imageAtom';
 import { useMutation } from '@tanstack/react-query';
 import { editDiaryOnServer, registerDiaryOnServer } from '@/services/diary';
 import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
+import { useRouter } from 'next/navigation';
+
 interface DiaryWriteModalProps {
   onClose: () => void;
   id: number;
@@ -24,6 +26,8 @@ const DiaryWriteModal = ({
   id,
   diaryDetail
 }: DiaryWriteModalProps) => {
+  const router = useRouter();
+
   const [textareaContent, setTextareaContent] = useState('');
   const [currentTime, setCurrentTime] = useState({
     hour: new Date().getHours().toString().padStart(2, '0'),
@@ -103,7 +107,7 @@ const DiaryWriteModal = ({
       content: textareaContent,
       caredDate: caredDate(),
       caredTime: displayTime(),
-      // catIds: [1, 2]
+      // taggedCats: [1, 2]
       images: images.filter(image => image !== null) as string[]
     };
   };
@@ -121,6 +125,7 @@ const DiaryWriteModal = ({
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
         onClose();
+        router.push('/diary');
       } else {
         console.error('일지 등록 중 오류:', response.message);
       }

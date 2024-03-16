@@ -24,5 +24,5 @@ export interface DiaryRegisterReqObj {
   images: string[];
   caredDate: string;
   caredTime: string;
-  catIds?: number[];
+  taggedCats?: number[];
 }
