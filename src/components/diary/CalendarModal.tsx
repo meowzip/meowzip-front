@@ -5,9 +5,12 @@ import { useEffect, useState } from 'react';
 import { useToast } from '../ui/hooks/useToast';
 import { getDiariesByMonth } from '@/services/diary';
 import { useQuery } from '@tanstack/react-query';
+import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { useAtom } from 'jotai';
 
 interface CalendarModalProps {
   isOpen: boolean;
+  setCalendarOpen: (calendarOpen: boolean) => void;
   setBottomSheetVisible: (bottomSheetVisible: boolean) => void;
   bottomSheetVisible: boolean;
   selectedMonth: Date;
@@ -16,6 +19,7 @@ interface CalendarModalProps {
 
 const CalendarModal = ({
   isOpen,
+  setCalendarOpen,
   setBottomSheetVisible,
   bottomSheetVisible,
   selectedMonth,
@@ -23,6 +27,8 @@ const CalendarModal = ({
 }: CalendarModalProps) => {
   const initialDays: Date[] = [];
   const [days, setDays] = useState<Date[] | undefined>(initialDays);
+  const [_, setDiaryDate] = useAtom(diaryDateAtom);
+
   const { toast } = useToast();
 
   const months = Array.from({ length: 12 }, (_, i) => i + 1); // 1월부터 12월까지의 배열 생성
@@ -79,7 +85,11 @@ const CalendarModal = ({
         description: '미래 날짜로 이동이 불가합니다.'
       });
     } else {
-      setDays(selectedDates);
+      setCalendarOpen(false);
+      const selected = selectedDates && selectedDates.at(-1);
+      console.log('selectedDates:', selectedDates);
+      console.log('selected:', selected);
+      setDiaryDate(selected ? selected : new Date());
     }
   };
 
