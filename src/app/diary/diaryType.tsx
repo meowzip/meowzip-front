@@ -21,6 +21,7 @@ export interface DiaryRegisterReqObj {
   isGivenWater: boolean;
   isFeed: boolean;
   content: string;
+  images: string[];
   caredDate: string;
   caredTime: string;
   catIds?: number[];

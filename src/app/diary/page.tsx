@@ -4,63 +4,18 @@ import { useState, useEffect } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
-import DiaryDetailModal from '@/components/diary/DiaryDetailModal';
 import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryPageProps } from './diaryType';
 import { useDiaries } from '@/hooks/useDiaries';
 import { dateToString } from '@/utils/common';
+import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
-// const mockup = [
-//   {
-//     pk: 1,
-//     images: [
-//       'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
-//       'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg',
-//       'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
-//     ],
-//     labels: [
-//       {
-//         type: 'default' as const,
-//         content: '사료',
-//         icon: 'https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/home.svg'
-//       },
-//       {
-//         type: 'default' as const,
-//         content: '물',
-//         icon: 'https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/home.svg'
-//       }
-//     ],
-//     content:
-//       '오늘도 먼지는 귀엽다냥 🧡 내용이 길어도 세 줄까지만 보여짐 냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥냥',
-//     profiles: [
-//       {
-//         id: '1',
-//         image: 'https://github.com/shadcn.png',
-//         style: 'w-6 h-6 absolute border border-gr-white',
-//         name: '식빵이',
-//         gender: 'female' as const
-//       },
-//       {
-//         id: '2',
-//         image: 'https://github.com/shadcn.png',
-//         style: 'w-6 h-6 absolute left-[20px] border border-gr-white',
-//         name: '콩이',
-//         gender: 'male' as const
-//       },
-//       {
-//         id: '3',
-//         image: 'https://github.com/shadcn.png',
-//         style: 'w-6 h-6 absolute left-[40px] border border-gr-white',
-//         name: '백설이',
-//         gender: 'female' as const
-//       }
-//     ]
-//   }
-// ];
 
 const DiaryPage = () => {
+  const router = useRouter();
+
   const [diaryDate] = useAtom(diaryDateAtom);
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
@@ -69,9 +24,8 @@ const DiaryPage = () => {
   );
 
   const openDetailModal = (item: DiaryPageProps) => {
-    console.log('item', item);
     setSelectedModal(item);
-    setShowDetailModal(true);
+    router.push(`/diary/${item.id}`);
   };
 
   const {
@@ -137,19 +91,11 @@ const DiaryPage = () => {
 
       <FloatingActionButton onClick={() => setShowWriteModal(true)} />
 
-      {showDetailModal && (
-        <DiaryDetailModal
-          id={selectedModal.id}
-          images={selectedModal.images}
-          labels={selectedModal.labels}
-          content={selectedModal.content}
-          profiles={selectedModal.profiles}
-          onClose={() => setShowDetailModal(false)}
-          memberId={selectedModal.memberId}
-        />
-      )}
       {showWriteModal && (
-        <DiaryWriteModal onClose={() => setShowWriteModal(false)} />
+        <DiaryWriteModal
+          onClose={() => setShowWriteModal(false)}
+          id={selectedModal.id}
+        />
       )}
     </>
   );

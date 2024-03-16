@@ -12,6 +12,7 @@ interface MoreBtnBottomSheetProps {
   name?: string;
   isMine: boolean;
   onDelete?: () => void;
+  onEdit?: () => void;
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
@@ -20,7 +21,8 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   heightPercent,
   name,
   isMine,
-  onDelete
+  onDelete,
+  onEdit
 }) => {
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [showModal, setShowModal] = useState(false);
@@ -33,6 +35,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   const openModalEdit = () => {
     setIsVisible(false);
     setShowWriteModal(true);
+    onEdit && onEdit();
   };
   const openModalDelete = () => {
     setIsVisible(false);

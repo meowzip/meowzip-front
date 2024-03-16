@@ -37,3 +37,21 @@ export const useDiaries = ({ date, page, size }: DiarySearchOption) => {
     staleTime: 1000 * 60 * 10
   });
 };
+
+export const useDiaryDetail = (id: number) => {
+  const fetchDiaryDetail = async (id: number) => {
+    const response = await fetchExtendedAuth(`/diaries/${id}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    return data.data;
+  };
+
+  return useQuery({
+    queryKey: ['diaryDetail', id],
+    queryFn: () => fetchDiaryDetail(id),
+    staleTime: 1000 * 60 * 10
+  });
+};
