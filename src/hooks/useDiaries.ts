@@ -2,12 +2,17 @@ import { objectToQueryString } from '@/utils/common';
 import returnFetch from '@/utils/returnFetch';
 import { getCookie } from '@/utils/common';
 import { useQuery } from '@tanstack/react-query';
+import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 
 type DiarySearchOption = {
   page: number;
   size: number;
   date: string;
 };
+
+interface DiaryObj extends DiaryRegisterReqObj {
+  id: number;
+}
 
 const memberToken = getCookie('Authorization');
 const fetchExtendedAuth = returnFetch({
@@ -28,7 +33,11 @@ export const useDiaries = ({ date, page, size }: DiarySearchOption) => {
     }
 
     const data = await response.json();
-    return data.items || [];
+
+    const sortByLatest = data.items.sort(
+      (a: DiaryObj, b: DiaryObj) => b.id - a.id
+    );
+    return sortByLatest || [];
   };
 
   return useQuery({
