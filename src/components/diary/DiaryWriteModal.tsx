@@ -2,7 +2,7 @@ import ImageUploader from '@/components/diary/ImageUploader';
 import Chip from '@/components/ui/Chip';
 import Textarea from '@/components/ui/Textarea';
 import Topbar from '@/components/ui/Topbar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BackIcon from '../../../public/images/icons/back.svg';
 import { Button } from '@/components/ui/Button';
 import BottomSheet from '@/components/ui/BottomSheet';
@@ -11,13 +11,19 @@ import SearchCatModal from './SearchCatModal';
 import { useAtom } from 'jotai';
 import { diaryImageListAtom } from '@/atoms/imageAtom';
 import { useMutation } from '@tanstack/react-query';
-import { registerDiaryOnServer } from '@/services/diary';
+import { editDiaryOnServer, registerDiaryOnServer } from '@/services/diary';
 import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 interface DiaryWriteModalProps {
   onClose: () => void;
+  id: number;
+  diaryDetail?: DiaryRegisterReqObj;
 }
 
-const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
+const DiaryWriteModal = ({
+  onClose,
+  id,
+  diaryDetail
+}: DiaryWriteModalProps) => {
   const [textareaContent, setTextareaContent] = useState('');
   const [currentTime, setCurrentTime] = useState({
     hour: new Date().getHours().toString().padStart(2, '0'),
@@ -37,6 +43,39 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
   ]);
   const [diaryImageList, setDiaryImageList] = useAtom(diaryImageListAtom);
 
+  const settingDiaryDetail = () => {
+    if (!diaryDetail) return;
+
+    setTextareaContent(diaryDetail.content);
+    setCurrentTime({
+      hour: diaryDetail.caredTime.split(':')[0].split(' ')[1],
+      minute: diaryDetail.caredTime.split(':')[1]
+    });
+    setChipObjList(prevList =>
+      prevList.map(prevChip =>
+        prevChip.key === 'food'
+          ? { ...prevChip, checked: diaryDetail.isFeed }
+          : prevChip.key === 'water'
+          ? { ...prevChip, checked: diaryDetail.isGivenWater }
+          : prevChip
+      )
+    );
+    // setDiaryImageList(updateDiaryImages(diaryDetail.images));
+  };
+  const updateDiaryImages = (images: string[]) => {
+    if (!images) return [];
+
+    const updatedImageList = images.map((image, index) => ({
+      key: (index + 1).toString(),
+      imageSrc: null,
+      croppedImage: image
+    }));
+    return updatedImageList;
+  };
+  useEffect(() => {
+    settingDiaryDetail();
+  }, [diaryDetail]);
+
   const displayTime = () => {
     const { hour, minute } = currentTime;
     const formattedHour = hour.padStart(2, '0');
@@ -52,28 +91,31 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
     return `${year}-${month}-${date}`;
   };
 
-  const saveDiary = () => {
+  const settingParams = () => {
     const images = diaryImageList
       ?.filter(diary => diary.croppedImage)
       ?.map(diary => diary.croppedImage);
 
-    registerDiaryMutation.mutate({
-      diary: {
-        isGivenWater: chipObjList.find(chip => chip.key === 'water')
-          ?.checked as boolean,
-        isFeed: chipObjList.find(chip => chip.key === 'food')
-          ?.checked as boolean,
-        content: textareaContent,
-        caredDate: caredDate(),
-        caredTime: displayTime()
-        // catIds: [1, 2]
-      },
+    return {
+      isGivenWater: chipObjList.find(chip => chip.key === 'water')
+        ?.checked as boolean,
+      isFeed: chipObjList.find(chip => chip.key === 'food')?.checked as boolean,
+      content: textareaContent,
+      caredDate: caredDate(),
+      caredTime: displayTime(),
+      // catIds: [1, 2]
       images: images.filter(image => image !== null) as string[]
-    });
+    };
+  };
+
+  const saveDiary = () => {
+    return id
+      ? editDiaryMutation.mutate({ id, diary: settingParams() })
+      : registerDiaryMutation.mutate(settingParams());
   };
 
   const registerDiaryMutation = useMutation({
-    mutationFn: (reqObj: { diary: DiaryRegisterReqObj; images: string[] }) => {
+    mutationFn: (reqObj: DiaryRegisterReqObj) => {
       return registerDiaryOnServer(reqObj);
     },
     onSuccess: (response: any) => {
@@ -88,8 +130,23 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
     }
   });
 
+  const editDiaryMutation = useMutation({
+    mutationFn: (reqObj: { id: number; diary: DiaryRegisterReqObj }) =>
+      editDiaryOnServer(reqObj),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        onClose();
+      } else {
+        console.error('일지 수정 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('일지 수정 중 오류:', error);
+    }
+  });
+
   return (
-    <div className="fixed left-0 top-0 z-10 h-screen w-full overflow-y-auto bg-gr-white">
+    <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
       <Topbar
         type="save"
         title="일지쓰기"
@@ -124,7 +181,12 @@ const DiaryWriteModal = ({ onClose }: DiaryWriteModalProps) => {
         </article>
         <article>
           <h5 className="p-4 text-heading-5 text-gr-900">
-            사진 <span className="text-pr-500">2</span>/3
+            사진
+            <span className="text-pr-500">
+              {diaryDetail?.images?.length ||
+                diaryImageList.map(diary => diary.croppedImage).length}
+            </span>
+            /3
           </h5>
           <div className="flex gap-3 px-4">
             {diaryImageList.map((diary, idx: number) => {

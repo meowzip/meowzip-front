@@ -4,35 +4,29 @@ import React, { useEffect, useState } from 'react';
 import Topbar from '@/components/ui/Topbar';
 import Carousel from '@/components/ui/Carousel';
 import Label from '@/components/ui/Label';
-import { DiaryPageProps } from '@/app/diary/diaryType';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { getCookie } from '@/utils/common';
 import { jwtDecode } from 'jwt-decode';
 import { useMutation } from '@tanstack/react-query';
 import { deleteDiaryOnServer } from '@/services/diary';
+import { useDiaryDetail } from '@/hooks/useDiaries';
+import { useRouter } from 'next/navigation';
+import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 
-interface DiaryDetailModalProps extends DiaryPageProps {
-  onClose: () => void;
-}
+const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
+  const router = useRouter();
 
-const DiaryDetailModal = ({
-  id,
-  images,
-  labels,
-  content,
-  profiles,
-  onClose,
-  memberId
-}: DiaryDetailModalProps) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [name, setName] = useState('이치즈');
-  const [isMine, setIsMine] = useState(false);
+  const [showWriteModal, setShowWriteModal] = useState(false);
+
+  const { data: diaryDetail, isError, isLoading } = useDiaryDetail(id);
+
+  const token = getCookie('Authorization');
+  const decodedToken: { memberId: number } = jwtDecode(token);
 
   useEffect(() => {
-    const token = getCookie('Authorization');
-    const decodedToken: { memberId: number } = jwtDecode(token);
-    setIsMine(decodedToken.memberId === memberId);
-  }, []);
+    if (!diaryDetail) return;
+  }, [id]);
 
   const deleteDidary = () => {
     deleteDiaryMutation.mutate(id);
@@ -41,7 +35,7 @@ const DiaryDetailModal = ({
     mutationFn: (id: number) => deleteDiaryOnServer(id),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
-        onClose();
+        router.push('/diary');
       } else {
         console.error('일지 등록 중 오류:', response.message);
       }
@@ -51,41 +45,50 @@ const DiaryDetailModal = ({
     }
   });
 
+  if (isLoading) return <div>로딩중</div>;
+  if (isError) return <div>에러</div>;
+
   return (
     <div className="fixed left-0 top-0 z-10 h-screen overflow-y-auto bg-gr-white">
       <Topbar
         type="modal"
         title="날짜 props"
-        onClose={onClose}
+        onClose={() => router.push('/diary')}
         onClick={() => setEditBottomSheet(true)}
       />
       <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-4">
-        <h5 className="text-end text-body-4 text-gr-500">아이디 • 7시간 전</h5>
+        <h5 className="text-end text-body-4 text-gr-500">
+          {diaryDetail.memberNickname} • {diaryDetail.caredTime}
+        </h5>
         <div className="flex h-[300px] w-[90vw]">
-          {images && <Carousel images={images} style="rounded-16" />}
+          {diaryDetail.images && (
+            <Carousel images={diaryDetail.images} style="rounded-16" />
+          )}
         </div>
-        <h4 className="text-body-3 text-gr-black">{content}</h4>
+        <h4 className="text-body-3 text-gr-black">{diaryDetail.content}</h4>
         <article className="mb-2 flex items-center justify-start gap-1">
-          {/* {labels?.map((label, index) => (
-            <Label
-              key={index}
-              type={label.type}
-              content={label.content}
-              icon={label.icon}
-            />
-          ))} */}
+          {diaryDetail.isFeed && (
+            <Label type="icon" content="사료">
+              🐟
+            </Label>
+          )}
+          {diaryDetail.isGivenWater && (
+            <Label type="icon" content="물">
+              💧
+            </Label>
+          )}
         </article>
       </section>
       <section className="px-4 pb-[120px] pt-4">
         <h3 className="py-3 text-heading-5 text-gr-900">
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
-        {profiles?.map(cat => (
+        {/* {taggedCats?.map(cat => (
           <article key={cat.id} className="flex items-center gap-4 py-2">
             <img
               src={cat.image}
               alt="cat-image"
-              className="h-12 w-12 rounded-full"
+              className="w-12 h-12 rounded-full"
             />
             <div className="flex items-center gap-2">
               <h4 className="text-body-3 text-gr-900">{cat.name}</h4>
@@ -98,18 +101,27 @@ const DiaryDetailModal = ({
               />
             </div>
           </article>
-        ))}
+        ))} */}
       </section>
       <MoreBtnBottomSheet
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
-        name={name}
-        isMine={isMine}
+        name={diaryDetail.memberNickname}
+        isMine={decodedToken.memberId === diaryDetail.memberId}
         onDelete={deleteDidary}
+        onEdit={() => setShowWriteModal(true)}
       />
+
+      {showWriteModal && (
+        <DiaryWriteModal
+          onClose={() => setShowWriteModal(false)}
+          id={diaryDetail.id}
+          diaryDetail={diaryDetail}
+        />
+      )}
     </div>
   );
 };
 
-export default DiaryDetailModal;
+export default DiaryDetailPage;

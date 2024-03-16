@@ -146,16 +146,11 @@ const DemoPage = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐻 Label</h1>
         <div className="flex gap-2">
-          <Label
-            type="default"
-            content="default label"
-            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/home.svg"
-          />
+          <Label type="default" content="default label">
+            🙊
+          </Label>
           <Label type="text" content="text label" />
-          <Label
-            type="icon"
-            icon="https://nemo-erp-dev.s3.ap-northeast-2.amazonaws.com/bus/image/time.svg"
-          />
+          <Label type="icon">❤️</Label>
         </div>
       </section>
       <section className="border-b p-3">

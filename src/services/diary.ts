@@ -2,19 +2,17 @@ import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 import { fetchExtendedForm, fetchExtendedAuth } from '@/services/nickname';
 import { base64ToFile } from '@/utils/common';
 
-export const registerDiaryOnServer = async (reqObj: {
-  diary: DiaryRegisterReqObj;
-  images?: string[] | [];
-}) => {
+export const registerDiaryOnServer = async (reqObj: DiaryRegisterReqObj) => {
+  const { images, ...diary } = reqObj;
   const formData = new FormData();
   formData.append(
     'diary',
-    new Blob([JSON.stringify(reqObj?.diary)], {
+    new Blob([JSON.stringify(diary)], {
       type: 'application/json'
     })
   );
 
-  const files = reqObj.images?.map(image => base64ToFile(image, 'image.jpg'));
+  const files = images?.map(image => base64ToFile(image, 'image.jpg'));
   if (files) {
     files.forEach(file => {
       file && formData.append('images', file);
@@ -68,7 +66,7 @@ export const deleteDiaryOnServer = async (id: number) => {
 
   try {
     const response = await fetchExtendedForm(`/diaries/${id}`, requestOptions);
-    // return response;
+
     const data = await response.json();
     return data;
   } catch (error) {
@@ -77,6 +75,49 @@ export const deleteDiaryOnServer = async (id: number) => {
       throw new Error('일지 삭제 중 오류 발생:' + error.message);
     } else {
       throw new Error('일지 삭제 중 오류 발생:');
+    }
+  }
+};
+
+export const editDiaryOnServer = async (reqObj: {
+  id: number;
+  diary: DiaryRegisterReqObj;
+}) => {
+  const { images, ...diary } = reqObj.diary;
+  const formData = new FormData();
+  formData.append(
+    'diary',
+    new Blob([JSON.stringify(diary)], {
+      type: 'application/json'
+    })
+  );
+
+  const files = images?.map(image => base64ToFile(image, 'image.jpg'));
+  if (files) {
+    files.forEach(file => {
+      file && formData.append('images', file);
+    });
+  }
+
+  const requestOptions = {
+    method: 'PATCH',
+    body: formData
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/diaries/${reqObj.id}`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('일지 등록 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('일지 등록 중 오류 발생:');
     }
   }
 };
