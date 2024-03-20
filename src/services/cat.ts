@@ -1,6 +1,7 @@
 import returnFetch from '@/utils/returnFetch';
 import { base64ToFile } from '@/utils/common';
 import { getCookie } from '@/utils/common';
+import { objectToQueryString } from '@/utils/common';
 
 const memberToken = getCookie('Authorization');
 
@@ -35,6 +36,33 @@ export const registerCat = async (reqObj: {
       throw new Error('고양이 등록 중 오류 발생:' + error.message);
     } else {
       throw new Error('고양이 등록 중 오류 발생:');
+    }
+  }
+};
+
+type CatSearchOption = {
+  page: number;
+  size: number;
+};
+
+export const getCatsOnServer = async ({ page, size }: CatSearchOption) => {
+  try {
+    const response = await fetchExtended(
+      `/cats?${objectToQueryString({ page, size })}`
+    );
+    if (response.body) {
+      const responseBody = await response.text();
+      const parsedBody = JSON.parse(responseBody);
+      return parsedBody.items;
+    } else {
+      throw new Error('응답 본문이 없습니다.');
+    }
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('고양이 목록 조회 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('고양이 목록 조회 중 오류 발생:');
     }
   }
 };

@@ -12,12 +12,15 @@ import { dateToString } from '@/utils/common';
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useQuery } from '@tanstack/react-query';
+import { catsAtom } from '@/atoms/catsAtom';
+import { getCatsOnServer } from '@/services/cat';
 
 const DiaryPage = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const [cats, setCats] = useAtom(catsAtom);
   const [diaryDate] = useAtom(diaryDateAtom);
   const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedModal, setSelectedModal] = useState<DiaryPageProps>(
@@ -28,6 +31,18 @@ const DiaryPage = () => {
     setSelectedModal(item);
     router.push(`/diary/${item.id}`);
   };
+
+  const { data: catData } = useQuery({
+    queryKey: ['getCats'],
+    queryFn: () => getCatsOnServer({ page: 0, size: 10 }),
+    staleTime: 1000 * 60 * 10
+  });
+
+  useEffect(() => {
+    if (catData) {
+      setCats(catData);
+    }
+  }, [catData]);
 
   const {
     data: diaryList,
@@ -43,37 +58,27 @@ const DiaryPage = () => {
     if (showWriteModal) return;
     queryClient.invalidateQueries({ queryKey: ['diaries'] });
   }, [diaryDate, showWriteModal]);
+
   return (
     <>
       {!isLoading && (
         <DiaryListLayout>
           <section className="flex justify-start bg-gr-white">
-            <Filter
-              propObj={{
-                id: '1',
-                image: 'bg-gr-400',
-                share: true,
-                name: '전체보기'
-              }}
-            />
-            <Filter
-              propObj={{
-                id: '1',
-                image:
-                  'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-                share: true,
-                name: '식빵이'
-              }}
-            />
-            <Filter
-              propObj={{
-                id: '2',
-                image:
-                  'https://i.natgeofe.com/k/ad9b542e-c4a0-4d0b-9147-da17121b4c98/MOmeow1_square.png',
-                share: false,
-                name: '꼬기'
-              }}
-            />
+            {cats?.map((cat: any) => (
+              <Filter
+                key={cat.id}
+                propObj={{
+                  id: cat.id,
+                  image: cat.imageUrl,
+                  name: cat.name,
+                  isCoparented: cat.isCoparented,
+                  coParentedCount: cat.coParentedCount,
+                  dDay: cat.dDay,
+                  sex: cat.sex,
+                  isNeutered: cat.isNeutered
+                }}
+              />
+            ))}
           </section>
           <section className="p-4">
             {!isLoading &&
