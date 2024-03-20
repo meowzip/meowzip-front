@@ -5,8 +5,12 @@ interface FilterProps {
   propObj: {
     id: string;
     image: string;
-    share: boolean;
+    isCoparented: boolean;
     name?: string;
+    coParentedCount: string;
+    dDay: string;
+    sex: string;
+    isNeutered: string;
   };
 }
 
@@ -24,7 +28,7 @@ const Filter = ({ propObj }: FilterProps) => {
               }
             ]}
           />
-          {propObj.share && (
+          {propObj.isCoparented && (
             <div className="absolute bottom-0 right-0 rounded-full border-15 border-gr-white">
               <Badge
                 type="icon"
