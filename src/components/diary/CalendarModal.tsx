@@ -87,8 +87,6 @@ const CalendarModal = ({
     } else {
       setCalendarOpen(false);
       const selected = selectedDates && selectedDates.at(-1);
-      console.log('selectedDates:', selectedDates);
-      console.log('selected:', selected);
       setDiaryDate(selected ? selected : new Date());
     }
   };
