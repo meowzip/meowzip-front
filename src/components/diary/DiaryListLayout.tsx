@@ -1,16 +1,22 @@
 import React, { ReactNode, useState } from 'react';
 import Topbar from '../ui/Topbar';
 import { CalendarModal } from './CalendarModal';
-
+import { useAtom } from 'jotai';
+import { diaryDateAtom } from '@/atoms/diaryAtom';
 interface DiaryListLayoutProps {
   children: ReactNode;
 }
 
 const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   const [isCalendarOpen, setCalendarOpen] = useState(false);
+  const [diaryDate, setDiaryDate] = useAtom(diaryDateAtom);
   const [bottomSheetVisible, setBottomSheetVisible] = useState(false);
-  const toggleCalendar = () => setCalendarOpen(!isCalendarOpen);
-  const toggleBottomSheet = () => setBottomSheetVisible(!bottomSheetVisible);
+  const toggleCalendar = () => {
+    setCalendarOpen(!isCalendarOpen);
+  };
+  const toggleBottomSheet = () => {
+    setBottomSheetVisible(!bottomSheetVisible);
+  };
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   const formatDate = (date: Date): string => {
@@ -22,6 +28,14 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   };
   const formattedMonth = formatDate(selectedMonth);
 
+  const changeSearchDiaryDate = (day: 'dayBefore' | 'nextDay') => {
+    if (day === 'dayBefore') {
+      setDiaryDate(new Date(diaryDate.setDate(diaryDate.getDate() - 1)));
+    }
+    if (day === 'nextDay') {
+      setDiaryDate(new Date(diaryDate.setDate(diaryDate.getDate() + 1)));
+    }
+  };
   return (
     <>
       {isCalendarOpen ? (
@@ -33,7 +47,13 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
           hideRight
         />
       ) : (
-        <Topbar type="home" title="title 1" onClick={toggleCalendar} />
+        <Topbar
+          type="home"
+          title="title 1"
+          onClick={toggleCalendar}
+          onLeftClick={() => changeSearchDiaryDate('dayBefore')}
+          onRightClick={() => changeSearchDiaryDate('nextDay')}
+        />
       )}
       <CalendarModal
         isOpen={isCalendarOpen}

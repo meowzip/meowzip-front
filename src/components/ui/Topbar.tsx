@@ -11,6 +11,9 @@ interface BaseProps {
   hideRight?: boolean;
   onClose?: () => void;
   onClick?: () => void;
+  onCenterClick?: () => void;
+  onLeftClick?: () => void;
+  onRightClick?: () => void;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -21,7 +24,9 @@ const Topbar = ({
   hideRight,
   onClose,
   onClick,
-  onChange
+  onChange,
+  onLeftClick,
+  onRightClick
 }: BaseProps) => {
   const CONTENT_LIST = [
     {
@@ -38,7 +43,27 @@ const Topbar = ({
             />
           </div>
         ),
-        center: <p>오늘</p>,
+        center: (
+          <div className="flex">
+            <Image
+              src="/images/icons/arrow-left.svg"
+              alt="calendar"
+              width={24}
+              height={24}
+              className="h-6 w-6"
+              onClick={onLeftClick}
+            />
+            <div onClick={onClick}>오늘</div>
+            <Image
+              src="/images/icons/arrow-right.svg"
+              alt="calendar"
+              width={24}
+              height={24}
+              className="h-6 w-6"
+              onClick={onRightClick}
+            />
+          </div>
+        ),
         right: (
           <div className="px-[10px] py-1">
             <Image
@@ -47,7 +72,6 @@ const Topbar = ({
               width={24}
               height={24}
               className="h-6 w-6 cursor-pointer"
-              onClick={onClick}
             />
           </div>
         )
