@@ -188,8 +188,7 @@ const DiaryWriteModal = ({
           <h5 className="p-4 text-heading-5 text-gr-900">
             사진
             <span className="text-pr-500">
-              {diaryDetail?.images?.length ||
-                diaryImageList.map(diary => diary.croppedImage).length}
+              {diaryImageList.filter(diary => diary.croppedImage).length || 0}
             </span>
             /3
           </h5>
