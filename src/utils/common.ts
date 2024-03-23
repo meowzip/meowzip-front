@@ -81,7 +81,7 @@ export const removeCookie = (
 
 export const base64ToFile = (base64String: string | null, filename: string) => {
   // Split the base64 string into parts
-  if (!base64String) return;
+  if (!base64String || !base64String.includes('data:')) return;
 
   const parts = base64String.split(';base64,');
   const decodedData = window.atob(parts[1]); // Decode base64 string

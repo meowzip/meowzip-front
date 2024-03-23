@@ -17,7 +17,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [name, setName] = useState('이치즈');
-  const [isMine, setIsMine] = useState(false);
+  const [isMine, setIsMine] = useState(true);
 
   const feed = {
     id: 1,
@@ -96,7 +96,7 @@ export default function DetailPage({ params }: { params: PageParams }) {
       <MoreBtnBottomSheet
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-        heightPercent={['40%', '40%']}
+        heightPercent={['50%', '40%']}
         name={name}
         isMine={isMine}
       />

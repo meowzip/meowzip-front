@@ -3,7 +3,8 @@ import ImageUploader from '@/components/diary/ImageUploader';
 import Textarea from '@/components/ui/Textarea';
 import Topbar from '@/components/ui/Topbar';
 import { useAtom } from 'jotai';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ImageUploadData } from '@/atoms/imageAtom';
 
 interface FeedWriteModalProps {
   onClose: () => void;
@@ -11,7 +12,26 @@ interface FeedWriteModalProps {
 
 const FeedWriteModal = ({ onClose }: FeedWriteModalProps) => {
   const [textareaContent, setTextareaContent] = useState('');
-  const [feedImageList, setFeedImageList] = useAtom(feedImageListAtom);
+  // const [feedImageList, setFeedImageList] = useAtom(feedImageListAtom);
+  const [feedImageList, setFeedImageList] = useState([
+    {
+      key: 0,
+      imageSrc: null,
+      croppedImage:
+        'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg'
+    },
+    {
+      key: 1,
+      imageSrc: null,
+      croppedImage: 'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg'
+    },
+    {
+      key: 2,
+      imageSrc: null,
+      croppedImage:
+        'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
+    }
+  ] as ImageUploadData[]);
 
   const saveFeed = () => {
     console.log('저장');
@@ -33,30 +53,24 @@ const FeedWriteModal = ({ onClose }: FeedWriteModalProps) => {
       </article>
       <article>
         <h5 className="p-4 text-heading-5 text-gr-900">
-          사진 <span className="text-pr-500">0</span>/3
+          사진
+          <span className="text-pr-500">
+            {feedImageList.filter(feed => feed.croppedImage).length || 0}
+          </span>
+          /3
         </h5>
         <div className="flex gap-3 px-4">
-          {feedImageList.map((feed, idx: number) => {
-            if (feed.key === '1') {
+          {feedImageList.map((diary, idx: number) => {
+            if (idx === 0 || feedImageList[idx - 1].croppedImage) {
               return (
                 <ImageUploader
-                  key={feed.key}
-                  data={feed}
-                  onUpload={setFeedImageList}
+                  key={diary.key}
+                  data={diary}
                   deleteBtn
+                  onUpload={setFeedImageList}
+                  images={feedImageList}
                 />
               );
-            } else {
-              if (feedImageList[idx - 1].croppedImage) {
-                return (
-                  <ImageUploader
-                    key={feed.key}
-                    data={feed}
-                    onUpload={setFeedImageList}
-                    deleteBtn
-                  />
-                );
-              }
             }
           })}
         </div>
