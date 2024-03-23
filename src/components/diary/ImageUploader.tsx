@@ -23,6 +23,7 @@ interface ImageUploaderProps {
   deleteBtn?: boolean;
   data: ImageUploadData;
   onUpload: Dispatch<SetStateAction<ImageUploadData[]>>;
+  images?: ImageUploadData[];
 }
 
 const ImageUploader = ({
@@ -33,12 +34,13 @@ const ImageUploader = ({
   editBtn,
   deleteBtn,
   data,
-  onUpload
+  onUpload,
+  images
 }: ImageUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageElement = useRef(null);
 
-  const selectImage = (e: ChangeEvent<HTMLInputElement>, key: string) => {
+  const selectImage = (e: ChangeEvent<HTMLInputElement>, key: number) => {
     const file = e.target.files ? e.target.files[0] : null;
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
@@ -55,14 +57,21 @@ const ImageUploader = ({
     }
   };
 
-  const deleteImage = (key: string) => {
-    onUpload(prevList =>
-      prevList.map(item =>
-        item.key === key
-          ? { ...item, imageSrc: null, croppedImage: null }
-          : item
-      )
-    );
+  const deleteImage = (key: number) => {
+    if (!images) return;
+
+    const updatedList = images
+      .filter(image => image.key !== key)
+      .map((image, index) => ({
+        ...image,
+        key: index
+      }));
+    updatedList.push({
+      key: images.length,
+      imageSrc: null,
+      croppedImage: null
+    });
+    onUpload(updatedList);
   };
 
   const { handleCrop } = useCropper(
@@ -85,7 +94,7 @@ const ImageUploader = ({
           type="file"
           accept="image/*"
           onChange={e => selectImage(e, data?.key)}
-          id={data?.key}
+          id={String(data?.key)}
           className="hidden"
         />
       )}

@@ -64,17 +64,24 @@ const DiaryWriteModal = ({
           : prevChip
       )
     );
-    // setDiaryImageList(updateDiaryImages(diaryDetail.images));
+    setDiaryImageList(updateDiaryImages(diaryDetail?.images));
   };
+
   const updateDiaryImages = (images: string[]) => {
     if (!images) return [];
 
     const updatedImageList = images.map((image, index) => ({
-      key: (index + 1).toString(),
+      key: index,
       imageSrc: null,
       croppedImage: image
     }));
-    return updatedImageList;
+
+    updatedImageList.push({
+      key: images.length,
+      imageSrc: null,
+      croppedImage: ''
+    });
+    return updatedImageList.slice(0, 3);
   };
   useEffect(() => {
     settingDiaryDetail();
@@ -188,33 +195,22 @@ const DiaryWriteModal = ({
           <h5 className="p-4 text-heading-5 text-gr-900">
             사진
             <span className="text-pr-500">
-              {diaryDetail?.images?.length ||
-                diaryImageList.map(diary => diary.croppedImage).length}
+              {diaryImageList.filter(diary => diary.croppedImage).length || 0}
             </span>
             /3
           </h5>
           <div className="flex gap-3 px-4">
             {diaryImageList.map((diary, idx: number) => {
-              if (diary.key === '1') {
+              if (idx === 0 || diaryImageList[idx - 1].croppedImage) {
                 return (
                   <ImageUploader
                     key={diary.key}
                     data={diary}
                     deleteBtn
                     onUpload={setDiaryImageList}
+                    images={diaryImageList}
                   />
                 );
-              } else {
-                if (diaryImageList[idx - 1].croppedImage) {
-                  return (
-                    <ImageUploader
-                      key={diary.key}
-                      data={diary}
-                      deleteBtn
-                      onUpload={setDiaryImageList}
-                    />
-                  );
-                }
               }
             })}
           </div>

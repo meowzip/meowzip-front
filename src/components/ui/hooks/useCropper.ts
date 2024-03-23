@@ -8,7 +8,7 @@ interface CropperImageElement extends HTMLImageElement {
 }
 
 const useCropper = (
-  key: string,
+  key: number,
   imageSrc: string | null,
   imageElement: MutableRefObject<CropperImageElement | null>,
   onUpload: Dispatch<SetStateAction<ImageUploadData[]>>
