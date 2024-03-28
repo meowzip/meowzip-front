@@ -21,7 +21,7 @@ const OnBoardPage = () => {
       <section className="px-4 pt-[60px]">
         <article className="flex items-center justify-center">
           <Image
-            src={profileImage[0].croppedImage || '/images/icons/camera.svg'}
+            src={profileImage[0]?.croppedImage || '/images/icons/camera.svg'}
             alt="profile"
             width={120}
             height={120}
