@@ -35,7 +35,7 @@ const Carousel: React.FC<CarouselProps> = ({ images, style }) => {
   useEffect(() => {
     const swiperSlides = swiperRef.current?.slides;
     if (swiperPagination.current && swiperRef.current && swiperSlides) {
-      if (swiperSlides.length > 2) {
+      if (swiperSlides.length > 1) {
         swiperPagination.current.style.display = 'block';
       } else {
         swiperPagination.current.style.display = 'none';
