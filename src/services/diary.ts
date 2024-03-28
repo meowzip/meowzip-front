@@ -92,6 +92,12 @@ export const editDiaryOnServer = async (reqObj: {
     })
   );
 
+  const imageUrl = images.filter(image => image.includes('http'));
+  if (imageUrl) {
+    imageUrl.forEach(file => {
+      file && formData.append('images', file);
+    });
+  }
   const files = images?.map(image => base64ToFile(image, 'image.jpg'));
   if (files) {
     files.forEach(file => {

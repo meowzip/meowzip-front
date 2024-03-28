@@ -6,6 +6,16 @@ export interface ImageUploadData {
   croppedImage: string | null;
 }
 
-export const profileImageAtom = atom([] as ImageUploadData[]);
-export const diaryImageListAtom = atom([] as ImageUploadData[]);
-export const feedImageListAtom = atom([] as ImageUploadData[]);
+export const profileImageAtom = atom<ImageUploadData[]>([
+  { key: 1, imageSrc: null, croppedImage: null }
+]);
+export const diaryImageListAtom = atom<ImageUploadData[]>([
+  { key: 1, imageSrc: null, croppedImage: null },
+  { key: 2, imageSrc: null, croppedImage: null },
+  { key: 3, imageSrc: null, croppedImage: null }
+]);
+export const feedImageListAtom = atom<ImageUploadData[]>([
+  { key: 1, imageSrc: null, croppedImage: null },
+  { key: 2, imageSrc: null, croppedImage: null },
+  { key: 3, imageSrc: null, croppedImage: null }
+]);
