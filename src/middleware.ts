@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import returnFetchJson from '@/utils/returnFetchJson';
+import { cookies } from 'next/headers';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
-  headers: { Accept: 'application/json' }
+  headers: {
+    Accept: 'application/json'
+  }
 });
 
 const protectedRoutes = ['/diary'];
@@ -12,9 +15,11 @@ const publicRoutes = ['/signin', '/signup'];
 
 export const middleware = async (request: NextRequest) => {
   const currentPath = request.nextUrl.pathname;
+  const cookieList = cookies();
+  const accessToken = cookieList.get('Authorization')?.value;
+  const refreshToken = cookies().get('Authorization-Refresh')?.value;
+  console.log(refreshToken, 'refreshToken');
 
-  const accessToken = await getTokenFromCookies(request);
-  console.log('accessToken:', accessToken);
   if (accessToken && checkExpiredToken(accessToken)) {
     try {
       await refreshAccessToken();
@@ -22,6 +27,7 @@ export const middleware = async (request: NextRequest) => {
       console.error('Error:', error);
       const url = request.nextUrl.clone();
       url.pathname = '/signin';
+      console.log('accessToken:', accessToken);
       return NextResponse.redirect(url);
     }
   }
@@ -37,7 +43,7 @@ export const middleware = async (request: NextRequest) => {
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
-
+  console.log('NextResponse.next();');
   return NextResponse.next();
 };
 
@@ -49,8 +55,17 @@ const checkExpiredToken = (accessToken: string) => {
 };
 
 const refreshAccessToken = async () => {
-  const response = await fetchExtended('/tokens/refresh', { method: 'POST' });
-
+  const refreshToken = cookies().get('Authorization-Refresh')?.value;
+  console.log(refreshToken, 'refreshToken');
+  const reqOptions = {
+    headers: {
+      Authorization: `Bearer ${refreshToken}`
+    }
+  };
+  const response = await fetchExtended('/tokens/refresh', {
+    method: 'POST',
+    ...reqOptions
+  });
   if (!response.ok) {
     throw new Error('Failed to refresh token');
   }
@@ -62,20 +77,4 @@ const refreshAccessToken = async () => {
   } else {
     throw new Error('Authorization token not found in the response');
   }
-};
-
-const getTokenFromCookies = async (request: NextRequest) => {
-  const cookiesHeader = request.headers.get('cookie');
-  if (!cookiesHeader) return null;
-
-  const cookiesArray: [string, string][] = cookiesHeader
-    .split('; ')
-    .map(cookie => {
-      const [key, value] = cookie.split('=');
-      return [key, value];
-    });
-
-  const cookies = new Map(cookiesArray);
-
-  return cookies.get('Authorization');
 };
