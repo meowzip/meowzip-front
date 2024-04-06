@@ -6,7 +6,7 @@ import Filter from '@/components/diary/Filter';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
 import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
-import { DiaryPageProps } from './diaryType';
+import { DiaryObj } from './diaryType';
 import { useDiaries } from '@/hooks/useDiaries';
 import { dateToString } from '@/utils/common';
 import { useRouter } from 'next/navigation';
@@ -23,11 +23,9 @@ const DiaryPage = () => {
   const [cats, setCats] = useAtom(catsAtom);
   const [diaryDate] = useAtom(diaryDateAtom);
   const [showWriteModal, setShowWriteModal] = useState(false);
-  const [selectedModal, setSelectedModal] = useState<DiaryPageProps>(
-    {} as DiaryPageProps
-  );
+  const [selectedModal, setSelectedModal] = useState({} as DiaryObj);
 
-  const openDetailModal = (item: DiaryPageProps) => {
+  const openDetailModal = (item: DiaryObj) => {
     setSelectedModal(item);
     router.push(`/diary/${item.id}`);
   };
@@ -67,22 +65,16 @@ const DiaryPage = () => {
             {cats?.map((cat: any) => (
               <Filter
                 key={cat.id}
-                propObj={{
-                  id: cat.id,
-                  image: cat.imageUrl,
-                  name: cat.name,
-                  isCoparented: cat.isCoparented,
-                  coParentedCount: cat.coParentedCount,
-                  dDay: cat.dDay,
-                  sex: cat.sex,
-                  isNeutered: cat.isNeutered
-                }}
+                id={cat.id}
+                imageUrl={cat.imageUrl}
+                isCoParented={cat.isCoparented}
+                name={cat.name}
               />
             ))}
           </section>
           <section className="p-4">
             {!isLoading &&
-              diaryList?.map((diary: DiaryPageProps) => (
+              diaryList?.map((diary: DiaryObj) => (
                 <DiaryCard
                   key={diary.id}
                   {...diary}

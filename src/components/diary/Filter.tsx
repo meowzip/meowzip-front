@@ -2,19 +2,13 @@ import Profile from '@/components/ui/Profile';
 import Badge from '@/components/ui/Badge';
 
 interface FilterProps {
-  propObj: {
-    id: string;
-    image: string;
-    isCoparented: boolean;
-    name?: string;
-    coParentedCount: string;
-    dDay: string;
-    sex: string;
-    isNeutered: string;
-  };
+  id: number;
+  imageUrl: string;
+  isCoParented: boolean;
+  name: string;
 }
 
-const Filter = ({ propObj }: FilterProps) => {
+const Filter = ({ id, imageUrl, isCoParented, name }: FilterProps) => {
   return (
     <>
       <section className="flex flex-col items-center justify-center gap-2 bg-gr-white px-2 py-3">
@@ -22,13 +16,13 @@ const Filter = ({ propObj }: FilterProps) => {
           <Profile
             items={[
               {
-                id: propObj.id,
-                image: propObj.image,
+                id: id,
+                imageUrl: imageUrl,
                 style: 'w-14 h-14 rounded-[20px] border border-gr-50'
               }
             ]}
           />
-          {propObj.isCoparented && (
+          {isCoParented && (
             <div className="absolute bottom-0 right-0 rounded-full border-15 border-gr-white">
               <Badge
                 type="icon"
@@ -38,7 +32,7 @@ const Filter = ({ propObj }: FilterProps) => {
             </div>
           )}
         </button>
-        <div className="text-body-4">{propObj.name}</div>
+        <div className="text-body-4">{name}</div>
       </section>
     </>
   );
