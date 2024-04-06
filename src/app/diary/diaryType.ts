@@ -9,7 +9,7 @@ export interface DiaryPageProps {
     image: string;
     style: string;
     name: string;
-    gender: 'female' | 'male';
+    gender: 'F' | 'M';
   }[];
   memberId: number;
 }

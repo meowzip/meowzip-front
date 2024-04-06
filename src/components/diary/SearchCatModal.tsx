@@ -10,7 +10,7 @@ type Cat = {
   src: string;
   style: string;
   name: string;
-  gender: 'male' | 'female';
+  gender: 'M' | 'F';
 };
 
 export default function SearchCatModal({
@@ -20,13 +20,13 @@ export default function SearchCatModal({
   const [showCatList, setShowCatList] = useState(false);
 
   const catList: Cat[] = [
-    { key: '1', src: 'image', style: '', name: '냥이', gender: 'female' },
-    { key: '2', src: 'image', style: '', name: '냥냥이', gender: 'male' },
-    { key: '3', src: 'image', style: '', name: '냥냥냥이', gender: 'female' },
-    { key: '4', src: 'image', style: '', name: '삼색이', gender: 'male' },
-    { key: '5', src: 'image', style: '', name: '빈집이', gender: 'male' },
-    { key: '6', src: 'image', style: '', name: '무', gender: 'female' },
-    { key: '7', src: 'image', style: '', name: '야통이', gender: 'male' }
+    { key: '1', src: 'image', style: '', name: '냥이', gender: 'F' },
+    { key: '2', src: 'image', style: '', name: '냥냥이', gender: 'M' },
+    { key: '3', src: 'image', style: '', name: '냥냥냥이', gender: 'F' },
+    { key: '4', src: 'image', style: '', name: '삼색이', gender: 'M' },
+    { key: '5', src: 'image', style: '', name: '빈집이', gender: 'M' },
+    { key: '6', src: 'image', style: '', name: '무', gender: 'F' },
+    { key: '7', src: 'image', style: '', name: '야통이', gender: 'M' }
   ];
 
   const onClose = () => setSearchCatModal(false);
@@ -67,7 +67,7 @@ export default function SearchCatModal({
                     src={`/images/icons/gender-${cat.gender}.svg`}
                     alt="tag cat"
                     className={`rounded-full ${
-                      cat.gender === 'female' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                      cat.gender === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                     }`}
                   />
                 </div>
