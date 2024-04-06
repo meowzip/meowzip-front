@@ -8,7 +8,7 @@ interface LabelProps {
 
 const labelTypeVariants = {
   text: 'rounded-md p-1',
-  icon: 'w-fit h-6 flex items-center justify-between rounded-[6px] px-[6px] pt-[5px] pb-1',
+  icon: 'flex items-center rounded-full',
   default: 'flex items-center rounded-md py-[2px] pr-1 pl-[2px]'
 };
 
@@ -20,8 +20,13 @@ const Text = ({ content, className }: HTMLAttributes<HTMLSpanElement>) => {
   );
 };
 
-const Icon = ({ src }: LabelProps & HTMLAttributes<HTMLSpanElement>) => (
-  <img src={src} className="h-4 w-4" />
+const Icon = ({
+  src,
+  className
+}: LabelProps & HTMLAttributes<HTMLSpanElement>) => (
+  <div className={cn(labelTypeVariants['icon'], className)}>
+    <img src={src} className="h-4 w-4" />
+  </div>
 );
 
 const Default = ({
