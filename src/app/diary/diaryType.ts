@@ -1,17 +1,13 @@
-export interface DiaryPageProps {
+export interface DiaryObj {
   id: number;
-  images?: string[];
-  isFeed: boolean;
   isGivenWater: boolean;
+  isFeed: boolean;
   content: string;
-  profiles: {
-    id: string;
-    image: string;
-    style: string;
-    name: string;
-    gender: 'F' | 'M';
-  }[];
+  images?: string[];
+  caredTime: string;
   memberId: number;
+  memberNickname: string;
+  taggedCats: TaggedCat[];
 }
 
 export interface DiaryRegisterReqObj {
@@ -22,4 +18,11 @@ export interface DiaryRegisterReqObj {
   caredDate: string;
   caredTime: string;
   taggedCats?: number[];
+}
+
+export interface TaggedCat {
+  id: number;
+  imageUrl: string;
+  name: string;
+  sex: 'F' | 'M';
 }

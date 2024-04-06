@@ -1,10 +1,10 @@
 'use client';
 
-import { ZipPageProps } from '@/app/zip/catType';
+import { CatListObj } from '@/app/zip/catType';
 import Label from '@/components/ui/Label';
 import React from 'react';
 
-interface ZipCardProps extends ZipPageProps {
+interface ZipCardProps extends CatListObj {
   onClick: () => void;
 }
 

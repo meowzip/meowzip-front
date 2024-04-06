@@ -35,33 +35,33 @@ const DemoPage = () => {
   });
   const [profiles, setProfiles] = useState([
     {
-      id: '1',
-      image: 'https://github.com/shadcn.png',
+      id: 1,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute '
     },
     {
-      id: '2',
-      image: 'https://github.com/shadcn.png',
+      id: 2,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[20px]'
     },
     {
-      id: '3',
-      image: 'https://github.com/shadcn.png',
+      id: 3,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[40px]'
     },
     {
-      id: '4',
-      image: 'https://github.com/shadcn.png',
+      id: 4,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[60px]'
     },
     {
-      id: '5',
-      image: 'https://github.com/shadcn.png',
+      id: 5,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[80px]'
     },
     {
-      id: '6',
-      image: 'https://github.com/shadcn.png',
+      id: 6,
+      imageUrl: 'https://github.com/shadcn.png',
       style: 'w-10 h-10 absolute left-[100px]'
     }
   ]);
@@ -163,8 +163,8 @@ const DemoPage = () => {
           <Profile
             items={[
               {
-                id: '1',
-                image: 'https://github.com/shadcn.png',
+                id: 1,
+                imageUrl: 'https://github.com/shadcn.png',
                 style: 'w-10 h-10'
               }
             ]}
