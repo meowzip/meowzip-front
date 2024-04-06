@@ -82,16 +82,11 @@ const DiaryPage = () => {
           </section>
           <section className="p-4">
             {!isLoading &&
-              diaryList?.map((diary: DiaryPageProps, index: number) => (
+              diaryList?.map((diary: DiaryPageProps) => (
                 <DiaryCard
-                  key={index}
-                  id={diary.id}
-                  images={diary.images}
-                  labels={diary.labels}
-                  content={diary.content}
-                  profiles={diary.profiles}
+                  key={diary.id}
+                  {...diary}
                   onClick={() => openDetailModal(diary)}
-                  memberId={selectedModal.memberId}
                 />
               ))}
           </section>
