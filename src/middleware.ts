@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
+import { parseCookieString } from './utils/common';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
@@ -10,41 +11,50 @@ const fetchExtended = returnFetchJson({
   }
 });
 
-const protectedRoutes = ['/diary'];
-const publicRoutes = ['/signin', '/signup'];
+const PROTECTED_ROUTES = ['/diary'];
+const PUBLIC_ROUTES = ['/signin', '/signup'];
 
 export const middleware = async (request: NextRequest) => {
   const currentPath = request.nextUrl.pathname;
   const cookieList = cookies();
   const accessToken = cookieList.get('Authorization')?.value;
   const refreshToken = cookies().get('Authorization-Refresh')?.value;
-  console.log(refreshToken, 'refreshToken');
 
-  if (accessToken && checkExpiredToken(accessToken)) {
-    try {
-      await refreshAccessToken();
-    } catch (error) {
-      console.error('Error:', error);
-      const url = request.nextUrl.clone();
-      url.pathname = '/signin';
-      console.log('accessToken:', accessToken);
-      return NextResponse.redirect(url);
+  try {
+    if (
+      (accessToken && checkExpiredToken(accessToken)) ||
+      (!accessToken && refreshToken)
+    ) {
+      const newAccessToken = await refreshAccessToken();
+      if (newAccessToken) {
+        const nextResponse = NextResponse.next();
+        nextResponse.cookies.set('Authorization', newAccessToken, {
+          maxAge: 60 * 60 * 24 * 7,
+          httpOnly: true,
+          secure: true,
+          path: '/'
+        });
+        return nextResponse;
+      }
     }
-  }
-
-  if (!accessToken && protectedRoutes.includes(currentPath)) {
+  } catch (error) {
+    console.error('Error:', error);
     const url = request.nextUrl.clone();
     url.pathname = '/signin';
     return NextResponse.redirect(url);
   }
 
-  if (accessToken && publicRoutes.includes(currentPath)) {
+  if (!accessToken && PROTECTED_ROUTES.includes(currentPath)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/signin';
+    return NextResponse.redirect(url);
+  }
+
+  if (accessToken && PUBLIC_ROUTES.includes(currentPath)) {
     const url = request.nextUrl.clone();
     url.pathname = '/';
     return NextResponse.redirect(url);
   }
-  console.log('NextResponse.next();');
-  return NextResponse.next();
 };
 
 const checkExpiredToken = (accessToken: string) => {
@@ -54,27 +64,40 @@ const checkExpiredToken = (accessToken: string) => {
   return exp < now;
 };
 
+let refreshPromise: any = null;
 const refreshAccessToken = async () => {
-  const refreshToken = cookies().get('Authorization-Refresh')?.value;
-  console.log(refreshToken, 'refreshToken');
-  const reqOptions = {
-    headers: {
-      Authorization: `Bearer ${refreshToken}`
-    }
-  };
-  const response = await fetchExtended('/tokens/refresh', {
-    method: 'POST',
-    ...reqOptions
-  });
-  if (!response.ok) {
-    throw new Error('Failed to refresh token');
-  }
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      const refreshToken = cookies().get('Authorization-Refresh')?.value;
 
-  const token = response.headers.get('Authorization');
+      const reqOptions = {
+        headers: {
+          Cookie: `Authorization-Refresh=${refreshToken}`
+        }
+      };
+      try {
+        const response = await fetchExtended('/tokens/refresh', {
+          method: 'POST',
+          ...reqOptions
+        });
+        console.log(response, 'response*******');
+        if (!response.ok) {
+          throw new Error('Failed to refresh token');
+        }
 
-  if (token) {
-    document.cookie = `Authorization=${token}; path=/; max-age=3600; secure;`;
+        const newAccessToken = response.headers.get('authorization');
+        if (newAccessToken) {
+          return newAccessToken;
+        } else {
+          throw new Error('Authorization token not found in the response');
+        }
+      } catch (error) {
+        refreshPromise = null;
+        throw error;
+      }
+    })();
+    return refreshPromise;
   } else {
-    throw new Error('Authorization token not found in the response');
+    return refreshPromise;
   }
 };
