@@ -68,14 +68,16 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
         <h4 className="text-body-3 text-gr-black">{diaryDetail.content}</h4>
         <article className="mb-2 flex items-center justify-start gap-1">
           {diaryDetail.isFeed && (
-            <Label type="icon" content="사료">
-              🐟
-            </Label>
+            <Label.Text
+              content="🐟 사료"
+              className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
+            />
           )}
           {diaryDetail.isGivenWater && (
-            <Label type="icon" content="물">
-              💧
-            </Label>
+            <Label.Text
+              content="💧 물"
+              className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
+            />
           )}
         </article>
       </section>

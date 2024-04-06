@@ -88,6 +88,8 @@ module.exports = {
         'gr-50': 'var(--gr-50)',
         'gr-10': 'var(--gr-10)',
         'gr-white': 'var(--gr-white)',
+        'gr-transparent-black': 'var(--gr-transparent-black)',
+        'gr-transparent-white': 'var(--gr-transparent-white)',
         scrim: 'rgba(0, 0, 0, 0.70)'
       },
       backgroundImage: {

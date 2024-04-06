@@ -1,31 +1,54 @@
+import { cn } from '@/lib/utils';
+import { HTMLAttributes } from 'react';
+
 interface LabelProps {
-  type: 'default' | 'text' | 'icon' | 'badge';
   content?: string;
-  children?: React.ReactNode;
+  src?: string;
 }
 
 const labelTypeVariants = {
-  default: 'flex items-center justify-center rounded-md py-[2px] pr-1 pl-[2px]',
-  text: 'rounded-md p-[4px]',
+  text: 'rounded-md p-1',
   icon: 'w-fit h-6 flex items-center justify-between rounded-[6px] px-[6px] pt-[5px] pb-1',
-  badge: 'rounded-md p-[4px] bg-sm-confirm-50 p-1'
+  default: 'flex items-center rounded-md py-[2px] pr-1 pl-[2px]'
 };
 
-const Label = ({ type, content, children }: LabelProps) => {
+const Text = ({ content, className }: HTMLAttributes<HTMLSpanElement>) => {
   return (
-    <div className={`bg-gr-50 ${labelTypeVariants[type]}`}>
-      {children && <p className="pr-1">{children}</p>}
-      {content && (
-        <p
-          className={`text-body-4 text-gr-600 ${
-            type === 'badge' && 'text-xs text-sm-confirm-500'
-          }`}
-        >
-          {content}
-        </p>
-      )}
+    <div className={cn(labelTypeVariants['text'], className)}>
+      <p className="text-btn-3">{content}</p>
     </div>
   );
 };
 
-export default Label;
+const Icon = ({ src }: LabelProps & HTMLAttributes<HTMLSpanElement>) => (
+  <img src={src} className="h-4 w-4" />
+);
+
+const Default = ({
+  content,
+  className,
+  children
+}: LabelProps & HTMLAttributes<HTMLSpanElement>) => {
+  return (
+    <div className={cn(labelTypeVariants['default'], className)}>
+      {children}
+      <p className="text-btn-3">{content}</p>
+    </div>
+  );
+};
+
+const Label = ({
+  src,
+  content,
+  children,
+  className,
+  ...props
+}: LabelProps & HTMLAttributes<HTMLDivElement>) => {
+  return (
+    <div className={cn(className)} {...props}>
+      {children}
+    </div>
+  );
+};
+
+export default Object.assign(Label, { Text, Icon, Default });

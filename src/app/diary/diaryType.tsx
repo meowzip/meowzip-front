@@ -1,11 +1,8 @@
 export interface DiaryPageProps {
   id: number;
   images?: string[];
-  labels: {
-    type: 'default' | 'text' | 'icon';
-    content?: string;
-    icon?: string;
-  }[];
+  isFeed: boolean;
+  isGivenWater: boolean;
   content: string;
   profiles: {
     id: string;

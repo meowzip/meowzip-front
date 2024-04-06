@@ -1,9 +1,22 @@
+'use client';
+
 import Label from '@/components/ui/Label';
 import React from 'react';
 
 const ZipCard = () => {
   return (
-    <div className="w-1/2">
+    <div className="relative">
+      <div className="absolute right-0 top-0 flex items-center gap-1 p-[5px]">
+        <Label.Text
+          className="bg-gr-transparent-white text-gr-800"
+          content="TNR"
+        />
+        <Label.Default
+          className="bg-gr-transparent-black text-gr-white"
+          src="/images/icons/share.svg"
+          content="2"
+        />
+      </div>
       <img
         src="https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg"
         alt="cat-image"
@@ -16,7 +29,7 @@ const ZipCard = () => {
             <img src="/images/icons/gender-female.svg" alt="gender" />
           </div>
         </div>
-        <p>만난지 100일</p>
+        <p className="text-btn-3 text-gr-600">만난지 100일</p>
       </div>
     </div>
   );

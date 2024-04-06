@@ -12,9 +12,10 @@ interface DiaryCardProps extends DiaryPageProps {
 
 const DiaryCard = ({
   images,
-  labels,
   content,
   profiles,
+  isFeed,
+  isGivenWater,
   onClick
 }: DiaryCardProps) => {
   const [showMore, setShowMore] = useState(false);
@@ -46,14 +47,18 @@ const DiaryCard = ({
       )}
       <section className="p-4">
         <article className="mb-2 flex items-center justify-start gap-1">
-          {/* {labels?.map((label, index) => (
-            <Label
-              key={index}
-              type={label.type}
-              content={label.content}
-              icon={label.icon}
+          {isFeed && (
+            <Label.Text
+              content="🐟 사료"
+              className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
             />
-          ))} */}
+          )}
+          {isGivenWater && (
+            <Label.Text
+              content="💧 물"
+              className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
+            />
+          )}
         </article>
         <article className="mb-2">
           <div
