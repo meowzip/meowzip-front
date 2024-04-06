@@ -10,8 +10,8 @@ export default function WriteComment() {
       <Profile
         items={[
           {
-            id: '1',
-            image: 'https://github.com/shadcn.png',
+            id: 1,
+            imageUrl: 'https://github.com/shadcn.png',
             style: 'w-10 h-10'
           }
         ]}

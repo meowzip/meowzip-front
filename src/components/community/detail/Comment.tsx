@@ -22,8 +22,8 @@ export default function Comment({ comment }: { comment: CommentProps }) {
       <Profile
         items={[
           {
-            id: '1',
-            image: 'https://github.com/shadcn.png',
+            id: 1,
+            imageUrl: 'https://github.com/shadcn.png',
             style: 'w-10 h-10'
           }
         ]}
@@ -32,8 +32,8 @@ export default function Comment({ comment }: { comment: CommentProps }) {
       {/* <Profile
           items={[
             {
-              id: '1',
-              image: comment.writerProfile,
+              id: 1,
+              imageUrl: comment.writerProfile,
               style: 'w-10 h-10'
             }
           ]}

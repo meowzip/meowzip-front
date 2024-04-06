@@ -4,18 +4,18 @@ import { useState } from 'react';
 import Carousel from '../ui/Carousel';
 import Label from '../ui/Label';
 import Profile from '../ui/Profile';
-import { DiaryPageProps } from '@/app/diary/diaryType';
+import { DiaryObj } from '@/app/diary/diaryType';
 
-interface DiaryCardProps extends DiaryPageProps {
+interface DiaryCardProps extends DiaryObj {
   onClick: () => void;
 }
 
 const DiaryCard = ({
-  images,
-  content,
-  profiles,
   isFeed,
   isGivenWater,
+  content,
+  images,
+  taggedCats,
   onClick
 }: DiaryCardProps) => {
   const [showMore, setShowMore] = useState(false);
@@ -79,7 +79,7 @@ const DiaryCard = ({
         </article>
         <article className="flex h-6 items-center justify-between">
           <div className="relative">
-            <Profile items={profiles} lastLeft="left-[100px]" />
+            <Profile items={taggedCats} lastLeft="left-[100px]" />
           </div>
           <h5 className="text-body-4 text-gr-500">
             아이디 • {formatTime(new Date())}
