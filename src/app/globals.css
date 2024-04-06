@@ -72,6 +72,9 @@
     --gr-50: #f2f4f6;
     --gr-10: #f8fafc;
     --gr-white: #ffffff;
+
+    --gr-transparent-black: rgba(51, 53, 54, 0.8);
+    --gr-transparent-white: rgba(242, 244, 246, 0.8);
   }
 
   .dark {
