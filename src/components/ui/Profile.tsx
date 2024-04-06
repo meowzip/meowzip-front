@@ -2,9 +2,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 
 interface ProfileProps {
   items: {
-    id: string;
-    image: string;
-    style: string;
+    id: number;
+    imageUrl: string;
+    style?: string;
   }[];
   lastLeft?: string;
 }
@@ -20,7 +20,7 @@ const Profile = ({ items, lastLeft }: ProfileProps) => {
             key={item.id}
             className={`${item.style} flex items-center text-gr-white`}
           >
-            <AvatarImage src={item.image} />
+            <AvatarImage src={item.imageUrl} />
           </Avatar>
         ))}
         {fiveItems?.length >= 5 && (
