@@ -98,7 +98,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
                 src={`/images/icons/gender-${cat.gender}.svg`}
                 alt=""
                 className={`rounded-full ${
-                  cat.gender === 'female' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                  cat.gender === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                 }`}
               />
             </div>

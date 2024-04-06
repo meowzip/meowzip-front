@@ -40,10 +40,10 @@ const DiaryWriteModal = ({
   const [searchCatModal, setSearchCatModal] = useState(false);
   const [selectTimeBottomSheet, setSelectTimeBottomSheet] = useState(false);
   const [tagCatList, setTagCatList] = useState([
-    { key: '1', src: 'image', style: '', name: '석삼이', gender: 'female' },
-    { key: '2', src: 'image', style: '', name: '점남이', gender: 'male' },
-    { key: '3', src: 'image', style: '', name: '뚱쭝이', gender: 'female' },
-    { key: '4', src: 'image', style: '', name: '감자', gender: 'male' }
+    { key: '1', src: 'image', style: '', name: '석삼이', gender: 'f' },
+    { key: '2', src: 'image', style: '', name: '점남이', gender: 'm' },
+    { key: '3', src: 'image', style: '', name: '뚱쭝이', gender: 'f' },
+    { key: '4', src: 'image', style: '', name: '감자', gender: 'm' }
   ]);
   const [diaryImageList, setDiaryImageList] = useAtom(diaryImageListAtom);
 
@@ -287,9 +287,7 @@ const DiaryWriteModal = ({
                       src={`/images/icons/gender-${cat.gender}.svg`}
                       alt="tag cat"
                       className={`rounded-full ${
-                        cat.gender === 'female'
-                          ? 'bg-[#FFF2F1]'
-                          : 'bg-[#ECF5FF]'
+                        cat.gender === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                       }`}
                     />
                   </div>
