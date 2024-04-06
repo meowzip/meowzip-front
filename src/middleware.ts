@@ -29,8 +29,7 @@ export const middleware = async (request: NextRequest) => {
       if (newAccessToken) {
         const nextResponse = NextResponse.next();
         nextResponse.cookies.set('Authorization', newAccessToken, {
-          maxAge: 60 * 60 * 24 * 7,
-          httpOnly: true,
+          maxAge: 60 * 60 * 2,
           secure: true,
           path: '/'
         });
@@ -80,7 +79,6 @@ const refreshAccessToken = async () => {
           method: 'POST',
           ...reqOptions
         });
-        console.log(response, 'response*******');
         if (!response.ok) {
           throw new Error('Failed to refresh token');
         }
