@@ -119,3 +119,51 @@ export const dateToString = (date: Date): string => {
 
   return `${year}-${month}-${day}`;
 };
+
+interface CookieAttributes {
+  token: string;
+  path: string;
+  maxAge: string;
+  expires: string;
+  secure: boolean;
+  httpOnly: boolean;
+  sameSite: string;
+}
+
+export const parseCookieString = (cookieString: string): CookieAttributes => {
+  const attributes: Partial<CookieAttributes> = {};
+  const parts = cookieString.split(';').map(part => part.trim());
+
+  const tokenPart = parts.shift();
+  if (tokenPart) {
+    const [name, token] = tokenPart.split('=');
+    if (name === 'Authorization-Refresh') {
+      attributes.token = token;
+    }
+  }
+
+  parts.forEach(part => {
+    const [key, value] = part.split('=');
+    switch (key) {
+      case 'Path':
+        attributes.path = value;
+        break;
+      case 'Max-Age':
+        attributes.maxAge = value;
+        break;
+      case 'Expires':
+        attributes.expires = value;
+        break;
+      case 'Secure':
+        attributes.secure = true;
+        break;
+      case 'HttpOnly':
+        attributes.httpOnly = true;
+        break;
+      case 'SameSite':
+        attributes.sameSite = value;
+        break;
+    }
+  });
+  return attributes as CookieAttributes;
+};
