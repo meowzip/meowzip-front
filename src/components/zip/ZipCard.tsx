@@ -1,8 +1,12 @@
 'use client';
 
-import { ZipCardProps } from '@/app/zip/catType';
+import { ZipPageProps } from '@/app/zip/catType';
 import Label from '@/components/ui/Label';
 import React from 'react';
+
+interface ZipCardProps extends ZipPageProps {
+  onClick: () => void;
+}
 
 const ZipCard = ({
   imageUrl,
@@ -11,10 +15,11 @@ const ZipCard = ({
   coParentedCount,
   dDay,
   sex,
-  isNeutered
+  isNeutered,
+  onClick
 }: ZipCardProps) => {
   return (
-    <div className="relative">
+    <div className="relative" onClick={onClick}>
       <div className="absolute right-0 top-0 flex items-center gap-1 p-[5px]">
         {isNeutered && (
           <Label.Text

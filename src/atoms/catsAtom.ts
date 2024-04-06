@@ -1,4 +1,4 @@
-import { ZipCardProps } from '@/app/zip/catType';
+import { ZipPageProps } from '@/app/zip/catType';
 import { atom } from 'jotai';
 
-export const catsAtom = atom([] as ZipCardProps[]);
+export const catsAtom = atom([] as ZipPageProps[]);

@@ -1,4 +1,4 @@
-export interface ZipCardProps {
+export interface ZipPageProps {
   id: number;
   imageUrl: string;
   name: string;
