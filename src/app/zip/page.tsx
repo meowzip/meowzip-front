@@ -1,10 +1,9 @@
 'use client';
 
-import { ZipPageProps } from '@/app/zip/catType';
+import { CatListObj } from '@/app/zip/catType';
 import { catsAtom } from '@/atoms/catsAtom';
 import ZipCard from '@/components/zip/ZipCard';
-import { getCatsOnServer } from '@/services/cat';
-import { useQuery } from '@tanstack/react-query';
+import { useCats } from '@/hooks/useCats';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -13,21 +12,17 @@ const ZipPage = () => {
   const router = useRouter();
 
   const [cats, setCats] = useAtom(catsAtom);
-  const [selectedModal, setSelectedModal] = useState({} as ZipPageProps);
+  const [selectedModal, setSelectedModal] = useState({} as CatListObj);
 
-  const { data: catData } = useQuery({
-    queryKey: ['getCats'],
-    queryFn: () => getCatsOnServer({ page: 0, size: 10 }),
-    staleTime: 1000 * 60 * 10
-  });
+  const { data: catList } = useCats({ page: 0, size: 10 });
 
   useEffect(() => {
-    if (catData) {
-      setCats(catData);
+    if (catList) {
+      setCats(catList);
     }
-  }, [catData]);
+  }, [catList]);
 
-  const openDetailModal = (item: ZipPageProps) => {
+  const openDetailModal = (item: CatListObj) => {
     setSelectedModal(item);
     router.push(`/zip/${item.id}`);
   };
