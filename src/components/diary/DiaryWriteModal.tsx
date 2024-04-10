@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { editDiaryOnServer, registerDiaryOnServer } from '@/services/diary';
 import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 import { useRouter } from 'next/navigation';
+import { Cat } from '@/types/cat';
 
 interface DiaryWriteModalProps {
   onClose: () => void;
@@ -39,12 +40,7 @@ const DiaryWriteModal = ({
   ]);
   const [searchCatModal, setSearchCatModal] = useState(false);
   const [selectTimeBottomSheet, setSelectTimeBottomSheet] = useState(false);
-  const [tagCatList, setTagCatList] = useState([
-    { key: '1', src: 'image', style: '', name: '석삼이', gender: 'f' },
-    { key: '2', src: 'image', style: '', name: '점남이', gender: 'm' },
-    { key: '3', src: 'image', style: '', name: '뚱쭝이', gender: 'f' },
-    { key: '4', src: 'image', style: '', name: '감자', gender: 'm' }
-  ]);
+  const [taggedCatList, setTaggedCatList] = useState<Cat[]>([]);
   const [diaryImageList, setDiaryImageList] = useAtom(diaryImageListAtom);
 
   const settingDiaryDetail = () => {
@@ -114,7 +110,7 @@ const DiaryWriteModal = ({
       content: textareaContent,
       caredDate: caredDate(),
       caredTime: displayTime(),
-      // taggedCats: [1, 2]
+      catIds: taggedCatList.map(cat => cat.id),
       images: images.filter(image => image !== null) as string[]
     };
   };
@@ -261,7 +257,7 @@ const DiaryWriteModal = ({
           <div className="flex items-center justify-between p-4">
             <h5 className="text-heading-5 text-gr-900">
               고양이 태그
-              <span className="pl-1 text-pr-500 ">{tagCatList.length}</span>
+              <span className="pl-1 text-pr-500 ">{taggedCatList.length}</span>
             </h5>
             <BackIcon
               width={16}
@@ -272,22 +268,21 @@ const DiaryWriteModal = ({
             />
           </div>
           <ul className="px-4 py-1 pb-20">
-            {tagCatList.map(cat => {
+            {taggedCatList.map((cat: Cat) => {
               return (
-                <li key={cat.key} className="flex items-center gap-4 py-2">
+                <li key={cat.id} className="flex items-center gap-4 py-2">
                   <img
-                    src="/vercel.svg"
-                    // src={cat.src }
+                    src={cat.imageUrl}
                     alt="cat-image"
                     className="h-12 w-12 rounded-full border"
                   />
                   <div className="flex gap-2">
                     <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
                     <img
-                      src={`/images/icons/gender-${cat.gender}.svg`}
+                      src={`/images/icons/gender-${cat.sex}.svg`}
                       alt="tag cat"
                       className={`rounded-full ${
-                        cat.gender === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                        cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                       }`}
                     />
                   </div>
@@ -297,7 +292,10 @@ const DiaryWriteModal = ({
           </ul>
         </article>
         {searchCatModal && (
-          <SearchCatModal setSearchCatModal={setSearchCatModal} />
+          <SearchCatModal
+            setSearchCatModal={setSearchCatModal}
+            setTaggedCatList={setTaggedCatList}
+          />
         )}
       </section>
     </div>

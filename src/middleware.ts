@@ -66,36 +66,43 @@ const checkExpiredToken = (accessToken: string) => {
 let refreshPromise: any = null;
 const refreshAccessToken = async () => {
   if (!refreshPromise) {
-    refreshPromise = (async () => {
+    refreshPromise = new Promise(async (resolve, reject) => {
       const refreshToken = cookies().get('Authorization-Refresh')?.value;
+
+      if (!refreshToken) {
+        reject(new Error('No refresh token available'));
+        refreshPromise = null;
+        return;
+      }
 
       const reqOptions = {
         headers: {
           Cookie: `Authorization-Refresh=${refreshToken}`
         }
       };
+
       try {
         const response = await fetchExtended('/tokens/refresh', {
           method: 'POST',
           ...reqOptions
         });
-        if (!response.ok) {
-          throw new Error('Failed to refresh token');
-        }
 
-        const newAccessToken = response.headers.get('authorization');
-        if (newAccessToken) {
-          return newAccessToken;
+        if (response.ok) {
+          const newAccessToken = response.headers.get('authorization');
+          if (newAccessToken) {
+            resolve(newAccessToken);
+          } else {
+            throw new Error('Authorization token not found in the response');
+          }
         } else {
-          throw new Error('Authorization token not found in the response');
+          reject(new Error('Failed to refresh token'));
         }
       } catch (error) {
         refreshPromise = null;
-        throw error;
+        reject(error);
       }
-    })();
-    return refreshPromise;
-  } else {
-    return refreshPromise;
+    });
   }
+
+  return refreshPromise;
 };

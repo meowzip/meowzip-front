@@ -12,6 +12,7 @@ import { deleteDiaryOnServer } from '@/services/diary';
 import { useDiaryDetail } from '@/hooks/useDiaries';
 import { useRouter } from 'next/navigation';
 import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
+import { Cat } from '@/types/cat';
 
 const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
@@ -85,25 +86,25 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
         <h3 className="py-3 text-heading-5 text-gr-900">
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
-        {/* {taggedCats?.map(cat => (
+        {diaryDetail?.taggedCats?.map((cat: Cat) => (
           <article key={cat.id} className="flex items-center gap-4 py-2">
             <img
-              src={cat.image}
+              src={cat.imageUrl}
               alt="cat-image"
-              className="w-12 h-12 rounded-full"
+              className="h-12 w-12 rounded-full"
             />
             <div className="flex items-center gap-2">
               <h4 className="text-body-3 text-gr-900">{cat.name}</h4>
               <img
-                src={`/images/icons/gender-${cat.gender}.svg`}
+                src={`/images/icons/gender-${cat.sex}.svg`}
                 alt=""
                 className={`rounded-full ${
-                  cat.gender === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                  cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                 }`}
               />
             </div>
           </article>
-        ))} */}
+        ))}
       </section>
       <MoreBtnBottomSheet
         isVisible={editBottomSheet}
