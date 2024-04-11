@@ -45,27 +45,29 @@ const CommunityPage = () => {
 
   return (
     <>
-      <h1 className="flex h-12 items-center pl-4 align-middle text-heading-3 text-gr-900">
+      <h1 className="fixed z-[999] flex h-12 w-full items-center bg-gr-white pl-4 align-middle text-heading-3 text-gr-900">
         커뮤니티
       </h1>
-      {feedList.map(feed => (
-        <FeedCard
-          key={feed.id}
-          content={feed}
-          onClick={() => setEditBottomSheet(true)}
+      <div className="pb-32 pt-12">
+        {feedList.map(feed => (
+          <FeedCard
+            key={feed.id}
+            content={feed}
+            onClick={() => setEditBottomSheet(true)}
+          />
+        ))}
+        <FloatingActionButton onClick={() => setShowWriteModal(true)} />
+        {showWriteModal && (
+          <FeedWriteModal onClose={() => setShowWriteModal(false)} />
+        )}
+        <MoreBtnBottomSheet
+          isVisible={editBottomSheet}
+          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+          heightPercent={['50%', '40%']}
+          name={name}
+          isMine={true}
         />
-      ))}
-      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-      {showWriteModal && (
-        <FeedWriteModal onClose={() => setShowWriteModal(false)} />
-      )}
-      <MoreBtnBottomSheet
-        isVisible={editBottomSheet}
-        setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-        heightPercent={['50%', '40%']}
-        name={name}
-        isMine={true}
-      />
+      </div>
     </>
   );
 };

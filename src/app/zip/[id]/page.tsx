@@ -126,8 +126,8 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         onClose={() => router.push('/zip')}
         onClick={() => setEditBottomSheet(true)}
       />
-      <section className="flex h-screen flex-col gap-4 overflow-auto bg-gr-50 px-4 pt-6">
-        <article className="rounded-16 bg-gr-white">
+      <section className="flex h-screen flex-col gap-4 overflow-auto bg-gr-50 px-4 pb-32 pt-[72px]">
+        <article className="rounded-16">
           <ZipDetailCatCard {...catObj} />
         </article>
         <DetailCardLayout
