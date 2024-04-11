@@ -23,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} relative w-full pb-[100px]`}>
+      <body className={`${inter.className} relative w-full`}>
         <div className="m-auto h-full max-w-[600px] bg-white">
           <Providers>
             <AuthSession>

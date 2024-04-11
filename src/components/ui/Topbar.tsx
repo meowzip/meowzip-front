@@ -199,7 +199,7 @@ const Topbar = ({
   const emptyElement = <div className="px-[10px] py-1"></div>;
 
   const topbarClassName = cn(
-    'relative z-10 flex h-12 w-full items-center bg-grey-white px-[6px]',
+    'fixed z-10 flex h-12 w-full items-center bg-gr-white px-[6px]',
     {
       'z-[30]': type === 'modal',
       'justify-normal border-b-2': type === 'search',
