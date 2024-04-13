@@ -4,7 +4,7 @@ import React from 'react';
 
 const ZipDetailCoParents = ({ ...props }: CoParent) => {
   return (
-    <div className="flex flex-col items-center gap-2 p-2">
+    <div className="flex flex-col items-center gap-2 overflow-scroll p-2">
       <Image
         src={props.imageUrl}
         alt={props.nickname}
