@@ -6,8 +6,10 @@ export interface CatBaseType {
   name: string;
   isCoParented: boolean;
   dDay: number;
-  sex: string;
-  isNeutered: string;
+  sex: 'F' | 'M';
+  isNeutered: 'Y' | 'N' | 'UNDEFINED';
+  metAt: string;
+  memo: string;
 }
 
 export interface CoParent {
