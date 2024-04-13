@@ -12,6 +12,7 @@ import ZipDetailCoParents from '@/components/zip/ZipDetailCoParents';
 import { CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
 import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
+import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
 
 const coParents = [
   { memberId: 1, imageUrl: 'https://github.com/shadcn.png', nickname: '민지' },
@@ -101,6 +102,7 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [coParentsBottomSheet, setCoParentsBottomSheet] = useState(false);
   const [showCatEditModal, setShowCatEditModal] = useState(false);
+  const [showCoParentsModal, setShowCoParentsModal] = useState(false);
 
   const { data: catDetail, isError, isLoading } = useCatDetail(id);
 
@@ -129,7 +131,7 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
           }}
           btnObj={{
             text: '함께할 공동집사 찾기',
-            onClick: () => console.log('공동 냥육 요청 모달 열기')
+            onClick: () => setShowCoParentsModal(true)
           }}
         >
           <div className="flex pt-2">
@@ -167,12 +169,13 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         // onDelete={deleteDidary}
         onEdit={() => setShowCatEditModal(true)}
       />
-
       <CoParentsBottomSheet
         isVisible={coParentsBottomSheet}
         setIsVisible={() => setCoParentsBottomSheet(!coParentsBottomSheet)}
         coParents={coParents}
       />
+
+      {showCoParentsModal && <FindCoParentsModal />}
     </>
   );
 };
