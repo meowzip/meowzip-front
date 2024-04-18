@@ -175,7 +175,9 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         coParents={coParents}
       />
 
-      {showCoParentsModal && <FindCoParentsModal />}
+      {showCoParentsModal && (
+        <FindCoParentsModal setShowCoParentsModal={setShowCoParentsModal} />
+      )}
     </>
   );
 };
