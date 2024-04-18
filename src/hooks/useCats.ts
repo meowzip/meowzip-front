@@ -63,3 +63,22 @@ export const useCatDetail = (id: number) => {
     staleTime: 1000 * 60 * 10
   });
 };
+export const useCoParents = (keyword: string) => {
+  const fetchCoParents = async (keyword: string) => {
+    const response = await fetchExtendedAuth(
+      `/cats/co-parents/members?keyword=${keyword}`
+    );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ['coParents', keyword],
+    queryFn: () => fetchCoParents(keyword),
+    staleTime: 1000 * 60 * 10
+  });
+};
