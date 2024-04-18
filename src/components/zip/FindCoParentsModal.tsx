@@ -1,7 +1,10 @@
 'use client';
 
 import { CoParent } from '@/app/zip/catType';
+import BottomSheet from '@/components/ui/BottomSheet';
+import { Button } from '@/components/ui/Button';
 import Topbar from '@/components/ui/Topbar';
+import CoParentsRequestBottomSheet from '@/components/zip/CoParentsRequestBottomSheet';
 import { useCoParents } from '@/hooks/useCats';
 import { debounce } from 'lodash';
 import Image from 'next/image';
@@ -15,7 +18,9 @@ const FindCoParentsModal = ({
   setShowCoParentsModal
 }: FindCoParentsModalProps) => {
   const [keyword, setKeyword] = useState('');
+  const [requestBottomSheet, setRequestBottomSheet] = useState(false);
   const [coParentList, setCoParentList] = useState<CoParent[]>([]);
+  const [coParent, setCoParent] = useState<CoParent>({} as CoParent);
 
   const { data: coParents, isError, isLoading } = useCoParents(keyword);
 
@@ -33,8 +38,10 @@ const FindCoParentsModal = ({
     debounceNickname(e.target.value);
   };
 
-  const requestCoParenting = (id: number) => {
-    console.log('request coparenting', id);
+  const requestCoParenting = (parent: CoParent) => {
+    console.log('request coparenting', parent);
+    setCoParent(parent);
+    setRequestBottomSheet(true);
   };
 
   if (isLoading) return <div>로딩중</div>;
@@ -69,7 +76,7 @@ const FindCoParentsModal = ({
                 </div>
                 <button
                   className="flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] bg-pr-500 text-btn-2 text-gr-white"
-                  onClick={() => requestCoParenting(coParent.memberId)}
+                  onClick={() => requestCoParenting(coParent)}
                 >
                   <p>요청</p>
                   <Image
@@ -86,6 +93,12 @@ const FindCoParentsModal = ({
           <div>공동집사가 없습니다.</div>
         )}
       </ul>
+
+      <CoParentsRequestBottomSheet
+        isVisible={requestBottomSheet}
+        setIsVisible={setRequestBottomSheet}
+        coParent={coParent}
+      />
     </div>
   );
 };
