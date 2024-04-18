@@ -11,8 +11,10 @@ import { DiaryObj } from '@/app/diary/diaryType';
 import ZipDetailCoParents from '@/components/zip/ZipDetailCoParents';
 import { CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
+import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
+import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
 
-const profiles = [
+const coParents = [
   { memberId: 1, imageUrl: 'https://github.com/shadcn.png', nickname: '민지' },
   { memberId: 2, imageUrl: 'https://github.com/shadcn.png', nickname: '해린' },
   { memberId: 3, imageUrl: 'https://github.com/shadcn.png', nickname: '소미' }
@@ -94,21 +96,13 @@ const diaries = [
   }
 ];
 
-const catObj = {
-  id: 1,
-  imageUrl: 'https://meowzip.com/cat1.jpg',
-  name: '냥이',
-  isCoParented: true,
-  dDay: 250,
-  sex: 'F',
-  isNeutered: 'Y'
-};
-
 const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
+  const [coParentsBottomSheet, setCoParentsBottomSheet] = useState(false);
   const [showCatEditModal, setShowCatEditModal] = useState(false);
+  const [showCoParentsModal, setShowCoParentsModal] = useState(false);
 
   const { data: catDetail, isError, isLoading } = useCatDetail(id);
 
@@ -126,27 +120,27 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         onClose={() => router.push('/zip')}
         onClick={() => setEditBottomSheet(true)}
       />
-      <section className="flex h-screen flex-col gap-4 overflow-auto bg-gr-50 px-4 pt-6">
-        <article className="rounded-16 bg-gr-white">
-          <ZipDetailCatCard {...catObj} />
+      <section className="flex h-screen flex-col gap-4 overflow-auto bg-gr-50 px-4 pb-32 pt-[72px]">
+        <article className="rounded-16">
+          <ZipDetailCatCard {...catDetail} />
         </article>
         <DetailCardLayout
           titleObj={{
             title: '공동집사',
-            onClick: () => console.log('공동집사 바텀 시트 열기')
+            onClick: () => setCoParentsBottomSheet(true)
           }}
           btnObj={{
             text: '함께할 공동집사 찾기',
-            onClick: () => console.log('공동 냥육 요청 모달 열기')
+            onClick: () => setShowCoParentsModal(true)
           }}
         >
           <div className="flex pt-2">
-            {profiles.map((coParent: CoParent) => (
+            {coParents.map((coParent: CoParent) => (
               <ZipDetailCoParents key={coParent.memberId} {...coParent} />
             ))}
             {/* {catDetail.coParents?.map((coParent: CoParent) => (
-            <ZipDetailCoParents key={coParent.memberId} {...coParent} />
-          ))} */}
+              <ZipDetailCoParents key={coParent.memberId} {...coParent} />
+            ))} */}
           </div>
         </DetailCardLayout>
         <DetailCardLayout
@@ -175,6 +169,13 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         // onDelete={deleteDidary}
         onEdit={() => setShowCatEditModal(true)}
       />
+      <CoParentsBottomSheet
+        isVisible={coParentsBottomSheet}
+        setIsVisible={() => setCoParentsBottomSheet(!coParentsBottomSheet)}
+        coParents={coParents}
+      />
+
+      {showCoParentsModal && <FindCoParentsModal />}
     </>
   );
 };
