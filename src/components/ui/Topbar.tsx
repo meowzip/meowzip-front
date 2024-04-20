@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
 interface BaseProps {
-  type: 'home' | 'page' | 'modal' | 'search' | 'bottom' | 'save';
+  type: 'home' | 'page' | 'modal' | 'search' | 'bottom' | 'save' | 'zip';
   title?: string;
   hideLeft?: boolean;
   hideRight?: boolean;
@@ -190,6 +190,33 @@ const Topbar = ({
             onClick={onClick}
           >
             완료
+          </Button>
+        )
+      }
+    },
+    {
+      type: 'zip',
+      content: {
+        left: (
+          <div className="flex px-[10px] py-1" onClick={onClose}>
+            <BackIcon
+              width={24}
+              height={24}
+              stroke="var(--gr-black)"
+              className="cursor-pointer"
+              onClick={onClose}
+            />
+          </div>
+        ),
+        center: <p onClick={onClick}>{title}</p>,
+        right: (
+          <Button
+            variant="text"
+            size="md"
+            className="text-pr-500"
+            onClick={onClick}
+          >
+            다음
           </Button>
         )
       }

@@ -26,3 +26,12 @@ export interface CatDetail extends CatBaseType {
   coParents: CoParent[];
   diaries: DiaryObj[];
 }
+
+export interface CatRegisterReqObj {
+  name: string;
+  sex: 'F' | 'M';
+  isNeutered: 'Y' | 'N' | 'UNDEFINED';
+  metAt: string;
+  memo: string;
+  image: File | null;
+}
