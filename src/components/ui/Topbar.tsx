@@ -72,6 +72,7 @@ const Topbar = ({
               width={24}
               height={24}
               className="h-6 w-6 cursor-pointer"
+              onClick={onClick}
             />
           </div>
         )
