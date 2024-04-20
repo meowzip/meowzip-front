@@ -6,15 +6,15 @@ import { checkMembershipByEmail } from '@/services/signin';
 import { parseCookieString } from '@/utils/common';
 
 const fetchExtended = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  baseUrl: process.env.MEOW_API,
   headers: { Accept: 'application/json' }
 });
 
 const handler = NextAuth({
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       httpOptions: {
         timeout: 40000
       }
@@ -24,14 +24,12 @@ const handler = NextAuth({
     async signIn({ user, account }) {
       const signInInfo = await checkMembershipByEmail(user.email || '');
       if (signInInfo && signInInfo.isEmailExists) {
-        // 소셜 로그인 처리
         await signInOnServerWithSocial({
           email: user.email || '',
           password: user.id || ''
         });
         return true;
       } else {
-        // 회원가입 처리
         await signUpOnServerWithSocialLogin({
           email: user.email || '',
           oauthId: user.id || '',
@@ -59,21 +57,8 @@ const handler = NextAuth({
   },
   events: {
     async signIn(message) {},
-    async signOut(message) {
-      /* on signout */
-    },
-    async createUser(message) {
-      /* user created */
-    },
-    async updateUser(message) {
-      /* user updated - e.g. their email was verified */
-    },
-    async linkAccount(message) {
-      /* account (e.g. Twitter) linked to a user */
-    },
-    async session(message) {
-      /* session is active */
-    }
+    async signOut(message) {},
+    async session(message) {}
   }
 });
 
