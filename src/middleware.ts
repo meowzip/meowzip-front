@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
-import { parseCookieString } from './utils/common';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
@@ -105,4 +104,8 @@ const refreshAccessToken = async () => {
   }
 
   return refreshPromise;
+};
+
+export const config = {
+  matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)']
 };
