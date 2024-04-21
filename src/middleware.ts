@@ -1,7 +1,7 @@
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import returnFetchJson from '@/utils/returnFetchJson';
-import { cookies } from 'next/headers';
 
 const fetchExtended = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
@@ -10,100 +10,135 @@ const fetchExtended = returnFetchJson({
   }
 });
 
-const PROTECTED_ROUTES = ['/diary'];
-const PUBLIC_ROUTES = ['/signin', '/signup'];
+const PROTECTED_ROUTES: string[] = ['/diary'];
+const PUBLIC_ROUTES: string[] = ['/signin', '/signup'];
 
-export const middleware = async (request: NextRequest) => {
-  const currentPath = request.nextUrl.pathname;
+export const middleware = async (
+  request: NextRequest
+): Promise<NextResponse> => {
+  const currentPath: string = request.nextUrl.pathname;
   const cookieList = cookies();
-  const accessToken = cookieList.get('Authorization')?.value;
-  const refreshToken = cookies().get('Authorization-Refresh')?.value;
+  const accessToken: string | undefined =
+    cookieList.get('Authorization')?.value;
+  const refreshToken: string | undefined = cookieList.get(
+    'Authorization-Refresh'
+  )?.value;
 
-  try {
-    if (
-      (accessToken && checkExpiredToken(accessToken)) ||
-      (!accessToken && refreshToken)
-    ) {
-      const newAccessToken = await refreshAccessToken();
-      if (newAccessToken) {
-        const nextResponse = NextResponse.next();
-        nextResponse.cookies.set('Authorization', newAccessToken, {
-          maxAge: 60 * 60 * 2,
-          secure: true,
-          path: '/'
-        });
-        return nextResponse;
-      }
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    const url = request.nextUrl.clone();
-    url.pathname = '/signin';
-    return NextResponse.redirect(url);
+  if (!accessToken && !refreshToken) {
+    return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
   }
 
+  if (accessToken && checkExpiredToken(accessToken)) {
+    try {
+      const newAccessToken = await refreshAccessToken(refreshToken);
+      return handleTokenRefresh(newAccessToken);
+    } catch (error) {
+      console.error('Error:', error);
+      return redirectToSignIn(request);
+    }
+  } else if (!accessToken && refreshToken) {
+    try {
+      const newAccessToken = await refreshAccessToken(refreshToken);
+      return handleTokenRefresh(newAccessToken);
+    } catch (error) {
+      console.error('Error:', error);
+      return redirectToSignIn(request);
+    }
+  }
+
+  return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
+};
+
+const handlePublicAndProtectedRoutes = (
+  currentPath: string,
+  accessToken: string | undefined,
+  request: NextRequest
+): NextResponse => {
   if (!accessToken && PROTECTED_ROUTES.includes(currentPath)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/signin';
-    return NextResponse.redirect(url);
+    return redirectToSignIn(request);
   }
 
   if (accessToken && PUBLIC_ROUTES.includes(currentPath)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    return NextResponse.redirect(url);
+    return redirectToHome(request);
   }
+
+  return NextResponse.next();
 };
 
-const checkExpiredToken = (accessToken: string) => {
-  const decodedToken = JSON.parse(atob(accessToken.split('.')[1]));
-  const exp = decodedToken.exp * 1000;
-  const now = Date.now();
-  return exp < now;
+const redirectToSignIn = (request: NextRequest): NextResponse => {
+  const url = request.nextUrl.clone();
+  url.pathname = '/signin';
+  return NextResponse.redirect(url);
 };
 
-let refreshPromise: any = null;
-const refreshAccessToken = async () => {
-  if (!refreshPromise) {
-    refreshPromise = new Promise(async (resolve, reject) => {
-      const refreshToken = cookies().get('Authorization-Refresh')?.value;
+const redirectToHome = (request: NextRequest): NextResponse => {
+  const url = request.nextUrl.clone();
+  url.pathname = '/';
+  return NextResponse.redirect(url);
+};
 
-      if (!refreshToken) {
-        reject(new Error('No refresh token available'));
-        refreshPromise = null;
-        return;
-      }
-
-      const reqOptions = {
-        headers: {
-          Cookie: `Authorization-Refresh=${refreshToken}`
-        }
-      };
-
-      try {
-        const response = await fetchExtended('/tokens/refresh', {
-          method: 'POST',
-          ...reqOptions
-        });
-
-        if (response.ok) {
-          const newAccessToken = response.headers.get('authorization');
-          if (newAccessToken) {
-            resolve(newAccessToken);
-          } else {
-            throw new Error('Authorization token not found in the response');
-          }
-        } else {
-          reject(new Error('Failed to refresh token'));
-        }
-      } catch (error) {
-        refreshPromise = null;
-        reject(error);
-      }
+const handleTokenRefresh = (
+  newAccessToken: string | undefined
+): NextResponse => {
+  if (newAccessToken) {
+    const nextResponse = NextResponse.next();
+    nextResponse.cookies.set('Authorization', newAccessToken, {
+      maxAge: 60 * 60 * 2,
+      secure: true,
+      path: '/'
     });
+    return nextResponse;
+  }
+  throw new Error('Failed to refresh token');
+};
+
+const refreshAccessToken = async (
+  refreshToken: string | undefined
+): Promise<string> => {
+  if (!refreshToken) {
+    throw new Error('No refresh token available');
   }
 
-  return refreshPromise;
+  const reqOptions = {
+    headers: {
+      Cookie: `Authorization-Refresh=${refreshToken}`
+    }
+  };
+
+  try {
+    const response = await fetchExtended('/tokens/refresh', {
+      method: 'POST',
+      ...reqOptions
+    });
+
+    if (response.ok) {
+      const newAccessToken: string | null =
+        response.headers.get('authorization');
+      if (newAccessToken) {
+        return newAccessToken;
+      } else {
+        throw new Error('Authorization token not found in the response');
+      }
+    } else {
+      throw new Error('Failed to refresh token');
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const checkExpiredToken = (accessToken: string): boolean => {
+  try {
+    const payloadBase64: string = accessToken.split('.')[1];
+    const decodedPayload: { exp: number } = JSON.parse(
+      Buffer.from(payloadBase64, 'base64').toString()
+    );
+    const expirationTimeMs: number = decodedPayload.exp * 1000;
+    return expirationTimeMs < Date.now();
+  } catch (error) {
+    console.error('Failed to decode or check token expiration:', error);
+    throw new Error('Invalid token format');
+  }
 };
 
 export const config = {
