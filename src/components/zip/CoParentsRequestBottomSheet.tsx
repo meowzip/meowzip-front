@@ -8,6 +8,7 @@ interface CoparentsRequestBottomSheetProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   coParent: CoParent;
+  requestCoParenting: () => void;
 }
 
 const REQUEST_CONTENT = {
@@ -28,7 +29,8 @@ const CANCEL_CONTENT = {
 const CoParentsRequestBottomSheet = ({
   isVisible,
   setIsVisible,
-  coParent
+  coParent,
+  requestCoParenting
 }: CoparentsRequestBottomSheetProps) => {
   const [contents, setContents] = useState(REQUEST_CONTENT);
 
@@ -60,7 +62,7 @@ const CoParentsRequestBottomSheet = ({
         <Button
           variant={contents.btnVariant as 'primary' | 'outline'}
           size="lg"
-          onClick={() => console.log('pr lg')}
+          onClick={requestCoParenting}
           className="w-full"
         >
           {contents.ok}
@@ -68,7 +70,7 @@ const CoParentsRequestBottomSheet = ({
         <Button
           variant="text"
           size="lg"
-          onClick={() => console.log('pr lg')}
+          onClick={() => setIsVisible(false)}
           className="w-full text-gr-300"
         >
           {contents.cancel}
