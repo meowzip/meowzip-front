@@ -13,87 +13,13 @@ import { CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
 import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
 import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
+import { Toaster } from '@/components/ui/Toaster';
+import Link from 'next/link';
 
 const coParents = [
   { memberId: 1, imageUrl: 'https://github.com/shadcn.png', nickname: '민지' },
   { memberId: 2, imageUrl: 'https://github.com/shadcn.png', nickname: '해린' },
   { memberId: 3, imageUrl: 'https://github.com/shadcn.png', nickname: '소미' }
-];
-
-const diaries = [
-  {
-    id: 1,
-    isGivenWater: true,
-    isFeed: false,
-    content: '오늘은 고양이들과 놀았어요 1111',
-    images: ['https://github.com/shadcn.png', 'https://github.com/shadcn.png'],
-    caredTime: '오후 06:00',
-    memberId: 1,
-    memberNickname: '뇽뇽이',
-    taggedCats: [
-      {
-        id: 1,
-        imageUrl: 'https://meowzip.com/cat1.jpg',
-        name: '냥이',
-        sex: 'F' as 'F' | 'M'
-      }
-    ]
-  },
-  {
-    id: 2,
-    isGivenWater: false,
-    isFeed: true,
-    content: '오늘은 고양이들과 놀았어요 22222',
-    images: [],
-    caredTime: '오후 03:00',
-    memberId: 1,
-    memberNickname: '삼색이',
-    taggedCats: [
-      {
-        id: 1,
-        imageUrl: 'https://meowzip.com/cat1.jpg',
-        name: '냥이',
-        sex: 'F' as 'F' | 'M'
-      }
-    ]
-  },
-  {
-    id: 3,
-    isGivenWater: true,
-    isFeed: true,
-    content:
-      '오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요 오늘은 고양이들과 놀았어요',
-    images: ['https://github.com/shadcn.png', 'https://github.com/shadcn.png'],
-    caredTime: '오후 11:00',
-    memberId: 1,
-    memberNickname: '치즈',
-    taggedCats: [
-      {
-        id: 1,
-        imageUrl: 'https://meowzip.com/cat1.jpg',
-        name: '냥이',
-        sex: 'M' as 'F' | 'M'
-      }
-    ]
-  },
-  {
-    id: 4,
-    isGivenWater: true,
-    isFeed: true,
-    content: '오늘은 고양이들과 놀았어요 4444',
-    images: ['https://github.com/shadcn.png', 'https://github.com/shadcn.png'],
-    caredTime: '오후 08:00',
-    memberId: 1,
-    memberNickname: '이브',
-    taggedCats: [
-      {
-        id: 1,
-        imageUrl: 'https://meowzip.com/cat1.jpg',
-        name: '냥이',
-        sex: 'F' as 'F' | 'M'
-      }
-    ]
-  }
 ];
 
 const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
@@ -147,16 +73,14 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
           titleObj={{ title: '일지' }}
           btnObj={{
             text: '더보기',
-            onClick: () =>
-              console.log('이 고양이로 필터링 된 일지 목록 페이지 이동')
+            onClick: () => router.push(`/diary`)
           }}
         >
-          {diaries.slice(0, 3).map((diary: DiaryObj) => (
-            <ZipDetailDiary key={diary.id} {...diary} />
+          {catDetail.diaries?.slice(0, 3).map((diary: DiaryObj) => (
+            <Link href={`/diary/${diary.id}`} key={diary.id}>
+              <ZipDetailDiary {...diary} />
+            </Link>
           ))}
-          {/* {catDetail.diaries?.slice(0, 3).map((diary: DiaryObj) => (
-            <ZipDetailDiary key={diary.id} {...diary} />
-          ))} */}
         </DetailCardLayout>
       </section>
 
@@ -176,8 +100,12 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
       />
 
       {showCoParentsModal && (
-        <FindCoParentsModal setShowCoParentsModal={setShowCoParentsModal} />
+        <FindCoParentsModal
+          setShowCoParentsModal={setShowCoParentsModal}
+          catId={catDetail.id}
+        />
       )}
+      <Toaster />
     </>
   );
 };

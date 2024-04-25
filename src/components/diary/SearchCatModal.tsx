@@ -56,7 +56,7 @@ export default function SearchCatModal({
           onClose={closeCurrentModal}
           onChange={handleOnChange}
         />
-        <ul className="flex flex-col gap-2 px-2 py-2">
+        <ul className="flex flex-col gap-2 px-2 py-2 pt-12">
           {catList ? (
             <>
               {catList.map((cat: Cat) => (
