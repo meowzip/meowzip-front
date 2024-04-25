@@ -7,12 +7,14 @@ import { useCats } from '@/hooks/useCats';
 import { useAtom } from 'jotai';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
+import FloatingActionButton from '@/components/ui/FloatingActionButton';
+import CatRegisterModal from '@/components/zip/CatRegisterModal';
 const ZipPage = () => {
   const router = useRouter();
 
   const [cats, setCats] = useAtom(catsAtom);
   const [selectedModal, setSelectedModal] = useState({} as CatListObj);
+  const [showWriteModal, setShowWriteModal] = useState(false);
 
   const { data: catList } = useCats({ page: 0, size: 10 });
 
@@ -42,6 +44,13 @@ const ZipPage = () => {
             />
           ))}
         </div>
+        <FloatingActionButton onClick={() => setShowWriteModal(true)} />
+        {showWriteModal && (
+          <CatRegisterModal
+            onClose={() => setShowWriteModal(false)}
+            id={selectedModal.id}
+          />
+        )}
       </section>
     </>
   );
