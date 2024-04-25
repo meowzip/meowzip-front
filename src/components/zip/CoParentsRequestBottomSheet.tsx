@@ -1,8 +1,9 @@
 import BottomSheet from '@/components/ui/BottomSheet';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { CoParent } from '@/app/zip/catType';
+import { useToast } from '@/components/ui/hooks/useToast';
 
 interface CoparentsRequestBottomSheetProps {
   isVisible: boolean;
@@ -32,6 +33,8 @@ const CoParentsRequestBottomSheet = ({
   coParent,
   requestCoParenting
 }: CoparentsRequestBottomSheetProps) => {
+  const { toast } = useToast();
+
   const [contents, setContents] = useState(REQUEST_CONTENT);
 
   return (
@@ -62,7 +65,13 @@ const CoParentsRequestBottomSheet = ({
         <Button
           variant={contents.btnVariant as 'primary' | 'outline'}
           size="lg"
-          onClick={requestCoParenting}
+          onClick={() => {
+            requestCoParenting(),
+              setIsVisible(false),
+              toast({
+                description: `${coParent.nickname}님께 공동냥육 요청을 보냈습니다.`
+              });
+          }}
           className="w-full"
         >
           {contents.ok}

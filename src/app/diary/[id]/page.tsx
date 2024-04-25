@@ -54,10 +54,10 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
       <Topbar
         type="modal"
         title="날짜 props"
-        onClose={() => router.push('/diary')}
+        onClose={() => router.back()}
         onClick={() => setEditBottomSheet(true)}
       />
-      <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-4">
+      <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-12">
         <h5 className="text-end text-body-4 text-gr-500">
           {diaryDetail.memberNickname} • {diaryDetail.caredTime}
         </h5>
