@@ -79,7 +79,12 @@ const DiaryCard = ({
         </article>
         <article className="flex h-6 items-center justify-between">
           <div className="relative">
-            <Profile items={taggedCats} lastLeft="left-[100px]" />
+            <Profile
+              items={taggedCats}
+              lastLeft="left-[100px]"
+              width="w-6"
+              height="h-6"
+            />
           </div>
           <h5 className="text-body-4 text-gr-500">
             아이디 • {formatTime(new Date())}
