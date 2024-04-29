@@ -140,7 +140,8 @@ const checkExpiredToken = (accessToken: string): boolean => {
     throw new Error('Invalid token format');
   }
 };
-
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|images|favicon.ico).*)']
+  matcher: [
+    '/((?!api|_next/static|_next/image|images|favicon.ico|_next/data|_next/chunks).*)'
+  ]
 };
