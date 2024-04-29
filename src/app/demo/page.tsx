@@ -146,7 +146,6 @@ const DemoPage = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐻 Label</h1>
         <div className="flex gap-2">
-          <Label.Default content="default label">🙊</Label.Default>
           <Label.Text content="text label" />
           <Label.Icon>❤️</Label.Icon>
         </div>

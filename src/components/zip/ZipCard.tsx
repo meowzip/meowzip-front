@@ -23,16 +23,15 @@ const ZipCard = ({
       <div className="absolute right-0 top-0 flex items-center gap-1 p-[5px]">
         {isNeutered && (
           <Label.Text
-            className="bg-gr-transparent-white text-gr-800"
+            className="bg-gr-transparent-white p-1 text-gr-800"
             content="TNR"
           />
         )}
         {isCoParented && (
-          <Label.Default
-            className="bg-gr-transparent-black text-gr-white"
-            src="/images/icons/share.svg"
-            content={coParentedCount.toString()}
-          />
+          <div className="flex items-center rounded-md bg-gr-transparent-black py-[2px] pl-[2px] pr-1 text-gr-white">
+            <Label.Icon src="/images/icons/share.svg" />
+            <Label.Text content={coParentedCount.toString()} className="" />
+          </div>
         )}
       </div>
       <img
