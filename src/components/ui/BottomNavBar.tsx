@@ -53,7 +53,7 @@ const BottomNavBar = () => {
   return (
     <div className="flex w-screen justify-center rounded-t-[20px] bg-gr-white px-2 pb-[34px] pt-2 shadow-bottomNav">
       {BOTTOM_NAV.map(nav => (
-        <Link key={nav.key} href={nav.key} className="relative px-4">
+        <Link key={nav.key} href={`/${nav.key}`} className="relative px-4">
           {nav.key === 'profile' && (
             <div className="absolute right-4">
               <Badge type="default" bgColor="bg-pr-500" />
