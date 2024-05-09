@@ -7,65 +7,104 @@ import FeedWriteModal from '@/components/community/FeedWriteModal';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { useAtom } from 'jotai';
 import { showWriteModalAtom } from '@/atoms/modalAtom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  blockWriterOnServer,
+  deleteFeedOnServer,
+  getFeedsOnServer
+} from '@/services/community';
+import { FeedType } from '@/app/community/communityType';
+import { getCookie } from '@/utils/common';
+import { jwtDecode } from 'jwt-decode';
+import { useRouter } from 'next/navigation';
 
 const CommunityPage = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
-  const [name, setName] = useState('이치즈');
-  const [feedList, setFeedList] = useState([
-    {
-      id: 1,
-      profile: 'https://github.com/shadcn.png',
-      nickname: '친절한캔따개',
-      time: '5분 전',
-      text: '울 애기 내 침대에서 잘도 잔다 🧡 엔터 포함 내용이 길어지면 3줄까지 보여짐 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형',
-      images: [
-        'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
-        'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg',
-        'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
-      ],
-      like: 345,
-      comment: 192
+  const [feed, setFeed] = useState<FeedType>();
+
+  const token = getCookie('Authorization');
+  const decodedToken: { memberId: number } = jwtDecode(token);
+
+  const { data: feedList } = useQuery({
+    queryKey: ['feeds'],
+    queryFn: () => getFeedsOnServer(),
+    staleTime: 1000 * 60 * 10
+  });
+
+  const deleteFeed = () => {
+    if (!feed) return;
+    deleteFeedMutation.mutate(feed?.id);
+  };
+  const deleteFeedMutation = useMutation({
+    mutationFn: (id: number) => deleteFeedOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+      } else {
+        console.error('게시물 삭제 중 오류:', response.message);
+      }
     },
-    {
-      id: 2,
-      profile: 'https://github.com/shadcn.png',
-      nickname: '발랄한캔따개',
-      time: '20분 전',
-      text: '울 애기 내 침대에서 잘도 잔다 🧡 엔터 포함 내용이 길어지면 3줄까지 보여짐 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형',
-      images: [
-        'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
-        'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg',
-        'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
-      ],
-      like: 220,
-      comment: 95
+    onError: (error: any) => {
+      console.error('게시물 삭제 중 오류:', error);
     }
-  ]);
+  });
+
+  const blockFeed = () => {
+    if (!feed) return;
+    blockFeedMutation.mutate(feed?.id);
+  };
+  const blockFeedMutation = useMutation({
+    mutationFn: (id: number) => blockWriterOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+      } else {
+        console.error('게시물 차단 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시물 차단 중 오류:', error);
+    }
+  });
 
   return (
     <>
-      <h1 className="fixed z-[999] flex h-12 w-full items-center bg-gr-white pl-4 align-middle text-heading-3 text-gr-900">
+      <h1 className="flex h-12 w-full items-center bg-gr-white pl-4 align-middle text-heading-3 text-gr-900">
         커뮤니티
       </h1>
-      <div className="pb-32 pt-12">
-        {feedList.map(feed => (
+      <div className="pb-32">
+        {feedList?.map((feed: FeedType) => (
           <FeedCard
             key={feed.id}
             content={feed}
-            onClick={() => setEditBottomSheet(true)}
+            onClick={() => {
+              setFeed(feed);
+              setEditBottomSheet(true);
+              console.log('feed', feed);
+              // router.push(`/community/${feed.id}`);
+            }}
           />
         ))}
         <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-        {showWriteModal && (
-          <FeedWriteModal onClose={() => setShowWriteModal(false)} />
+        {showWriteModal && feed && (
+          <FeedWriteModal
+            onClose={() => setShowWriteModal(false)}
+            feedDetail={feed}
+          />
         )}
         <MoreBtnBottomSheet
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}
-          name={name}
-          isMine={true}
+          name={feed?.memberNickname}
+          isMine={decodedToken.memberId === feed?.memberId}
+          onDelete={deleteFeed}
+          onEdit={() => setShowWriteModal(true)}
+          onBlock={blockFeed}
         />
       </div>
     </>

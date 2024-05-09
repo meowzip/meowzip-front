@@ -8,31 +8,24 @@ import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
 import { useAtom } from 'jotai';
 import { showWriteModalAtom } from '@/atoms/modalAtom';
+import { useQuery } from '@tanstack/react-query';
+import { getFeedDetail } from '@/services/community';
 
-type PageParams = {
-  slug: string;
-};
-
-export default function DetailPage({ params }: { params: PageParams }) {
+const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [name, setName] = useState('이치즈');
   const [isMine, setIsMine] = useState(true);
 
-  const feed = {
-    id: 1,
-    profile: 'https://github.com/shadcn.png',
-    nickname: '친절한캔따개',
-    time: '5분 전',
-    text: '울 애기 내 침대에서 잘도 잔다 🧡 엔터 포함 내용이 길어지면 3줄까지 보여짐 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형 이렇게 저렇게 블라블라 울라블라 짱구는 못말려 맹구 훈이 유리 토끼인형',
-    images: [
-      'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
-      'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg',
-      'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
-    ],
-    like: 345,
-    comment: 192
-  };
+  const { data: feedDetail } = useQuery({
+    queryKey: ['feedDetail', slug],
+    queryFn: () => getFeedDetail(slug),
+    staleTime: 1000 * 60 * 10
+  });
+
+  useEffect(() => {
+    if (!feedDetail) return;
+  }, [slug]);
 
   const comments = [
     {
@@ -66,32 +59,33 @@ export default function DetailPage({ params }: { params: PageParams }) {
   ];
 
   return (
-    <div>
-      {/* <p>feed Id: {params.slug}</p> */}
-      <>
-        <FeedCard
-          variant="detail"
-          content={feed}
-          onClick={() => setEditBottomSheet(true)}
-        />
+    <>
+      <FeedCard
+        variant="detail"
+        content={feedDetail}
+        onClick={() => setEditBottomSheet(true)}
+        key={slug}
+      />
 
-        {comments.length === 0 && (
-          <p className="py-8 text-center text-sm text-gr-300">
-            아직 댓글이 없어요
-            <br />
-            가장 먼저 댓글을 남겨보세요.
-          </p>
-        )}
+      {comments.length === 0 && (
+        <p className="py-8 text-center text-sm text-gr-300">
+          아직 댓글이 없어요
+          <br />
+          가장 먼저 댓글을 남겨보세요.
+        </p>
+      )}
 
-        {comments.map((comment, index) => (
-          <div key={index} className="py-4">
-            <Comment comment={comment} />
-          </div>
-        ))}
-        <WriteComment />
-      </>
+      {comments.map((comment, index) => (
+        <div key={index} className="py-4">
+          <Comment comment={comment} />
+        </div>
+      ))}
+      <WriteComment />
       {showWriteModal && (
-        <FeedWriteModal onClose={() => setShowWriteModal(false)} />
+        <FeedWriteModal
+          onClose={() => setShowWriteModal(false)}
+          feedDetail={feedDetail}
+        />
       )}
       <MoreBtnBottomSheet
         isVisible={editBottomSheet}
@@ -100,6 +94,8 @@ export default function DetailPage({ params }: { params: PageParams }) {
         name={name}
         isMine={isMine}
       />
-    </div>
+    </>
   );
-}
+};
+
+export default DetailPage;
