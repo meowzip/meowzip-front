@@ -26,7 +26,7 @@ const FindCoParentsModal = ({
   const [coParentList, setCoParentList] = useState<CoParent[]>([]);
   const [coParent, setCoParent] = useState<CoParent>({} as CoParent);
 
-  const { data: coParents, isError, isLoading } = useCoParents(keyword);
+  const { data: coParents, isError, isLoading } = useCoParents(keyword, catId);
 
   useEffect(() => {
     setCoParentList(coParents?.items);
@@ -91,16 +91,26 @@ const FindCoParentsModal = ({
                   <p className="text-body-2 text-gr-900">{coParent.nickname}</p>
                 </div>
                 <button
-                  className="flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] bg-pr-500 text-btn-2 text-gr-white"
+                  className={`flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] text-btn-2 ${
+                    coParent.isRequested
+                      ? 'border border-pr-500 bg-gr-white text-pr-500'
+                      : 'bg-pr-500 text-gr-white'
+                  }`}
                   onClick={() => openBottomSheet(coParent)}
                 >
-                  <p>요청</p>
-                  <Image
-                    src="/images/icons/plane.svg"
-                    alt="send"
-                    width={20}
-                    height={20}
-                  />
+                  {coParent.isRequested ? (
+                    <p>요청취소</p>
+                  ) : (
+                    <>
+                      <p>요청</p>
+                      <Image
+                        src="/images/icons/plane.svg"
+                        alt="send"
+                        width={20}
+                        height={20}
+                      />
+                    </>
+                  )}
                 </button>
               </li>
             ))}

@@ -1,5 +1,5 @@
 import BottomSheet from '@/components/ui/BottomSheet';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { CoParent } from '@/app/zip/catType';
@@ -13,15 +13,15 @@ interface CoparentsRequestBottomSheetProps {
 }
 
 const REQUEST_CONTENT = {
-  title: '공동양육 요청',
-  message: '공동양육 요청을 보내시겠습니까?',
+  title: '공동냥육 요청',
+  message: '공동냥육 요청을 보내시겠습니까?',
   btnVariant: 'primary',
   ok: '요청 보내기',
   cancel: '취소'
 };
 const CANCEL_CONTENT = {
   title: '요청 취소',
-  message: '공동양육 요청을 취소하시겠습니까?',
+  message: '공동냥육 요청을 취소하시겠습니까?',
   btnVariant: 'outline',
   ok: '요청 취소하기',
   cancel: '닫기'
@@ -36,6 +36,14 @@ const CoParentsRequestBottomSheet = ({
   const { toast } = useToast();
 
   const [contents, setContents] = useState(REQUEST_CONTENT);
+
+  useEffect(() => {
+    if (coParent.isRequested) {
+      setContents(CANCEL_CONTENT);
+    } else {
+      setContents(REQUEST_CONTENT);
+    }
+  }, [coParent]);
 
   return (
     <BottomSheet
