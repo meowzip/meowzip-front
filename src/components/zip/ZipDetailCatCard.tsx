@@ -18,11 +18,13 @@ const ZipDetailCatCard = ({ ...props }: CatBaseType) => {
       <div className="rounded-b-16 bg-gr-white px-6">
         <div className="flex flex-col items-center justify-center gap-1 pb-4 pt-2">
           <h1 className="text-heading-1 text-gr-900">{props.name}</h1>
-          <Label.Default
-            className="rounded-[4px] bg-gr-50 py-1 pl-2 pr-[6px] text-gr-600"
-            src="/images/icons/share.svg"
-            content={`만난지 ${props.dDay}일`}
-          />
+          <div className="flex items-center gap-[2px] rounded-[4px] bg-gr-50 py-1 pl-2 pr-[6px]">
+            <Label.Text
+              className="text-gr-600"
+              content={`만난지 ${props.dDay}일`}
+            />
+            <Label.Icon src="/images/icons/paw.svg" />
+          </div>
         </div>
         <Image
           src={props.imageUrl}

@@ -7,9 +7,11 @@ interface ProfileProps {
     style?: string;
   }[];
   lastLeft?: string;
+  width?: string;
+  height?: string;
 }
 
-const Profile = ({ items, lastLeft }: ProfileProps) => {
+const Profile = ({ items, lastLeft, width, height }: ProfileProps) => {
   const fiveItems = items?.slice(0, 5);
 
   return (
@@ -24,8 +26,10 @@ const Profile = ({ items, lastLeft }: ProfileProps) => {
           </Avatar>
         ))}
         {fiveItems?.length >= 5 && (
-          <div className={`absolute top-0 h-10 w-10 ${lastLeft}`}>
-            <Avatar className={`text-gr-white`}>
+          <div className={`absolute top-0 ${lastLeft}`}>
+            <Avatar
+              className={`text-gr-white ${width ?? 'w-10'} ${height || 'h-10'}`}
+            >
               <AvatarFallback className="bg-gr-200 text-heading-6">
                 +{items.length % 5}
               </AvatarFallback>
