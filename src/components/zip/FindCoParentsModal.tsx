@@ -4,7 +4,7 @@ import { CoParent } from '@/app/zip/catType';
 import Topbar from '@/components/ui/Topbar';
 import CoParentsRequestBottomSheet from '@/components/zip/CoParentsRequestBottomSheet';
 import { useCoParents } from '@/hooks/useCats';
-import { requestCoParenting } from '@/services/cat';
+import { cancelCoParenting, requestCoParenting } from '@/services/cat';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import Image from 'next/image';
@@ -55,10 +55,35 @@ const FindCoParentsModal = ({
         console.log('error');
       } else {
         queryClient.invalidateQueries({ queryKey: ['coParents'] });
-        console.log('data', data);
       }
     }
   });
+
+  const cancelCoParentingMutation = useMutation({
+    mutationFn: (reqObj: { catId: number; memberId: number }) =>
+      cancelCoParenting(reqObj),
+    onSuccess: (data: any) => {
+      if (data.status !== 'OK') {
+        console.log('error');
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['coParents'] });
+      }
+    }
+  });
+
+  const toggleRequestCoParenting = () => {
+    if (coParent.isRequested) {
+      cancelCoParentingMutation.mutate({
+        catId: catId,
+        memberId: coParent.memberId
+      });
+      return;
+    }
+    requestCoParentingMutation.mutate({
+      catId: catId,
+      memberId: coParent.memberId
+    });
+  };
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) return <div>에러</div>;
@@ -124,12 +149,7 @@ const FindCoParentsModal = ({
         isVisible={requestBottomSheet}
         setIsVisible={setRequestBottomSheet}
         coParent={coParent}
-        requestCoParenting={() =>
-          requestCoParentingMutation.mutate({
-            catId: catId,
-            memberId: coParent.memberId
-          })
-        }
+        toggleRequestCoParenting={toggleRequestCoParenting}
       />
     </div>
   );

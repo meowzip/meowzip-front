@@ -9,7 +9,7 @@ interface CoparentsRequestBottomSheetProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   coParent: CoParent;
-  requestCoParenting: () => void;
+  toggleRequestCoParenting: () => void;
 }
 
 const REQUEST_CONTENT = {
@@ -31,7 +31,7 @@ const CoParentsRequestBottomSheet = ({
   isVisible,
   setIsVisible,
   coParent,
-  requestCoParenting
+  toggleRequestCoParenting
 }: CoparentsRequestBottomSheetProps) => {
   const { toast } = useToast();
 
@@ -74,7 +74,7 @@ const CoParentsRequestBottomSheet = ({
           variant={contents.btnVariant as 'primary' | 'outline'}
           size="lg"
           onClick={() => {
-            requestCoParenting(),
+            toggleRequestCoParenting(),
               setIsVisible(false),
               toast({
                 description: `${coParent.nickname}님께 공동냥육 요청을 보냈습니다.`
