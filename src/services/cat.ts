@@ -87,9 +87,34 @@ export const requestCoParenting = async (reqObj: {
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
-      throw new Error('일지 등록 중 오류 발생:' + error.message);
+      throw new Error('고양이 공동냥육 신청 중 오류 발생:' + error.message);
     } else {
-      throw new Error('일지 등록 중 오류 발생:');
+      throw new Error('고양이 공동냥육 신청 중 오류 발생:');
+    }
+  }
+};
+
+export const cancelCoParenting = async (reqObj: {
+  catId: number;
+  memberId: number;
+}) => {
+  const requestOptions = {
+    method: 'DELETE'
+  };
+
+  try {
+    const response = await fetchExtendedAuth(
+      `/cats/co-parents/cancel?cat-id=${reqObj.catId}&requested-member-id=${reqObj.memberId}`,
+      requestOptions
+    );
+
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('고양이 공동냥육 취소 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('고양이 공동냥육 취소 중 오류 발생:');
     }
   }
 };

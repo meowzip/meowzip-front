@@ -17,9 +17,24 @@ import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
 
 const coParents = [
-  { memberId: 1, imageUrl: 'https://github.com/shadcn.png', nickname: '민지' },
-  { memberId: 2, imageUrl: 'https://github.com/shadcn.png', nickname: '해린' },
-  { memberId: 3, imageUrl: 'https://github.com/shadcn.png', nickname: '소미' }
+  {
+    memberId: 1,
+    imageUrl: 'https://github.com/shadcn.png',
+    nickname: '민지',
+    isRequested: true
+  },
+  {
+    memberId: 2,
+    imageUrl: 'https://github.com/shadcn.png',
+    nickname: '해린',
+    isRequested: true
+  },
+  {
+    memberId: 3,
+    imageUrl: 'https://github.com/shadcn.png',
+    nickname: '소미',
+    isRequested: true
+  }
 ];
 
 const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {

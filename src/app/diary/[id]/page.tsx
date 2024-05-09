@@ -38,11 +38,11 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
       if (response.status === 'OK') {
         router.push('/diary');
       } else {
-        console.error('일지 등록 중 오류:', response.message);
+        console.error('일지 삭제 중 오류:', response.message);
       }
     },
     onError: (error: any) => {
-      console.error('일지 등록 중 오류:', error);
+      console.error('일지 삭제 중 오류:', error);
     }
   });
 
