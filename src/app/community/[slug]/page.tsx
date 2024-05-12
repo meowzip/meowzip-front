@@ -59,7 +59,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   ];
 
   return (
-    <>
+    <div className="pb-[100px]">
       <FeedCard
         variant="detail"
         content={feedDetail}
@@ -93,7 +93,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         name={name}
         isMine={isMine}
       />
-    </>
+    </div>
   );
 };
 
