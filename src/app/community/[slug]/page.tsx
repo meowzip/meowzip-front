@@ -63,8 +63,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       <FeedCard
         variant="detail"
         content={feedDetail}
-        onClick={() => setEditBottomSheet(true)}
-        key={slug}
+        openBottomSheet={() => setEditBottomSheet(true)}
       />
 
       {comments.length === 0 && (

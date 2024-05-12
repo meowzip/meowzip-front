@@ -1,3 +1,4 @@
+import { fetchExtended } from '@/services/cat';
 import { fetchExtendedForm, fetchExtendedAuth } from '@/services/nickname';
 
 export const getFeedsOnServer = async () => {
@@ -14,13 +15,13 @@ export const getFeedsOnServer = async () => {
 };
 
 export const getFeedDetail = async (id: number) => {
-  const response = await fetchExtendedAuth(`/community/${id}`);
+  const response = await fetchExtended(`/community/${id}`);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
 
-  const data = (response.body as any).items || [];
-  return data;
+  const data = await response.json();
+  return data.data;
 };
 
 export const deleteFeedOnServer = async (id: number) => {

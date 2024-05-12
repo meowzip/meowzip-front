@@ -10,10 +10,16 @@ import { FeedType } from '@/app/community/communityType';
 interface FeedCardProps {
   variant?: 'detail';
   content: FeedType;
-  onClick: () => void;
+  goToDetail?: () => void;
+  openBottomSheet?: () => void;
 }
 
-const FeedCard = ({ variant, content, onClick }: FeedCardProps) => {
+const FeedCard = ({
+  variant,
+  content,
+  goToDetail,
+  openBottomSheet
+}: FeedCardProps) => {
   const [showMore, setMore] = useState(false);
   const router = useRouter();
 
@@ -31,11 +37,13 @@ const FeedCard = ({ variant, content, onClick }: FeedCardProps) => {
   };
 
   return (
-    <div className="border-b border-gr-100 px-4 pt-4">
+    <div className="border-b border-gr-100 px-4 pt-4" onClick={goToDetail}>
       <UserArea
         nickname={content?.memberNickname}
         profile={content?.memberNickname}
-        onClick={onClick}
+        onClick={() => {
+          openBottomSheet && openBottomSheet();
+        }}
       />
       <section className="flex flex-col items-start gap-1">
         <p

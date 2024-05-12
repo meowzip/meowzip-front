@@ -71,6 +71,11 @@ const CommunityPage = () => {
     }
   });
 
+  const goToDetail = (feed: FeedType) => {
+    setFeed(feed);
+    router.push(`/community/${feed.id}`);
+  };
+
   return (
     <>
       <h1 className="flex h-12 w-full items-center bg-gr-white pl-4 align-middle text-heading-3 text-gr-900">
@@ -81,12 +86,8 @@ const CommunityPage = () => {
           <FeedCard
             key={feed.id}
             content={feed}
-            onClick={() => {
-              setFeed(feed);
-              setEditBottomSheet(true);
-              console.log('feed', feed);
-              // router.push(`/community/${feed.id}`);
-            }}
+            goToDetail={() => goToDetail(feed)}
+            openBottomSheet={() => setEditBottomSheet(true)}
           />
         ))}
         <FloatingActionButton onClick={() => setShowWriteModal(true)} />
