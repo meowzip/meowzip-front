@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
@@ -68,6 +68,11 @@ const CommunityPage = () => {
       console.error('게시물 차단 중 오류:', error);
     }
   });
+
+  useEffect(() => {
+    if (showWriteModal) return;
+    queryClient.invalidateQueries({ queryKey: ['feeds'] });
+  }, [showWriteModal]);
 
   return (
     <>
