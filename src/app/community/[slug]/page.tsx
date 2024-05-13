@@ -6,16 +6,17 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useAtom } from 'jotai';
-import { showWriteModalAtom } from '@/atoms/modalAtom';
 import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
+import { getCookie } from '@/utils/common';
+import { jwtDecode } from 'jwt-decode';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
-  const [name, setName] = useState('이치즈');
-  const [isMine, setIsMine] = useState(true);
+  const [showWriteModal, setShowWriteModal] = useState(false);
+
+  const token = getCookie('Authorization');
+  const decodedToken: { memberId: number } = jwtDecode(token);
 
   const { data: feedDetail } = useQuery({
     queryKey: ['feedDetail', slug],
@@ -90,8 +91,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
-        name={name}
-        isMine={isMine}
+        isMine={decodedToken.memberId === feedDetail?.memberId}
+        showWriteModal={setShowWriteModal}
       />
     </div>
   );
