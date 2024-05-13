@@ -9,7 +9,7 @@ import { FeedType } from '@/app/community/communityType';
 
 interface FeedWriteModalProps {
   onClose: () => void;
-  feedDetail: FeedType;
+  feedDetail?: FeedType;
 }
 
 const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {

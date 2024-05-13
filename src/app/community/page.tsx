@@ -87,7 +87,7 @@ const CommunityPage = () => {
           />
         ))}
         <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-        {showWriteModal && feed && (
+        {showWriteModal && (
           <FeedWriteModal
             onClose={() => setShowWriteModal(false)}
             feedDetail={feed}
