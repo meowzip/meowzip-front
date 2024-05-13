@@ -1,8 +1,6 @@
-import { showWriteModalAtom } from '@/atoms/modalAtom';
 import ActionButton from '@/components/ui/ActionButton';
 import BottomSheet from '@/components/ui/BottomSheet';
 import Modal from '@/components/ui/Modal';
-import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
@@ -14,6 +12,7 @@ interface MoreBtnBottomSheetProps {
   onDelete?: () => void;
   onEdit?: () => void;
   onBlock?: () => void;
+  showWriteModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
@@ -24,9 +23,9 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   isMine,
   onDelete,
   onEdit,
-  onBlock
+  onBlock,
+  showWriteModal
 }) => {
-  const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{
     title: string;
@@ -36,7 +35,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
 
   const openModalEdit = () => {
     setIsVisible(false);
-    setShowWriteModal(true);
+    showWriteModal && showWriteModal(true);
     onEdit && onEdit();
   };
   const openModalDelete = () => {

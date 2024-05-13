@@ -6,14 +6,12 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useAtom } from 'jotai';
-import { showWriteModalAtom } from '@/atoms/modalAtom';
 import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
+  const [showWriteModal, setShowWriteModal] = useState(false);
   const [name, setName] = useState('이치즈');
   const [isMine, setIsMine] = useState(true);
 
@@ -92,6 +90,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         heightPercent={['50%', '40%']}
         name={name}
         isMine={isMine}
+        showWriteModal={setShowWriteModal}
       />
     </div>
   );
