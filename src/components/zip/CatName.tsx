@@ -5,21 +5,32 @@ import useCatNameHandler from '@/hooks/zip/useCatNameHandler';
 
 interface SignInMainProps {
   setStep: () => void;
+  setPrev: () => void;
   setCatData: (
     data: (prevData: CatRegisterReqObj) => CatRegisterReqObj
   ) => void;
 }
 
-export default function CatName({ setStep, setCatData }: SignInMainProps) {
+export default function CatName({
+  setStep,
+  setCatData,
+  setPrev
+}: SignInMainProps) {
   const { catName, handleCatNameChange } = useCatNameHandler();
 
   const handleNext = () => {
     setCatData((prev: CatRegisterReqObj) => ({ ...prev, name: catName.value }));
     setStep();
   };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-      <Topbar type="zip" title="고양이 등록(1/3)" onClick={handleNext} />
+      <Topbar
+        type="zip"
+        title="고양이 등록(1/3)"
+        onClick={handleNext}
+        onClose={setPrev}
+      />
       <section className="mt-16 w-full px-6 text-gray-800">
         <div className="mb-[32px]">
           <p className="text-[24px] font-bold">냥이 이름이 뭐예요?</p>

@@ -3,7 +3,7 @@ import { Button } from '../ui/Button';
 import { useUser } from '@/contexts/EmailContext';
 import Image from 'next/image';
 import { hideEmail } from '@/utils/common';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 
 interface CheckAccountProps {
   setStep: () => void;

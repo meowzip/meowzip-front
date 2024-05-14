@@ -1,25 +1,29 @@
 import Topbar from '../ui/Topbar';
-// import ImageUploader from '@/components/diary/ImageUploader';
+import ImageUploader from '@/components/diary/ImageUploader';
 import { CatRegisterReqObj } from '@/app/zip/catType';
-import { ImageUploadData } from '@/atoms/imageAtom';
-import Image from 'next/image';
+import Filter from '../diary/Filter';
+import { useState } from 'react';
+
 interface SignInMainProps {
   setStep: () => void;
-  catData: CatRegisterReqObj;
   setCatData: (data: any) => void;
+  setPrev: () => void;
 }
 
 export default function CatPhoto({
   setStep,
-  catData,
-  setCatData
+  setCatData,
+  setPrev
 }: SignInMainProps) {
-  const defaultImage: ImageUploadData = {
+  const [selectedImage, setSelectedImage] = useState({
     key: 0,
-    imageSrc:
-      'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg',
+    imageSrc: '',
     croppedImage: null
-  };
+  });
+
+  const defaultImagesrc =
+    'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg';
+
   const catImages = [
     {
       key: 0,
@@ -67,39 +71,50 @@ export default function CatPhoto({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-      <Topbar type="zip" title="고양이 등록(2/3)" onClick={setStep} />
+      <Topbar
+        type="zip"
+        title="고양이 등록(2/3)"
+        onClose={setPrev}
+        onClick={() => {
+          setCatData((prev: CatRegisterReqObj) => ({
+            ...prev,
+            image: selectedImage.imageSrc,
+            croppedImage: selectedImage.croppedImage
+          }));
+          setStep();
+        }}
+      />
       <section className="pt-20">
         <div className="flex items-center justify-center">
           <img
-            className="rounded-16"
-            src={defaultImage.imageSrc || ''}
-            width={200}
-            height={200}
+            className="rounded-[48px]"
+            src={selectedImage.croppedImage || defaultImagesrc}
+            width={120}
+            height={120}
             alt="고양이 사진"
           />
         </div>
       </section>
       <section className="px-6">
         <div className="py-4 text-center text-body-4 text-gr-black">
-          고양이 대표 사진를 하나 선택하세요!
+          고양이 대표 사진을 하나 선택하세요!
         </div>
-        <div className="grid grid-cols-4 gap-2">
-          <div className="flex items-center justify-center rounded-3xl bg-gray-50">
-            <Image
-              src="/images/icons/camera.svg"
-              width={24}
-              height={24}
-              alt="camera-image"
-            />
-          </div>
+        <div className="grid grid-cols-4 gap-4">
+          <ImageUploader
+            width="w-16"
+            height="h-16"
+            data={selectedImage}
+            deleteBtn
+            onUpload={(data: any) => {
+              setSelectedImage(data);
+            }}
+          />
           {catImages.map(data => (
-            <Image
+            <Filter
               key={data.key}
-              className="rounded-3xl"
-              src={data.imageSrc}
-              width={100}
-              height={100}
-              alt="고양이 사진"
+              id={data.key}
+              imageUrl={data.imageSrc}
+              type="cat"
             />
           ))}
         </div>

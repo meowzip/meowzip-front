@@ -35,4 +35,5 @@ export interface CatRegisterReqObj {
   metAt: string;
   memo: string;
   image: File | null;
+  croppedImage: string | null;
 }
