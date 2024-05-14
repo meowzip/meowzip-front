@@ -24,7 +24,10 @@ const UserArea = ({ nickname, profile, onClick }: UserProps) => {
         width={24}
         height={24}
         className="h-6 w-6"
-        onClick={onClick}
+        onClick={e => {
+          e.stopPropagation();
+          onClick();
+        }}
       />
     </div>
   );

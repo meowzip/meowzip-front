@@ -16,6 +16,7 @@ export interface CoParent {
   memberId: number;
   imageUrl: string;
   nickname: string;
+  isRequested: boolean;
 }
 
 export interface CatListObj extends CatBaseType {

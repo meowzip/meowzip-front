@@ -1,5 +1,5 @@
 import BottomSheet from '@/components/ui/BottomSheet';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
 import { CoParent } from '@/app/zip/catType';
@@ -9,19 +9,19 @@ interface CoparentsRequestBottomSheetProps {
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   coParent: CoParent;
-  requestCoParenting: () => void;
+  toggleRequestCoParenting: () => void;
 }
 
 const REQUEST_CONTENT = {
-  title: '공동양육 요청',
-  message: '공동양육 요청을 보내시겠습니까?',
+  title: '공동냥육 요청',
+  message: '공동냥육 요청을 보내시겠습니까?',
   btnVariant: 'primary',
   ok: '요청 보내기',
   cancel: '취소'
 };
 const CANCEL_CONTENT = {
   title: '요청 취소',
-  message: '공동양육 요청을 취소하시겠습니까?',
+  message: '공동냥육 요청을 취소하시겠습니까?',
   btnVariant: 'outline',
   ok: '요청 취소하기',
   cancel: '닫기'
@@ -31,11 +31,19 @@ const CoParentsRequestBottomSheet = ({
   isVisible,
   setIsVisible,
   coParent,
-  requestCoParenting
+  toggleRequestCoParenting
 }: CoparentsRequestBottomSheetProps) => {
   const { toast } = useToast();
 
   const [contents, setContents] = useState(REQUEST_CONTENT);
+
+  useEffect(() => {
+    if (coParent.isRequested) {
+      setContents(CANCEL_CONTENT);
+    } else {
+      setContents(REQUEST_CONTENT);
+    }
+  }, [coParent]);
 
   return (
     <BottomSheet
@@ -66,7 +74,7 @@ const CoParentsRequestBottomSheet = ({
           variant={contents.btnVariant as 'primary' | 'outline'}
           size="lg"
           onClick={() => {
-            requestCoParenting(),
+            toggleRequestCoParenting(),
               setIsVisible(false),
               toast({
                 description: `${coParent.nickname}님께 공동냥육 요청을 보냈습니다.`

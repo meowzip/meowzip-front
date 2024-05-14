@@ -4,44 +4,105 @@ import Textarea from '@/components/ui/Textarea';
 import Topbar from '@/components/ui/Topbar';
 import { useAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
-import { ImageUploadData } from '@/atoms/imageAtom';
+import { FeedType } from '@/app/community/communityType';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { editFeedOnServer, registerFeedOnServer } from '@/services/community';
 
 interface FeedWriteModalProps {
   onClose: () => void;
+  feedDetail?: FeedType;
 }
 
-const FeedWriteModal = ({ onClose }: FeedWriteModalProps) => {
+const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
+  const router = useRouter();
+
   const [textareaContent, setTextareaContent] = useState('');
-  // const [feedImageList, setFeedImageList] = useAtom(feedImageListAtom);
-  const [feedImageList, setFeedImageList] = useState([
-    {
-      key: 0,
+  const [feedImageList, setFeedImageList] = useAtom(feedImageListAtom);
+
+  const settingFeedDetail = () => {
+    if (!feedDetail) return;
+
+    setTextareaContent(feedDetail.content);
+    setFeedImageList(updateFeedImages(feedDetail?.images));
+  };
+
+  const updateFeedImages = (images: string[]) => {
+    if (!images) return [];
+
+    const updatedImageList = images.map((image, index) => ({
+      key: index,
       imageSrc: null,
-      croppedImage:
-        'https://www.petmd.com/sites/default/files/petmd-cat-happy-13.jpg'
-    },
-    {
-      key: 1,
+      croppedImage: image
+    }));
+
+    updatedImageList.push({
+      key: images.length,
       imageSrc: null,
-      croppedImage: 'https://i.ytimg.com/vi/YCaGYUIfdy4/maxresdefault.jpg'
-    },
-    {
-      key: 2,
-      imageSrc: null,
-      croppedImage:
-        'https://i.pinimg.com/originals/81/6d/a5/816da533638aee63cfbd315ea24cccbd.jpg'
-    }
-  ] as ImageUploadData[]);
+      croppedImage: ''
+    });
+    return updatedImageList.slice(0, 3);
+  };
+
+  useEffect(() => {
+    settingFeedDetail();
+  }, [feedDetail]);
 
   const saveFeed = () => {
-    console.log('저장');
-    onClose();
+    return feedDetail?.id
+      ? editFeedMutation.mutate({
+          id: feedDetail?.id,
+          ...settingParams()
+        })
+      : registerFeedMutation.mutate(settingParams());
   };
+
+  const settingParams: () => { content: string; images: string[] } = () => {
+    const images = feedImageList
+      ?.filter(feed => feed.croppedImage)
+      ?.map(feed => feed.croppedImage);
+
+    return {
+      content: textareaContent,
+      images: images.filter(image => image !== null) as string[]
+    };
+  };
+
+  const registerFeedMutation = useMutation({
+    mutationFn: (reqObj: { content: string; images: string[] }) =>
+      registerFeedOnServer(reqObj),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        onClose();
+        router.push('/community');
+      } else {
+        console.error('게시글 등록 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시글 등록 중 오류:', error);
+    }
+  });
+
+  const editFeedMutation = useMutation({
+    mutationFn: (reqObj: { id: number; content: string; images: string[] }) =>
+      editFeedOnServer(reqObj),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        onClose();
+      } else {
+        console.error('게시글 수정 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시글 수정 중 오류:', error);
+    }
+  });
 
   return (
     <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-white">
       <Topbar type="save" title="글쓰기" onClose={onClose} onClick={saveFeed} />
-      <article className="p-4">
+      <article className="p-4 pt-14">
         <Textarea
           propObj={{
             placeholder: '사람들과 나누고 싶은 일들을 공유해보세요!',
@@ -60,12 +121,12 @@ const FeedWriteModal = ({ onClose }: FeedWriteModalProps) => {
           /3
         </h5>
         <div className="flex gap-3 px-4">
-          {feedImageList.map((diary, idx: number) => {
+          {feedImageList.map((feed, idx: number) => {
             if (idx === 0 || feedImageList[idx - 1].croppedImage) {
               return (
                 <ImageUploader
-                  key={diary.key}
-                  data={diary}
+                  key={feed.key}
+                  data={feed}
                   deleteBtn
                   onUpload={setFeedImageList}
                   images={feedImageList}

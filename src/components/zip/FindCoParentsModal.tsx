@@ -4,7 +4,7 @@ import { CoParent } from '@/app/zip/catType';
 import Topbar from '@/components/ui/Topbar';
 import CoParentsRequestBottomSheet from '@/components/zip/CoParentsRequestBottomSheet';
 import { useCoParents } from '@/hooks/useCats';
-import { requestCoParenting } from '@/services/cat';
+import { cancelCoParenting, requestCoParenting } from '@/services/cat';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import Image from 'next/image';
@@ -26,7 +26,7 @@ const FindCoParentsModal = ({
   const [coParentList, setCoParentList] = useState<CoParent[]>([]);
   const [coParent, setCoParent] = useState<CoParent>({} as CoParent);
 
-  const { data: coParents, isError, isLoading } = useCoParents(keyword);
+  const { data: coParents, isError, isLoading } = useCoParents(keyword, catId);
 
   useEffect(() => {
     setCoParentList(coParents?.items);
@@ -55,10 +55,35 @@ const FindCoParentsModal = ({
         console.log('error');
       } else {
         queryClient.invalidateQueries({ queryKey: ['coParents'] });
-        console.log('data', data);
       }
     }
   });
+
+  const cancelCoParentingMutation = useMutation({
+    mutationFn: (reqObj: { catId: number; memberId: number }) =>
+      cancelCoParenting(reqObj),
+    onSuccess: (data: any) => {
+      if (data.status !== 'OK') {
+        console.log('error');
+      } else {
+        queryClient.invalidateQueries({ queryKey: ['coParents'] });
+      }
+    }
+  });
+
+  const toggleRequestCoParenting = () => {
+    if (coParent.isRequested) {
+      cancelCoParentingMutation.mutate({
+        catId: catId,
+        memberId: coParent.memberId
+      });
+      return;
+    }
+    requestCoParentingMutation.mutate({
+      catId: catId,
+      memberId: coParent.memberId
+    });
+  };
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) return <div>에러</div>;
@@ -91,16 +116,26 @@ const FindCoParentsModal = ({
                   <p className="text-body-2 text-gr-900">{coParent.nickname}</p>
                 </div>
                 <button
-                  className="flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] bg-pr-500 text-btn-2 text-gr-white"
+                  className={`flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] text-btn-2 ${
+                    coParent.isRequested
+                      ? 'border border-pr-500 bg-gr-white text-pr-500'
+                      : 'bg-pr-500 text-gr-white'
+                  }`}
                   onClick={() => openBottomSheet(coParent)}
                 >
-                  <p>요청</p>
-                  <Image
-                    src="/images/icons/plane.svg"
-                    alt="send"
-                    width={20}
-                    height={20}
-                  />
+                  {coParent.isRequested ? (
+                    <p>요청취소</p>
+                  ) : (
+                    <>
+                      <p>요청</p>
+                      <Image
+                        src="/images/icons/plane.svg"
+                        alt="send"
+                        width={20}
+                        height={20}
+                      />
+                    </>
+                  )}
                 </button>
               </li>
             ))}
@@ -114,12 +149,7 @@ const FindCoParentsModal = ({
         isVisible={requestBottomSheet}
         setIsVisible={setRequestBottomSheet}
         coParent={coParent}
-        requestCoParenting={() =>
-          requestCoParentingMutation.mutate({
-            catId: catId,
-            memberId: coParent.memberId
-          })
-        }
+        toggleRequestCoParenting={toggleRequestCoParenting}
       />
     </div>
   );

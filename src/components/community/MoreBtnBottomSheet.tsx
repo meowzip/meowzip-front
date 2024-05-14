@@ -1,8 +1,6 @@
-import { showWriteModalAtom } from '@/atoms/modalAtom';
 import ActionButton from '@/components/ui/ActionButton';
 import BottomSheet from '@/components/ui/BottomSheet';
 import Modal from '@/components/ui/Modal';
-import { useAtom } from 'jotai';
 import React, { useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
@@ -13,6 +11,8 @@ interface MoreBtnBottomSheetProps {
   isMine: boolean;
   onDelete?: () => void;
   onEdit?: () => void;
+  onBlock?: () => void;
+  showWriteModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
@@ -22,9 +22,10 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   name,
   isMine,
   onDelete,
-  onEdit
+  onEdit,
+  onBlock,
+  showWriteModal
 }) => {
-  const [showWriteModal, setShowWriteModal] = useAtom(showWriteModalAtom);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{
     title: string;
@@ -34,7 +35,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
 
   const openModalEdit = () => {
     setIsVisible(false);
-    setShowWriteModal(true);
+    showWriteModal && showWriteModal(true);
     onEdit && onEdit();
   };
   const openModalDelete = () => {
@@ -64,20 +65,17 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     setModalContent({
       title: `${name}님을 \n 차단하시겠습니까?`,
       body: '차단된 사용자의 게시글과 댓글을 회원님께 \n 더이상 표시하지 않습니다.',
-      primaryBtn: { content: '차단하기', onClick: () => blockFeed() }
+      primaryBtn: {
+        content: '차단하기',
+        onClick: () => {
+          onBlock && onBlock(), setShowModal(false);
+        }
+      }
     });
   };
 
-  const deleteFeed = () => {
-    console.log('삭제 버튼 클릭');
-    setShowModal(false);
-  };
   const reportFeed = () => {
     console.log('신고 버튼 클릭');
-    setShowModal(false);
-  };
-  const blockFeed = () => {
-    console.log('차단 버튼 클릭');
     setShowModal(false);
   };
 
