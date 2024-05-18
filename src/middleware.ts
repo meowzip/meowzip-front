@@ -10,7 +10,7 @@ const fetchExtended = returnFetchJson({
   }
 });
 
-const PROTECTED_ROUTES: string[] = ['/diary'];
+const PROTECTED_ROUTES: string[] = ['/diary', '/zip', '/community'];
 const PUBLIC_ROUTES: string[] = ['/signin', '/signup'];
 
 export const middleware = async (
