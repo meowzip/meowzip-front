@@ -10,8 +10,12 @@ import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import { getCookie } from '@/utils/common';
 import { jwtDecode } from 'jwt-decode';
+import Topbar from '@/components/ui/Topbar';
+import { useRouter } from 'next/navigation';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
+  const router = useRouter();
+
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
 
@@ -60,41 +64,43 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   ];
 
   return (
-    <div className="pb-[100px]">
-      <FeedCard
-        variant="detail"
-        content={feedDetail}
-        openBottomSheet={() => setEditBottomSheet(true)}
-      />
-
-      {comments.length === 0 && (
-        <p className="py-8 text-center text-sm text-gr-300">
-          아직 댓글이 없어요
-          <br />
-          가장 먼저 댓글을 남겨보세요.
-        </p>
-      )}
-
-      {comments.map((comment, index) => (
-        <div key={index} className="py-4">
-          <Comment comment={comment} />
-        </div>
-      ))}
-      <WriteComment />
-      {showWriteModal && (
-        <FeedWriteModal
-          onClose={() => setShowWriteModal(false)}
-          feedDetail={feedDetail}
+    <>
+      <Topbar type="modal" title="피드" onClose={() => router.back()} />
+      <div className="pb-[100px] pt-12">
+        <FeedCard
+          variant="detail"
+          content={feedDetail}
+          openBottomSheet={() => setEditBottomSheet(true)}
         />
-      )}
-      <MoreBtnBottomSheet
-        isVisible={editBottomSheet}
-        setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-        heightPercent={['50%', '40%']}
-        isMine={decodedToken.memberId === feedDetail?.memberId}
-        showWriteModal={setShowWriteModal}
-      />
-    </div>
+        {comments.length === 0 && (
+          <p className="py-8 text-center text-sm text-gr-300">
+            아직 댓글이 없어요
+            <br />
+            가장 먼저 댓글을 남겨보세요.
+          </p>
+        )}
+
+        {comments.map((comment, index) => (
+          <div key={index} className="py-4">
+            <Comment comment={comment} />
+          </div>
+        ))}
+        <WriteComment />
+        {showWriteModal && (
+          <FeedWriteModal
+            onClose={() => setShowWriteModal(false)}
+            feedDetail={feedDetail}
+          />
+        )}
+        <MoreBtnBottomSheet
+          isVisible={editBottomSheet}
+          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+          heightPercent={['50%', '40%']}
+          isMine={decodedToken.memberId === feedDetail?.memberId}
+          showWriteModal={setShowWriteModal}
+        />
+      </div>
+    </>
   );
 };
 
