@@ -45,13 +45,21 @@ const ImageUploader = ({
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        onUpload(prevList =>
-          prevList.map(item =>
-            item.key === key
-              ? { ...item, imageSrc: reader.result as string }
-              : item
-          )
-        );
+        onUpload((prevList: any) => {
+          if (Array.isArray(prevList)) {
+            return prevList.map(item =>
+              item.key === key
+                ? { ...item, imageSrc: reader.result as string }
+                : item
+            );
+          } else {
+            return {
+              ...prevList,
+              imageSrc: reader.result as string,
+              croppedImage: null
+            };
+          }
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -142,7 +150,10 @@ const ImageUploader = ({
                 width={16}
                 height={16}
                 stroke="var(--gr-white)"
-                onClick={() => deleteImage(data?.key)}
+                onClick={() => {
+                  console.log(data?.key);
+                  deleteImage(data?.key);
+                }}
               />
             ) : (
               <PencilIcon

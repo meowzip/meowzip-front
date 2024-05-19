@@ -24,30 +24,43 @@ export default function CatRegisterModal({
     isNeutered: 'UNDEFINED',
     metAt: '',
     memo: '',
-    image: null
+    image: null,
+    croppedImage: null
   });
 
-  console.log(catData, 'catData');
+  console.log('catData', catData);
 
   return (
     <div>
       <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
         <Funnel>
           <Funnel.Step name="name">
-            <CatName setStep={() => setStep('photo')} setCatData={setCatData} />
+            <CatName
+              setStep={() => setStep('photo')}
+              setCatData={setCatData}
+              setPrev={onClose}
+            />
           </Funnel.Step>
           <Funnel.Step name="photo">
             <CatPhoto
               setStep={() => setStep('info')}
               setCatData={setCatData}
-              catData={catData}
+              setPrev={() => setStep('name')}
             />
           </Funnel.Step>
           <Funnel.Step name="info">
-            <CatInfo setStep={() => setStep('complete')} />
+            <CatInfo
+              setStep={() => setStep('complete')}
+              catData={catData}
+              setCatData={setCatData}
+              setPrev={() => setStep('photo')}
+            />
           </Funnel.Step>
           <Funnel.Step name="complete">
-            <CatRegisterComplete setStep={onClose} />
+            <CatRegisterComplete
+              catData={catData}
+              setPrev={() => setStep('info')}
+            />
           </Funnel.Step>
         </Funnel>
       </div>

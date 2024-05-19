@@ -11,7 +11,9 @@ const useCropper = (
   key: number,
   imageSrc: string | null,
   imageElement: MutableRefObject<CropperImageElement | null>,
-  onUpload: Dispatch<SetStateAction<ImageUploadData[]>>
+  onUpload:
+    | Dispatch<SetStateAction<ImageUploadData[]>>
+    | Dispatch<SetStateAction<ImageUploadData>>
 ) => {
   useEffect(() => {
     if (imageElement.current && imageSrc) {
@@ -46,11 +48,21 @@ const useCropper = (
       // Canvas를 이미지로 변환하여 압축 && 이미지 품질 설정
       const resizedImage = resizedCanvas.toDataURL('image/jpeg', 0.8);
 
-      onUpload(prevList =>
-        prevList.map(item =>
-          item.key === key ? { ...item, croppedImage: resizedImage } : item
-        )
-      );
+      onUpload((prevList: any) => {
+        if (Array.isArray(prevList)) {
+          return prevList.map(item =>
+            item.key === key ? { ...item, croppedImage: resizedImage } : item
+          );
+        } else if (
+          prevList &&
+          typeof prevList === 'object' &&
+          !Array.isArray(prevList)
+        ) {
+          return { ...prevList, croppedImage: resizedImage };
+        } else {
+          return [];
+        }
+      });
     }
   };
 

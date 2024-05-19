@@ -3,7 +3,7 @@ import { base64ToFile } from '@/utils/common';
 import { getCookie } from '@/utils/common';
 import { objectToQueryString } from '@/utils/common';
 import { fetchExtendedAuth } from '@/services/nickname';
-
+import { CatRegisterReqObj } from '@/app/zip/catType';
 const memberToken = getCookie('Authorization');
 
 export const fetchExtended = returnFetch({
@@ -11,26 +11,25 @@ export const fetchExtended = returnFetch({
   headers: { Authorization: `Bearer ${memberToken}` }
 });
 
-export const registerCat = async (reqObj: {
-  name: string;
-  sex: string;
-  isNeutered: boolean;
-  metAt: string;
-  memo: string;
-  profileImage: string | null;
-}) => {
+export const registerCat = async (catDataObj: CatRegisterReqObj) => {
+  const { croppedImage, image, ...catObj } = catDataObj;
   const formData = new FormData();
-  formData.append('nickname', reqObj.name);
 
-  const file = base64ToFile(reqObj.profileImage, 'image.jpg');
-  file && formData.append('profileImage', file);
+  formData.append(
+    'cat',
+    new Blob([JSON.stringify(catObj)], {
+      type: 'application/json'
+    })
+  );
 
-  const requestOptions = { method: 'PATCH', body: formData };
+  const file = base64ToFile(image, 'image.jpg');
+  file && formData.append('image', file);
+
+  const requestOptions = { method: 'POST', body: formData };
 
   try {
     const response = await fetchExtended('/cats', requestOptions);
-
-    return response.body;
+    return response;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {

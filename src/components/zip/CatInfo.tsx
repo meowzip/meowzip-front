@@ -1,8 +1,210 @@
+import { useState } from 'react';
+import { CatRegisterReqObj } from '@/app/zip/catType';
 import Topbar from '../ui/Topbar';
+import Textarea from '../ui/Textarea';
+import BottomSheet from '../ui/BottomSheet';
+import DatePicker from '../common/DatePicker';
+import { Button } from '../ui/Button';
+import { registerCat } from '@/services/cat';
 
 interface SignInMainProps {
   setStep: () => void;
+  catData: CatRegisterReqObj;
+  setCatData: (data: any) => void;
+  setPrev: () => void;
 }
-export default function CatInfo({ setStep }: SignInMainProps) {
-  return <Topbar type="zip" title="고양이 등록(3/3)" onClick={setStep} />;
+
+const todayToDateString = () => {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
+  const day = today.getDate();
+  return `${year}년  /  ${month}월  /  ${day}일`;
+};
+
+export default function CatInfo({
+  setStep,
+  catData,
+  setCatData,
+  setPrev
+}: SignInMainProps) {
+  const [openBottomSheet, setOpenBottomSheet] = useState(false);
+  const [textareaContent, setTextAreaContent] = useState('');
+  const [selectedSex, setSelectedSex] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | number>(
+    todayToDateString
+  );
+  const [selectedNeutered, setSelectedNeutered] = useState<string | null>(null);
+
+  const handleSelectedChange = (selected: string) => {
+    setSelectedItem(selected);
+    setOpenBottomSheet(false);
+  };
+
+  const formatDate = (input: string): string => {
+    const parts = input
+      .replace(/년|월|일/g, '')
+      .split('/')
+      .map(part => part.trim());
+
+    const year = parts[0];
+    const month = parts[1].padStart(2, '0');
+    const day = parts[2].padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const updateCatData = () => {
+    const updatedCatData = {
+      ...catData,
+      sex: selectedSex,
+      isNeutered: selectedNeutered,
+      metAt: formatDate(selectedItem as string),
+      memo: textareaContent
+    };
+
+    setCatData(updatedCatData);
+    return updatedCatData;
+  };
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] overflow-y-auto bg-gr-white">
+      <Topbar
+        type="zip"
+        title="고양이 등록(3/3)"
+        onClick={async () => {
+          const newCatData = updateCatData();
+          const response = await registerCat(newCatData);
+          if (response && response.status === 200) {
+            setStep();
+          }
+        }}
+        onClose={setPrev}
+      />
+      <section className="mt-12 flex flex-col items-center self-stretch p-6">
+        <article className="flex w-full flex-col items-center justify-center gap-4 pb-8">
+          <div
+            className="flex h-16 w-16 items-center justify-center gap-[10px] rounded-full bg-contain bg-no-repeat"
+            style={{ backgroundImage: `url(${catData?.croppedImage})` }}
+          ></div>
+          <p className="flex flex-col justify-center text-center text-heading-1 font-bold">
+            <span className="block">
+              <span className="text-pr-500">{catData?.name}</span>
+              <span>에 대해</span>
+            </span>
+            <span className="block">알려주세요!</span>
+          </p>
+        </article>
+        <article className="flex flex-col items-start self-stretch pb-6">
+          <article className="flex items-center self-stretch">
+            <p className="font-bold">성별이 뭐예요?</p>
+          </article>
+          <article className="flex items-start justify-between gap-3 self-stretch pt-4">
+            <Button
+              variant={selectedSex === 'F' ? 'tertiaryReverse' : 'tertiary'}
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('F')}
+            >
+              여아
+              <img src={`/images/icons/gender-F.svg`} alt="Female" />
+            </Button>
+            <Button
+              variant={selectedSex === 'M' ? 'tertiaryReverse' : 'tertiary'}
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('M')}
+            >
+              남아
+              <img src={`/images/icons/gender-M.svg`} alt="Male" />
+            </Button>
+            <Button
+              variant={
+                selectedSex === 'UNDEFINED' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('UNDEFINED')}
+            >
+              <img src={`/images/icons/question.svg`} alt="Unknown" />
+              모름
+            </Button>
+          </article>
+        </article>
+        <article className="flex flex-col items-center self-stretch pb-6">
+          <p className="flex items-center gap-1 self-stretch py-3 font-bold">
+            언제 처음 만나셨나요?
+          </p>
+          <button
+            className="flex h-12 items-center justify-center self-stretch rounded-lg border border-gr-100"
+            onClick={() => setOpenBottomSheet(true)}
+          >
+            {selectedItem}
+          </button>
+        </article>
+        <article className="flex flex-col items-start self-stretch pb-6">
+          <article className="flex items-center self-stretch">
+            <p className="py-3 font-bold">중성화(TNR)했나요?</p>
+          </article>
+          <article className="flex items-start justify-center gap-3 self-stretch">
+            <Button
+              variant={
+                selectedNeutered === 'Y' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('Y')}
+            >
+              완료
+            </Button>
+            <Button
+              variant={
+                selectedNeutered === 'N' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('N')}
+            >
+              미완료
+            </Button>
+            <Button
+              variant={
+                selectedNeutered === 'UNDEFINED'
+                  ? 'tertiaryReverse'
+                  : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('UNDEFINED')}
+            >
+              모름
+            </Button>
+          </article>
+        </article>
+        <article className="flex flex-col items-start self-stretch pb-20">
+          <p className="flex items-center self-stretch py-3 font-bold">
+            특징이 있나요?
+          </p>
+          <Textarea
+            propObj={{
+              placeholder: '예) 애교 많고 사람 좋아하는 개냥이에요.',
+              content: textareaContent,
+              maxLength: 100,
+              style:
+                'border border-gr-100 rounded-lg h-[120px] p-4 w-full min-h-[160px]'
+            }}
+            onChange={e => setTextAreaContent(e)}
+          />
+        </article>
+      </section>
+      <BottomSheet
+        isVisible={openBottomSheet}
+        setIsVisible={setOpenBottomSheet}
+        topBar={<div className="font-medium">날짜 선택</div>}
+        heightPercent={['70%', '50%']}
+      >
+        <DatePicker onSelectedChange={handleSelectedChange} />
+      </BottomSheet>
+    </div>
+  );
 }
