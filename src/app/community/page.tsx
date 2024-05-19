@@ -12,8 +12,6 @@ import {
   getFeedsOnServer
 } from '@/services/community';
 import { FeedType } from '@/app/community/communityType';
-import { getCookie } from '@/utils/common';
-import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 
 const CommunityPage = () => {
@@ -23,9 +21,6 @@ const CommunityPage = () => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
   const [feed, setFeed] = useState<FeedType>();
-
-  const token = getCookie('Authorization');
-  const decodedToken: { memberId: number } = jwtDecode(token);
 
   const { data: feedList } = useQuery({
     queryKey: ['feeds'],
@@ -98,17 +93,19 @@ const CommunityPage = () => {
             feedDetail={feed}
           />
         )}
-        <MoreBtnBottomSheet
-          isVisible={editBottomSheet}
-          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-          heightPercent={['50%', '40%']}
-          name={feed?.memberNickname}
-          isMine={decodedToken.memberId === feed?.memberId}
-          onDelete={deleteFeed}
-          onEdit={() => setShowWriteModal(true)}
-          onBlock={blockFeed}
-          showWriteModal={setShowWriteModal}
-        />
+        {editBottomSheet && (
+          <MoreBtnBottomSheet
+            isVisible={editBottomSheet}
+            setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+            heightPercent={['50%', '40%']}
+            name={feed?.memberNickname}
+            memberId={feed?.memberId}
+            onDelete={deleteFeed}
+            onEdit={() => setShowWriteModal(true)}
+            onBlock={blockFeed}
+            showWriteModal={setShowWriteModal}
+          />
+        )}
       </div>
     </>
   );

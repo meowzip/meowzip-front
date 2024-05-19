@@ -8,8 +8,6 @@ import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
 import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
-import { getCookie } from '@/utils/common';
-import { jwtDecode } from 'jwt-decode';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
 
@@ -18,9 +16,6 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
-
-  const token = getCookie('Authorization');
-  const decodedToken: { memberId: number } = jwtDecode(token);
 
   const { data: feedDetail } = useQuery({
     queryKey: ['feedDetail', slug],
@@ -96,7 +91,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}
-          isMine={decodedToken.memberId === feedDetail?.memberId}
+          memberId={feedDetail?.memberId}
           showWriteModal={setShowWriteModal}
         />
       </div>

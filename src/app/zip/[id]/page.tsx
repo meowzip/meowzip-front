@@ -104,7 +104,6 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
         name={'name'}
-        isMine={true}
         // onDelete={deleteDidary}
         onEdit={() => setShowCatEditModal(true)}
       />
