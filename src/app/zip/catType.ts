@@ -29,11 +29,11 @@ export interface CatDetail extends CatBaseType {
 }
 
 export interface CatRegisterReqObj {
-  name: string;
-  sex: 'F' | 'M';
-  isNeutered: 'Y' | 'N' | 'UNDEFINED';
-  metAt: string;
-  memo: string;
-  image: File | null;
   croppedImage: string | null;
+  image: string | null;
+  isNeutered: string | null;
+  memo: string;
+  metAt: string;
+  name: string;
+  sex: string | null;
 }

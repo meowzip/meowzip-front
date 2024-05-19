@@ -4,6 +4,8 @@ import Topbar from '../ui/Topbar';
 import Textarea from '../ui/Textarea';
 import BottomSheet from '../ui/BottomSheet';
 import DatePicker from '../common/DatePicker';
+import { Button } from '../ui/Button';
+import { registerCat } from '@/services/cat';
 
 interface SignInMainProps {
   setStep: () => void;
@@ -23,17 +25,46 @@ const todayToDateString = () => {
 export default function CatInfo({
   setStep,
   catData,
+  setCatData,
   setPrev
 }: SignInMainProps) {
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
+  const [textareaContent, setTextAreaContent] = useState('');
+  const [selectedSex, setSelectedSex] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | number>(
     todayToDateString
   );
-  const [textareaContent, setTextAreaContent] = useState('');
+  const [selectedNeutered, setSelectedNeutered] = useState<string | null>(null);
 
   const handleSelectedChange = (selected: string) => {
     setSelectedItem(selected);
     setOpenBottomSheet(false);
+  };
+
+  const formatDate = (input: string): string => {
+    const parts = input
+      .replace(/년|월|일/g, '')
+      .split('/')
+      .map(part => part.trim());
+
+    const year = parts[0];
+    const month = parts[1].padStart(2, '0');
+    const day = parts[2].padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const updateCatData = () => {
+    const updatedCatData = {
+      ...catData,
+      sex: selectedSex,
+      isNeutered: selectedNeutered,
+      metAt: formatDate(selectedItem as string),
+      memo: textareaContent
+    };
+
+    setCatData(updatedCatData);
+    return updatedCatData;
   };
 
   return (
@@ -41,7 +72,13 @@ export default function CatInfo({
       <Topbar
         type="zip"
         title="고양이 등록(3/3)"
-        onClick={setStep}
+        onClick={async () => {
+          const newCatData = updateCatData();
+          const response = await registerCat(newCatData);
+          if (response && response.status === 200) {
+            setStep();
+          }
+        }}
         onClose={setPrev}
       />
       <section className="mt-12 flex flex-col items-center self-stretch p-6">
@@ -62,21 +99,36 @@ export default function CatInfo({
           <article className="flex items-center self-stretch">
             <p className="font-bold">성별이 뭐예요?</p>
           </article>
-          <article className="flex items-start justify-center gap-3 self-stretch">
-            {/* <Button variant="tertiary" size="lg" className="rounded-8">
-              tertiary
-            </Button> */}
-            <div className="flex w-[375px] items-center justify-center px-3 py-[10px]">
-              <img src={`/images/icons/gender-F.svg`} alt="Female" />
+          <article className="flex items-start justify-between gap-3 self-stretch pt-4">
+            <Button
+              variant={selectedSex === 'F' ? 'tertiaryReverse' : 'tertiary'}
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('F')}
+            >
               여아
-            </div>
-            <div className="flex w-[375px] items-center justify-center px-3 py-[10px]">
-              <img src={`/images/icons/gender-M.svg`} alt="" />
+              <img src={`/images/icons/gender-F.svg`} alt="Female" />
+            </Button>
+            <Button
+              variant={selectedSex === 'M' ? 'tertiaryReverse' : 'tertiary'}
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('M')}
+            >
               남아
-            </div>
-            <div className="flex w-[375px] items-center justify-center px-3 py-[10px]">
+              <img src={`/images/icons/gender-M.svg`} alt="Male" />
+            </Button>
+            <Button
+              variant={
+                selectedSex === 'UNDEFINED' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedSex('UNDEFINED')}
+            >
+              <img src={`/images/icons/question.svg`} alt="Unknown" />
               모름
-            </div>
+            </Button>
           </article>
         </article>
         <article className="flex flex-col items-center self-stretch pb-6">
@@ -95,15 +147,38 @@ export default function CatInfo({
             <p className="py-3 font-bold">중성화(TNR)했나요?</p>
           </article>
           <article className="flex items-start justify-center gap-3 self-stretch">
-            <div className="flex w-[375px] items-center justify-center rounded-lg bg-gr-50 px-3 py-[10px]">
+            <Button
+              variant={
+                selectedNeutered === 'Y' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('Y')}
+            >
               완료
-            </div>
-            <div className="flex w-[375px] items-center justify-center rounded-lg bg-gr-50 px-3 py-[10px]">
+            </Button>
+            <Button
+              variant={
+                selectedNeutered === 'N' ? 'tertiaryReverse' : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('N')}
+            >
               미완료
-            </div>
-            <div className="flex w-[375px] items-center justify-center rounded-lg bg-gr-50 px-3 py-[10px]">
+            </Button>
+            <Button
+              variant={
+                selectedNeutered === 'UNDEFINED'
+                  ? 'tertiaryReverse'
+                  : 'tertiary'
+              }
+              size="lg"
+              className="rounded-8"
+              onClick={() => setSelectedNeutered('UNDEFINED')}
+            >
               모름
-            </div>
+            </Button>
           </article>
         </article>
         <article className="flex flex-col items-start self-stretch pb-20">
