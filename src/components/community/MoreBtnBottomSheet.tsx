@@ -1,6 +1,8 @@
 import ActionButton from '@/components/ui/ActionButton';
 import BottomSheet from '@/components/ui/BottomSheet';
 import Modal from '@/components/ui/Modal';
+import { getCookie } from '@/utils/common';
+import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
@@ -8,7 +10,7 @@ interface MoreBtnBottomSheetProps {
   setIsVisible: (isVisible: boolean) => void;
   heightPercent: string[];
   name?: string;
-  isMine: boolean;
+  memberId?: number;
   onDelete?: () => void;
   onEdit?: () => void;
   onBlock?: () => void;
@@ -20,7 +22,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   setIsVisible,
   heightPercent,
   name,
-  isMine,
+  memberId,
   onDelete,
   onEdit,
   onBlock,
@@ -32,6 +34,9 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     body?: string;
     primaryBtn: { content: string; onClick: () => void };
   }>();
+
+  const token = getCookie('Authorization');
+  const decodedToken: { memberId: number } = jwtDecode(token);
 
   const openModalEdit = () => {
     setIsVisible(false);
@@ -88,7 +93,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
         heightPercent={heightPercent}
       >
         <div className="px-4">
-          {isMine ? (
+          {decodedToken?.memberId === memberId ? (
             <>
               <ActionButton
                 icon="/images/icons/edit.svg"

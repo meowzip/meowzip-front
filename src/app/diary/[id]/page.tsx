@@ -5,8 +5,6 @@ import Topbar from '@/components/ui/Topbar';
 import Carousel from '@/components/ui/Carousel';
 import Label from '@/components/ui/Label';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { getCookie } from '@/utils/common';
-import { jwtDecode } from 'jwt-decode';
 import { useMutation } from '@tanstack/react-query';
 import { deleteDiaryOnServer } from '@/services/diary';
 import { useDiaryDetail } from '@/hooks/useDiaries';
@@ -21,9 +19,6 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   const [showWriteModal, setShowWriteModal] = useState(false);
 
   const { data: diaryDetail, isError, isLoading } = useDiaryDetail(id);
-
-  const token = getCookie('Authorization');
-  const decodedToken: { memberId: number } = jwtDecode(token);
 
   useEffect(() => {
     if (!diaryDetail) return;
@@ -111,7 +106,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
         name={diaryDetail.memberNickname}
-        isMine={decodedToken.memberId === diaryDetail.memberId}
+        memberId={diaryDetail?.memberId}
         onDelete={deleteDidary}
         onEdit={() => setShowWriteModal(true)}
       />
