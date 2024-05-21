@@ -16,6 +16,7 @@ import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
 import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
 import CatInfo from '@/components/zip/CatInfo';
+import { deleteCat } from '@/services/cat';
 
 const coParents = [
   {
@@ -111,7 +112,10 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         heightPercent={['50%', '40%']}
         name={catDetail?.name}
         memberId={catDetail?.id}
-        // onDelete={deleteDidary}
+        onDelete={() => {
+          deleteCat(catDetail?.id);
+          location.href = '/zip';
+        }}
         onEdit={() => setShowCatEditModal(true)}
       />
       <CoParentsBottomSheet

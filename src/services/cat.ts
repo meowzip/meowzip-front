@@ -175,3 +175,21 @@ export const cancelCoParenting = async (reqObj: {
     }
   }
 };
+
+export const deleteCat = async (id: number) => {
+  const requestOptions = {
+    method: 'DELETE'
+  };
+
+  try {
+    const response = await fetchExtended(`/cats/${id}`, requestOptions);
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('고양이 삭제 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('고양이 삭제 중 오류 발생:');
+    }
+  }
+};
