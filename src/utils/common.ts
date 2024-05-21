@@ -167,3 +167,30 @@ export const parseCookieString = (cookieString: string): CookieAttributes => {
   });
   return attributes as CookieAttributes;
 };
+
+export const logFormData = (
+  formData: FormData | URLSearchParams | Record<string, string>
+) => {
+  if (formData instanceof FormData) {
+    for (let pair of formData.entries()) {
+      if (pair[1] instanceof File) {
+        const reader = new FileReader();
+        reader.onload = event => {
+          if (!event.target?.result) return;
+          console.log(`${pair[0]}:`, event.target.result);
+        };
+        reader.readAsText(pair[1]);
+      } else {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+    }
+  } else if (formData instanceof URLSearchParams) {
+    for (let pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+  } else {
+    for (let key in formData) {
+      console.log(`${key}: ${formData[key]}`);
+    }
+  }
+};

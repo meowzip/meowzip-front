@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 interface SignInMainProps {
   catData: CatRegisterReqObj;
   setPrev: () => void;
+  setStep: () => void;
 }
 export default function CatRegisterComplete({
   catData,
-  setPrev
+  setPrev,
+  setStep
 }: SignInMainProps) {
   const router = useRouter();
   const handleMoveToDiaryWrite = () => {
@@ -44,7 +46,10 @@ export default function CatRegisterComplete({
             </button>
           </div>
           <div className="flex h-12 w-full flex-1 items-start justify-center gap-2 self-stretch">
-            <button className="flex flex-1 items-center justify-center gap-[10px] rounded-16 border border-gr-100 bg-blue-500 px-4 py-3 text-white">
+            <button
+              className="flex flex-1 items-center justify-center gap-[10px] rounded-16 border border-gr-100 bg-blue-500 px-4 py-3 text-white"
+              onClick={() => setStep()}
+            >
               모음집 보기
             </button>
           </div>

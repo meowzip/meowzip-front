@@ -102,6 +102,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
         ))}
       </section>
       <MoreBtnBottomSheet
+        type="diary"
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}

@@ -48,7 +48,7 @@ const ZipPage = () => {
         {showWriteModal && (
           <CatRegisterModal
             onClose={() => setShowWriteModal(false)}
-            id={selectedModal.id}
+            id={selectedModal?.id ?? 0}
           />
         )}
       </section>
