@@ -1,17 +1,22 @@
-import { useState } from 'react';
-import { CatRegisterReqObj } from '@/app/zip/catType';
+import { useEffect, useState } from 'react';
+import { CatObjType, CatRegisterReqObj, CoParent } from '@/app/zip/catType';
 import Topbar from '../ui/Topbar';
 import Textarea from '../ui/Textarea';
 import BottomSheet from '../ui/BottomSheet';
 import DatePicker from '../common/DatePicker';
 import { Button } from '../ui/Button';
-import { registerCat } from '@/services/cat';
+import { editCat, registerCat } from '@/services/cat';
+import ImageUploader from '../diary/ImageUploader';
+import { Input } from '../ui/Input';
+import useCatNameHandler from '@/hooks/zip/useCatNameHandler';
+import { DiaryObj } from '@/app/diary/diaryType';
 
 interface SignInMainProps {
   setStep: () => void;
   catData: CatRegisterReqObj;
   setCatData: (data: any) => void;
   setPrev: () => void;
+  type: 'register' | 'edit';
 }
 
 const todayToDateString = () => {
@@ -26,7 +31,8 @@ export default function CatInfo({
   setStep,
   catData,
   setCatData,
-  setPrev
+  setPrev,
+  type
 }: SignInMainProps) {
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const [textareaContent, setTextAreaContent] = useState('');
@@ -35,11 +41,27 @@ export default function CatInfo({
     todayToDateString
   );
   const [selectedNeutered, setSelectedNeutered] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState({
+    key: 0,
+    imageSrc: '',
+    croppedImage: null
+  });
+  const { catName, handleCatNameChange } = useCatNameHandler();
+
+  useEffect(() => {
+    if (type === 'edit') {
+      setSelectedSex(catData.sex);
+      setSelectedNeutered(catData.isNeutered);
+      setSelectedItem(catData.metAt);
+      setTextAreaContent(catData.memo);
+    }
+  }, []);
 
   const handleSelectedChange = (selected: string) => {
     setSelectedItem(selected);
     setOpenBottomSheet(false);
   };
+  [];
 
   const formatDate = (input: string): string => {
     const parts = input
@@ -55,47 +77,97 @@ export default function CatInfo({
   };
 
   const updateCatData = () => {
-    const updatedCatData = {
+    const updatedCatData: CatObjType & {
+      id?: number;
+      diaries?: DiaryObj[];
+      coParents?: CoParent[];
+      isCoParented?: boolean;
+      dDay?: number;
+    } = {
       ...catData,
       sex: selectedSex,
       isNeutered: selectedNeutered,
       metAt: formatDate(selectedItem as string),
-      memo: textareaContent
+      memo: textareaContent,
+      image: type === 'edit' ? selectedImage.croppedImage : catData.image
     };
 
     setCatData(updatedCatData);
     return updatedCatData;
   };
 
+  const handleOnClick = async () => {
+    const newCatData = updateCatData();
+    if (type === 'edit') {
+      const response = await editCat(newCatData);
+      if (response && response.status === 200) {
+        setStep();
+      }
+    } else if (type === 'register') {
+      const response = await registerCat(newCatData);
+      if (response && response.status === 200) {
+        setStep();
+      }
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] overflow-y-auto bg-gr-white">
       <Topbar
         type="zip"
-        title="고양이 등록(3/3)"
-        onClick={async () => {
-          const newCatData = updateCatData();
-          const response = await registerCat(newCatData);
-          if (response && response.status === 200) {
-            setStep();
-          }
-        }}
+        title={type === 'register' ? '고양이 등록(3/3)' : '정보 수정'}
+        onClick={handleOnClick}
         onClose={setPrev}
       />
       <section className="mt-12 flex flex-col items-center self-stretch p-6">
         <article className="flex w-full flex-col items-center justify-center gap-4 pb-8">
-          <div
-            className="flex h-16 w-16 items-center justify-center gap-[10px] rounded-full bg-contain bg-no-repeat"
-            style={{ backgroundImage: `url(${catData?.croppedImage})` }}
-          ></div>
-          <p className="flex flex-col justify-center text-center text-heading-1 font-bold">
-            <span className="block">
-              <span className="text-pr-500">{catData?.name}</span>
-              <span>에 대해</span>
-            </span>
-            <span className="block">알려주세요!</span>
-          </p>
+          {type === 'register' ? (
+            <>
+              <div
+                className="flex h-16 w-16 items-center justify-center gap-[10px] rounded-full bg-contain bg-no-repeat"
+                style={{ backgroundImage: `url(${catData?.croppedImage})` }}
+              ></div>
+              <p className="flex flex-col justify-center text-center text-heading-1 font-bold">
+                <span className="block">
+                  <span className="text-pr-500">{catData?.name}</span>
+                  <span>에 대해</span>
+                </span>
+                <span className="block">알려주세요!</span>
+              </p>
+            </>
+          ) : (
+            <ImageUploader
+              width="w-[120px]"
+              height="h-[120px]"
+              radius="rounded-[48px]"
+              preview={
+                <img className="h-full w-full" src={catData?.imageUrl} />
+              }
+              editBtn
+              data={selectedImage}
+              onUpload={(data: any) => {
+                setSelectedImage(data);
+              }}
+            />
+          )}
         </article>
         <article className="flex flex-col items-start self-stretch pb-6">
+          {type === 'edit' && (
+            <article className="flex flex-col items-center self-stretch pb-6">
+              <p className="flex items-center gap-1 self-stretch py-3 font-bold">
+                이름
+              </p>
+              <div className="w-full">
+                <Input
+                  variant="outlined"
+                  placeholder={catData?.name}
+                  className="flex flex-shrink-0 flex-col items-center justify-end"
+                  value={catName.value}
+                  onChange={handleCatNameChange}
+                />
+              </div>
+            </article>
+          )}
           <article className="flex items-center self-stretch">
             <p className="font-bold">성별이 뭐예요?</p>
           </article>

@@ -1,17 +1,32 @@
+import { DiaryObj } from '@/app/diary/diaryType';
 import returnFetch from '@/utils/returnFetch';
 import { base64ToFile } from '@/utils/common';
 import { getCookie } from '@/utils/common';
 import { objectToQueryString } from '@/utils/common';
 import { fetchExtendedAuth } from '@/services/nickname';
-import { CatRegisterReqObj } from '@/app/zip/catType';
-const memberToken = getCookie('Authorization');
+import {
+  CatBaseType,
+  CatDetail,
+  CatObjType,
+  CatRegisterReqObj,
+  CoParent
+} from '@/app/zip/catType';
 
+const memberToken = getCookie('Authorization');
 export const fetchExtended = returnFetch({
   baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
   headers: { Authorization: `Bearer ${memberToken}` }
 });
 
-export const registerCat = async (catDataObj: CatRegisterReqObj) => {
+export const registerCat = async (
+  catDataObj: CatObjType & {
+    id?: number;
+    diaries?: DiaryObj[];
+    coParents?: CoParent[];
+    isCoParented?: boolean;
+    dDay?: number;
+  }
+) => {
   const { croppedImage, image, ...catObj } = catDataObj;
   const formData = new FormData();
 
@@ -36,6 +51,49 @@ export const registerCat = async (catDataObj: CatRegisterReqObj) => {
       throw new Error('고양이 등록 중 오류 발생:' + error.message);
     } else {
       throw new Error('고양이 등록 중 오류 발생:');
+    }
+  }
+};
+
+export const editCat = async (
+  catDataObj: CatObjType & {
+    id?: number;
+    diaries?: DiaryObj[];
+    coParents?: CoParent[];
+    isCoParented?: boolean;
+    dDay?: number;
+  }
+) => {
+  const {
+    imageUrl,
+    coParents,
+    diaries,
+    isCoParented,
+    dDay,
+    id,
+    image,
+    ...catObj
+  } = catDataObj;
+
+  const formData = new FormData();
+  const catBlob = new Blob([JSON.stringify(catObj)], {
+    type: 'application/json'
+  });
+  formData.append('cat', catBlob);
+  const file = base64ToFile(image, 'image.jpg');
+  file && formData.append('image', file);
+
+  const requestOptions = { method: 'PATCH', body: formData };
+
+  try {
+    const response = await fetchExtended(`/cats/${id}`, requestOptions);
+    return response;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('고양이 수정 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('고양이 수정 중 오류 발생:');
     }
   }
 };

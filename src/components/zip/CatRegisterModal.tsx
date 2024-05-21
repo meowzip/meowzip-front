@@ -50,6 +50,7 @@ export default function CatRegisterModal({
           </Funnel.Step>
           <Funnel.Step name="info">
             <CatInfo
+              type="register"
               setStep={() => setStep('complete')}
               catData={catData}
               setCatData={setCatData}
@@ -60,6 +61,7 @@ export default function CatRegisterModal({
             <CatRegisterComplete
               catData={catData}
               setPrev={() => setStep('info')}
+              setStep={onClose}
             />
           </Funnel.Step>
         </Funnel>

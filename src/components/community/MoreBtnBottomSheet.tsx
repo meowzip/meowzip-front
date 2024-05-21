@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
+  type: 'community' | 'zip' | 'diary';
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   heightPercent: string[];
@@ -18,6 +19,7 @@ interface MoreBtnBottomSheetProps {
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
+  type,
   isVisible,
   setIsVisible,
   heightPercent,
@@ -93,7 +95,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
         heightPercent={heightPercent}
       >
         <div className="px-4">
-          {decodedToken?.memberId === memberId ? (
+          {decodedToken?.memberId === memberId || type === 'zip' ? (
             <>
               <ActionButton
                 icon="/images/icons/edit.svg"

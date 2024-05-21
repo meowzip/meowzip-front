@@ -88,6 +88,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           />
         )}
         <MoreBtnBottomSheet
+          type="community"
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}

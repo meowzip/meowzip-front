@@ -9,12 +9,13 @@ import DetailCardLayout from '@/components/zip/DetailCardLayout';
 import { useCatDetail } from '@/hooks/useCats';
 import { DiaryObj } from '@/app/diary/diaryType';
 import ZipDetailCoParents from '@/components/zip/ZipDetailCoParents';
-import { CoParent } from '@/app/zip/catType';
+import { CatRegisterReqObj, CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
 import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
 import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
 import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
+import CatInfo from '@/components/zip/CatInfo';
 
 const coParents = [
   {
@@ -46,10 +47,14 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const [showCoParentsModal, setShowCoParentsModal] = useState(false);
 
   const { data: catDetail, isError, isLoading } = useCatDetail(id);
+  const [catData, setCatData] = useState<CatRegisterReqObj | null>(null);
 
   useEffect(() => {
     if (!catDetail) return;
-  }, [id]);
+    if (catDetail !== undefined && catData === null) {
+      setCatData(catDetail);
+    }
+  }, [catDetail, id, catData]);
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) return <div>에러</div>;
@@ -100,10 +105,12 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
       </section>
 
       <MoreBtnBottomSheet
+        type="zip"
         isVisible={editBottomSheet}
         setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
         heightPercent={['50%', '40%']}
-        name={'name'}
+        name={catDetail?.name}
+        memberId={catDetail?.id}
         // onDelete={deleteDidary}
         onEdit={() => setShowCatEditModal(true)}
       />
@@ -112,6 +119,16 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         setIsVisible={() => setCoParentsBottomSheet(!coParentsBottomSheet)}
         coParents={coParents}
       />
+
+      {showCatEditModal && catData && (
+        <CatInfo
+          type="edit"
+          setStep={() => setShowCatEditModal(false)}
+          catData={catData}
+          setCatData={setCatData}
+          setPrev={() => setShowCatEditModal(false)}
+        />
+      )}
 
       {showCoParentsModal && (
         <FindCoParentsModal
