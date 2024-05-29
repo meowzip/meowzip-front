@@ -10,6 +10,8 @@ import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
+import { getFeedComments } from '@/services/community';
+import { CommentType } from '@/types/communityType';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -23,40 +25,17 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     staleTime: 1000 * 60 * 10
   });
 
+  const { data: commentsData } = useQuery({
+    queryKey: ['feedComments', slug],
+    queryFn: () => getFeedComments(slug),
+    staleTime: 1000 * 60 * 10
+  });
+
+  const comments = commentsData?.items || [];
+
   useEffect(() => {
     if (!feedDetail) return;
   }, [slug]);
-
-  const comments = [
-    {
-      type: 'comment',
-      commentId: 1,
-      writerId: 'NAME',
-      writerNickname: 'NAME',
-      content:
-        '치즈냥이 너무 귀엽네용 골골대니 순하디순한냥인가봐요. 우리집 애기랑 똑같이 생겼어요~ 맞팔하고 자주 소통해요 😄',
-      writerProfile: '',
-      registerTime: '5분 전'
-    },
-    {
-      type: 'reply',
-      commentId: 2,
-      writerId: 'NAME2',
-      writerNickname: '발랄한캔따개',
-      content: '그쵸. 완전 순해요~ 맞팔했습니당 🙌🏻',
-      writerProfile: '',
-      registerTime: '5분 전'
-    },
-    {
-      type: 'comment',
-      commentId: 3,
-      writerId: 'NAME3',
-      writerNickname: '발랄한캔따개',
-      content: '저희 아이도 치즈냥이에요~ 애교 진짜 많죠!?',
-      writerProfile: '',
-      registerTime: '5분 전'
-    }
-  ];
 
   return (
     <>
@@ -79,7 +58,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           </p>
         )}
 
-        {comments.map((comment, index) => (
+        {comments.map((comment: CommentType, index: number) => (
           <div key={index} className="py-4">
             <Comment comment={comment} />
           </div>

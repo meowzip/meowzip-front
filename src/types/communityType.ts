@@ -11,3 +11,13 @@ export interface FeedType {
   isBookmarked: boolean;
   createdAt: string;
 }
+
+export interface CommentType {
+  type: string;
+  commentId: number;
+  writerId: string;
+  writerNickname: string;
+  content: string;
+  writerProfile: string;
+  registerTime: string;
+}

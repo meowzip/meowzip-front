@@ -163,3 +163,14 @@ export const editFeedOnServer = async (reqObj: {
     }
   }
 };
+
+export const getFeedComments = async (postId: number) => {
+  try {
+    const response = await fetchExtended(`/community/${postId}/comments`);
+    if (!response.ok) return;
+    const data = response.json();
+    return data;
+  } catch {
+    throw new Error('댓글 조회 중 오류 발생');
+  }
+};

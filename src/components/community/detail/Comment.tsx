@@ -1,17 +1,9 @@
 import Profile from '@/components/ui/Profile';
 import Image from 'next/image';
 import Label from '@/components/ui/Label';
-export interface CommentProps {
-  type: string;
-  commentId: number;
-  writerId: string;
-  writerNickname: string;
-  content: string;
-  writerProfile: string;
-  registerTime: string;
-}
+import { CommentType } from '@/types/communityType';
 
-export default function Comment({ comment }: { comment: CommentProps }) {
+export default function Comment({ comment }: { comment: CommentType }) {
   return (
     <div
       className={`${

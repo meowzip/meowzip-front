@@ -11,7 +11,7 @@ import {
   deleteFeedOnServer,
   getFeedsOnServer
 } from '@/services/community';
-import { FeedType } from '@/app/community/communityType';
+import { FeedType } from '@/types/communityType';
 import { useRouter } from 'next/navigation';
 
 const CommunityPage = () => {
