@@ -60,7 +60,11 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   return (
     <>
-      <Topbar type="modal" title="피드" onClose={() => router.back()} />
+      <Topbar type="three">
+        <Topbar.Back onClick={() => router.back()} />
+        <Topbar.Title title="피드" />
+        <Topbar.Empty />
+      </Topbar>
       <div className="pb-[100px] pt-12">
         <FeedCard
           variant="detail"

@@ -25,12 +25,11 @@ export default function CatName({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-      <Topbar
-        type="zip"
-        title="고양이 등록(1/3)"
-        onClick={handleNext}
-        onClose={setPrev}
-      />
+      <Topbar type="three">
+        <Topbar.Back onClick={setPrev} />
+        <Topbar.Title title="고양이 등록(1/3)" />
+        <Topbar.Complete onClick={handleNext} />
+      </Topbar>
       <section className="mt-16 w-full px-6 text-gray-800">
         <div className="mb-[32px]">
           <p className="text-[24px] font-bold">냥이 이름이 뭐예요?</p>

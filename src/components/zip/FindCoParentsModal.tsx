@@ -91,11 +91,10 @@ const FindCoParentsModal = ({
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
       <section>
-        <Topbar
-          type="search"
-          onClose={() => setShowCoParentsModal(false)}
-          onChange={handleNickname}
-        />
+        <Topbar type="two" className="justify-start">
+          <Topbar.Back onClick={() => setShowCoParentsModal(false)} />
+          <Topbar.SearchInput onChange={handleNickname} />
+        </Topbar>
       </section>
       <ul className="p-4 pt-12">
         {coParentList ? (

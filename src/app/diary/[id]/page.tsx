@@ -46,12 +46,11 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
 
   return (
     <div className="fixed left-0 top-0 z-10 h-screen overflow-y-auto bg-gr-white">
-      <Topbar
-        type="modal"
-        title="날짜 props"
-        onClose={() => router.back()}
-        onClick={() => setEditBottomSheet(true)}
-      />
+      <Topbar type="two">
+        <Topbar.Back onClick={() => router.back()} />
+        <Topbar.Title title="날짜 props" />
+        <Topbar.More onClick={() => setEditBottomSheet(true)} />
+      </Topbar>
       <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-12">
         <h5 className="text-end text-body-4 text-gr-500">
           {diaryDetail.memberNickname} • {diaryDetail.caredTime}

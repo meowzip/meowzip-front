@@ -155,12 +155,11 @@ const DiaryWriteModal = ({
 
   return (
     <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
-      <Topbar
-        type="save"
-        title="일지쓰기"
-        onClose={onClose}
-        onClick={saveDiary}
-      />
+      <Topbar type="three">
+        <Topbar.Back onClick={onClose} />
+        <Topbar.Title title="일지쓰기" />
+        <Topbar.Complete onClick={saveDiary} />
+      </Topbar>
       <section className="flex items-center justify-between px-4 py-2">
         <h5 className="py-2 text-heading-5 text-gr-900">돌봄 시간</h5>
         <Button
