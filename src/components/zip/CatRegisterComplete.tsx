@@ -19,7 +19,11 @@ export default function CatRegisterComplete({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-      <Topbar type="zip" title="등록 완료" hideRight onClose={setPrev} />
+      <Topbar type="three">
+        <Topbar.Back onClick={setPrev} />
+        <Topbar.Title title="등록 완료" />
+        <Topbar.Empty />
+      </Topbar>
       <section className="mt-12 flex h-fit flex-col items-center self-stretch p-6">
         <article className="flex max-w-screen-sm flex-1 flex-col items-center self-stretch pt-[60px]">
           <div

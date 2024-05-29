@@ -131,17 +131,18 @@ const SignupAgreeBottomSheet = ({
       </BottomSheet>
       {termsModal !== '' && (
         <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto  bg-gr-white">
-          <Topbar
-            title={
-              termsModal === TermsType.TERMS_OF_USE
-                ? '서비스 이용약관'
-                : '개인정보 수집 및 처리방침'
-            }
-            type="modal"
-            hideRight
-            onClick={() => setTermsModal('')}
-          />
-          <div className="flex flex-col gap-2 px-2 py-2">
+          <Topbar type="three">
+            <Topbar.Back onClick={() => setTermsModal('')} />
+            <Topbar.Title
+              title={
+                termsModal === TermsType.TERMS_OF_USE
+                  ? '서비스 이용약관'
+                  : '개인정보 수집 및 처리방침'
+              }
+            />
+            <Topbar.Empty />
+          </Topbar>
+          <div className="flex flex-col gap-2 px-2 py-2 pt-12">
             <Terms type={termsModal} />
           </div>
         </div>

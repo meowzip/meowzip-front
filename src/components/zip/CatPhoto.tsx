@@ -71,19 +71,20 @@ export default function CatPhoto({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-      <Topbar
-        type="zip"
-        title="고양이 등록(2/3)"
-        onClose={setPrev}
-        onClick={() => {
-          setCatData((prev: CatRegisterReqObj) => ({
-            ...prev,
-            image: selectedImage.imageSrc,
-            croppedImage: selectedImage.croppedImage
-          }));
-          setStep();
-        }}
-      />
+      <Topbar type="three">
+        <Topbar.Back onClick={setPrev} />
+        <Topbar.Title title="고양이 등록(2/3)" />
+        <Topbar.Complete
+          onClick={() => {
+            setCatData((prev: CatRegisterReqObj) => ({
+              ...prev,
+              image: selectedImage.imageSrc,
+              croppedImage: selectedImage.croppedImage
+            }));
+            setStep();
+          }}
+        />
+      </Topbar>
       <section className="pt-20">
         <div className="flex items-center justify-center">
           <img

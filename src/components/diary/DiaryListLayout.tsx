@@ -39,21 +39,21 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   return (
     <>
       {isCalendarOpen ? (
-        <Topbar
-          type="modal"
-          title={formattedMonth}
-          onClick={toggleBottomSheet}
-          onClose={() => setCalendarOpen(false)}
-          hideRight
-        />
+        <Topbar type="three">
+          <Topbar.Back onClick={() => setCalendarOpen(false)} />
+          <Topbar.Title title={formattedMonth} />
+          <Topbar.Complete onClick={toggleBottomSheet} />
+        </Topbar>
       ) : (
-        <Topbar
-          type="home"
-          title="title 1"
-          onClick={toggleCalendar}
-          onLeftClick={() => changeSearchDiaryDate('dayBefore')}
-          onRightClick={() => changeSearchDiaryDate('nextDay')}
-        />
+        <Topbar type="three">
+          <Topbar.Home />
+          <Topbar.Today
+            onClick={toggleCalendar}
+            onLeftClick={() => changeSearchDiaryDate('dayBefore')}
+            onRightClick={() => changeSearchDiaryDate('nextDay')}
+          />
+          <Topbar.Calendar onClick={toggleCalendar} />
+        </Topbar>
       )}
       <CalendarModal
         isOpen={isCalendarOpen}

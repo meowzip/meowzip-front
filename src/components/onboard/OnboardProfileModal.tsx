@@ -124,12 +124,11 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] bg-gr-white">
-        <Topbar
-          type="save"
-          title="프로필 설정"
-          onClose={onClose}
-          onClick={updateProfile}
-        />
+        <Topbar type="three">
+          <Topbar.Back onClick={onClose} />
+          <Topbar.Title title="프로필 설정" />
+          <Topbar.Complete onClick={updateProfile} />
+        </Topbar>
         <section className="px-6 pt-5">
           <OnboardProfileUploader data={profileImage} />
           <div className="py-6 text-center text-body-4 text-gr-black">

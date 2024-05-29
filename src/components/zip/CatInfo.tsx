@@ -113,12 +113,13 @@ export default function CatInfo({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 h-full min-w-[320px] overflow-y-auto bg-gr-white">
-      <Topbar
-        type="zip"
-        title={type === 'register' ? '고양이 등록(3/3)' : '정보 수정'}
-        onClick={handleOnClick}
-        onClose={setPrev}
-      />
+      <Topbar type="three">
+        <Topbar.Back onClick={setPrev} />
+        <Topbar.Title
+          title={type === 'register' ? '고양이 등록(3/3)' : '정보 수정'}
+        />
+        <Topbar.Complete onClick={handleOnClick} />
+      </Topbar>
       <section className="mt-12 flex flex-col items-center self-stretch p-6">
         <article className="flex w-full flex-col items-center justify-center gap-4 pb-8">
           {type === 'register' ? (

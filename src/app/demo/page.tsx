@@ -195,11 +195,9 @@ const DemoPage = () => {
       <section className="border-b p-3">
         <h1 className="pb-1">🐻 Topbar</h1>
         <div className="flex flex-col gap-2">
-          <Topbar type="home" />
-          <Topbar type="page" title="title 1" />
-          <Topbar type="modal" title="title 2" />
-          <Topbar type="search" />
-          <Topbar type="bottom" title="title 3" />
+          <Topbar type="one">
+            <Topbar.Title title="피드" />
+          </Topbar>
         </div>
       </section>
       <section className="border-b p-3">

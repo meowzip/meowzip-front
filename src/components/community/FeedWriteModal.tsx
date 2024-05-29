@@ -101,7 +101,11 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
 
   return (
     <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-white">
-      <Topbar type="save" title="글쓰기" onClose={onClose} onClick={saveFeed} />
+      <Topbar type="three">
+        <Topbar.Back onClick={onClose} />
+        <Topbar.Title title="글쓰기" />
+        <Topbar.Complete onClick={saveFeed} />
+      </Topbar>
       <article className="p-4 pt-14">
         <Textarea
           propObj={{
