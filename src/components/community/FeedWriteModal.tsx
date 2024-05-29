@@ -4,7 +4,7 @@ import Textarea from '@/components/ui/Textarea';
 import Topbar from '@/components/ui/Topbar';
 import { useAtom } from 'jotai';
 import React, { useEffect, useState } from 'react';
-import { FeedType } from '@/app/community/communityType';
+import { FeedType } from '@/types/communityType';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { editFeedOnServer, registerFeedOnServer } from '@/services/community';

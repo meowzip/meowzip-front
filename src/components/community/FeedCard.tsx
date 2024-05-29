@@ -5,7 +5,7 @@ import UserArea from './feed/UserArea';
 import Carousel from '@/components/ui/Carousel';
 import ButtonArea from '@/components/community/feed/ButtonArea';
 import { useRouter } from 'next/navigation';
-import { FeedType } from '@/app/community/communityType';
+import { FeedType } from '@/types/communityType';
 
 interface FeedCardProps {
   variant?: 'detail';
