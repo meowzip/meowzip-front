@@ -3,20 +3,7 @@ import BackIcon from '../../../public/images/icons/back.svg';
 import { Input } from '@/components/ui/Input';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
-import { HTMLAttributes, createContext, useContext, useState } from 'react';
-
-interface BaseProps {
-  type: 'home' | 'page' | 'modal' | 'search' | 'bottom' | 'save' | 'zip';
-  title?: string;
-  hideLeft?: boolean;
-  hideRight?: boolean;
-  onClose?: () => void;
-  onClick?: () => void;
-  onCenterClick?: () => void;
-  onLeftClick?: () => void;
-  onRightClick?: () => void;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { HTMLAttributes } from 'react';
 
 const Home = () => {
   return (
