@@ -15,6 +15,7 @@ interface MoreBtnBottomSheetProps {
   onDelete?: () => void;
   onEdit?: () => void;
   onBlock?: () => void;
+  onReport?: () => void;
   showWriteModal?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -28,6 +29,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   onDelete,
   onEdit,
   onBlock,
+  onReport,
   showWriteModal
 }) => {
   const [showModal, setShowModal] = useState(false);
@@ -63,7 +65,12 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     setShowModal(true);
     setModalContent({
       title: '해당 게시글을 \n 신고하시겠습니까?',
-      primaryBtn: { content: '신고하기', onClick: () => reportFeed() }
+      primaryBtn: {
+        content: '신고하기',
+        onClick: () => {
+          onReport && onReport(), setShowModal(false);
+        }
+      }
     });
   };
   const openModalBlock = () => {
@@ -79,11 +86,6 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
         }
       }
     });
-  };
-
-  const reportFeed = () => {
-    console.log('신고 버튼 클릭');
-    setShowModal(false);
   };
 
   return (

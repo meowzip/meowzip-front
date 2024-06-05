@@ -71,6 +71,29 @@ export const blockWriterOnServer = async (postId: number) => {
   }
 };
 
+export const reportFeedOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'POST'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/report`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 신고 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 신고 중 오류 발생:');
+    }
+  }
+};
+
 export const registerFeedOnServer = async (reqObj: {
   content: string;
   images: string[];
