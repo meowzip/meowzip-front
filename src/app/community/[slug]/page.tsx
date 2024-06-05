@@ -12,6 +12,7 @@ import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
 import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
+import useFeedMutations from '@/hooks/community/useFeedMutations';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -30,6 +31,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     queryFn: () => getFeedComments(slug),
     staleTime: 1000 * 60 * 10
   });
+
+  const { deleteFeed, blockFeed, reportFeed } = useFeedMutations();
 
   const comments = commentsData?.items || [];
 
@@ -75,7 +78,12 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}
+          name={feedDetail?.memberNickname}
           memberId={feedDetail?.memberId}
+          onDelete={() => feedDetail && deleteFeed(feedDetail)}
+          onEdit={() => setShowWriteModal(true)}
+          onBlock={() => feedDetail && blockFeed(feedDetail)}
+          onReport={() => feedDetail && reportFeed(feedDetail)}
           showWriteModal={setShowWriteModal}
         />
       </div>
