@@ -5,14 +5,11 @@ import FeedCard from '../../components/community/FeedCard';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  blockWriterOnServer,
-  deleteFeedOnServer,
-  getFeedsOnServer
-} from '@/services/community';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { getFeedsOnServer } from '@/services/community';
 import { FeedType } from '@/types/communityType';
 import { useRouter } from 'next/navigation';
+import useFeedMutations from '@/hooks/community/useFeedMutations';
 
 const CommunityPage = () => {
   const queryClient = useQueryClient();
@@ -28,41 +25,7 @@ const CommunityPage = () => {
     staleTime: 1000 * 60 * 10
   });
 
-  const deleteFeed = () => {
-    if (!feed) return;
-    deleteFeedMutation.mutate(feed?.id);
-  };
-  const deleteFeedMutation = useMutation({
-    mutationFn: (id: number) => deleteFeedOnServer(id),
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['feeds'] });
-      } else {
-        console.error('게시물 삭제 중 오류:', response.message);
-      }
-    },
-    onError: (error: any) => {
-      console.error('게시물 삭제 중 오류:', error);
-    }
-  });
-
-  const blockFeed = () => {
-    if (!feed) return;
-    blockFeedMutation.mutate(feed?.id);
-  };
-  const blockFeedMutation = useMutation({
-    mutationFn: (id: number) => blockWriterOnServer(id),
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['feeds'] });
-      } else {
-        console.error('게시물 차단 중 오류:', response.message);
-      }
-    },
-    onError: (error: any) => {
-      console.error('게시물 차단 중 오류:', error);
-    }
-  });
+  const { deleteFeed, blockFeed, reportFeed } = useFeedMutations();
 
   useEffect(() => {
     if (showWriteModal) return;
@@ -93,20 +56,19 @@ const CommunityPage = () => {
             feedDetail={feed}
           />
         )}
-        {editBottomSheet && (
-          <MoreBtnBottomSheet
-            type="community"
-            isVisible={editBottomSheet}
-            setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-            heightPercent={['50%', '40%']}
-            name={feed?.memberNickname}
-            memberId={feed?.memberId}
-            onDelete={deleteFeed}
-            onEdit={() => setShowWriteModal(true)}
-            onBlock={blockFeed}
-            showWriteModal={setShowWriteModal}
-          />
-        )}
+        <MoreBtnBottomSheet
+          type="community"
+          isVisible={editBottomSheet}
+          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+          heightPercent={['50%', '40%']}
+          name={feed?.memberNickname}
+          memberId={feed?.memberId}
+          onDelete={() => feed && deleteFeed(feed)}
+          onEdit={() => setShowWriteModal(true)}
+          onBlock={() => feed && blockFeed(feed)}
+          onReport={() => feed && reportFeed(feed)}
+          showWriteModal={setShowWriteModal}
+        />
       </div>
     </>
   );
