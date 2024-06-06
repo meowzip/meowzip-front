@@ -1,7 +1,11 @@
 import {
   blockWriterOnServer,
+  bookmarkFeedOnServer,
+  cancelBookmarkFeedOnServer,
   deleteFeedOnServer,
-  reportFeedOnServer
+  likeFeedOnServer,
+  reportFeedOnServer,
+  unlikeFeedOnServer
 } from '@/services/community';
 import { FeedType } from '@/types/communityType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -66,7 +70,95 @@ const useFeedMutations = () => {
     }
   });
 
-  return { deleteFeed, blockFeed, reportFeed };
+  const likeFeed = (feed: FeedType) => {
+    if (!feed) return;
+    likeFeedMutation.mutate(feed?.id);
+  };
+
+  const likeFeedMutation = useMutation({
+    mutationFn: (id: number) => likeFeedOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({ queryKey: ['feedDetail'] });
+      } else {
+        console.error('게시물 좋아요 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시물 좋아요 중 오류:', error);
+    }
+  });
+
+  const unLikeFeed = (feed: FeedType) => {
+    if (!feed) return;
+    unlikeFeedMutation.mutate(feed?.id);
+  };
+
+  const unlikeFeedMutation = useMutation({
+    mutationFn: (id: number) => unlikeFeedOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({ queryKey: ['feedDetail'] });
+      } else {
+        console.error('게시물 좋아요 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시물 좋아요 중 오류:', error);
+    }
+  });
+
+  const bookmarkFeed = (feed: FeedType) => {
+    if (!feed) return;
+    bookmarkFeedMutation.mutate(feed?.id);
+  };
+
+  const bookmarkFeedMutation = useMutation({
+    mutationFn: (id: number) => bookmarkFeedOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({ queryKey: ['feedDetail'] });
+      } else {
+        console.error('게시물 좋아요 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시물 좋아요 중 오류:', error);
+    }
+  });
+
+  const cancelBookmarkFeed = (feed: FeedType) => {
+    if (!feed) return;
+    cancelBookmarkFeedMutation.mutate(feed?.id);
+  };
+
+  const cancelBookmarkFeedMutation = useMutation({
+    mutationFn: (id: number) => cancelBookmarkFeedOnServer(id),
+    onSuccess: (response: any) => {
+      if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({ queryKey: ['feedDetail'] });
+      } else {
+        console.error('게시물 좋아요 중 오류:', response.message);
+      }
+    },
+    onError: (error: any) => {
+      console.error('게시물 좋아요 중 오류:', error);
+    }
+  });
+
+  return {
+    deleteFeed,
+    blockFeed,
+    reportFeed,
+    likeFeed,
+    unLikeFeed,
+    bookmarkFeed,
+    cancelBookmarkFeed
+  };
 };
 
 export default useFeedMutations;

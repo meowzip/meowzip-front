@@ -25,7 +25,15 @@ const CommunityPage = () => {
     staleTime: 1000 * 60 * 10
   });
 
-  const { deleteFeed, blockFeed, reportFeed } = useFeedMutations();
+  const {
+    deleteFeed,
+    blockFeed,
+    reportFeed,
+    likeFeed,
+    unLikeFeed,
+    bookmarkFeed,
+    cancelBookmarkFeed
+  } = useFeedMutations();
 
   useEffect(() => {
     if (showWriteModal) return;
@@ -47,6 +55,10 @@ const CommunityPage = () => {
               setFeed(feed);
               setEditBottomSheet(true);
             }}
+            likeFeed={() => likeFeed(feed)}
+            unLikeFeed={() => unLikeFeed(feed)}
+            bookmarkFeed={() => bookmarkFeed(feed)}
+            cancelBookmarkFeed={() => cancelBookmarkFeed(feed)}
           />
         ))}
         <FloatingActionButton onClick={() => setShowWriteModal(true)} />

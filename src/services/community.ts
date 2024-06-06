@@ -187,6 +187,98 @@ export const editFeedOnServer = async (reqObj: {
   }
 };
 
+export const likeFeedOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'POST'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/like`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 좋아요 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 좋아요 중 오류 발생:');
+    }
+  }
+};
+
+export const unlikeFeedOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'DELETE'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/like`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 좋아요 취소 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 좋아요 취소 중 오류 발생:');
+    }
+  }
+};
+
+export const bookmarkFeedOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'POST'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/bookmark`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 북마크 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 북마크 중 오류 발생:');
+    }
+  }
+};
+
+export const cancelBookmarkFeedOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'DELETE'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/bookmark`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 북마크 취소 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 북마크 취소 중 오류 발생:');
+    }
+  }
+};
+
 export const getFeedComments = async (postId: number) => {
   try {
     const response = await fetchExtended(`/community/${postId}/comments`);

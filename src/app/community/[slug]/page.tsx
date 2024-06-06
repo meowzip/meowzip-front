@@ -32,7 +32,15 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     staleTime: 1000 * 60 * 10
   });
 
-  const { deleteFeed, blockFeed, reportFeed } = useFeedMutations();
+  const {
+    deleteFeed,
+    blockFeed,
+    reportFeed,
+    likeFeed,
+    unLikeFeed,
+    bookmarkFeed,
+    cancelBookmarkFeed
+  } = useFeedMutations();
 
   const comments = commentsData?.items || [];
 
@@ -52,6 +60,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           variant="detail"
           content={feedDetail}
           openBottomSheet={() => setEditBottomSheet(true)}
+          likeFeed={() => likeFeed(feedDetail)}
+          unLikeFeed={() => unLikeFeed(feedDetail)}
+          bookmarkFeed={() => bookmarkFeed(feedDetail)}
+          cancelBookmarkFeed={() => cancelBookmarkFeed(feedDetail)}
         />
         {comments.length === 0 && (
           <p className="py-8 text-center text-sm text-gr-300">
