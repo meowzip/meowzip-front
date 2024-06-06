@@ -12,13 +12,21 @@ interface FeedCardProps {
   content: FeedType;
   goToDetail?: () => void;
   openBottomSheet?: () => void;
+  likeFeed: () => void;
+  unLikeFeed: () => void;
+  bookmarkFeed: () => void;
+  cancelBookmarkFeed: () => void;
 }
 
 const FeedCard = ({
   variant,
   content,
   goToDetail,
-  openBottomSheet
+  openBottomSheet,
+  likeFeed,
+  unLikeFeed,
+  bookmarkFeed,
+  cancelBookmarkFeed
 }: FeedCardProps) => {
   const router = useRouter();
 
@@ -34,24 +42,24 @@ const FeedCard = ({
     }
   }, [content?.content]);
 
-  const clickLike = () => {
-    console.log('click like interaction');
-  };
-
-  const clickComment = () => {
-    if (variant === 'detail') return;
-    router.push(`/community/${content.id}`);
-  };
-
-  const clickBookmark = () => {
-    console.log('프로필의 저장한 글에 피드 저장');
-  };
-
   const toggleContent = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
     setMore(!showMore);
+  };
+
+  const toggleLike = () => {
+    content?.isLiked ? unLikeFeed() : likeFeed();
+  };
+
+  const toggleBookmark = () => {
+    content?.isBookmarked ? cancelBookmarkFeed() : bookmarkFeed();
+  };
+
+  const clickComment = () => {
+    if (variant === 'detail') return;
+    router.push(`/community/${content.id}`);
   };
 
   return (
@@ -90,10 +98,12 @@ const FeedCard = ({
       )}
       <ButtonArea
         like={content?.likeCount}
+        isLiked={content?.isLiked}
+        isBookmarked={content?.isBookmarked}
         comment={content?.commentCount}
-        clickLike={clickLike}
+        toggleLike={toggleLike}
+        toggleBookmark={toggleBookmark}
         clickComment={clickComment}
-        clickBookmark={clickBookmark}
       />
     </div>
   );

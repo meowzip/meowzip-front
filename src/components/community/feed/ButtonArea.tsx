@@ -3,23 +3,32 @@ import React from 'react';
 
 interface ButtonAreaProps {
   like: number;
+  isLiked: boolean;
+  isBookmarked: boolean;
   comment: number;
-  clickLike: () => void;
+  toggleLike: () => void;
+  toggleBookmark: () => void;
   clickComment: () => void;
-  clickBookmark: () => void;
 }
 
 const ButtonArea = ({
   like,
   comment,
-  clickLike,
-  clickComment,
-  clickBookmark
+  isLiked,
+  isBookmarked,
+  toggleLike,
+  toggleBookmark,
+  clickComment
 }: ButtonAreaProps) => {
   return (
     <div className="flex justify-between py-4">
       <div className="flex gap-[10px]">
-        <div className="flex items-center gap-[2px]" onClick={clickLike}>
+        <div
+          className="flex items-center gap-[2px]"
+          onClick={e => {
+            e.stopPropagation(), toggleLike();
+          }}
+        >
           <Image
             src="/images/icons/heart.svg"
             alt="heart"
@@ -42,8 +51,11 @@ const ButtonArea = ({
         src="/images/icons/bookmark.svg"
         alt="bookmark"
         width={24}
+        // onClick={toggleBookmark}
+        onClick={e => {
+          e.stopPropagation(), toggleBookmark();
+        }}
         height={24}
-        onClick={clickBookmark}
       />
     </div>
   );
