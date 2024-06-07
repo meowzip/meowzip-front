@@ -78,7 +78,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
             <Comment comment={comment} />
           </div>
         ))}
-        <WriteComment />
+        <WriteComment feedId={feedDetail?.id} />
         {showWriteModal && (
           <FeedWriteModal
             onClose={() => setShowWriteModal(false)}

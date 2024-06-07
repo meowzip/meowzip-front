@@ -50,7 +50,9 @@ export const deleteFeedOnServer = async (id: number) => {
 
 export const blockWriterOnServer = async (postId: number) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ postId })
   };
 
   try {
@@ -287,5 +289,46 @@ export const getFeedComments = async (postId: number) => {
     return data;
   } catch {
     throw new Error('댓글 조회 중 오류 발생');
+  }
+};
+
+export const registerCommentOnServer = async (reqObj: {
+  postId: number;
+  content: string;
+  parentCommentId?: number;
+}) => {
+  const reqParams: {
+    content: string;
+    parentCommentId?: number;
+  } = {
+    content: reqObj.content
+  };
+
+  if (reqObj.parentCommentId) {
+    reqParams.parentCommentId = reqObj.parentCommentId;
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reqParams)
+  };
+
+  try {
+    const response = await fetchExtended(
+      `/community/${reqObj.postId}/comments`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    console.log('댓글 등록 data:', data);
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('게시글 차단 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('게시글 차단 중 오류 발생:');
+    }
   }
 };
