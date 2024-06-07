@@ -1,8 +1,9 @@
+import { registerCommentOnServer } from '@/services/community';
 import { Input } from '../../ui/Input';
 import Profile from '../../ui/Profile';
 import { useState } from 'react';
 
-export default function WriteComment() {
+export default function WriteComment({ feedId }: { feedId: number }) {
   const [comment, setComment] = useState('');
 
   return (
@@ -19,11 +20,17 @@ export default function WriteComment() {
       />
       <Input
         variant="comment"
-        disabled
+        // disabled
         suffix="등록"
         placeholder="댓글을 남겨주세요."
         onChange={e => setComment(e.target.value)}
-        suffixClickHandler={() => console.log('등록')}
+        suffixClickHandler={() => {
+          registerCommentOnServer({
+            postId: feedId,
+            content: comment
+          });
+          setComment('');
+        }}
       />
     </div>
   );
