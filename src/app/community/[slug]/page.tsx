@@ -44,7 +44,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     cancelBookmarkFeed
   } = useFeedMutations();
 
-  const { blockComment, reportComment } = useCommentMutation();
+  const { blockComment, reportComment, deleteComment } = useCommentMutation();
 
   const comments = commentsData?.items || [];
 
@@ -111,9 +111,12 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
             selectedComment ? selectedComment?.memberId : feedDetail?.memberId
           }
           onDelete={() => {
-            if (!selectedComment) {
-              deleteFeed(feedDetail);
-            }
+            selectedComment
+              ? deleteComment({
+                  postId: feedDetail?.id,
+                  commentId: selectedComment?.id
+                })
+              : deleteFeed(feedDetail);
           }}
           onEdit={() => {
             if (!selectedComment) {

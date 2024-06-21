@@ -31,13 +31,32 @@ const useCommentMutation = () => {
     }
   });
 
-  const deleteComment = (feed: CommentType) => {
-    if (!feed) return;
-    deleteCommentMutation.mutate(feed?.id);
+  const deleteComment = ({
+    postId,
+    commentId
+  }: {
+    postId: number;
+    commentId: number;
+  }) => {
+    if (!commentId) return;
+    deleteCommentMutation.mutate({
+      postId,
+      commentId
+    });
   };
 
   const deleteCommentMutation = useMutation({
-    mutationFn: (id: number) => deleteCommentOnServer(id),
+    mutationFn: ({
+      postId,
+      commentId
+    }: {
+      postId: number;
+      commentId: number;
+    }) =>
+      deleteCommentOnServer({
+        postId,
+        commentId
+      }),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
         queryClient.invalidateQueries({ queryKey: ['comments'] });
