@@ -13,12 +13,14 @@ import { useRouter } from 'next/navigation';
 import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
+import useCommentMutation from '@/hooks/community/useCommentMutation';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
+  const [selectedComment, setSelectedComment] = useState<CommentType>();
 
   const { data: feedDetail } = useQuery({
     queryKey: ['feedDetail', slug],
@@ -27,7 +29,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   });
 
   const { data: commentsData } = useQuery({
-    queryKey: ['feedComments', slug],
+    queryKey: ['comments', slug],
     queryFn: () => getFeedComments(slug),
     staleTime: 1000 * 60 * 10
   });
@@ -41,6 +43,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     bookmarkFeed,
     cancelBookmarkFeed
   } = useFeedMutations();
+
+  const { blockComment, reportComment } = useCommentMutation();
 
   const comments = commentsData?.items || [];
 
@@ -59,7 +63,9 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         <FeedCard
           variant="detail"
           content={feedDetail}
-          openBottomSheet={() => setEditBottomSheet(true)}
+          openBottomSheet={() => {
+            setEditBottomSheet(true);
+          }}
           likeFeed={() => likeFeed(feedDetail)}
           unLikeFeed={() => unLikeFeed(feedDetail)}
           bookmarkFeed={() => bookmarkFeed(feedDetail)}
@@ -75,7 +81,15 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
         {comments.map((comment: CommentType, index: number) => (
           <div key={index} className="py-4">
-            <Comment comment={comment} />
+            <Comment
+              comment={comment}
+              setEditBottomSheet={setEditBottomSheet}
+              setSelectedComment={
+                setSelectedComment as React.Dispatch<
+                  React.SetStateAction<CommentType>
+                >
+              }
+            />
           </div>
         ))}
         <WriteComment feedId={feedDetail?.id} />
@@ -86,17 +100,37 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           />
         )}
         <MoreBtnBottomSheet
-          type="community"
+          type={selectedComment ? 'comment' : 'feed'}
           isVisible={editBottomSheet}
-          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
+          setIsVisible={() => {
+            setEditBottomSheet(!editBottomSheet);
+          }}
           heightPercent={['50%', '40%']}
           name={feedDetail?.memberNickname}
-          memberId={feedDetail?.memberId}
-          onDelete={() => feedDetail && deleteFeed(feedDetail)}
-          onEdit={() => setShowWriteModal(true)}
-          onBlock={() => feedDetail && blockFeed(feedDetail)}
-          onReport={() => feedDetail && reportFeed(feedDetail)}
-          showWriteModal={setShowWriteModal}
+          memberId={
+            selectedComment ? selectedComment?.memberId : feedDetail?.memberId
+          }
+          onDelete={() => {
+            if (!selectedComment) {
+              deleteFeed(feedDetail);
+            }
+          }}
+          onEdit={() => {
+            if (!selectedComment) {
+              setShowWriteModal(true);
+            }
+          }}
+          onBlock={() => {
+            selectedComment
+              ? blockComment(feedDetail?.id)
+              : blockFeed(feedDetail);
+          }}
+          onReport={() => {
+            selectedComment
+              ? reportComment(feedDetail?.id, selectedComment?.id)
+              : reportFeed(feedDetail);
+          }}
+          showWriteModal={selectedComment ? undefined : setShowWriteModal}
         />
       </div>
     </>

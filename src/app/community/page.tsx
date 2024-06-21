@@ -69,7 +69,7 @@ const CommunityPage = () => {
           />
         )}
         <MoreBtnBottomSheet
-          type="community"
+          type="feed"
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}

@@ -1,10 +1,11 @@
-import { registerCommentOnServer } from '@/services/community';
+import useCommentMutation from '@/hooks/community/useCommentMutation';
 import { Input } from '../../ui/Input';
 import Profile from '../../ui/Profile';
 import { useState } from 'react';
 
 export default function WriteComment({ feedId }: { feedId: number }) {
   const [comment, setComment] = useState('');
+  const { registerComment } = useCommentMutation();
 
   return (
     <div className="fixed bottom-0 flex w-full items-center gap-2 border-t-[1px] border-gray-300 bg-white px-4 py-2">
@@ -20,15 +21,11 @@ export default function WriteComment({ feedId }: { feedId: number }) {
       />
       <Input
         variant="comment"
-        // disabled
         suffix="등록"
         placeholder="댓글을 남겨주세요."
         onChange={e => setComment(e.target.value)}
         suffixClickHandler={() => {
-          registerCommentOnServer({
-            postId: feedId,
-            content: comment
-          });
+          registerComment({ feedId, comment });
           setComment('');
         }}
       />
