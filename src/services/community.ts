@@ -332,3 +332,77 @@ export const registerCommentOnServer = async (reqObj: {
     }
   }
 };
+
+export const deleteCommentOnServer = async (commentId: number) => {
+  const requestOptions = {
+    method: 'DELETE'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/comments/${commentId}`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('댓글 삭제 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('댓글 삭제 중 오류 발생:');
+    }
+  }
+};
+export const blockCommentWriterOnServer = async (postId: number) => {
+  const requestOptions = {
+    method: 'POST'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/block-writer`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('댓글 작성자 차단 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('댓글 작성자 차단 중 오류 발생:');
+    }
+  }
+};
+
+export const reportCommentOnServer = async ({
+  postId,
+  commentId
+}: {
+  postId: number;
+  commentId: number;
+}) => {
+  const requestOptions = {
+    method: 'POST'
+  };
+
+  try {
+    const response = await fetchExtendedForm(
+      `/community/${postId}/comments/${commentId}/report`,
+      requestOptions
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('댓글 신고 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('댓글 신고 중 오류 발생:');
+    }
+  }
+};

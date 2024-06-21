@@ -66,7 +66,9 @@ const Picker = ({
         <ListItem
           key={index}
           isSelected={index === selected}
-          ref={el => (itemRefs.current[index] = el)}
+          ref={el => {
+            itemRefs.current[index] = el;
+          }}
         >
           {item}
         </ListItem>

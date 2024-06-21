@@ -6,7 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import React, { useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
-  type: 'community' | 'zip' | 'diary';
+  type: 'feed' | 'zip' | 'diary' | 'comment';
   isVisible: boolean;
   setIsVisible: (isVisible: boolean) => void;
   heightPercent: string[];
@@ -64,7 +64,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     setIsVisible(false);
     setShowModal(true);
     setModalContent({
-      title: '해당 게시글을 \n 신고하시겠습니까?',
+      title: `해당 ${type === 'comment' ? '댓글' : '게시글'}을 \n 신고하시겠습니까?`,
       primaryBtn: {
         content: '신고하기',
         onClick: () => {
@@ -97,7 +97,8 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
         heightPercent={heightPercent}
       >
         <div className="px-4">
-          {decodedToken?.memberId === memberId || type === 'zip' ? (
+          {(decodedToken?.memberId === memberId && type !== 'comment') ||
+          type === 'zip' ? (
             <>
               <ActionButton
                 icon="/images/icons/edit.svg"
@@ -114,7 +115,9 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
             <>
               <ActionButton
                 icon="/images/icons/edit.svg"
-                content="게시물 신고하기"
+                content={
+                  type === 'comment' ? '댓글 신고하기' : '게시물 신고하기'
+                }
                 onClick={() => openModalReport()}
               />
               <ActionButton

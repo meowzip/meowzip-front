@@ -13,11 +13,13 @@ export interface FeedType {
 }
 
 export interface CommentType {
-  type: string;
-  commentId: number;
-  writerId: string;
-  writerNickname: string;
+  type?: 'comment' | 'reply';
+  id: number;
+  memberId: number;
+  memberNickname: string;
+  isMine: boolean;
   content: string;
-  writerProfile: string;
-  registerTime: string;
+  parentId: number | null;
+  replies: CommentType[];
+  createdAt: string;
 }
