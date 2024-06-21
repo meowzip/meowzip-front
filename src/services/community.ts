@@ -333,14 +333,20 @@ export const registerCommentOnServer = async (reqObj: {
   }
 };
 
-export const deleteCommentOnServer = async (commentId: number) => {
+export const deleteCommentOnServer = async ({
+  postId,
+  commentId
+}: {
+  postId: number;
+  commentId: number;
+}) => {
   const requestOptions = {
     method: 'DELETE'
   };
 
   try {
     const response = await fetchExtendedForm(
-      `/community/comments/${commentId}`,
+      `/community/${postId}/comments/${commentId}`,
       requestOptions
     );
 

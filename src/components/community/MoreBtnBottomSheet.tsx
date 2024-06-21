@@ -113,18 +113,28 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
             </>
           ) : (
             <>
-              <ActionButton
-                icon="/images/icons/edit.svg"
-                content={
-                  type === 'comment' ? '댓글 신고하기' : '게시물 신고하기'
-                }
-                onClick={() => openModalReport()}
-              />
-              <ActionButton
-                icon="/images/icons/delete.svg"
-                content="작성자 차단하기"
-                onClick={() => openModalBlock()}
-              />
+              {decodedToken?.memberId === memberId && type === 'comment' ? (
+                <ActionButton
+                  icon="/images/icons/delete.svg"
+                  content="삭제하기"
+                  onClick={() => openModalDelete()}
+                />
+              ) : (
+                <>
+                  <ActionButton
+                    icon="/images/icons/edit.svg"
+                    content={
+                      type === 'comment' ? '댓글 신고하기' : '게시물 신고하기'
+                    }
+                    onClick={() => openModalReport()}
+                  />
+                  <ActionButton
+                    icon="/images/icons/delete.svg"
+                    content="작성자 차단하기"
+                    onClick={() => openModalBlock()}
+                  />
+                </>
+              )}
             </>
           )}
         </div>
