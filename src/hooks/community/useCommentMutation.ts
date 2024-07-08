@@ -11,16 +11,24 @@ registerCommentOnServer;
 const useCommentMutation = () => {
   const queryClient = useQueryClient();
 
-  const registerComment = (reqObj: { feedId: number; comment: string }) => {
+  const registerComment = (reqObj: {
+    parentCommentId: number;
+    feedId: number;
+    comment: string;
+  }) => {
     registerCommentMutation.mutate({
+      parentCommentId: reqObj.parentCommentId,
       postId: reqObj.feedId,
       content: reqObj.comment
     });
   };
 
   const registerCommentMutation = useMutation({
-    mutationFn: (reqObj: { postId: number; content: string }) =>
-      registerCommentOnServer(reqObj),
+    mutationFn: (reqObj: {
+      parentCommentId: number;
+      postId: number;
+      content: string;
+    }) => registerCommentOnServer(reqObj),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
         queryClient.invalidateQueries({ queryKey: ['comments'] });

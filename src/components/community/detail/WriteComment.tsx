@@ -3,9 +3,23 @@ import { Input } from '../../ui/Input';
 import Profile from '../../ui/Profile';
 import { useState } from 'react';
 
-export default function WriteComment({ feedId }: { feedId: number }) {
+export default function WriteComment({
+  feedId,
+  parentCommentId,
+  onCancel
+}: {
+  feedId: number;
+  parentCommentId?: number;
+  onCancel?: () => void;
+}) {
   const [comment, setComment] = useState('');
   const { registerComment } = useCommentMutation();
+
+  const handleSubmit = () => {
+    registerComment({ feedId, comment, parentCommentId: parentCommentId ?? 0 });
+    setComment('');
+    if (onCancel) onCancel();
+  };
 
   return (
     <div className="fixed bottom-0 flex w-full items-center gap-2 border-t-[1px] border-gray-300 bg-white px-4 py-2">
@@ -25,7 +39,7 @@ export default function WriteComment({ feedId }: { feedId: number }) {
         placeholder="댓글을 남겨주세요."
         onChange={e => setComment(e.target.value)}
         suffixClickHandler={() => {
-          registerComment({ feedId, comment });
+          handleSubmit();
           setComment('');
         }}
       />
