@@ -21,6 +21,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState<CommentType>();
+  const [parentCommentId, setParentCommentId] = useState<number | null>(null);
+  const [isReplying, setIsReplying] = useState(false);
 
   const { data: feedDetail } = useQuery({
     queryKey: ['feedDetail', slug],
@@ -52,6 +54,16 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     if (!feedDetail) return;
   }, [slug]);
 
+  const handleReply = (commentId: number) => {
+    setParentCommentId(commentId);
+    setIsReplying(true);
+  };
+
+  const handleCancelReply = () => {
+    setParentCommentId(null);
+    setIsReplying(false);
+  };
+
   return (
     <>
       <Topbar type="three">
@@ -79,20 +91,26 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           </p>
         )}
 
-        {comments.map((comment: CommentType, index: number) => (
-          <div key={index} className="py-4">
+        {comments.map((comment: CommentType) => (
+          <div key={comment.id} className="py-4">
             <Comment
               comment={comment}
               setEditBottomSheet={setEditBottomSheet}
-              setSelectedComment={
-                setSelectedComment as React.Dispatch<
-                  React.SetStateAction<CommentType>
-                >
-              }
+              setSelectedComment={setSelectedComment}
+              onReply={handleReply}
             />
+            {isReplying && parentCommentId === comment.id && (
+              <div className="pl-8">
+                <WriteComment
+                  feedId={feedDetail?.id}
+                  parentCommentId={parentCommentId}
+                  onCancel={handleCancelReply}
+                />
+              </div>
+            )}
           </div>
         ))}
-        <WriteComment feedId={feedDetail?.id} />
+        {!isReplying && <WriteComment feedId={feedDetail?.id} />}
         {showWriteModal && (
           <FeedWriteModal
             onClose={() => setShowWriteModal(false)}
