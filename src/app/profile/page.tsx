@@ -2,19 +2,16 @@
 import { profileImageAtom } from '@/atoms/imageAtom';
 import { useAtom } from 'jotai';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
-
+import Detail from '@/components/profile/ProfileDetail';
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import Detail from '@/components/profile/Detail';
 
 export default function ProfilePage() {
   const [profileImage, setProfileImage] = useAtom(profileImageAtom);
-
-  console.log('profileImage', profileImage);
 
   return (
     <>

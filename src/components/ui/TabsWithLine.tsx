@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import * as TabsPrimitive from '@radix-ui/react-tabs';
-
 import { cn } from '@/lib/utils';
 
 const Tabs = TabsPrimitive.Root;
@@ -14,7 +13,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'flex items-start justify-center self-stretch rounded-md border-b-2 border-gr-50 p-[2px]',
+      'flex items-start justify-center self-stretch border-b-2 border-gr-50',
       className
     )}
     {...props}
@@ -29,7 +28,10 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'flex flex-1 items-center justify-center gap-[6px] px-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:border-b-[3px] data-[state=active]:border-gr-black data-[state=active]:text-foreground',
+      'tabs-trigger', // Add this base class to every tab trigger
+      'relative flex flex-1 items-center justify-center gap-[6px] p-2 px-4 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'data-[state=active]:font-bold data-[state=active]:text-black',
+      'data-[state=inactive]:text-gray-400',
       className
     )}
     {...props}
