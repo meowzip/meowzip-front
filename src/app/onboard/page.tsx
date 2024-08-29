@@ -3,25 +3,28 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
-import { useAtom } from 'jotai';
-import { nicknameAtom } from '@/atoms/nicknameAtom';
 import Image from 'next/image';
 import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
-import { profileImageAtom } from '@/atoms/imageAtom';
+import { useQuery } from '@tanstack/react-query';
+import { getMyProfile } from '@/services/profile';
 
 const OnBoardPage = () => {
   const router = useRouter();
 
   const [showProfileModal, setShowProfileModal] = useState(false);
-  const [nickname, setNickname] = useAtom(nicknameAtom);
-  const [profileImage, setProfileImage] = useAtom(profileImageAtom);
+
+  const { data: myProfile } = useQuery({
+    queryKey: ['myProfile'],
+    queryFn: () => getMyProfile(),
+    enabled: !showProfileModal
+  });
 
   return (
     <>
       <section className="px-4 pt-[60px]">
         <article className="flex items-center justify-center">
           <Image
-            src={profileImage[0]?.croppedImage || '/images/icons/camera.svg'}
+            src={myProfile?.profileImageUrl || '/images/icons/camera.svg'}
             alt="profile"
             width={120}
             height={120}
@@ -30,7 +33,7 @@ const OnBoardPage = () => {
         </article>
         <article className="text-bg-black flex flex-col items-center justify-center gap-2 py-8 text-heading-1">
           <h1>
-            <span className="text-pr-500">{nickname}</span>님,
+            <span className="text-pr-500">{myProfile?.nickname}</span>님,
           </h1>
           <h1>환영합니다.</h1>
         </article>
@@ -56,7 +59,10 @@ const OnBoardPage = () => {
         </article>
       </section>
       {showProfileModal && (
-        <OnboardProfileModal onClose={() => setShowProfileModal(false)} />
+        <OnboardProfileModal
+          onClose={() => setShowProfileModal(false)}
+          myProfile={myProfile}
+        />
       )}
     </>
   );

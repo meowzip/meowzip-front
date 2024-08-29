@@ -4,24 +4,13 @@ import { useState } from 'react';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { useUser } from '@/contexts/EmailContext';
-import { useAtom } from 'jotai';
 import { useMutation } from '@tanstack/react-query';
 import { signUpOnServer } from '@/services/signup';
-import { nicknameAtom } from '@/atoms/nicknameAtom';
 import { useRouter } from 'next/navigation';
 import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
 import { signInOnServer } from '@/services/signin';
-
-interface SignUpResponse {
-  status: string;
-  result?: number;
-  message?: string;
-  data?: {
-    generatedNickname: string;
-  };
-}
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -29,7 +18,6 @@ const SignUpPage = () => {
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [nickname, setNickname] = useAtom(nicknameAtom);
 
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
@@ -51,9 +39,6 @@ const SignUpPage = () => {
     });
   };
 
-  /**
-   * @description API - POST signup
-   */
   const signUpMutation = useMutation({
     mutationFn: (reqObj: {
       email: string;
@@ -69,15 +54,11 @@ const SignUpPage = () => {
           email: email,
           password: password.value
         });
-        data.data && setNickname(data.data.generatedNickname);
         signInMutation.mutate({ email: email, password: password.value });
       }
     }
   });
 
-  /**
-   * @description API - POST signin
-   */
   const signInMutation = useMutation({
     mutationFn: (reqObj: { email: string; password: string }) => {
       return signInOnServer(reqObj);
