@@ -49,8 +49,8 @@ export const updateProfileOnServer = async (reqObj: {
 
   try {
     const response = await fetchExtendedForm('/members', requestOptions);
-
-    return response.body;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {

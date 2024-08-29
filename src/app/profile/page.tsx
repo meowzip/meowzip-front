@@ -24,7 +24,10 @@ export default function ProfilePage() {
       </div>
       <div className="flex gap-2">
         <Tabs defaultValue="account" className="w-[400px]">
-          <OnboardProfileUploader data={profileImage} />
+          <OnboardProfileUploader
+            data={profileImage}
+            setProfileImage={setProfileImage}
+          />
           <Detail />
           <TabsList>
             <TabsTrigger value="myContents">작성한 글</TabsTrigger>

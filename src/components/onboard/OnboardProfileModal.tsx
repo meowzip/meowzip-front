@@ -2,10 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Input } from '@/components/ui/Input';
 import { debounce } from 'lodash';
 import { NICKNAME } from '@/components/onboard/NICKNAME';
-import { useAtom } from 'jotai';
-import { nicknameAtom } from '@/atoms/nicknameAtom';
 import { useNickname } from '@/hooks/useNickname';
-import { profileImageAtom } from '@/atoms/imageAtom';
+import { ImageUploadData } from '@/atoms/imageAtom';
 import OnboardProfileUploader from '@/components/onboard/OnboardProfileUploader';
 import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
@@ -14,32 +12,39 @@ import { useMutation } from '@tanstack/react-query';
 
 interface OnboardProfileModalProps {
   onClose: () => void;
+  myProfile: {
+    nickname: string;
+    profileImageUrl: string;
+  };
 }
 
-const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
-  const [nickname, setNickname] = useAtom(nicknameAtom);
-  const [nicknameObj, setNicknameObj] = useState({
-    value: '',
-    error: false,
-    msg: ''
-  });
+const OnboardProfileModal = ({
+  onClose,
+  myProfile
+}: OnboardProfileModalProps) => {
+  const [nickname, setNickname] = useState('');
   const [debouncedNickname, setDebouncedNickname] = useState('');
-  const [profileImage, setProfileImage] = useAtom(profileImageAtom);
+  const [profileImage, setProfileImage] = useState([
+    { key: 1, imageSrc: null, croppedImage: null } as ImageUploadData
+  ]);
+  const [errorObj, setErrorObj] = useState({ error: false, message: '' });
 
   useEffect(() => {
-    setNicknameObj(prev => ({ ...prev, value: nickname }));
+    setNickname(myProfile?.nickname);
+    setProfileImage(prevList =>
+      prevList.map(prev => ({
+        ...prev,
+        croppedImage: myProfile?.profileImageUrl
+      }))
+    );
   }, []);
 
-  /**
-   * @description nickname 유효성 검사
-   * @returns setNickname
-   */
   const validateNickname = (name: string) => {
     if (name.length < 2) {
       return {
         value: name,
         error: true,
-        msg: '닉네임은 2자 이상 입력해주세요.'
+        message: '닉네임은 2자 이상 입력해주세요.'
       };
     }
 
@@ -48,7 +53,7 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
       return {
         value: name,
         error: true,
-        msg: '닉네임은 띄어쓰기 없이 한글, 영문, 숫자만 가능해요.'
+        message: '닉네임은 띄어쓰기 없이 한글, 영문, 숫자만 가능해요.'
       };
     }
 
@@ -57,51 +62,49 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
       return {
         value: name,
         error: true,
-        msg: '사용 불가능한 닉네임입니다.'
+        message: '사용 불가능한 닉네임입니다.'
       };
     }
 
     return {
       value: name,
       error: false,
-      msg: ''
+      message: ''
     };
   };
 
-  /**
-   * @description debounce nickname input
-   */
   const debounceNickname = useCallback(
     debounce(name => {
-      const nickObj = validateNickname(name);
-      nickObj && setNicknameObj(nickObj);
+      const { value, error, message } = validateNickname(name);
+      if (error) {
+        return setErrorObj({ error: error, message: message });
+      }
+      setNickname(value);
       setDebouncedNickname(name);
     }, 500),
     []
   );
 
   const handleNickname = (e: { target: { value: string } }) => {
-    setNicknameObj(prev => ({ ...prev, value: e.target.value }));
     debounceNickname(e.target.value);
+    setNickname(e.target.value);
   };
 
-  const { nickObj } = useNickname(
+  const { error, message } = useNickname(
     debouncedNickname,
     debouncedNickname.length > 0
   );
   useEffect(() => {
-    setNicknameObj(nickObj);
-  }, [nickObj]);
+    if (error) {
+      setErrorObj({ error: error, message: message });
+    }
+  }, [error, message]);
 
-  /**
-   * @description profile 저장
-   */
   const updateProfile = () => {
     const params = {
-      nickname: nickObj.value,
+      nickname: nickname,
       profileImage: profileImage[0].croppedImage
     };
-
     profileMutation.mutate(params);
   };
 
@@ -110,13 +113,9 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
       updateProfileOnServer(reqObj),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        console.log('ok data', data);
-        setNickname(data.data.nickname);
-        setProfileImage(data.data.profileImage);
         onClose();
       } else {
-        console.log('error data', data);
-        // router.push('/onboard');
+        console.log('프로필 업데이트 에러: ', data);
       }
     }
   });
@@ -129,22 +128,23 @@ const OnboardProfileModal = ({ onClose }: OnboardProfileModalProps) => {
           <Topbar.Title title="프로필 설정" />
           <Topbar.Complete onClick={updateProfile} />
         </Topbar>
-        <section className="px-6 pt-5">
-          <OnboardProfileUploader data={profileImage} />
+        <section className="px-6 pt-12">
+          <OnboardProfileUploader
+            data={profileImage}
+            setProfileImage={setProfileImage}
+          />
           <div className="py-6 text-center text-body-4 text-gr-black">
             <h6>사용하실 프로필과 닉네임을 설정하세요.</h6>
             <h6>닉네임은 띄어쓰기 포함 최대 12자까지 가능합니다.</h6>
           </div>
           <Input
-            helperText={nicknameObj.msg}
-            value={nicknameObj.value}
+            helperText={errorObj.message}
+            value={nickname}
             placeholder="닉네임을 입력해주세요."
-            error={nicknameObj.error ? true : false}
+            error={errorObj.error ? true : false}
             onChange={handleNickname}
             iconEnd={
-              <div
-                onClick={() => setNicknameObj(prev => ({ ...prev, value: '' }))}
-              >
+              <div onClick={() => setNickname('')}>
                 <Image
                   src="/images/icons/close-btn.svg"
                   alt="close-btn"
