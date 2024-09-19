@@ -4,6 +4,7 @@ import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import SettingCard from '@/components/setting/SettingCard';
+import { Switch } from '@/components/ui/Switch';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ const SettingPage = () => {
             알림을 꺼도 내 소식에서 확인할 수 있어요
           </h1>
         </div>
-        <div>switch</div>
+        <Switch />
       </section>
       <section className="h-2 bg-gr-50" />
       <section>
