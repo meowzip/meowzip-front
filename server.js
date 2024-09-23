@@ -2,8 +2,8 @@ const http = require('http');
 const { parse } = require('url');
 const next = require('next');
 
-const https = require('https');
-const fs = require('fs');
+// const https = require('https');
+// const fs = require('fs');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
@@ -11,10 +11,10 @@ const handle = app.getRequestHandler();
 
 const PORT = 3000;
 
-const httpsOptions = {
-  key: fs.readFileSync('./key.pem'),
-  cert: fs.readFileSync('./cert.pem')
-};
+// const httpsOptions = {
+//   key: fs.readFileSync('./key.pem'),
+//   cert: fs.readFileSync('./cert.pem')
+// };
 
 app.prepare().then(() => {
   http
