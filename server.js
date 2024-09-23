@@ -28,13 +28,13 @@ app.prepare().then(() => {
     });
 
   // https 서버 추가
-  https
-    .createServer(httpsOptions, (req, res) => {
-      const parsedUrl = parse(req.url, true);
-      handle(req, res, parsedUrl);
-    })
-    .listen(PORT + 1, err => {
-      if (err) throw err;
-      console.log(`> HTTPS: Ready on https://localhost:${PORT + 1}`);
-    });
+  // https
+  //   .createServer(httpsOptions, (req, res) => {
+  //     const parsedUrl = parse(req.url, true);
+  //     handle(req, res, parsedUrl);
+  //   })
+  //   .listen(PORT + 1, err => {
+  //     if (err) throw err;
+  //     console.log(`> HTTPS: Ready on https://localhost:${PORT + 1}`);
+  //   });
 });
