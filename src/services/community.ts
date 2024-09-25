@@ -101,7 +101,6 @@ export const registerFeedOnServer = async (reqObj: {
   images: string[];
 }) => {
   const { images, content } = reqObj;
-  console.log('등록 content', content);
   const formData = new FormData();
   formData.append(
     'post',

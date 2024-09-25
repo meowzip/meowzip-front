@@ -120,7 +120,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
         <h5 className="p-4 text-heading-5 text-gr-900">
           사진
           <span className="text-pr-500">
-            {feedImageList.filter(feed => feed.croppedImage).length || 0}
+            {feedImageList?.filter(feed => feed.croppedImage).length || 0}
           </span>
           /3
         </h5>
