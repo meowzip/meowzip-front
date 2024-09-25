@@ -9,6 +9,8 @@ import Modal from '@/components/ui/Modal';
 import { deleteAccountOnServer } from '@/services/signup';
 import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/hooks/useToast';
+import Terms from '@/components/signup/Terms';
+import { TermsType } from '@/constants/general';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -18,6 +20,7 @@ const SettingPage = () => {
   const [switchOn, setSwitchOn] = useState(false);
   const [logOutModal, setLogOutModal] = useState(false);
   const [withdrawModal, setWithdrawModal] = useState(false);
+  const [termsModal, setTermsModal] = useState<string>('');
 
   const allowNotify = () => {
     console.log('알림 허용 api');
@@ -30,12 +33,16 @@ const SettingPage = () => {
     setOpenFirstRunModal(false);
   };
 
-  const logOut = () => {
-    console.log('로그아웃');
+  const openTermsOfUseModal = () => {
+    setTermsModal(TermsType.TERMS_OF_USE);
   };
 
-  const onRightClick = () => {
-    console.log('click right');
+  const openPrivacyModal = () => {
+    setTermsModal(TermsType.PRIVACY_POLICY);
+  };
+
+  const logOut = () => {
+    console.log('로그아웃');
   };
 
   const toggleSwitch = () => {
@@ -97,8 +104,8 @@ const SettingPage = () => {
           </section>
           <section className="h-2 bg-gr-50" />
           <section>
-            <SettingCard text="이용약관" onClick={onRightClick} />
-            <SettingCard text="개인정보 처리방침" onClick={onRightClick} />
+            <SettingCard text="이용약관" onClick={openTermsOfUseModal} />
+            <SettingCard text="개인정보 처리방침" onClick={openPrivacyModal} />
           </section>
           <section className="h-2 bg-gr-50" />
           <SettingCard text="로그아웃" onClick={() => setLogOutModal(true)} />
@@ -108,6 +115,25 @@ const SettingPage = () => {
             <p>nyangzip@gmail.com으로 보내주세요</p>
           </section>
           <Toaster />
+
+          {termsModal !== '' && (
+            <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
+              <Topbar type="three">
+                <Topbar.Back onClick={() => setTermsModal('')} />
+                <Topbar.Title
+                  title={
+                    termsModal === TermsType.TERMS_OF_USE
+                      ? '서비스 이용약관'
+                      : '개인정보 수집 및 처리방침'
+                  }
+                />
+                <Topbar.Empty />
+              </Topbar>
+              <div className="flex flex-col gap-2 px-2 py-2 pt-12">
+                <Terms type={termsModal} />
+              </div>
+            </div>
+          )}
 
           {logOutModal && (
             <Modal
