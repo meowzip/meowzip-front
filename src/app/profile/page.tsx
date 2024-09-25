@@ -39,7 +39,7 @@ export default function ProfilePage() {
               height={24}
             />
           </button>
-          <button>
+          <button onClick={() => router.push('/profile/setting')}>
             <Image
               src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/profile/setting.svg"
               alt="edit"
