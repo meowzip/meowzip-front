@@ -7,9 +7,12 @@ import SettingCard from '@/components/setting/SettingCard';
 import { Switch } from '@/components/ui/Switch';
 import Modal from '@/components/ui/Modal';
 import { deleteAccountOnServer } from '@/services/signup';
+import { Toaster } from '@/components/ui/Toaster';
+import { useToast } from '@/components/ui/hooks/useToast';
 
 const SettingPage = () => {
   const router = useRouter();
+  const { toast } = useToast();
 
   const [openFirstRunModal, setOpenFirstRunModal] = useState(true);
   const [switchOn, setSwitchOn] = useState(false);
@@ -33,6 +36,21 @@ const SettingPage = () => {
 
   const onRightClick = () => {
     console.log('click right');
+  };
+
+  const toggleSwitch = () => {
+    setSwitchOn(!switchOn);
+    toast({
+      description: `${formatToday()} 앱 푸시 수신 동의를 ${switchOn ? '철회' : '동의'} 했어요`
+    });
+  };
+
+  const formatToday = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
+    const date = today.getDate();
+    return `${year}.${month}.${date}`;
   };
 
   return (
@@ -75,7 +93,7 @@ const SettingPage = () => {
                 알림을 꺼도 내 소식에서 확인할 수 있어요
               </h1>
             </div>
-            <Switch checked={switchOn} onCheckedChange={setSwitchOn} />
+            <Switch checked={switchOn} onCheckedChange={toggleSwitch} />
           </section>
           <section className="h-2 bg-gr-50" />
           <section>
@@ -89,6 +107,7 @@ const SettingPage = () => {
             <p>문의사항이 있을 경우,</p>
             <p>nyangzip@gmail.com으로 보내주세요</p>
           </section>
+          <Toaster />
 
           {logOutModal && (
             <Modal
