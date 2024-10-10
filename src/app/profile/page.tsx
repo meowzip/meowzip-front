@@ -50,7 +50,10 @@ export default function ProfilePage() {
         </div>
       </div>
       <div className="flex gap-2">
-        <Tabs defaultValue="myContents" className="w-[400px]">
+        <Tabs
+          defaultValue="myContents"
+          className="max-w-[390px] sm:max-w-[600px]"
+        >
           <OnboardProfileUploader
             data={profileImage}
             setProfileImage={setProfileImage}

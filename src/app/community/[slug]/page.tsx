@@ -52,7 +52,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   useEffect(() => {
     if (!feedDetail) return;
-  }, [slug]);
+  }, [slug, feedDetail]);
 
   const handleReply = (commentId: number) => {
     setParentCommentId(commentId);
