@@ -18,7 +18,11 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
 
-  const { data: diaryDetail, isError, isLoading } = useDiaryDetail(id);
+  const {
+    data: diaryDetail,
+    isError,
+    isLoading
+  } = useDiaryDetail(id, showWriteModal);
 
   useEffect(() => {
     if (!diaryDetail) return;
