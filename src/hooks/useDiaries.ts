@@ -47,7 +47,7 @@ export const useDiaries = ({ date, page, size }: DiarySearchOption) => {
   });
 };
 
-export const useDiaryDetail = (id: number) => {
+export const useDiaryDetail = (id: number, showWriteModal: boolean) => {
   const fetchDiaryDetail = async (id: number) => {
     const response = await fetchExtendedAuth(`/diaries/${id}`);
     if (!response.ok) {
@@ -59,8 +59,7 @@ export const useDiaryDetail = (id: number) => {
   };
 
   return useQuery({
-    queryKey: ['diaryDetail', id],
-    queryFn: () => fetchDiaryDetail(id),
-    staleTime: 1000 * 60 * 10
+    queryKey: ['diaryDetail', id, showWriteModal],
+    queryFn: () => fetchDiaryDetail(id)
   });
 };

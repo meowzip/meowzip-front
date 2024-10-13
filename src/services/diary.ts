@@ -85,19 +85,14 @@ export const editDiaryOnServer = async (reqObj: {
 }) => {
   const { images, ...diary } = reqObj.diary;
   const formData = new FormData();
+
+  const imageUrls = images.filter(image => image.includes('http'));
   formData.append(
     'diary',
-    new Blob([JSON.stringify(diary)], {
+    new Blob([JSON.stringify({ imageUrls: imageUrls, ...diary })], {
       type: 'application/json'
     })
   );
-
-  const imageUrl = images.filter(image => image.includes('http'));
-  if (imageUrl) {
-    imageUrl.forEach(file => {
-      file && formData.append('images', file);
-    });
-  }
   const files = images?.map(image => base64ToFile(image, 'image.jpg'));
   if (files) {
     files.forEach(file => {
