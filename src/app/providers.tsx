@@ -11,7 +11,8 @@ const Providers = ({ children }: any): React.JSX.Element => {
         defaultOptions: {
           queries: {
             refetchOnWindowFocus: false,
-            retry: 0
+            retry: 0,
+            staleTime: 1000 * 60 * 10
           }
         }
       })

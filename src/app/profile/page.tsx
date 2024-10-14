@@ -12,19 +12,39 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import { getFeedsOnServer } from '@/services/community';
 import FeedCard from '@/components/community/FeedCard';
 import { FeedType } from '@/types/communityType';
+import { getMyBookmarks, getMyFeeds, getMyProfile } from '@/services/profile';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
   const [profileImage, setProfileImage] = useAtom(profileImageAtom);
   const router = useRouter();
 
-  const { data: feedList } = useQuery({
-    queryKey: ['feeds'],
-    queryFn: () => getFeedsOnServer(),
-    staleTime: 1000 * 60 * 10
+  const feedReqObj = {
+    page: 0,
+    size: 9
+    // offset: 0
+  };
+
+  const { data: myFeedList } = useQuery({
+    queryKey: ['myFeeds'],
+    queryFn: () => getMyFeeds(feedReqObj)
   });
+
+  const { data: myBookmarksList } = useQuery({
+    queryKey: ['myBookmarks'],
+    queryFn: () => getMyBookmarks(feedReqObj)
+  });
+
+  const { data: myProfile } = useQuery({
+    queryKey: ['myProfile'],
+    queryFn: () => getMyProfile()
+  });
+
+  useEffect(() => {
+    setProfileImage(myProfile?.profileImageUrl);
+  }, [myProfile]);
 
   return (
     <>
@@ -64,7 +84,7 @@ export default function ProfilePage() {
             <TabsTrigger value="savedContents">저장한 글</TabsTrigger>
           </TabsList>
           <TabsContent value="myContents">
-            {feedList?.map((feed: FeedType) => (
+            {myFeedList?.map((feed: FeedType) => (
               <FeedCard
                 likeFeed={() => {}}
                 unLikeFeed={() => {}}
@@ -77,7 +97,17 @@ export default function ProfilePage() {
             ))}
           </TabsContent>
           <TabsContent value="savedContents">
-            저장한 글 리스트 컴포넌트
+            {myBookmarksList?.map((feed: FeedType) => (
+              <FeedCard
+                likeFeed={() => {}}
+                unLikeFeed={() => {}}
+                bookmarkFeed={() => {}}
+                cancelBookmarkFeed={() => {}}
+                key={feed.id}
+                content={feed}
+                goToDetail={() => router.push(`/community/${feed.id}`)}
+              />
+            ))}
           </TabsContent>
         </Tabs>
       </div>
