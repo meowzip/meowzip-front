@@ -11,6 +11,7 @@ import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/hooks/useToast';
 import Terms from '@/components/signup/Terms';
 import { TermsType } from '@/constants/general';
+import { signOut } from 'next-auth/react';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -42,7 +43,8 @@ const SettingPage = () => {
   };
 
   const logOut = () => {
-    console.log('로그아웃');
+    document.cookie = 'Authorization=; Max-Age=0; Path=/;';
+    signOut({ callbackUrl: '/diary' });
   };
 
   const toggleSwitch = () => {
