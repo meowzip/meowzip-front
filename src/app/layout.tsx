@@ -34,9 +34,6 @@ export default function RootLayout({
           </Providers>
         </div>
         <Toaster />
-        <div className="fixed bottom-0 left-0 right-0 z-[100] flex justify-center">
-          <BottomNavBar />
-        </div>
       </body>
     </html>
   );
