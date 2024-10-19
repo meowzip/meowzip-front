@@ -65,8 +65,8 @@ const FeedCard = ({
   return (
     <div className="border-b border-gr-100 px-4 pt-4" onClick={goToDetail}>
       <UserArea
-        nickname={content?.memberNickname}
-        profile={content?.memberNickname}
+        nickname={content?.writerNickname}
+        profile={content?.writerProfileImage}
         createdAt={content?.createdAt}
         onClick={() => {
           openBottomSheet && openBottomSheet();
