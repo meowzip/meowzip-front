@@ -4,5 +4,10 @@
       "maxDuration": 60
     }
   },
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--dns-result-order=ipv4first"
+    }
+  },
   "regions": ["icn1"]
 }

@@ -16,7 +16,7 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       httpOptions: {
-        timeout: 4000
+        timeout: 10000
       }
     })
   ],
@@ -42,7 +42,11 @@ const handler = NextAuth({
           return true;
         }
       } catch (error) {
-        console.error('Sign in error:', error);
+        console.error(
+          'Sign in error:',
+          error,
+          JSON.stringify(error, Object.getOwnPropertyNames(error))
+        );
         return false;
       }
     },
@@ -88,7 +92,11 @@ const signInOnServerWithSocial = async (reqObj: {
       });
     }
   } catch (error) {
-    console.error('Sign in error:', error);
+    console.error(
+      'SignInOnServerWithSocial error:',
+      error,
+      JSON.stringify(error, Object.getOwnPropertyNames(error))
+    );
     return null;
   }
 };
@@ -114,7 +122,11 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
       });
     }
   } catch (error) {
-    console.error('Sign up error:', error);
+    console.error(
+      'SignUpOnServerWithSocialLogin',
+      error,
+      JSON.stringify(error, Object.getOwnPropertyNames(error))
+    );
     return false;
   }
 };
