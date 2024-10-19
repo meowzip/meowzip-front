@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <body className={`${inter.className} relative w-full bg-[#f9f9f9]`}>
         <div className="m-auto h-screen max-w-[600px] bg-white">
           <Providers>

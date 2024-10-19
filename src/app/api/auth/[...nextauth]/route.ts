@@ -16,49 +16,42 @@ const handler = NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       httpOptions: {
-        timeout: 40000
+        timeout: 4000
       }
     })
   ],
   callbacks: {
     async signIn({ user, account }) {
-      const signInInfo = await checkMembershipByEmail(user.email || '');
-      if (signInInfo && signInInfo.isEmailExists) {
-        await signInOnServerWithSocial({
-          email: user.email || '',
-          password: user.id || ''
-        });
-        return true;
-      } else {
-        await signUpOnServerWithSocialLogin({
-          email: user.email || '',
-          oauthId: user.id || '',
-          loginType: account?.provider.toUpperCase() || ''
-        });
-        return true;
+      try {
+        const [signInInfo, signInResult] = await Promise.all([
+          checkMembershipByEmail(user.email || ''),
+          signInOnServerWithSocial({
+            email: user.email || '',
+            password: user.id || ''
+          }).catch(() => null)
+        ]);
+
+        if (signInInfo && signInInfo.isEmailExists) {
+          return true;
+        } else {
+          await signUpOnServerWithSocialLogin({
+            email: user.email || '',
+            oauthId: user.id || '',
+            loginType: account?.provider.toUpperCase() || ''
+          });
+          return true;
+        }
+      } catch (error) {
+        console.error('Sign in error:', error);
+        return false;
       }
     },
 
     async redirect({ url, baseUrl }) {
       const cookieList = cookies();
       const isMember = cookieList.get('Authorization');
-      const redirectUrl = isMember ? '/diary' : '/signin';
-      if (url) {
-        return url;
-      }
-      return redirectUrl;
-    },
-    async session({ session, user, token }) {
-      return session;
-    },
-    async jwt({ token, user, account, profile, isNewUser }) {
-      return token;
+      return isMember ? '/diary' : '/signin';
     }
-  },
-  events: {
-    async signIn(message) {},
-    async signOut(message) {},
-    async session(message) {}
   }
 });
 
@@ -95,12 +88,8 @@ const signInOnServerWithSocial = async (reqObj: {
       });
     }
   } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('로그인 요청 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('로그인 요청 중 오류 발생');
-    }
+    console.error('Sign in error:', error);
+    return null;
   }
 };
 
@@ -125,7 +114,8 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
       });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Sign up error:', error);
+    return false;
   }
 };
 

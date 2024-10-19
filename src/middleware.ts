@@ -23,7 +23,7 @@ export const middleware = async (
   request: NextRequest
 ): Promise<NextResponse> => {
   const currentPath: string = request.nextUrl.pathname;
-  const cookieList = cookies();
+  const cookieList = request.cookies;
   const accessToken: string | undefined =
     cookieList.get('Authorization')?.value;
   const refreshToken: string | undefined = cookieList.get(
@@ -34,25 +34,17 @@ export const middleware = async (
     return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
   }
 
-  if (accessToken && checkExpiredToken(accessToken)) {
-    try {
-      const newAccessToken = await refreshAccessToken(refreshToken);
-      return handleTokenRefresh(newAccessToken);
-    } catch (error) {
-      console.error('Error:', error);
-      return redirectToSignIn(request);
-    }
-  } else if (!accessToken && refreshToken) {
-    try {
-      const newAccessToken = await refreshAccessToken(refreshToken);
-      return handleTokenRefresh(newAccessToken);
-    } catch (error) {
-      console.error('Error:', error);
-      return redirectToSignIn(request);
-    }
+  if (accessToken && !checkExpiredToken(accessToken)) {
+    return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
   }
 
-  return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
+  try {
+    const newAccessToken = await refreshAccessToken(refreshToken);
+    return handleTokenRefresh(newAccessToken, request);
+  } catch (error) {
+    console.error('Error:', error);
+    return redirectToSignIn(request);
+  }
 };
 
 const handlePublicAndProtectedRoutes = (
@@ -84,18 +76,23 @@ const redirectToHome = (request: NextRequest): NextResponse => {
 };
 
 const handleTokenRefresh = (
-  newAccessToken: string | undefined
+  newAccessToken: string | undefined,
+  request: NextRequest
 ): NextResponse => {
   if (newAccessToken) {
-    const nextResponse = NextResponse.next();
-    nextResponse.cookies.set('Authorization', newAccessToken, {
+    const response = handlePublicAndProtectedRoutes(
+      request.nextUrl.pathname,
+      newAccessToken,
+      request
+    );
+    response.cookies.set('Authorization', newAccessToken, {
       maxAge: 60 * 60 * 2,
       secure: true,
       path: '/'
     });
-    return nextResponse;
+    return response;
   }
-  throw new Error('Failed to refresh token');
+  return redirectToSignIn(request);
 };
 
 const refreshAccessToken = async (
