@@ -1,7 +1,8 @@
 export interface FeedType {
   id: number;
-  memberId: number;
-  memberNickname: string;
+  writerId: number;
+  writerNickname: string;
+  writerProfileImage: string;
   isMine: boolean;
   content: string;
   images: string[];

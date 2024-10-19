@@ -70,8 +70,8 @@ const CommunityContents = () => {
           isVisible={editBottomSheet}
           setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
           heightPercent={['50%', '40%']}
-          name={feed?.memberNickname}
-          memberId={feed?.memberId}
+          name={feed?.writerNickname}
+          memberId={feed?.writerId}
           onDelete={() => feed && deleteFeed(feed)}
           onEdit={() => setShowWriteModal(true)}
           onBlock={() => feed && blockFeed(feed)}
