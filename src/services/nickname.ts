@@ -6,7 +6,7 @@ import { base64ToFile } from '@/utils/common';
 const memberToken = getCookie('Authorization');
 
 export const fetchExtendedAuth = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
+  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API + '/api/auth/v1.0.0',
   headers: {
     Accept: 'application/json',
     Authorization: `Bearer ${memberToken}`
@@ -31,7 +31,7 @@ export const validateNicknameOnServer = async (nickname: string) => {
 };
 
 export const fetchExtendedForm = returnFetch({
-  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API,
+  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API + '/api/auth/v1.0.0',
   headers: { Authorization: `Bearer ${memberToken}` }
 });
 
