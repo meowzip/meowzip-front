@@ -6,7 +6,7 @@ import { checkMembershipByEmail } from '@/services/signin';
 import { parseCookieString } from '@/utils/common';
 
 const fetchExtended = returnFetchJson({
-  baseUrl: process.env.MEOW_API,
+  baseUrl: process.env.MEOW_API + '/api/public/v1.0.0',
   headers: { Accept: 'application/json' }
 });
 

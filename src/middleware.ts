@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 import returnFetchJson from '@/utils/returnFetchJson';
 
 const fetchExtended = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
   headers: {
     Accept: 'application/json'
   }

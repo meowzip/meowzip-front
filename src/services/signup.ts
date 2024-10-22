@@ -2,11 +2,11 @@ import returnFetchJson from '@/utils/returnFetchJson';
 import { getCookie, removeCookie } from '@/utils/common';
 
 export const fetchExtendedPublic = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API,
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
   headers: { Accept: 'application/json' }
 });
 export const fetchExtendedAuth = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API
+  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API + '/api/auth/v1.0.0'
 });
 
 export const signUpOnServer = async (reqObj: {
