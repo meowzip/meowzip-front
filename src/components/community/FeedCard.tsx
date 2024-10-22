@@ -63,7 +63,7 @@ const FeedCard = ({
   };
 
   return (
-    <div className="border-b border-gr-100 px-4 pt-4" onClick={goToDetail}>
+    <div className="border-b border-gr-100 px-4 pt-4">
       <UserArea
         writerId={content?.writerId}
         nickname={content?.writerNickname}
@@ -73,7 +73,7 @@ const FeedCard = ({
           openBottomSheet && openBottomSheet();
         }}
       />
-      <section className="flex flex-col items-start gap-1">
+      <section className="flex flex-col items-start gap-1" onClick={goToDetail}>
         <p
           ref={contentRef}
           className={`pt-4 text-body-3 text-gr-black ${
