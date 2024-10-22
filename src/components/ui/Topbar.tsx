@@ -20,7 +20,7 @@ const Home = () => {
 };
 
 const Title = ({ title }: HTMLAttributes<HTMLDivElement>) => {
-  return <p>{title}</p>;
+  return <p className="text-heading-3 text-gr-900">{title}</p>;
 };
 
 const Calendar = ({ onClick }: HTMLAttributes<HTMLDivElement>) => {

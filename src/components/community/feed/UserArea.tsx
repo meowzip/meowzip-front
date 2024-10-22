@@ -25,11 +25,11 @@ const UserArea = ({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center justify-start gap-3">
-        <Profile
-          items={[{ id: 1, imageUrl: profile, style: 'w-10 h-10' }]}
-          onClick={navigateDetailProfile}
-        />
+      <div
+        className="flex items-center justify-start gap-3"
+        onClick={navigateDetailProfile}
+      >
+        <Profile items={[{ id: 1, imageUrl: profile, style: 'w-10 h-10' }]} />
         <div className="flex flex-col justify-between">
           <h5 className="text-heading-4 text-gr-900">{nickname}</h5>
           <h6 className="text-body-4 text-gr-400">{createdAt}</h6>
