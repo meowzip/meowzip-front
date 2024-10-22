@@ -78,7 +78,11 @@ export default function ProfilePage() {
             data={profileImage}
             setProfileImage={setProfileImage}
           />
-          <Detail />
+          <Detail
+            catCount={myProfile?.catCount}
+            postCount={myProfile?.postCount}
+            bookmarkCount={myProfile?.bookmarkCount}
+          />
           <TabsList>
             <TabsTrigger value="myContents">작성한 글</TabsTrigger>
             <TabsTrigger value="savedContents">저장한 글</TabsTrigger>
