@@ -65,6 +65,7 @@ const FeedCard = ({
   return (
     <div className="border-b border-gr-100 px-4 pt-4" onClick={goToDetail}>
       <UserArea
+        writerId={content?.writerId}
         nickname={content?.writerNickname}
         profile={content?.writerProfileImage}
         createdAt={content?.createdAt}

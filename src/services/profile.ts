@@ -105,3 +105,40 @@ export const getMyBookmarks = async ({
     }
   }
 };
+
+export const getClickedUserProfile = async (memberId: number) => {
+  try {
+    const queryParams = new URLSearchParams({
+      'member-id': memberId.toString()
+    });
+
+    const memberToken = getCookie('Authorization');
+    const response = await fetchExtendedAuth(
+      `/profiles?${queryParams.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${memberToken}`
+        }
+      }
+    );
+
+    const responseBody = response.body as any;
+    const isSuccess = responseBody.status;
+
+    if (isSuccess) {
+      return responseBody.data;
+    } else {
+      throw new Error('사용자 프로필 조회 중 오류 발생');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('사용자 프로필 조회 중 오류 발생: ' + error.message);
+    } else {
+      throw new Error('사용자 프로필 조회 중 오류 발생');
+    }
+  }
+};
+
+// ... 기존 코드 ...

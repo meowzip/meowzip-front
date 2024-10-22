@@ -1,12 +1,7 @@
 {
   "functions": {
     "src/app/api/**/*": {
-      "maxDuration": 60
-    }
-  },
-  "build": {
-    "env": {
-      "NODE_OPTIONS": "--dns-result-order=ipv4first"
+      "maxDuration": 10
     }
   },
   "regions": ["icn1"]
