@@ -10,7 +10,7 @@ import { deleteDiaryOnServer } from '@/services/diary';
 import { useDiaryDetail } from '@/hooks/useDiaries';
 import { useRouter } from 'next/navigation';
 import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
-import { Cat } from '@/types/cat';
+import { CatType } from '@/types/cat';
 
 const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
@@ -84,7 +84,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
         <h3 className="py-3 text-heading-5 text-gr-900">
           태그된 고양이 <span className="text-pr-500">{5}</span>
         </h3>
-        {diaryDetail?.taggedCats?.map((cat: Cat) => (
+        {diaryDetail?.taggedCats?.map((cat: CatType) => (
           <article key={cat.id} className="flex items-center gap-4 py-2">
             <img
               src={cat.imageUrl}
