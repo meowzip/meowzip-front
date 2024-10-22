@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 
 interface ProfileProps {
+  onClick?: () => void;
   items: {
     id: number;
     imageUrl: string;
@@ -11,12 +12,12 @@ interface ProfileProps {
   height?: string;
 }
 
-const Profile = ({ items, lastLeft, width, height }: ProfileProps) => {
+const Profile = ({ items, lastLeft, width, height, onClick }: ProfileProps) => {
   const fiveItems = items?.slice(0, 5);
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between" onClick={onClick}>
         {fiveItems?.map(item => (
           <Avatar
             key={item.id}

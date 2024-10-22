@@ -94,6 +94,7 @@ const signInOnServerWithSocial = async (reqObj: {
   } catch (error) {
     console.error(
       'SignInOnServerWithSocial error:',
+
       error,
       JSON.stringify(error, Object.getOwnPropertyNames(error))
     );
