@@ -14,7 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { editDiaryOnServer, registerDiaryOnServer } from '@/services/diary';
 import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 import { useRouter } from 'next/navigation';
-import { Cat } from '@/types/cat';
+import { CatType } from '@/types/cat';
 
 interface DiaryWriteModalProps {
   onClose: () => void;
@@ -40,7 +40,7 @@ const DiaryWriteModal = ({
   ]);
   const [searchCatModal, setSearchCatModal] = useState(false);
   const [selectTimeBottomSheet, setSelectTimeBottomSheet] = useState(false);
-  const [taggedCatList, setTaggedCatList] = useState<Cat[]>([]);
+  const [taggedCatList, setTaggedCatList] = useState<CatType[]>([]);
   const [diaryImageList, setDiaryImageList] = useAtom(diaryImageListAtom);
 
   const settingDiaryDetail = () => {
@@ -56,8 +56,8 @@ const DiaryWriteModal = ({
         prevChip.key === 'food'
           ? { ...prevChip, checked: diaryDetail.isFeed }
           : prevChip.key === 'water'
-          ? { ...prevChip, checked: diaryDetail.isGivenWater }
-          : prevChip
+            ? { ...prevChip, checked: diaryDetail.isGivenWater }
+            : prevChip
       )
     );
     setDiaryImageList(updateDiaryImages(diaryDetail?.images));
@@ -256,7 +256,7 @@ const DiaryWriteModal = ({
           <div className="flex items-center justify-between p-4">
             <h5 className="text-heading-5 text-gr-900">
               고양이 태그
-              <span className="pl-1 text-pr-500 ">{taggedCatList.length}</span>
+              <span className="pl-1 text-pr-500">{taggedCatList.length}</span>
             </h5>
             <BackIcon
               width={16}
@@ -267,7 +267,7 @@ const DiaryWriteModal = ({
             />
           </div>
           <ul className="px-4 py-1 pb-20">
-            {taggedCatList.map((cat: Cat) => {
+            {taggedCatList.map((cat: CatType) => {
               return (
                 <li key={cat.id} className="flex items-center gap-4 py-2">
                   <img

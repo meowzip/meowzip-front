@@ -1,4 +1,4 @@
-export type Cat = {
+export type CatType = {
   id: string;
   imageUrl: string;
   style: string;

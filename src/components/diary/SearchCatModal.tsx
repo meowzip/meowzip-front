@@ -1,17 +1,17 @@
 import Topbar from '@/components/ui/Topbar';
 import { useEffect, useState } from 'react';
 import { useCats } from '@/hooks/useCats';
-import { Cat } from '@/types/cat';
+import { CatType } from '@/types/cat';
 interface SearchCatModalProps {
   setSearchCatModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setTaggedCatList: React.Dispatch<React.SetStateAction<Cat[]>>;
+  setTaggedCatList: React.Dispatch<React.SetStateAction<CatType[]>>;
 }
 
 export default function SearchCatModal({
   setSearchCatModal,
   setTaggedCatList
 }: SearchCatModalProps) {
-  const [catList, setCatList] = useState<Cat[]>([]);
+  const [catList, setCatList] = useState<CatType[]>([]);
   const { data: cats } = useCats({ page: 0, size: 10 });
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function SearchCatModal({
 
   const closeCurrentModal = () => setSearchCatModal(false);
 
-  const selectCat = (cat: Cat) => {
+  const selectCat = (cat: CatType) => {
     setTaggedCatList(prev => {
       if (prev.some(prevCat => prevCat.id === cat.id)) {
         return prev;
@@ -36,10 +36,10 @@ export default function SearchCatModal({
 
     if (searchTerm !== '') {
       const filteredAndSortedCats = catList
-        .filter((cat: Cat) => cat.name.toLowerCase().includes(searchTerm))
+        .filter((cat: CatType) => cat.name.toLowerCase().includes(searchTerm))
         .concat(
           catList.filter(
-            (cat: Cat) => !cat.name.toLowerCase().includes(searchTerm)
+            (cat: CatType) => !cat.name.toLowerCase().includes(searchTerm)
           )
         );
       setCatList(filteredAndSortedCats);
@@ -50,7 +50,7 @@ export default function SearchCatModal({
 
   return (
     <article>
-      <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto  bg-gr-white">
+      <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
         <Topbar type="two" className="justify-start">
           <Topbar.Back onClick={closeCurrentModal} />
           <Topbar.SearchInput onChange={handleOnChange} />
@@ -58,7 +58,7 @@ export default function SearchCatModal({
         <ul className="flex flex-col gap-2 px-2 py-2 pt-12">
           {catList ? (
             <>
-              {catList.map((cat: Cat) => (
+              {catList.map((cat: CatType) => (
                 <li
                   key={cat.id}
                   className="flex items-center gap-4 py-2"
