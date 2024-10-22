@@ -34,12 +34,22 @@ const nextConfig = {
       }
     ]
   },
-  headers: [
+  rewrites: [
+    {
+      source: '/api/public/:path*',
+      destination: `${process.env.NEXT_PUBLIC_MEOW_API}/:path*`
+    },
+    {
+      source: '/api/auth/:path*',
+      destination: `${process.env.NEXT_PUBLIC_AUTH_MEOW_API}/:path*`
+    },
     {
       source: '/api/**',
       headers: [
-        { key: 'Access-Control-Allow-Credentials', value: 'true' },
-        { key: 'Access-Control-Allow-Origin', value: '*' },
+        {
+          key: 'Access-Control-Allow-Origin',
+          value: 'https://dev.meowzip.com'
+        },
         {
           key: 'Access-Control-Allow-Methods',
           value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT'
