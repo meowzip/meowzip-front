@@ -2,7 +2,6 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/Toaster';
-import BottomNavBar from '../components/ui/BottomNavBar';
 import Providers from './providers';
 import UserProvider from '@/providers/UserInfoProvider';
 import JotaiProvider from '@/providers/JotaiProvider';

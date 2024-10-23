@@ -9,9 +9,13 @@ import { Button } from '@/components/ui/Button';
 import { FeedType } from '@/types/communityType';
 import FeedCard from '@/components/community/FeedCard';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
+import OtherMemberZipModal from '@/components/zip/OtherMemberZipModal';
+import { useState } from 'react';
 
 const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
+
+  const [showZipModal, setShowZipModal] = useState(false);
 
   const feedReqObj = {
     page: 0,
@@ -20,27 +24,23 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
   };
 
   const { data: othersProfile } = useQuery({
-    queryKey: ['othersProfile'],
+    queryKey: ['othersProfile', id],
     queryFn: () => getClickedUserProfile(id)
   });
 
   const { data: otherUserFeedList } = useQuery({
-    queryKey: ['otherUserFeeds'],
+    queryKey: ['otherUserFeeds', id],
     queryFn: () => getOtherUserFeeds(feedReqObj)
   });
 
   const { likeFeed, unLikeFeed, bookmarkFeed, cancelBookmarkFeed } =
     useFeedMutations();
 
-  const goBackTo = () => {
-    console.log('go back to community');
-  };
-
   return (
     <>
       <section className="h-12">
         <Topbar type="three">
-          <Topbar.Back onClick={goBackTo} />
+          <Topbar.Back onClick={() => router.back()} />
           <Topbar.Title title={othersProfile?.nickname} />
           <Topbar.Empty />
         </Topbar>
@@ -71,6 +71,7 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
             variant="text"
             icon="/images/icons/right.svg"
             className="px-0 py-2 text-btn-3 text-gr-600"
+            onClick={() => setShowZipModal(true)}
           >
             모음집 구경하기
           </Button>
@@ -89,6 +90,13 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
           />
         ))}
       </section>
+      {showZipModal && (
+        <OtherMemberZipModal
+          onClose={() => setShowZipModal(false)}
+          memberId={id}
+          memberName={othersProfile.nickname}
+        />
+      )}
     </>
   );
 };

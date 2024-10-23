@@ -34,7 +34,7 @@ const ZipPage = () => {
       <h1 className="flex h-12 w-full items-center bg-gr-white px-4 text-heading-3 text-gr-900">
         모음집
       </h1>
-      <section className="bg-gr-50 p-4 pb-28">
+      <section className="p-4 pb-28">
         <div className="grid grid-cols-2 gap-4">
           {cats.map(cat => (
             <ZipCard

@@ -61,7 +61,7 @@ const DiaryPage = () => {
     <>
       {!isLoading && (
         <DiaryListLayout>
-          <section className="flex justify-start bg-gr-white">
+          <section className="flex justify-start overflow-scroll bg-gr-white">
             {cats?.map((cat: any) => (
               <Filter
                 key={cat.id}

@@ -7,6 +7,7 @@ import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
 type CatSearchOption = {
   page: number;
   size: number;
+  id?: number;
 };
 
 interface DiaryObj extends DiaryRegisterReqObj {
@@ -22,11 +23,18 @@ const fetchExtendedAuth = returnFetch({
   }
 });
 
-export const useCats = ({ page, size }: CatSearchOption) => {
-  const fetchCats = async (reqObj: CatSearchOption) => {
-    const response = await fetchExtendedAuth(
-      `/cats?${objectToQueryString(reqObj)}`
-    );
+export const useCats = ({ page, size, id }: CatSearchOption) => {
+  const fetchCats = async ({ page, size, id }: CatSearchOption) => {
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString()
+      // 'member-id': id ? id.toString() : '0'
+    });
+    if (id) {
+      queryParams.append('member-id', id.toString());
+    }
+
+    const response = await fetchExtendedAuth(`/cats?${queryParams.toString()}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -40,9 +48,9 @@ export const useCats = ({ page, size }: CatSearchOption) => {
   };
 
   return useQuery({
-    queryKey: ['getCats', page, size],
-    queryFn: () => fetchCats({ size, page }),
-    staleTime: 1000 * 60 * 10
+    queryKey: ['getCats', page, size, id],
+    queryFn: () => fetchCats({ size, page, id })
+    // staleTime: 1000 * 60 * 10
   });
 };
 
