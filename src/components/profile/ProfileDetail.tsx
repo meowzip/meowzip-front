@@ -33,8 +33,8 @@ export default function Detail({
             className="flex max-w-[100px] flex-1 flex-col items-center justify-center px-4 py-3"
             aria-label="Bookmark Count"
           >
-            <div className="font-bold">50</div>
-            <div className="text-gr-600">{bookmarkCount}</div>
+            <div className="font-bold">{bookmarkCount}</div>
+            <div className="text-gr-600">북마크</div>
           </section>
         </>
       )}
