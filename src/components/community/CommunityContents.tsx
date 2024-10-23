@@ -56,6 +56,7 @@ const CommunityContents = () => {
             unLikeFeed={() => unLikeFeed(feed)}
             bookmarkFeed={() => bookmarkFeed(feed)}
             cancelBookmarkFeed={() => cancelBookmarkFeed(feed)}
+            hasUserArea
           />
         ))}
         <FloatingActionButton onClick={() => setShowWriteModal(true)} />

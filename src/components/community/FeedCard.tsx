@@ -16,6 +16,7 @@ interface FeedCardProps {
   unLikeFeed: () => void;
   bookmarkFeed: () => void;
   cancelBookmarkFeed: () => void;
+  hasUserArea?: boolean;
 }
 
 const FeedCard = ({
@@ -26,7 +27,8 @@ const FeedCard = ({
   likeFeed,
   unLikeFeed,
   bookmarkFeed,
-  cancelBookmarkFeed
+  cancelBookmarkFeed,
+  hasUserArea
 }: FeedCardProps) => {
   const router = useRouter();
 
@@ -64,15 +66,17 @@ const FeedCard = ({
 
   return (
     <div className="border-b border-gr-100 px-4 pt-4">
-      <UserArea
-        writerId={content?.writerId}
-        nickname={content?.writerNickname}
-        profile={content?.writerProfileImage}
-        createdAt={content?.createdAt}
-        onClick={() => {
-          openBottomSheet && openBottomSheet();
-        }}
-      />
+      {hasUserArea && (
+        <UserArea
+          writerId={content?.writerId}
+          nickname={content?.writerNickname}
+          profile={content?.writerProfileImage}
+          createdAt={content?.createdAt}
+          onClick={() => {
+            openBottomSheet && openBottomSheet();
+          }}
+        />
+      )}
       <section className="flex flex-col items-start gap-1" onClick={goToDetail}>
         <p
           ref={contentRef}

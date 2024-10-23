@@ -141,4 +141,41 @@ export const getClickedUserProfile = async (memberId: number) => {
   }
 };
 
-// ... 기존 코드 ...
+export const getOtherUserFeeds = async ({
+  page,
+  size,
+  offset,
+  memberId
+}: {
+  page: number;
+  size: number;
+  offset?: number;
+  memberId: number;
+}) => {
+  try {
+    const memberToken = getCookie('Authorization');
+    const queryParams = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString(),
+      offset: offset ? offset.toString() : '0',
+      'member-id': memberId.toString()
+    });
+
+    const response = await fetchExtendedAuth(
+      `/profiles/posts?${queryParams.toString()}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          Authorization: `Bearer ${memberToken}`
+        }
+      }
+    );
+    const responseBody = response.body as { items?: any[] };
+    return responseBody?.items;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('내 피드 조회 중 오류 발생: ' + error.message);
+    }
+  }
+};

@@ -82,6 +82,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           unLikeFeed={() => unLikeFeed(feedDetail)}
           bookmarkFeed={() => bookmarkFeed(feedDetail)}
           cancelBookmarkFeed={() => cancelBookmarkFeed(feedDetail)}
+          hasUserArea
         />
         {comments.length === 0 && (
           <p className="py-8 text-center text-sm text-gr-300">
