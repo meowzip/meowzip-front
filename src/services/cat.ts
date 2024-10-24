@@ -37,7 +37,7 @@ export const registerCat = async (
     })
   );
 
-  const file = base64ToFile(image, 'image.jpg');
+  const file = base64ToFile(croppedImage, 'image.jpg');
   file && formData.append('image', file);
 
   const requestOptions = { method: 'POST', body: formData };
