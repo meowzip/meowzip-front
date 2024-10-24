@@ -27,15 +27,15 @@ const Profile = ({ items, lastLeft, width, height, onClick }: ProfileProps) => {
           </Avatar>
         ))}
         {fiveItems?.length >= 5 && (
-          <div className={`absolute top-0 ${lastLeft}`}>
+          <span className={`absolute ${lastLeft}`}>
             <Avatar
-              className={`text-gr-white ${width ?? 'w-10'} ${height || 'h-10'}`}
+              className={`border-[1.2px] border-gr-white text-gr-white shadow-profile ${width || 'w-10'} ${height || 'h-10'}`}
             >
               <AvatarFallback className="bg-gr-200 text-heading-6">
-                +{items.length % 5}
+                {items.length % 5}
               </AvatarFallback>
             </Avatar>
-          </div>
+          </span>
         )}
       </div>
     </>
