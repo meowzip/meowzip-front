@@ -51,6 +51,11 @@ const DiaryCard = ({
     return formattedTime;
   };
 
+  const taggedCatWithStyle = taggedCats.map((cat, idx) => ({
+    ...cat,
+    style: `w-6 h-6 border-gr-white border-[1.2px] absolute left-[${idx * 20}px] shadow-profile`
+  }));
+
   return (
     <div className="mb-4 rounded-16 bg-gr-white" onClick={onClick}>
       {images && images?.length > 0 && (
@@ -94,7 +99,7 @@ const DiaryCard = ({
         <article className="flex h-6 items-center justify-between">
           <div className="relative">
             <Profile
-              items={taggedCats}
+              items={taggedCatWithStyle}
               lastLeft="left-[100px]"
               width="w-6"
               height="h-6"
