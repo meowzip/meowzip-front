@@ -131,7 +131,8 @@ module.exports = {
       },
       boxShadow: {
         modal: '0px 8px 20px 0px rgba(14, 31, 53, 0.20)',
-        bottomNav: '0px -2px 8px 0px rgba(165, 165, 165, 0.16)'
+        bottomNav: '0px -2px 8px 0px rgba(165, 165, 165, 0.16)',
+        profile: '0px 1px 2px 0px rgba(0, 0, 0, 0.15)'
       },
       keyframes: {
         'accordion-down': {

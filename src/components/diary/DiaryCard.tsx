@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Carousel from '../ui/Carousel';
 import Label from '../ui/Label';
 import Profile from '../ui/Profile';
@@ -19,11 +19,24 @@ const DiaryCard = ({
   onClick
 }: DiaryCardProps) => {
   const [showMore, setShowMore] = useState(false);
+  const [isClamped, setIsClamped] = useState(false);
+  const contentRef = useRef<HTMLParagraphElement>(null);
 
-  /**
-   * @description 시간 포맷
-   * @returns 오후/오전 HH:MM
-   */
+  useEffect(() => {
+    if (contentRef.current) {
+      setIsClamped(
+        contentRef.current.scrollHeight > contentRef.current.clientHeight
+      );
+    }
+  }, [content]);
+
+  const toggleContent = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    setShowMore(!showMore);
+  };
+
   const formatTime = (date: Date): string => {
     let hours: number = date.getHours();
     let hoursIn12HourFormat: string = (hours % 12 || 12).toString();
@@ -37,6 +50,11 @@ const DiaryCard = ({
     let formattedTime: string = `${ampm} ${hoursIn12HourFormat}:${minutes}`;
     return formattedTime;
   };
+
+  const taggedCatWithStyle = taggedCats.map((cat, idx) => ({
+    ...cat,
+    style: `w-6 h-6 border-gr-white border-[1.2px] absolute left-[${idx * 20}px] shadow-profile`
+  }));
 
   return (
     <div className="mb-4 rounded-16 bg-gr-white" onClick={onClick}>
@@ -65,22 +83,23 @@ const DiaryCard = ({
             className={`mb-1 text-body-3 text-gr-black ${
               showMore ? 'line-clamp-0' : 'line-clamp-3'
             }`}
+            ref={contentRef}
           >
             {content}
           </div>
-          <div className="flex justify-start">
+          {isClamped && (
             <button
               className="text-body-3 text-gr-300"
-              onClick={() => setShowMore(!showMore)}
+              onClick={e => toggleContent(e)}
             >
-              {showMore ? '닫기' : '더보기'}
+              {showMore ? '간략히' : '더보기'}
             </button>
-          </div>
+          )}
         </article>
         <article className="flex h-6 items-center justify-between">
           <div className="relative">
             <Profile
-              items={taggedCats}
+              items={taggedCatWithStyle}
               lastLeft="left-[100px]"
               width="w-6"
               height="h-6"

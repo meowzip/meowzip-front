@@ -32,7 +32,7 @@ const FeedCard = ({
 }: FeedCardProps) => {
   const router = useRouter();
 
-  const [showMore, setMore] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
 
@@ -48,7 +48,7 @@ const FeedCard = ({
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    setMore(!showMore);
+    setShowMore(!showMore);
   };
 
   const toggleLike = () => {

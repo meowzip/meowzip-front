@@ -82,7 +82,10 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
       </section>
       <section className="px-4 pb-[120px] pt-4">
         <h3 className="py-3 text-heading-5 text-gr-900">
-          태그된 고양이 <span className="text-pr-500">{5}</span>
+          태그된 고양이
+          <span className="pl-1 text-pr-500">
+            {diaryDetail.taggedCats.length}
+          </span>
         </h3>
         {diaryDetail?.taggedCats?.map((cat: CatType) => (
           <article key={cat.id} className="flex items-center gap-4 py-2">
