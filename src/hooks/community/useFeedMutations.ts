@@ -105,11 +105,11 @@ const useFeedMutations = (queryKeyList: string[]) => {
       if (response.status === 'OK') {
         invalidateQueryFucn(queryKeyList);
       } else {
-        console.error('게시물 좋아요 중 오류:', response.message);
+        console.error('게시물 북마크 중 오류:', response.message);
       }
     },
     onError: (error: any) => {
-      console.error('게시물 좋아요 중 오류:', error);
+      console.error('게시물 북마크 중 오류:', error);
     }
   });
 
@@ -124,11 +124,11 @@ const useFeedMutations = (queryKeyList: string[]) => {
       if (response.status === 'OK') {
         invalidateQueryFucn(queryKeyList);
       } else {
-        console.error('게시물 좋아요 중 오류:', response.message);
+        console.error('게시물 북마크 취소 중 오류:', response.message);
       }
     },
     onError: (error: any) => {
-      console.error('게시물 좋아요 중 오류:', error);
+      console.error('게시물 북마크 취소 중 오류:', error);
     }
   });
 

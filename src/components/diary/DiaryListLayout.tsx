@@ -64,7 +64,7 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
       />
-      <main className="h-full bg-gr-50 pb-20 pt-12">{children}</main>
+      <main className="h-screen bg-gr-50 pb-20 pt-12">{children}</main>
     </>
   );
 };
