@@ -1,0 +1,58 @@
+.bookmark {
+    --color: #1E2235;
+    --back: #ECEFFC;
+    --default-position: 32px;
+    --default-y: 0px;
+    --background-height: 17px;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-appearance: none;
+    outline: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 5px 0 0 0;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .bookmark:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 9px;
+    width: 18px;
+    height: 19px;
+    border-radius: 1px;
+    -webkit-clip-path: inset(0 -1px var(--background-height) -1px);
+            clip-path: inset(0 -1px var(--background-height) -1px);
+    background: var(--color);
+    transform: translateZ(0);
+  }
+  .bookmark svg {
+    display: block;
+    width: 36px;
+    height: 36px;
+    margin-top: -5px;
+    stroke: var(--color);
+    stroke-width: 2px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    position: relative;
+    z-index: 1;
+    transform: translateZ(0);
+  }
+  .bookmark svg path {
+    fill: var(--fill, var(--back));
+    transform: translateZ(0);
+  }
+  .bookmark svg path.default {
+    --fill: var(--default-fill, var(--back));
+    -webkit-clip-path: circle(var(--default-position) at 50% 100%);
+            clip-path: circle(var(--default-position) at 50% 100%);
+  }
+  .bookmark svg path.filled {
+    --fill: var(--color);
+  }
+  .bookmark svg path.default, .bookmark svg path.filled {
+    transform: translateY(var(--default-y)) translateZ(0);
+  }

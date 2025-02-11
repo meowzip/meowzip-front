@@ -146,7 +146,7 @@ export default function ProfilePage() {
         </TabsList>
         <TabsContent
           value="myContents"
-          className="mx-auto mt-0 max-w-[640px] pb-24"
+          className="mx-auto mt-0 h-screen max-w-[640px] bg-gr-50 pb-24"
         >
           {isFeedLoading ? (
             <ProfileFeedSkeleton />
