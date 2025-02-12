@@ -37,9 +37,9 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
     queryFn: () => getOtherUserFeeds(feedReqObj)
   });
 
-  const { toggleLikeFeed, bookmarkFeed, cancelBookmarkFeed } = useFeedMutations(
-    ['otherUserFeeds']
-  );
+  const { toggleLikeFeed, toggleBookmark } = useFeedMutations([
+    'otherUserFeeds'
+  ]);
 
   return (
     <>
@@ -103,8 +103,7 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
                 content={feed}
                 goToDetail={() => router.push(`/community/${feed.id}`)}
                 toggleLikeFeed={() => toggleLikeFeed(feed)}
-                bookmarkFeed={() => bookmarkFeed(feed)}
-                cancelBookmarkFeed={() => cancelBookmarkFeed(feed)}
+                toggleBookmark={() => toggleBookmark(feed)}
               />
             ))
           )}
