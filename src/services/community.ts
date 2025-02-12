@@ -220,7 +220,7 @@ export const toggleLikeFeedOnServer = async (postId: number) => {
   }
 };
 
-export const bookmarkFeedOnServer = async (postId: number) => {
+export const toggleBookmarkOnServer = async (postId: number) => {
   const requestOptions = {
     method: 'POST'
   };
@@ -239,29 +239,6 @@ export const bookmarkFeedOnServer = async (postId: number) => {
       throw new Error('게시글 북마크 중 오류 발생:' + error.message);
     } else {
       throw new Error('게시글 북마크 중 오류 발생:');
-    }
-  }
-};
-
-export const cancelBookmarkFeedOnServer = async (postId: number) => {
-  const requestOptions = {
-    method: 'DELETE'
-  };
-
-  try {
-    const response = await fetchExtendedForm(
-      `/community/${postId}/bookmark`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 북마크 취소 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 북마크 취소 중 오류 발생:');
     }
   }
 };

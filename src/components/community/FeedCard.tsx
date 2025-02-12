@@ -14,8 +14,7 @@ interface FeedCardProps {
   goToDetail?: () => void;
   openBottomSheet?: () => void;
   toggleLikeFeed: () => void;
-  bookmarkFeed: () => void;
-  cancelBookmarkFeed: () => void;
+  toggleBookmark: () => void;
   hasUserArea?: boolean;
 }
 
@@ -25,8 +24,7 @@ const FeedCard = ({
   goToDetail,
   openBottomSheet,
   toggleLikeFeed,
-  bookmarkFeed,
-  cancelBookmarkFeed,
+  toggleBookmark,
   hasUserArea
 }: FeedCardProps) => {
   const router = useRouter();
@@ -52,10 +50,6 @@ const FeedCard = ({
 
   const toggleLike = () => {
     toggleLikeFeed();
-  };
-
-  const toggleBookmark = () => {
-    content?.isBookmarked ? cancelBookmarkFeed() : bookmarkFeed();
   };
 
   const clickComment = () => {

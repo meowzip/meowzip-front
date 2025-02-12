@@ -45,14 +45,8 @@ const CommunityContents = () => {
     }
   }, [inView, fetchNextPage]);
 
-  const {
-    deleteFeed,
-    blockFeed,
-    reportFeed,
-    toggleLikeFeed,
-    bookmarkFeed,
-    cancelBookmarkFeed
-  } = useFeedMutations(['feeds']);
+  const { deleteFeed, blockFeed, reportFeed, toggleLikeFeed, toggleBookmark } =
+    useFeedMutations(['feeds']);
 
   useEffect(() => {
     if (showWriteModal) return;
@@ -75,8 +69,7 @@ const CommunityContents = () => {
                 setEditBottomSheet(true);
               }}
               toggleLikeFeed={() => toggleLikeFeed(feed)}
-              bookmarkFeed={() => bookmarkFeed(feed)}
-              cancelBookmarkFeed={() => cancelBookmarkFeed(feed)}
+              toggleBookmark={() => toggleBookmark(feed)}
               hasUserArea
             />
           ))

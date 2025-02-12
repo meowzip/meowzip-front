@@ -1,10 +1,9 @@
 import {
   blockWriterOnServer,
-  bookmarkFeedOnServer,
-  cancelBookmarkFeedOnServer,
   deleteFeedOnServer,
   reportFeedOnServer,
-  toggleLikeFeedOnServer
+  toggleLikeFeedOnServer,
+  toggleBookmarkOnServer
 } from '@/services/community';
 import { FeedType } from '@/types/communityType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -94,13 +93,13 @@ const useFeedMutations = (queryKeyList: string[]) => {
     }
   });
 
-  const bookmarkFeed = (feed: FeedType) => {
+  const toggleBookmark = (feed: FeedType) => {
     if (!feed) return;
-    bookmarkFeedMutation.mutate(feed?.id);
+    toggleBookmarkMutation.mutate(feed?.id);
   };
 
-  const bookmarkFeedMutation = useMutation({
-    mutationFn: (id: number) => bookmarkFeedOnServer(id),
+  const toggleBookmarkMutation = useMutation({
+    mutationFn: (id: number) => toggleBookmarkOnServer(id),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
         invalidateQueryFucn(queryKeyList);
@@ -113,32 +112,12 @@ const useFeedMutations = (queryKeyList: string[]) => {
     }
   });
 
-  const cancelBookmarkFeed = (feed: FeedType) => {
-    if (!feed) return;
-    cancelBookmarkFeedMutation.mutate(feed?.id);
-  };
-
-  const cancelBookmarkFeedMutation = useMutation({
-    mutationFn: (id: number) => cancelBookmarkFeedOnServer(id),
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        invalidateQueryFucn(queryKeyList);
-      } else {
-        console.error('게시물 북마크 취소 중 오류:', response.message);
-      }
-    },
-    onError: (error: any) => {
-      console.error('게시물 북마크 취소 중 오류:', error);
-    }
-  });
-
   return {
     deleteFeed,
     blockFeed,
     reportFeed,
     toggleLikeFeed,
-    bookmarkFeed,
-    cancelBookmarkFeed
+    toggleBookmark
   };
 };
 

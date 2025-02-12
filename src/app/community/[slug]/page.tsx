@@ -36,14 +36,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     staleTime: 1000 * 60 * 10
   });
 
-  const {
-    deleteFeed,
-    blockFeed,
-    reportFeed,
-    toggleLikeFeed,
-    bookmarkFeed,
-    cancelBookmarkFeed
-  } = useFeedMutations(['feeds', 'feedDetail']);
+  const { deleteFeed, blockFeed, reportFeed, toggleLikeFeed, toggleBookmark } =
+    useFeedMutations(['feeds', 'feedDetail']);
 
   const { blockComment, reportComment, deleteComment } = useCommentMutation();
 
@@ -78,8 +72,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
             setEditBottomSheet(true);
           }}
           toggleLikeFeed={() => toggleLikeFeed(feedDetail)}
-          bookmarkFeed={() => bookmarkFeed(feedDetail)}
-          cancelBookmarkFeed={() => cancelBookmarkFeed(feedDetail)}
+          toggleBookmark={() => toggleBookmark(feedDetail)}
           hasUserArea
         />
         {comments.length === 0 && (
