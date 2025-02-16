@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
+import AppleProvider from 'next-auth/providers/apple';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
@@ -23,6 +24,11 @@ const handler = NextAuth({
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET!
+    }),
+
+    AppleProvider({
+      clientId: process.env.APPLE_ID || '',
+      clientSecret: process.env.APPLE_SECRET || ''
     })
   ],
   callbacks: {

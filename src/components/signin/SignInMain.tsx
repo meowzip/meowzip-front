@@ -71,7 +71,14 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
                 alt="google-icon"
               />
             </button>
-            <button>
+            <button
+              onClick={() =>
+                signIn('apple', {
+                  callbackUrl: '/diary',
+                  redirect: true
+                })
+              }
+            >
               <Image
                 width={48}
                 height={48}
