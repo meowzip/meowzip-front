@@ -27,10 +27,22 @@ const handler = NextAuth({
     }),
 
     AppleProvider({
-      clientId: process.env.APPLE_ID || '',
-      clientSecret: process.env.APPLE_SECRET || ''
+      clientId: process.env.APPLE_ID!,
+      clientSecret: process.env.APPLE_SECRET!,
+      checks: ['pkce', 'state']
     })
   ],
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production',
+        path: '/'
+      }
+    }
+  },
   callbacks: {
     async signIn({ user, account }) {
       try {
