@@ -8,7 +8,7 @@ import { CatObjType, CoParent } from '@/app/zip/catType';
 
 const memberToken = getCookie('Authorization');
 export const fetchExtended = returnFetch({
-  baseUrl: process.env.NEXT_PUBLIC_AUTH_MEOW_API + '/api/auth/v1.0.0',
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0',
   headers: { Authorization: `Bearer ${memberToken}` }
 });
 

@@ -8,7 +8,7 @@ import { checkMembershipByEmail } from '@/services/signin';
 import { parseCookieString } from '@/utils/common';
 
 const fetchExtended = returnFetchJson({
-  baseUrl: process.env.MEOW_API + '/api/public/v1.0.0',
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
   headers: { Accept: 'application/json' }
 });
 
@@ -29,7 +29,10 @@ const handler = NextAuth({
     AppleProvider({
       clientId: process.env.APPLE_ID!,
       clientSecret: process.env.APPLE_SECRET!,
-      checks: ['pkce', 'state']
+      checks: ['pkce', 'state'],
+      httpOptions: {
+        timeout: 10000
+      }
     })
   ],
   cookies: {
@@ -100,45 +103,58 @@ const signInOnServerWithSocial = async (reqObj: {
   email: string;
   password: string;
 }) => {
-  try {
-    const requestOptions = {
-      method: 'POST',
-      body: reqObj,
-      credentials: 'include' as RequestCredentials
-    };
+  const maxRetries = 3;
+  let retryCount = 0;
 
-    const response = await fetchExtended('/members/login', requestOptions);
-    const token = response.headers.get('Authorization');
-    const setCookies = response.headers.get('set-cookie');
-    const parsedCookie = parseCookieString(setCookies || '');
+  while (retryCount < maxRetries) {
+    try {
+      const requestOptions = {
+        method: 'POST',
+        body: reqObj,
+        credentials: 'include' as RequestCredentials,
+        timeout: 15000
+      };
 
-    if (response.status === 200) {
-      cookies().set({
-        name: 'Authorization',
-        value: token || '',
-        secure: true,
-        maxAge: 60 * 60 * 4
-      });
+      const response = await fetchExtended('/members/login', requestOptions);
+      const token = response.headers.get('Authorization');
+      const setCookies = response.headers.get('set-cookie');
+      const parsedCookie = parseCookieString(setCookies || '');
 
-      cookies().set({
-        name: 'Authorization-Refresh',
-        value: parsedCookie.token || '',
-        maxAge: parseInt(parsedCookie.maxAge, 10),
-        httpOnly: true,
-        secure: true
-      });
+      if (response.status === 200) {
+        cookies().set({
+          name: 'Authorization',
+          value: token || '',
+          secure: true,
+          maxAge: 60 * 60 * 4
+        });
 
-      if (typeof window !== 'undefined') {
-        document.cookie = `Authorization=${token}; path=/; max-age=${60 * 60 * 4}; secure;`;
+        cookies().set({
+          name: 'Authorization-Refresh',
+          value: parsedCookie.token || '',
+          maxAge: parseInt(parsedCookie.maxAge, 10),
+          httpOnly: true,
+          secure: true
+        });
+
+        if (typeof window !== 'undefined') {
+          document.cookie = `Authorization=${token}; path=/; max-age=${60 * 60 * 4}; secure;`;
+        }
+
+        return true;
       }
-
-      return true;
+      return false;
+    } catch (error) {
+      retryCount++;
+      if (retryCount === maxRetries) {
+        console.error('SignInOnServerWithSocial error:', error);
+        return false;
+      }
+      await new Promise(resolve =>
+        setTimeout(resolve, Math.pow(2, retryCount) * 1000)
+      );
     }
-    return false;
-  } catch (error) {
-    console.error('SignInOnServerWithSocial error:', error);
-    return false;
   }
+  return false;
 };
 
 const signUpOnServerWithSocialLogin = async (reqObj: {
