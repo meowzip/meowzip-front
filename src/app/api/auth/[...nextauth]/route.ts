@@ -18,16 +18,7 @@ const handler = NextAuth({
       name: 'next-auth.pkce.code_verifier',
       options: {
         httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: true
-      }
-    },
-    state: {
-      name: 'next-auth.state',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
+        sameSite: 'none',
         path: '/',
         secure: true
       }
@@ -49,12 +40,22 @@ const handler = NextAuth({
     AppleProvider({
       clientId: process.env.APPLE_ID!,
       clientSecret: process.env.APPLE_SECRET!,
-      checks: ['state', 'pkce'],
+      wellKnown: 'https://appleid.apple.com/.well-known/openid-configuration',
+      checks: ['pkce'],
+      token: {
+        url: 'https://appleid.apple.com/auth/token'
+      },
       authorization: {
+        url: 'https://appleid.apple.com/auth/authorize',
         params: {
-          response_mode: 'form_post',
-          scope: 'name email'
+          scope: '',
+          response_type: 'code',
+          response_mode: 'query',
+          state: crypto.randomUUID()
         }
+      },
+      client: {
+        token_endpoint_auth_method: 'client_secret_post'
       },
       profile(profile: AppleProfile) {
         return {
