@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
-import AppleProvider from 'next-auth/providers/apple';
+import AppleProvider, { AppleProfile } from 'next-auth/providers/apple';
 import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
@@ -13,6 +13,27 @@ const fetchExtended = returnFetchJson({
 });
 
 const handler = NextAuth({
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
+    state: {
+      name: 'next-auth.state',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    }
+  },
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -28,32 +49,22 @@ const handler = NextAuth({
     AppleProvider({
       clientId: process.env.APPLE_ID!,
       clientSecret: process.env.APPLE_SECRET!,
-      checks: ['pkce', 'state'],
-      httpOptions: {
-        timeout: 10000
+      checks: ['state', 'pkce'],
+      authorization: {
+        params: {
+          response_mode: 'form_post',
+          scope: 'name email'
+        }
+      },
+      profile(profile: AppleProfile) {
+        return {
+          id: profile.sub,
+          email: profile.email,
+          from: 'apple'
+        };
       }
     })
   ],
-  cookies: {
-    pkceCodeVerifier: {
-      name: 'next-auth.pkce.code_verifier',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: true,
-        path: '/'
-      }
-    },
-    state: {
-      name: 'next-auth.state',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: true,
-        path: '/'
-      }
-    }
-  },
   callbacks: {
     async signIn({ user, account }) {
       try {
