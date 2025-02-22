@@ -27,6 +27,17 @@ const handler = NextAuth({
       clientSecret: process.env.APPLE_SECRET!
     })
   ],
+  cookies: {
+    pkceCodeVerifier: {
+      name: 'next-auth.pkce.code_verifier',
+      options: {
+        httpOnly: true,
+        sameSite: 'none',
+        path: '/',
+        secure: true
+      }
+    }
+  },
   callbacks: {
     async signIn({ user, account }) {
       console.log('🔍 Apple 로그인 응답:', { user, account });
