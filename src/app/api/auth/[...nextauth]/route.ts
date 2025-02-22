@@ -20,11 +20,10 @@ const handler = NextAuth({
         httpOnly: true,
         sameSite: 'none',
         path: '/',
-        secure: true
+        secure: process.env.NODE_ENV === 'production'
       }
     }
   },
-
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -38,32 +37,8 @@ const handler = NextAuth({
       clientSecret: process.env.KAKAO_CLIENT_SECRET!
     }),
     AppleProvider({
-      clientId: process.env.APPLE_ID!,
-      clientSecret: process.env.APPLE_SECRET!,
-      wellKnown: 'https://appleid.apple.com/.well-known/openid-configuration',
-      checks: ['pkce'],
-      token: {
-        url: 'https://appleid.apple.com/auth/token'
-      },
-      authorization: {
-        url: 'https://appleid.apple.com/auth/authorize',
-        params: {
-          scope: '',
-          response_type: 'code',
-          response_mode: 'query',
-          state: crypto.randomUUID()
-        }
-      },
-      client: {
-        token_endpoint_auth_method: 'client_secret_post'
-      },
-      profile(profile: AppleProfile) {
-        return {
-          id: profile.sub,
-          email: profile.email,
-          from: 'apple'
-        };
-      }
+      clientId: process.env.APPLE_CLIENT_ID!,
+      clientSecret: process.env.APPLE_CLIENT_SECRET!
     })
   ],
   callbacks: {
