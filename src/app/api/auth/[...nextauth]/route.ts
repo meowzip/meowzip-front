@@ -13,36 +13,24 @@ const fetchExtended = returnFetchJson({
 });
 
 const handler = NextAuth({
-  cookies: {
-    pkceCodeVerifier: {
-      name: 'next-auth.pkce.code_verifier',
-      options: {
-        httpOnly: true,
-        sameSite: 'none',
-        path: '/',
-        secure: process.env.NODE_ENV === 'production'
-      }
-    }
-  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      httpOptions: {
-        timeout: 10000
-      }
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }),
     KakaoProvider({
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET!
     }),
     AppleProvider({
-      clientId: process.env.APPLE_CLIENT_ID!,
-      clientSecret: process.env.APPLE_CLIENT_SECRET!
+      clientId: process.env.APPLE_ID!,
+      clientSecret: process.env.APPLE_SECRET!
     })
   ],
   callbacks: {
     async signIn({ user, account }) {
+      console.log('🔍 Apple 로그인 응답:', { user, account });
+
       try {
         const [signInInfo, signInResult] = await Promise.all([
           checkMembershipByEmail(user.email || ''),
