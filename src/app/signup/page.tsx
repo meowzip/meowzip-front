@@ -23,12 +23,14 @@ const SignUpPage = () => {
     usePasswordHandler();
 
   const { email } = useUser();
+  const fcmToken = 'ExponentPushToken[****************]';
 
   const signUp = () => {
     signUpMutation.mutate({
       email: email,
       password: password.value,
-      loginType: 'EMAIL'
+      loginType: 'EMAIL',
+      fcmToken: fcmToken
     });
   };
 
@@ -37,6 +39,7 @@ const SignUpPage = () => {
       email: string;
       password: string;
       loginType: string;
+      fcmToken: string;
     }) => signUpOnServer(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
@@ -46,16 +49,25 @@ const SignUpPage = () => {
       } else {
         signInOnServer({
           email: email,
-          password: password.value
+          password: password.value,
+          fcmToken: fcmToken
         });
-        signInMutation.mutate({ email: email, password: password.value });
+        signInMutation.mutate({
+          email: email,
+          password: password.value,
+          fcmToken: fcmToken
+        });
         localStorage.setItem('firstRun', 'firstRun');
       }
     }
   });
 
   const signInMutation = useMutation({
-    mutationFn: (reqObj: { email: string; password: string }) => {
+    mutationFn: (reqObj: {
+      email: string;
+      password: string;
+      fcmToken: string;
+    }) => {
       return signInOnServer(reqObj);
     },
     onSuccess: (response: any) => {
