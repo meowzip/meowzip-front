@@ -18,15 +18,22 @@ export default function Password() {
   const [showFindModal, setShowFindModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  const fcmToken = 'ExponentPushToken[****************]';
+
   const signIn = () => {
     signInMutation.mutate({
       email: email,
-      password: password.value
+      password: password.value,
+      fcmToken: fcmToken
     });
   };
 
   const signInMutation = useMutation({
-    mutationFn: (reqObj: { email: string; password: string }) => {
+    mutationFn: (reqObj: {
+      email: string;
+      password: string;
+      fcmToken: string;
+    }) => {
       return signInOnServer(reqObj);
     },
     onSuccess: (response: any) => {
