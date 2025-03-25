@@ -26,7 +26,7 @@ export const checkMembershipByEmail = async (email: string) => {
 export const signInOnServer = async (reqObj: {
   email: string;
   password: string;
-  fcmToken: string;
+  fcmToken?: string;
 }) => {
   try {
     const requestOptions = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useUser } from '@/contexts/EmailContext';
@@ -11,6 +11,7 @@ import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomShe
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
 import { signInOnServer } from '@/services/signin';
+import { WebViewMessage, WebViewMessageType } from '@/types/webview';
 
 const SignUpPage = () => {
   const router = useRouter();
@@ -18,19 +19,49 @@ const SignUpPage = () => {
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
 
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
 
   const { email } = useUser();
-  const fcmToken = 'ExponentPushToken[****************]';
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data) as WebViewMessage;
+        if (message.type === WebViewMessageType.PUSH_TOKEN && message.token) {
+          console.log('Received push token:', message.token);
+          setFcmToken(message.token);
+          localStorage.setItem('fcm_token', message.token);
+        }
+      } catch (e) {
+        console.error('Error parsing message from app:', e);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!fcmToken) {
+      const storedToken = localStorage.getItem('expo_token');
+      if (storedToken) {
+        setFcmToken(storedToken);
+      }
+    }
+  }, [fcmToken]);
 
   const signUp = () => {
     signUpMutation.mutate({
       email: email,
       password: password.value,
       loginType: 'EMAIL',
-      fcmToken: fcmToken
+      fcmToken: fcmToken || undefined
     });
   };
 
@@ -39,7 +70,7 @@ const SignUpPage = () => {
       email: string;
       password: string;
       loginType: string;
-      fcmToken: string;
+      fcmToken?: string;
     }) => signUpOnServer(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
@@ -50,12 +81,12 @@ const SignUpPage = () => {
         signInOnServer({
           email: email,
           password: password.value,
-          fcmToken: fcmToken
+          fcmToken: fcmToken || undefined
         });
         signInMutation.mutate({
           email: email,
           password: password.value,
-          fcmToken: fcmToken
+          fcmToken: fcmToken || undefined
         });
         localStorage.setItem('firstRun', 'firstRun');
       }
@@ -66,7 +97,7 @@ const SignUpPage = () => {
     mutationFn: (reqObj: {
       email: string;
       password: string;
-      fcmToken: string;
+      fcmToken?: string;
     }) => {
       return signInOnServer(reqObj);
     },
