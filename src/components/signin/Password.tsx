@@ -9,51 +9,28 @@ import { useMutation } from '@tanstack/react-query';
 import { sendPwdResetEmail, signInOnServer } from '@/services/signin';
 import { useRouter } from 'next/navigation';
 import Modal from '../ui/Modal';
+import { usePushToken } from '@/hooks/common/usePushToken';
 
 export default function Password() {
   const { password, handlePwdChange } = usePasswordHandler();
   const { email } = useUser();
   const router = useRouter();
+  const { fcmToken } = usePushToken();
   const [showModal, setShowModal] = useState(false);
   const [showFindModal, setShowFindModal] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [fcmToken, setFcmToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === 'PUSH_TOKEN') {
-          console.log('Received push token:', message.token);
-          setFcmToken(message.token);
-          localStorage.setItem('expo_token', message.token);
-        }
-      } catch (e) {
-        console.error('Error parsing message from app:', e);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!fcmToken) {
-      const storedToken = localStorage.getItem('expo_token');
-      if (storedToken) {
-        setFcmToken(storedToken);
-      }
-    }
-  }, [fcmToken]);
 
   const signIn = () => {
+    const storedToken = localStorage.getItem('fcm_token') || '';
+    const currentToken = fcmToken || '';
+
+    if (storedToken !== currentToken && currentToken) {
+      localStorage.setItem('fcm_token', currentToken);
+    }
+
     signInMutation.mutate({
       email: email,
       password: password.value,
-      fcmToken: fcmToken || undefined
+      fcmToken: currentToken || storedToken
     });
   };
 
@@ -61,21 +38,19 @@ export default function Password() {
     mutationFn: (reqObj: {
       email: string;
       password: string;
-      fcmToken: string | undefined;
+      fcmToken: string;
     }) => {
       return signInOnServer(reqObj);
     },
     onSuccess: (response: any) => {
       if (response.status === 200) {
-        router.push('/diary');
+        router.replace('/diary');
       } else {
-        console.error('로그인 중 오류:', response.message);
-        router.push('/signin');
+        router.replace('/signin');
       }
     },
     onError: (error: any) => {
       setShowModal(true);
-      setErrorMsg(error.message);
       console.error('로그인 중 오류:', error.message);
     }
   });
@@ -137,7 +112,7 @@ export default function Password() {
         <Modal
           contents={{
             title: '알림',
-            body: errorMsg || '입력하신 정보를 다시 한번 확인해주세요'
+            body: '입력하신 정보를 다시 한번 확인해주세요'
           }}
           scrim={true}
           buttons={[
