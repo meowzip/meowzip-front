@@ -4,27 +4,33 @@ import Button from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import { useUser } from '@/contexts/EmailContext';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { sendPwdResetEmail, signInOnServer } from '@/services/signin';
 import { useRouter } from 'next/navigation';
 import Modal from '../ui/Modal';
+import { usePushToken } from '@/hooks/common/usePushToken';
 
 export default function Password() {
   const { password, handlePwdChange } = usePasswordHandler();
   const { email } = useUser();
   const router = useRouter();
+  const { fcmToken } = usePushToken();
   const [showModal, setShowModal] = useState(false);
   const [showFindModal, setShowFindModal] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const fcmToken = 'ExponentPushToken[****************]';
 
   const signIn = () => {
+    const storedToken = localStorage.getItem('fcm_token') || '';
+    const currentToken = fcmToken || '';
+
+    if (storedToken !== currentToken && currentToken) {
+      localStorage.setItem('fcm_token', currentToken);
+    }
+
     signInMutation.mutate({
       email: email,
       password: password.value,
-      fcmToken: fcmToken
+      fcmToken: currentToken || storedToken
     });
   };
 
@@ -38,15 +44,13 @@ export default function Password() {
     },
     onSuccess: (response: any) => {
       if (response.status === 200) {
-        router.push('/diary');
+        router.replace('/diary');
       } else {
-        console.error('로그인 중 오류:', response.message);
-        router.push('/signin');
+        router.replace('/signin');
       }
     },
     onError: (error: any) => {
       setShowModal(true);
-      setErrorMsg(error.message);
       console.error('로그인 중 오류:', error.message);
     }
   });
@@ -108,7 +112,7 @@ export default function Password() {
         <Modal
           contents={{
             title: '알림',
-            body: errorMsg || '입력하신 정보를 다시 한번 확인해주세요'
+            body: '입력하신 정보를 다시 한번 확인해주세요'
           }}
           scrim={true}
           buttons={[

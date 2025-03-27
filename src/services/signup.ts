@@ -13,6 +13,7 @@ export const signUpOnServer = async (reqObj: {
   email: string;
   password: string;
   loginType: string;
+  fcmToken: string;
 }) => {
   try {
     const requestOptions = {

@@ -41,12 +41,10 @@ export const signInOnServer = async (reqObj: {
       document.cookie = `Authorization=${token}; path=/; max-age=3600; secure;`;
       return response;
     } else {
-      console.log('Sign-in error:', response.body);
       const errorData = (await response.body) as any;
       throw new Error(errorData.message || '로그인 요청 중 오류 발생');
     }
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };

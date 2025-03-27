@@ -11,9 +11,11 @@ import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomShe
 import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
 import { signInOnServer } from '@/services/signin';
+import { usePushToken } from '@/hooks/common/usePushToken';
 
 const SignUpPage = () => {
   const router = useRouter();
+  const { fcmToken } = usePushToken();
 
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -23,14 +25,13 @@ const SignUpPage = () => {
     usePasswordHandler();
 
   const { email } = useUser();
-  const fcmToken = 'ExponentPushToken[****************]';
 
   const signUp = () => {
     signUpMutation.mutate({
       email: email,
       password: password.value,
       loginType: 'EMAIL',
-      fcmToken: fcmToken
+      fcmToken: fcmToken || ''
     });
   };
 
@@ -50,14 +51,13 @@ const SignUpPage = () => {
         signInOnServer({
           email: email,
           password: password.value,
-          fcmToken: fcmToken
+          fcmToken: fcmToken || ''
         });
         signInMutation.mutate({
           email: email,
           password: password.value,
-          fcmToken: fcmToken
+          fcmToken: fcmToken || ''
         });
-        localStorage.setItem('firstRun', 'firstRun');
       }
     }
   });
