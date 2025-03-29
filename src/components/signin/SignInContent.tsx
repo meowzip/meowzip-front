@@ -10,15 +10,9 @@ import SignInMain from '@/components/signin/SignInMain';
 import Complete from '@/components/signin/Complete';
 import Topbar from '@/components/ui/Topbar';
 import { useFunnel } from '@/components/common/Funnel';
+import { useWebView } from '@/hooks/useWebView';
 
 export type Step = 'main' | 'email' | 'accountInfo' | 'password' | 'complete';
-
-type WebViewMessage = {
-  type: string;
-  token?: string;
-  message?: string;
-  error?: string;
-};
 
 const SignInContent = () => {
   const router = useRouter();
@@ -35,50 +29,7 @@ const SignInContent = () => {
 
   const [Funnel, setStep] = useFunnel(steps, 'main');
 
-  useEffect(() => {
-    const handlePushTokenReceived = (event: CustomEvent) => {
-      console.log('[웹] 푸시 토큰 이벤트 수신:', event.detail.token);
-      localStorage.setItem('fcm_token', event.detail.token);
-    };
-
-    const handleWebViewMessage = (event: MessageEvent) => {
-      try {
-        const data = JSON.parse(event.data) as WebViewMessage;
-
-        switch (data.type) {
-          case 'PUSH_TOKEN_RECEIVED':
-            if (data.token) {
-              localStorage.setItem('fcm_token', data.token);
-            }
-            break;
-          case 'TOKEN_SET_SUCCESS':
-            break;
-          case 'TOKEN_SET_ERROR':
-            break;
-          case 'WEB_PAGE_LOADED':
-            break;
-        }
-      } catch (e) {
-        console.error('❌ 메시지 파싱 실패:', e);
-      }
-    };
-
-    window.addEventListener(
-      'pushTokenReceived',
-      handlePushTokenReceived as EventListener
-    );
-    window.addEventListener('message', handleWebViewMessage);
-
-    window.dispatchEvent(new CustomEvent('load'));
-
-    return () => {
-      window.removeEventListener(
-        'pushTokenReceived',
-        handlePushTokenReceived as EventListener
-      );
-      window.removeEventListener('message', handleWebViewMessage);
-    };
-  }, []);
+  useWebView();
 
   useEffect(() => {
     const step = searchParams.get('step') as Step;
