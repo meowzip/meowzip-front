@@ -82,7 +82,13 @@ const BottomNavBar = () => {
               alt={nav.key}
               width={40}
               height={40}
-              className="rounded-full p-[3px]"
+              className="select-none rounded-full p-[3px]"
+              style={{
+                WebkitTransform: 'translate3d(0, 0, 0)',
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden'
+              }}
+              priority={nav.key === activeNav}
             />
             <h5 className="text-center text-[10px] font-normal text-gr-800">
               {nav.value}

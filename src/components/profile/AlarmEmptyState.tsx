@@ -6,7 +6,7 @@ const AlarmEmptyState = () => {
     <section className="flex flex-col items-center justify-center">
       <div className="flex flex-col items-center justify-center gap-[6px] px-4 py-6">
         <Image
-          src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/profile/setting.svg"
+          src="/images/mockup/box-cat.svg"
           alt="edit"
           width={120}
           height={120}
