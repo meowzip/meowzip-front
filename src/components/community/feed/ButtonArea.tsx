@@ -25,7 +25,7 @@ const ButtonArea = ({
     <div className="flex justify-between py-4">
       <div className="flex gap-[10px]">
         <div
-          className="flex items-center gap-[2px]"
+          className="flex w-[50px] items-center gap-[2px]"
           onClick={e => {
             e.stopPropagation(), toggleLike();
           }}

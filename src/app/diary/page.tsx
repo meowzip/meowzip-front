@@ -138,26 +138,26 @@ const DiaryPage = () => {
   };
 
   // test code
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      console.log('📩 Received message:', event.data);
+  // useEffect(() => {
+  //   const handleMessage = (event: MessageEvent) => {
+  //     console.log('📩 Received message:', event.data);
 
-      try {
-        const parsedData = JSON.parse(event.data);
-        if (parsedData.type === 'PUSH_TOKEN') {
-          console.log('✅ Push Token Received:', parsedData.token);
-        }
-      } catch (error) {
-        console.error('❌ Error parsing message data:', error);
-      }
-    };
+  //     try {
+  //       const parsedData = JSON.parse(event.data);
+  //       if (parsedData.type === 'PUSH_TOKEN') {
+  //         console.log('✅ Push Token Received:', parsedData.token);
+  //       }
+  //     } catch (error) {
+  //       console.error('❌ Error parsing message data:', error);
+  //     }
+  //   };
 
-    window.addEventListener('message', handleMessage);
+  //   window.addEventListener('message', handleMessage);
 
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('message', handleMessage);
+  //   };
+  // }, []);
 
   return (
     <>

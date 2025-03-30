@@ -53,7 +53,11 @@ const ImageUploader = ({
           if (Array.isArray(prevList)) {
             return prevList.map(item =>
               item.key === key
-                ? { ...item, imageSrc: reader.result as string }
+                ? {
+                    ...item,
+                    imageSrc: reader.result as string,
+                    croppedImage: null
+                  }
                 : item
             );
           } else {
@@ -100,16 +104,14 @@ const ImageUploader = ({
       } relative flex flex-col items-center justify-center bg-gr-50`}
     >
       {/* 파일 업로드 */}
-      {!data?.imageSrc && (
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          onChange={e => selectImage(e, data?.key)}
-          id={String(data?.key)}
-          className="hidden"
-        />
-      )}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={e => selectImage(e, data?.key)}
+        id={String(data?.key)}
+        className="hidden"
+      />
       {/* 업로드 버튼 겸 이미지 프리뷰 */}
       <section
         className={`flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300 ${

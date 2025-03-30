@@ -7,6 +7,7 @@ import ButtonArea from '@/components/community/feed/ButtonArea';
 import { useRouter } from 'next/navigation';
 import { FeedType } from '@/types/communityType';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 interface FeedCardProps {
   variant?: 'detail';
@@ -28,7 +29,7 @@ const FeedCard = ({
   hasUserArea
 }: FeedCardProps) => {
   const router = useRouter();
-
+  const [isImagesLoading, setIsImagesLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [isClamped, setIsClamped] = useState(false);
   const contentRef = useRef<HTMLParagraphElement>(null);
@@ -40,6 +41,35 @@ const FeedCard = ({
       );
     }
   }, [content?.content]);
+
+  useEffect(() => {
+    if (!content?.images?.length) {
+      setIsImagesLoading(false);
+      return;
+    }
+
+    const loadImages = async () => {
+      try {
+        await Promise.all(
+          content.images.map(
+            src =>
+              new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = src;
+                img.onload = resolve;
+                img.onerror = reject;
+              })
+          )
+        );
+        setIsImagesLoading(false);
+      } catch (error) {
+        console.error('이미지 로딩 중 에러 발생:', error);
+        setIsImagesLoading(false);
+      }
+    };
+
+    loadImages();
+  }, [content?.images]);
 
   const toggleContent = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -91,7 +121,11 @@ const FeedCard = ({
       </section>
       {content?.images && content?.images?.length > 0 && (
         <section className="flex h-[300px] gap-2 pt-4" onClick={clickComment}>
-          <Carousel images={content.images} style="rounded-b-lg" />
+          {isImagesLoading ? (
+            <Skeleton className="h-full w-full rounded-lg" />
+          ) : (
+            <Carousel images={content.images} style="rounded-b-lg" />
+          )}
         </section>
       )}
       <ButtonArea

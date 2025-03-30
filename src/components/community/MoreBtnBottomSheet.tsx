@@ -100,60 +100,63 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
 
   return (
     <>
-      <BottomSheet
-        isVisible={isVisible}
-        setIsVisible={setIsVisible}
-        topBar={true}
-        heightPercent={heightPercent}
-      >
-        <div className="px-4">
-          {(decodedToken?.memberId === memberId && type !== 'comment') ||
-          type === 'zip' ? (
-            <>
-              <ActionButton
-                icon="/images/icons/edit.svg"
-                content="수정하기"
-                onClick={() => openModalEdit()}
-              />
-              <ActionButton
-                icon="/images/icons/delete.svg"
-                content="삭제하기"
-                onClick={() => openModalDelete()}
-              />
-            </>
-          ) : (
-            <>
-              {decodedToken?.memberId === memberId && type === 'comment' ? (
+      <div className="z-[110]">
+        <BottomSheet
+          isVisible={isVisible}
+          setIsVisible={setIsVisible}
+          topBar={true}
+          heightPercent={heightPercent}
+        >
+          <div className="px-4">
+            {(decodedToken?.memberId === memberId && type !== 'comment') ||
+            type === 'zip' ? (
+              <>
+                <ActionButton
+                  icon="/images/icons/edit.svg"
+                  content="수정하기"
+                  onClick={() => openModalEdit()}
+                />
                 <ActionButton
                   icon="/images/icons/delete.svg"
                   content="삭제하기"
                   onClick={() => openModalDelete()}
                 />
-              ) : (
-                <>
-                  <ActionButton
-                    icon="/images/icons/edit.svg"
-                    content={
-                      type === 'comment' ? '댓글 신고하기' : '게시물 신고하기'
-                    }
-                    onClick={() => openModalReport()}
-                  />
+              </>
+            ) : (
+              <>
+                {decodedToken?.memberId === memberId && type === 'comment' ? (
                   <ActionButton
                     icon="/images/icons/delete.svg"
-                    content="작성자 차단하기"
-                    onClick={() => openModalBlock()}
+                    content="삭제하기"
+                    onClick={() => openModalDelete()}
                   />
-                </>
-              )}
-            </>
-          )}
-        </div>
-      </BottomSheet>
-
+                ) : (
+                  <>
+                    <ActionButton
+                      icon="/images/icons/edit.svg"
+                      content={
+                        type === 'comment' ? '댓글 신고하기' : '게시물 신고하기'
+                      }
+                      onClick={() => openModalReport()}
+                    />
+                    <ActionButton
+                      icon="/images/icons/delete.svg"
+                      content="작성자 차단하기"
+                      onClick={() => openModalBlock()}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </BottomSheet>
+      </div>
       {showModal && (
         <Modal
-          contents={{ title: modalContent?.title, body: modalContent?.body }}
-          scrim={true}
+          contents={{
+            title: modalContent?.title,
+            body: modalContent?.body
+          }}
           buttons={[
             {
               content: modalContent?.primaryBtn.content || '',
@@ -168,6 +171,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
               onClick: () => setShowModal(false)
             }
           ]}
+          scrim={true}
         />
       )}
     </>
