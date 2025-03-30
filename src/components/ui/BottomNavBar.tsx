@@ -58,6 +58,16 @@ const BottomNavBar = () => {
     setActiveNav(path);
   }, [pathName]);
 
+  const handleNavClick = () => {
+    if (
+      typeof window !== 'undefined' &&
+      window.ReactNativeWebView &&
+      window.vibrate
+    ) {
+      window.vibrate(50);
+    }
+  };
+
   if (isLoading) return;
 
   return (
@@ -71,7 +81,12 @@ const BottomNavBar = () => {
               : nav.img.default;
 
         return (
-          <Link key={nav.key} href={`/${nav.key}`} className="relative px-4">
+          <Link
+            key={nav.key}
+            href={`/${nav.key}`}
+            className="relative px-4"
+            onClick={handleNavClick}
+          >
             {nav.key === 'profile' && (
               <div className="absolute right-4">
                 <Badge type="default" bgColor="bg-pr-500" />

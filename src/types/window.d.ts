@@ -5,4 +5,6 @@ interface Window {
   ReactNativeWebView?: {
     postMessage: (message: string) => void;
   };
+  vibrate(duration?: number): void;
+  addVibrateToElement(elementId: string): void;
 }
