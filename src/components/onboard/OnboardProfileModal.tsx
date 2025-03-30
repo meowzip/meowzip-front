@@ -103,15 +103,28 @@ const OnboardProfileModal = ({
   }, [error, message]);
 
   const updateProfile = () => {
-    const params = {
-      nickname: nickname,
-      profileImage: profileImage[0].croppedImage
-    };
-    profileMutation.mutate(params);
+    const params: {
+      nickname?: string;
+      profileImage?: string | null;
+    } = {};
+
+    if (nickname !== myProfile.nickname) {
+      params.nickname = nickname;
+    }
+
+    if (profileImage[0].croppedImage !== myProfile.profileImageUrl) {
+      params.profileImage = profileImage[0].croppedImage;
+    }
+
+    if (Object.keys(params).length > 0) {
+      profileMutation.mutate(params);
+    } else {
+      onClose();
+    }
   };
 
   const profileMutation = useMutation({
-    mutationFn: (reqObj: { nickname: string; profileImage: string | null }) =>
+    mutationFn: (reqObj: { nickname?: string; profileImage?: string | null }) =>
       updateProfileOnServer(reqObj),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {

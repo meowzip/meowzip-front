@@ -36,14 +36,19 @@ export const fetchExtendedForm = returnFetch({
 });
 
 export const updateProfileOnServer = async (reqObj: {
-  nickname: string;
-  profileImage: string | null;
+  nickname?: string;
+  profileImage?: string | null;
 }) => {
   const formData = new FormData();
-  formData.append('nickname', reqObj.nickname);
 
-  const file = base64ToFile(reqObj.profileImage, 'image.jpg');
-  file && formData.append('profileImage', file);
+  if (reqObj.nickname) {
+    formData.append('nickname', reqObj.nickname);
+  }
+
+  if (reqObj.profileImage) {
+    const file = base64ToFile(reqObj.profileImage, 'image.jpg');
+    file && formData.append('profileImage', file);
+  }
 
   const requestOptions = { method: 'PATCH', body: formData };
 
