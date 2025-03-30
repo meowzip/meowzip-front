@@ -101,8 +101,7 @@ const CalendarModal = ({
           <div>
             <Calendar
               selected={days}
-              onSelect={handleSelectDate}
-              mode="multiple"
+              onDateSelect={handleSelectDate}
               month={selectedMonth}
             />
             <BottomSheet

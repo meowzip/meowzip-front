@@ -365,7 +365,7 @@ const DemoPage = () => {
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 Calendar</h1>
-        <Calendar mode="single" selected={date} onSelect={setDate} />
+        {/* <Calendar mode="single" selected={[date]} onSelect={setDate} /> */}
       </section>
     </div>
   );
