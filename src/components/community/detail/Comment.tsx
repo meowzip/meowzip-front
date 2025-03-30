@@ -30,7 +30,7 @@ export default function Comment({
           items={[
             {
               id: 1,
-              imageUrl: comment.memberNickname,
+              imageUrl: comment.profileImageUrl || '',
               style: 'w-10 h-10'
             }
           ]}

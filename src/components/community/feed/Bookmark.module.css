@@ -1,0 +1,48 @@
+.bookmarkButton {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.bookmarkButton:hover {
+  transform: scale(1.1);
+}
+
+.bookmarkButton:active {
+  transform: scale(0.9);
+}
+
+.bookmarkIcon {
+  width: 100%;
+  height: 100%;
+}
+
+.bookmarkOutline {
+  fill: none;
+  stroke: #999999;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  transition: stroke 0.3s ease;
+}
+
+.bookmarkFill {
+  fill: #020a1a;
+  stroke: #020a1a;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bookmarked .bookmarkOutline {
+  stroke: #0A1D47;
+}
+
+.bookmarked .bookmarkFill {
+  clip-path: inset(0 0 0 0);
+} 

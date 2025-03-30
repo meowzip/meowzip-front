@@ -18,6 +18,7 @@ export interface CommentType {
   id: number;
   memberId: number;
   memberNickname: string;
+  profileImageUrl?: string;
   isMine: boolean;
   content: string;
   parentId: number | null;
