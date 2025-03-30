@@ -108,7 +108,7 @@ const Carousel: React.FC<CarouselProps> = ({ images, style }) => {
           <SwiperSlide key={index}>
             {loadedImages[index] ? (
               <img
-                className={`h-full w-full object-cover transition-opacity duration-300 ${style}`}
+                className={`h-full max-h-[300px] w-full object-cover transition-opacity duration-300 ${style}`}
                 src={image}
                 alt={`slide-${index}`}
                 loading="lazy"

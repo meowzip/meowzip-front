@@ -27,7 +27,9 @@ const ZipDetailDiary = ({ ...props }: DiaryObj) => {
           <p className="line-clamp-4 text-body-3 text-gr-black">
             {props.content}
           </p>
-          <p className="pt-[6px] text-btn-3 text-gr-400">{props.caredTime}</p>
+          <p className="pt-[6px] text-btn-3 text-gr-400">
+            {props.caredDateTime}
+          </p>
         </div>
         <div className="w-[90px]">
           {props.images && (

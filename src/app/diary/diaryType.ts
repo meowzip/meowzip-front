@@ -8,6 +8,7 @@ export interface DiaryObj {
   memberId: number;
   memberNickname: string;
   taggedCats: TaggedCat[];
+  caredDateTime: string;
 }
 
 export interface DiaryRegisterReqObj {
