@@ -36,6 +36,26 @@ const DiaryWriteModal = ({
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const caredDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const date = today.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${date}`;
+  };
+
+  const formatDateToISO = (dateStr: string) => {
+    if (dateStr.includes('-')) return dateStr;
+
+    const year = new Date().getFullYear();
+    const match = dateStr.match(/(\d+)월\s*(\d+)일/);
+    if (!match) return dateStr;
+
+    const month = match[1].padStart(2, '0');
+    const day = match[2].padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [textareaContent, setTextareaContent] = useState('');
   const [currentTime, setCurrentTime] = useState({
     hour: new Date().getHours().toString().padStart(2, '0'),
@@ -53,6 +73,7 @@ const DiaryWriteModal = ({
     { key: 2, imageSrc: null, croppedImage: null },
     { key: 3, imageSrc: null, croppedImage: null }
   ]);
+  const [caredDateState, setCaredDateState] = useState(caredDate());
 
   const settingDiaryDetail = () => {
     if (!diaryDetail) return;
@@ -62,6 +83,7 @@ const DiaryWriteModal = ({
       hour: diaryDetail.caredTime.split(':')[0].split(' ')[1],
       minute: diaryDetail.caredTime.split(':')[1]
     });
+    setCaredDateState(diaryDetail.caredDate);
     setChipObjList(prevList =>
       prevList.map(prevChip =>
         prevChip.key === 'food'
@@ -102,25 +124,20 @@ const DiaryWriteModal = ({
     return `${formattedHour}:${formattedMinute}`;
   };
 
-  const caredDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const date = today.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${date}`;
-  };
-
   const settingParams = () => {
     const images = diaryImageList
       ?.filter(diary => diary.croppedImage)
       ?.map(diary => diary.croppedImage);
+
+    const rawDate = id ? caredDateState : caredDate();
+    const formattedDate = formatDateToISO(rawDate);
 
     return {
       isGivenWater: chipObjList.find(chip => chip.key === 'water')
         ?.checked as boolean,
       isFeed: chipObjList.find(chip => chip.key === 'food')?.checked as boolean,
       content: textareaContent,
-      caredDate: caredDate(),
+      caredDate: formattedDate,
       caredTime: displayTime(),
       catIds: taggedCatList.map(cat => cat.id),
       images: images.filter(image => image !== null) as string[]
@@ -128,9 +145,11 @@ const DiaryWriteModal = ({
   };
 
   const saveDiary = () => {
+    const params = settingParams();
+
     return id
-      ? editDiaryMutation.mutate({ id, diary: settingParams() })
-      : registerDiaryMutation.mutate(settingParams());
+      ? editDiaryMutation.mutate({ id, diary: params })
+      : registerDiaryMutation.mutate(params);
   };
 
   const registerDiaryMutation = useMutation({
