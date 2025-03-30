@@ -1,7 +1,7 @@
 'use client';
 
 import WriteComment from '@/components/community/detail/WriteComment';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useRef } from 'react';
 import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
@@ -17,6 +17,8 @@ import useCommentMutation from '@/hooks/community/useCommentMutation';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
+  const [bottomSheetHeight, setBottomSheetHeight] = useState<number>(0);
+  const bottomSheetRef = useRef<HTMLDivElement>(null);
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [showWriteModal, setShowWriteModal] = useState(false);
@@ -47,6 +49,13 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     if (!feedDetail) return;
   }, [slug, feedDetail]);
 
+  useEffect(() => {
+    if (bottomSheetRef.current) {
+      const height = bottomSheetRef.current.scrollHeight;
+      setBottomSheetHeight(height);
+    }
+  }, [editBottomSheet]);
+
   const handleReply = (commentId: number) => {
     setParentCommentId(commentId);
     setIsReplying(true);
@@ -58,103 +67,107 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   return (
-    <div className="fixed top-0 z-50 mx-auto h-screen w-full max-w-[640px] bg-gr-white">
-      <Topbar type="three">
+    <div className="fixed top-0 z-50 mx-auto flex h-screen w-full max-w-[640px] flex-col bg-gr-white">
+      <Topbar type="three" className="flex-none">
         <Topbar.Back onClick={() => router.back()} />
         <Topbar.Title title="피드" />
         <Topbar.Empty />
       </Topbar>
-      <div className="pb-28 pt-12">
-        <FeedCard
-          variant="detail"
-          content={feedDetail}
-          openBottomSheet={() => {
-            setEditBottomSheet(true);
-          }}
-          toggleLikeFeed={() => toggleLikeFeed(feedDetail)}
-          toggleBookmark={() => toggleBookmark(feedDetail)}
-          hasUserArea
-        />
-        {comments.length === 0 && (
-          <p className="py-8 text-center text-sm text-gr-300">
-            아직 댓글이 없어요
-            <br />
-            가장 먼저 댓글을 남겨보세요.
-          </p>
-        )}
-
-        {comments.map((comment: CommentType) => (
-          <div key={comment.id} className="py-4">
-            <Comment
-              comment={comment}
-              setEditBottomSheet={setEditBottomSheet}
-              setSelectedComment={setSelectedComment}
-              onReply={handleReply}
-            />
-            {isReplying && parentCommentId === comment.id && (
-              <WriteComment
-                feedId={feedDetail?.id}
-                parentCommentId={parentCommentId}
-                onCancel={handleCancelReply}
-              />
-            )}
-            {comment.replies?.map((reply: CommentType) => (
-              <Fragment key={reply.id}>
-                {isReplying && parentCommentId === reply.id && (
-                  <WriteComment
-                    feedId={feedDetail?.id}
-                    parentCommentId={parentCommentId}
-                    onCancel={handleCancelReply}
-                  />
-                )}
-              </Fragment>
-            ))}
-          </div>
-        ))}
-        {!isReplying && <WriteComment feedId={feedDetail?.id} />}
-        {showWriteModal && (
-          <FeedWriteModal
-            onClose={() => setShowWriteModal(false)}
-            feedDetail={feedDetail}
+      <div className="flex-1 overflow-y-auto">
+        <div className="pb-24 pt-12">
+          <FeedCard
+            variant="detail"
+            content={feedDetail}
+            openBottomSheet={() => {
+              setEditBottomSheet(true);
+            }}
+            toggleLikeFeed={() => toggleLikeFeed(feedDetail)}
+            toggleBookmark={() => toggleBookmark(feedDetail)}
+            hasUserArea
           />
-        )}
-        <MoreBtnBottomSheet
-          type={selectedComment ? 'comment' : 'feed'}
-          isVisible={editBottomSheet}
-          setIsVisible={() => {
-            setEditBottomSheet(!editBottomSheet);
-          }}
-          heightPercent={['50%', '40%']}
-          name={feedDetail?.memberNickname}
-          memberId={
-            selectedComment ? selectedComment?.memberId : feedDetail?.memberId
-          }
-          onDelete={() => {
-            selectedComment
-              ? deleteComment({
-                  postId: feedDetail?.id,
-                  commentId: selectedComment?.id
-                })
-              : deleteFeed(feedDetail);
-          }}
-          onEdit={() => {
-            if (!selectedComment) {
-              setShowWriteModal(true);
-            }
-          }}
-          onBlock={() => {
-            selectedComment
-              ? blockComment(feedDetail?.id)
-              : blockFeed(feedDetail);
-          }}
-          onReport={() => {
-            selectedComment
-              ? reportComment(feedDetail?.id, selectedComment?.id)
-              : reportFeed(feedDetail);
-          }}
-          showWriteModal={selectedComment ? undefined : setShowWriteModal}
-        />
+          {comments.length === 0 && (
+            <p className="py-8 text-center text-sm text-gr-300">
+              아직 댓글이 없어요
+              <br />
+              가장 먼저 댓글을 남겨보세요.
+            </p>
+          )}
+
+          {comments.map((comment: CommentType) => (
+            <div key={comment.id} className="py-4">
+              <Comment
+                comment={comment}
+                setEditBottomSheet={setEditBottomSheet}
+                setSelectedComment={setSelectedComment}
+                onReply={handleReply}
+              />
+              {isReplying && parentCommentId === comment.id && (
+                <WriteComment
+                  feedId={feedDetail?.id}
+                  parentCommentId={parentCommentId}
+                  onCancel={handleCancelReply}
+                />
+              )}
+              {comment.replies?.map((reply: CommentType) => (
+                <Fragment key={reply.id}>
+                  {isReplying && parentCommentId === reply.id && (
+                    <WriteComment
+                      feedId={feedDetail?.id}
+                      parentCommentId={parentCommentId}
+                      onCancel={handleCancelReply}
+                    />
+                  )}
+                </Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
+      <div className="z-[60] flex-none border-t border-gr-100 bg-gr-white pb-[env(safe-area-inset-bottom)] shadow-sm">
+        {!isReplying && <WriteComment feedId={feedDetail?.id} />}
+      </div>
+      {showWriteModal && (
+        <FeedWriteModal
+          onClose={() => setShowWriteModal(false)}
+          feedDetail={feedDetail}
+        />
+      )}
+      <MoreBtnBottomSheet
+        type={selectedComment ? 'comment' : 'feed'}
+        isVisible={editBottomSheet}
+        setIsVisible={() => {
+          setEditBottomSheet(!editBottomSheet);
+        }}
+        heightPercent={['40%', '30%']}
+        name={feedDetail?.memberNickname}
+        memberId={
+          selectedComment ? selectedComment?.memberId : feedDetail?.memberId
+        }
+        onDelete={() => {
+          selectedComment
+            ? deleteComment({
+                postId: feedDetail?.id,
+                commentId: selectedComment?.id
+              })
+            : deleteFeed(feedDetail);
+        }}
+        onEdit={() => {
+          if (!selectedComment) {
+            setShowWriteModal(true);
+          }
+        }}
+        onBlock={() => {
+          selectedComment
+            ? blockComment(feedDetail?.id)
+            : blockFeed(feedDetail);
+        }}
+        onReport={() => {
+          selectedComment
+            ? reportComment(feedDetail?.id, selectedComment?.id)
+            : reportFeed(feedDetail);
+        }}
+        showWriteModal={selectedComment ? undefined : setShowWriteModal}
+      />
     </div>
   );
 };
