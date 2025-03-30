@@ -5,6 +5,7 @@ interface UseWebViewReturn {
   isAndroid: boolean;
   isIOS: boolean;
   platform: 'Android' | 'iOS' | 'Web';
+  safePostMessage: (message: { type: string; [key: string]: any }) => void;
 }
 
 declare global {
@@ -244,6 +245,7 @@ export const useWebView = (): UseWebViewReturn => {
   return {
     isAndroid,
     isIOS,
-    platform
+    platform,
+    safePostMessage
   };
 };
