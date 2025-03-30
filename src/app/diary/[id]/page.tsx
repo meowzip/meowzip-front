@@ -49,6 +49,28 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
     }
   });
 
+  if (isLoading) {
+    return (
+      <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
+        <div className="flex h-full items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-pr-500 border-t-transparent" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
+        <div className="flex h-full items-center justify-center">
+          <div className="text-body-2 text-gr-500">
+            일지를 불러오는데 실패했습니다.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative mx-auto">
       <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
@@ -128,7 +150,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
           onEdit={() => setShowWriteModal(true)}
         />
 
-        {showWriteModal && (
+        {showWriteModal && diaryDetail && (
           <DiaryWriteModal
             onClose={() => setShowWriteModal(false)}
             id={diaryDetail.id}
