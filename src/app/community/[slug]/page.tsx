@@ -35,7 +35,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const { data: commentsData } = useQuery({
     queryKey: ['comments', slug],
     queryFn: () => getFeedComments(slug),
-    staleTime: 1000 * 60 * 10
+    staleTime: 0
   });
 
   const { deleteFeed, blockFeed, reportFeed, toggleLikeFeed, toggleBookmark } =

@@ -159,6 +159,7 @@ const DiaryWriteModal = ({
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
         onClose();
+        queryClient.invalidateQueries({ queryKey: ['diaryList'] });
         router.push('/diary');
       } else {
         console.error('일지 등록 중 오류:', response.message);

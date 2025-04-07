@@ -1,6 +1,5 @@
 import Button from '@/components/ui/Button';
-import React from 'react';
-
+import { IoIosArrowDown } from 'react-icons/io';
 interface DetailCardLayoutProps {
   titleObj: {
     title: string;
@@ -21,10 +20,11 @@ const DetailCardLayout = ({
   return (
     <section className="rounded-16 bg-gr-white">
       <h1
-        className="px-5 pb-2 pt-5 text-heading-4 text-gr-900"
+        className="flex cursor-pointer items-center gap-1 px-5 pb-2 pt-5 text-heading-4 text-gr-900"
         onClick={() => titleObj.onClick && titleObj.onClick()}
       >
         {titleObj.title}
+        {titleObj.onClick && <IoIosArrowDown className="ml-1" />}
       </h1>
       <div className="px-5">{children}</div>
       {btnObj && (
