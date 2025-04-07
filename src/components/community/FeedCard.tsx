@@ -78,10 +78,6 @@ const FeedCard = ({
     setShowMore(!showMore);
   };
 
-  const toggleLike = () => {
-    toggleLikeFeed();
-  };
-
   const clickComment = () => {
     if (variant === 'detail') return;
     router.push(`/community/${content.id}`);
@@ -133,7 +129,7 @@ const FeedCard = ({
         isLiked={content?.isLiked}
         isBookmarked={content?.isBookmarked}
         comment={content?.commentCount}
-        toggleLike={toggleLike}
+        toggleLike={toggleLikeFeed}
         toggleBookmark={toggleBookmark}
         clickComment={clickComment}
       />
