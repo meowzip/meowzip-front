@@ -13,7 +13,7 @@ import { getCoParentNotifications, getNotifications } from '@/services/profile';
 import AlarmEmptyState from '@/components/profile/AlarmEmptyState';
 import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
 import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export interface AlarmType {
   id: number;
@@ -80,6 +80,20 @@ const AlarmPage = () => {
     }
   }, [coParentInView, fetchNextCoparentNofi]);
 
+  const isNotiEmpty = useMemo(() => {
+    return (
+      Array.isArray(notifications?.pages?.[0]?.items) &&
+      notifications.pages[0].items.length === 0
+    );
+  }, [notifications]);
+
+  const isCoParentEmpty = useMemo(() => {
+    return (
+      Array.isArray(coParentsNoti?.pages?.[0]?.items) &&
+      coParentsNoti.pages[0].items.length === 0
+    );
+  }, [coParentsNoti]);
+
   return (
     <div className="fixed left-1/2 top-0 z-20 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
       <Topbar type="three">
@@ -98,7 +112,7 @@ const AlarmPage = () => {
         <TabsContent value="notice" className="mx-auto mt-0 max-w-[640px]">
           {notiIsLoading ? (
             <AlarmListSkeleton />
-          ) : notifications?.pages[0]?.items?.length === 0 ? (
+          ) : isNotiEmpty ? (
             <div className="flex h-[calc(100vh-90px)] items-center justify-center bg-gr-50">
               <AlarmEmptyState />
             </div>
@@ -122,7 +136,7 @@ const AlarmPage = () => {
         >
           {coParentIsLoading ? (
             <AlarmListSkeleton />
-          ) : coParentsNoti?.pages[0]?.items?.length === 0 ? (
+          ) : isCoParentEmpty ? (
             <div className="flex h-[calc(100vh-90px)] items-center justify-center bg-gr-50">
               <AlarmEmptyState />
             </div>
