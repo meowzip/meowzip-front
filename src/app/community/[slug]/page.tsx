@@ -94,7 +94,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           )}
 
           {comments.map((comment: CommentType) => (
-            <div key={comment.id} className="py-4">
+            <div key={comment.id} className="py-3">
               <Comment
                 comment={comment}
                 setEditBottomSheet={setEditBottomSheet}

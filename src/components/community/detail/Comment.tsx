@@ -20,11 +20,11 @@ export default function Comment({
   >;
 }) {
   return (
-    <div className={`${!comment.parentId ? 'mb-4' : ''}`}>
+    <div className={`${!comment.parentId ? '' : ''}`}>
       <div
         className={`${
-          comment.parentId ? 'mb-3 pl-8' : 'mb-3'
-        } flex items-start justify-between px-4`}
+          comment.parentId ? 'pl-8' : ''
+        } mb-3 flex items-start justify-between px-4`}
       >
         <Profile
           items={[
@@ -43,9 +43,11 @@ export default function Comment({
           <div className="mt-1">{comment.content}</div>
           <div className="mt-2 flex text-gr-500">
             <div>{formatCreatedAt(comment.createdAt)}</div>
-            <button className="ml-5" onClick={() => onReply(comment.id)}>
-              답글 달기
-            </button>
+            {!comment.parentId && (
+              <button className="ml-5" onClick={() => onReply(comment.id)}>
+                답글 달기
+              </button>
+            )}
           </div>
         </div>
         <Image
@@ -61,7 +63,7 @@ export default function Comment({
         />
       </div>
       {comment.replies && comment.replies.length > 0 && (
-        <div className="mb-4 pl-4">
+        <div className="pl-4">
           {comment.replies.map((reply: CommentType, index) => (
             <Comment
               key={reply.id}
