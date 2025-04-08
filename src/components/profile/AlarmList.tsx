@@ -6,13 +6,17 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { readNotificationOnServer } from '@/services/profile';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { AlarmType } from '@/app/profile/alarm/page';
 
-const AlarmList = (alarm: AlarmType) => {
+interface AlarmListProps {
+  alarm: AlarmType;
+  refetch: () => void;
+}
+
+const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
   const router = useRouter();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const [showMessage, setShowMessage] = useState(false);
 
@@ -43,14 +47,7 @@ const AlarmList = (alarm: AlarmType) => {
       if (data.status !== 'OK') {
         console.log('error');
       } else {
-        const { type } = variables;
-        if (type === 'UNDEFINED') {
-          queryClient.invalidateQueries({ queryKey: ['getNotifications'] });
-        } else {
-          queryClient.invalidateQueries({
-            queryKey: ['getCoparentsNotifications']
-          });
-        }
+        refetch();
       }
     }
   });

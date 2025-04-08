@@ -8,7 +8,7 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCoParentNotifications, getNotifications } from '@/services/profile';
 import AlarmEmptyState from '@/components/profile/AlarmEmptyState';
 import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
@@ -35,7 +35,8 @@ const AlarmPage = () => {
   const {
     data: notifications,
     isLoading: notiIsLoading,
-    fetchNextPage: fetchNextNotifications
+    fetchNextPage: fetchNextNotifications,
+    refetch: refetchNotifications
   } = useInfiniteQuery({
     queryKey: ['getNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -58,7 +59,8 @@ const AlarmPage = () => {
   const {
     data: coParentsNoti,
     isLoading: coParentIsLoading,
-    fetchNextPage: fetchNextCoparentNofi
+    fetchNextPage: fetchNextCoparentNofi,
+    refetch: refetchCoParentNotifications
   } = useInfiniteQuery({
     queryKey: ['getCoparentsNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -105,7 +107,7 @@ const AlarmPage = () => {
               {notifications?.pages?.map(page =>
                 page?.items?.map((noti: AlarmType) => (
                   <div key={noti.id}>
-                    <AlarmList {...noti} />
+                    <AlarmList alarm={noti} refetch={refetchNotifications} />
                   </div>
                 ))
               )}
@@ -129,7 +131,10 @@ const AlarmPage = () => {
               {coParentsNoti?.pages?.map(page =>
                 page?.items?.map((noti: AlarmType) => (
                   <div key={noti.id}>
-                    <AlarmList {...noti} />
+                    <AlarmList
+                      alarm={noti}
+                      refetch={refetchCoParentNotifications}
+                    />
                   </div>
                 ))
               )}
