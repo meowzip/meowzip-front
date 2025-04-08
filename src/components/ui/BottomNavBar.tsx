@@ -87,7 +87,7 @@ const BottomNavBar = () => {
             className="relative px-4"
             onClick={handleNavClick}
           >
-            {nav.key === 'profile' && (
+            {nav.key === 'profile' && myProfile?.existsNewNotification && (
               <div className="absolute right-4">
                 <Badge type="default" bgColor="bg-pr-500" />
               </div>
