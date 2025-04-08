@@ -81,7 +81,7 @@ const DiaryCard = ({
         </article>
         <article className="mb-2">
           <div
-            className={`mb-1 text-body-3 text-gr-black ${
+            className={`mb-1 w-full whitespace-pre-line text-body-3 text-gr-black ${
               showMore ? 'line-clamp-0' : 'line-clamp-3'
             }`}
             ref={contentRef}
