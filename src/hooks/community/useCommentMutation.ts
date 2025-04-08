@@ -18,7 +18,7 @@ const useCommentMutation = () => {
   }) => {
     registerCommentMutation.mutate({
       parentCommentId: reqObj.parentCommentId,
-      postId: reqObj.feedId,
+      postId: Number(reqObj.feedId),
       content: reqObj.comment
     });
   };
@@ -31,11 +31,14 @@ const useCommentMutation = () => {
     }) => registerCommentOnServer(reqObj),
     onSuccess: (response: any, variables) => {
       if (response.status === 'OK') {
+        const postIdStr = String(variables.postId);
         queryClient.invalidateQueries({
-          queryKey: ['comments', variables.postId]
+          queryKey: ['comments', postIdStr],
+          refetchType: 'active'
         });
         queryClient.invalidateQueries({
-          queryKey: ['feedDetail', String(variables.postId)]
+          queryKey: ['feedDetail', postIdStr],
+          refetchType: 'active'
         });
       }
     },
