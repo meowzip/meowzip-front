@@ -3,6 +3,7 @@ import Topbar from '../ui/Topbar';
 import { CalendarModal } from './CalendarModal';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { IoIosArrowDown } from 'react-icons/io';
 interface DiaryListLayoutProps {
   children: ReactNode;
 }
@@ -42,7 +43,9 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
       {isCalendarOpen ? (
         <Topbar type="three">
           <Topbar.Back onClick={() => setCalendarOpen(false)} />
-          <Topbar.Title title={formattedMonth} onClick={toggleBottomSheet} />
+          <Topbar.Title title={formattedMonth} onClick={toggleBottomSheet}>
+            <IoIosArrowDown className="ml-1" />
+          </Topbar.Title>
           <Topbar.Empty />
         </Topbar>
       ) : (

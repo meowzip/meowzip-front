@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button';
 import { HTMLAttributes } from 'react';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { IoIosArrowDown } from 'react-icons/io';
 
 const Home = () => {
   return (
@@ -15,11 +16,16 @@ const Home = () => {
   );
 };
 
-const Title = ({ title, onClick }: HTMLAttributes<HTMLDivElement>) => {
+const Title = ({
+  title,
+  onClick,
+  children
+}: HTMLAttributes<HTMLDivElement>) => {
   return (
-    <p className="text-heading-3 text-gr-900" onClick={onClick}>
-      {title}
-    </p>
+    <div className="flex items-center" onClick={onClick}>
+      <p className="text-heading-3 text-gr-900">{title}</p>
+      {children}
+    </div>
   );
 };
 
