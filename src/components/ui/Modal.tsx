@@ -1,5 +1,6 @@
 import React, { createRef, useEffect, ReactNode } from 'react';
 import Button from './Button';
+import { cn } from '@/lib/utils';
 
 interface ModalProps {
   contents?: {
@@ -12,6 +13,7 @@ interface ModalProps {
     btnStyle: string;
     textStyle: string;
     onClick?: () => void;
+    disabled?: boolean;
   }[];
   scrim?: boolean;
   customContent?: ReactNode; // New prop for custom JSX content
@@ -54,8 +56,12 @@ const Modal = ({ contents, buttons, scrim, customContent }: ModalProps) => {
           {buttons?.map(btn => (
             <Button
               key={btn.content}
-              onClick={btn.onClick}
-              className={btn.btnStyle}
+              onClick={btn.disabled ? undefined : btn.onClick}
+              className={cn(
+                btn.btnStyle,
+                btn.disabled && 'cursor-not-allowed opacity-70'
+              )}
+              disabled={btn.disabled}
             >
               <Button.Text text={btn.content} className={btn.textStyle} />
             </Button>

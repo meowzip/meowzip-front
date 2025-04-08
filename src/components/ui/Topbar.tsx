@@ -15,11 +15,16 @@ const Home = () => {
   );
 };
 
-const Title = ({ title, onClick }: HTMLAttributes<HTMLDivElement>) => {
+const Title = ({
+  title,
+  onClick,
+  children
+}: HTMLAttributes<HTMLDivElement>) => {
   return (
-    <p className="text-heading-3 text-gr-900" onClick={onClick}>
-      {title}
-    </p>
+    <div className="flex items-center" onClick={onClick}>
+      <p className="text-heading-3 text-gr-900">{title}</p>
+      {children}
+    </div>
   );
 };
 
@@ -114,10 +119,19 @@ const Next = ({ onClick }: { onClick: () => void }) => {
   );
 };
 
-const Complete = ({ onClick }: { onClick: () => void }) => {
+const Complete = ({
+  onClick,
+  isLoading
+}: {
+  onClick: () => void;
+  isLoading?: boolean;
+}) => {
   return (
-    <Button onClick={onClick} className="px-[10px] py-1">
-      <Button.Text text="완료" className="text-btn-2 text-pr-500" />
+    <Button onClick={onClick} className="px-[10px] py-1" disabled={isLoading}>
+      <Button.Text
+        text="완료"
+        className={cn('text-btn-2', isLoading ? 'text-gr-300' : 'text-pr-500')}
+      />
     </Button>
   );
 };

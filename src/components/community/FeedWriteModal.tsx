@@ -54,6 +54,8 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
   }, [feedDetail]);
 
   const saveFeed = () => {
+    if (registerFeedMutation.isPending || editFeedMutation.isPending) return;
+
     return feedDetail?.id
       ? editFeedMutation.mutate({
           id: feedDetail?.id,
@@ -116,7 +118,12 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
       <Topbar type="three">
         <Topbar.Back onClick={onClose} />
         <Topbar.Title title="글쓰기" />
-        <Topbar.Complete onClick={saveFeed} />
+        <Topbar.Complete
+          onClick={saveFeed}
+          isLoading={
+            registerFeedMutation.isPending || editFeedMutation.isPending
+          }
+        />
       </Topbar>
       <div className="mx-auto max-w-[640px] pb-28 pt-12">
         <article className="p-4 pt-14">
