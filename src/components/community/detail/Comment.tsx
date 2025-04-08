@@ -20,7 +20,7 @@ export default function Comment({
   >;
 }) {
   return (
-    <div className={`${!comment.parentId ? 'mb-6 last:mb-0' : ''}`}>
+    <div className={`${!comment.parentId ? 'mb-4' : ''}`}>
       <div
         className={`${
           comment.parentId ? 'mb-3 pl-8' : 'mb-3'
@@ -61,8 +61,8 @@ export default function Comment({
         />
       </div>
       {comment.replies && comment.replies.length > 0 && (
-        <div className="pl-4">
-          {comment.replies.map((reply: CommentType) => (
+        <div className="mb-4 pl-4">
+          {comment.replies.map((reply: CommentType, index) => (
             <Comment
               key={reply.id}
               comment={reply}
