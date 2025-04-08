@@ -99,7 +99,7 @@ const FeedCard = ({
       <section className="flex flex-col items-start gap-1" onClick={goToDetail}>
         <p
           ref={contentRef}
-          className={`pt-4 text-body-3 text-gr-black ${
+          className={`w-full whitespace-pre-line pt-4 text-body-3 text-gr-black ${
             showMore ? 'line-clamp-none' : 'line-clamp-3'
           }`}
           onClick={clickComment}

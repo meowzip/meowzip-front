@@ -89,7 +89,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
                 <Carousel images={diaryDetail?.images} style="rounded-16" />
               )}
             </div>
-            <h4 className="text-body-3 text-gr-black">
+            <h4 className="w-full whitespace-pre-line text-body-3 text-gr-black">
               {diaryDetail?.content}
             </h4>
             <article className="mb-2 flex items-center justify-start gap-1">

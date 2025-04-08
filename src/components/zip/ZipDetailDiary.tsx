@@ -24,7 +24,7 @@ const ZipDetailDiary = ({ ...props }: DiaryObj) => {
       </section>
       <section className="flex justify-between gap-[10px] pt-2">
         <div>
-          <p className="line-clamp-4 text-body-3 text-gr-black">
+          <p className="line-clamp-4 w-full whitespace-pre-line text-body-3 text-gr-black">
             {props.content}
           </p>
           <p className="pt-[6px] text-btn-3 text-gr-400">
