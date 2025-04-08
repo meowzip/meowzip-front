@@ -8,7 +8,11 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient
+} from '@tanstack/react-query';
 import {
   getCoParentNotifications,
   getNotifications,
@@ -33,6 +37,7 @@ export interface AlarmType {
 
 const AlarmPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { ref: notiRef, inView: notiInView } = useInView();
   const { ref: coParentRef, inView: coParentInView } = useInView();
 
@@ -106,6 +111,7 @@ const AlarmPage = () => {
       } else {
         refetchNotifications();
         refetchCoParentNotifications();
+        queryClient.invalidateQueries({ queryKey: ['myProfile'] });
       }
     }
   });
