@@ -8,7 +8,7 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCoParentNotifications, getNotifications } from '@/services/profile';
 import AlarmEmptyState from '@/components/profile/AlarmEmptyState';
 import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
@@ -35,7 +35,8 @@ const AlarmPage = () => {
   const {
     data: notifications,
     isLoading: notiIsLoading,
-    fetchNextPage: fetchNextNotifications
+    fetchNextPage: fetchNextNotifications,
+    refetch: refetchNotifications
   } = useInfiniteQuery({
     queryKey: ['getNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -58,7 +59,8 @@ const AlarmPage = () => {
   const {
     data: coParentsNoti,
     isLoading: coParentIsLoading,
-    fetchNextPage: fetchNextCoparentNofi
+    fetchNextPage: fetchNextCoparentNofi,
+    refetch: refetchCoParentNotifications
   } = useInfiniteQuery({
     queryKey: ['getCoparentsNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -93,55 +95,54 @@ const AlarmPage = () => {
           <TabsTrigger value="notice">활동 알림</TabsTrigger>
           <TabsTrigger value="coParentNotice">공동냥육</TabsTrigger>
         </TabsList>
-        {notifications?.pages[0]?.items?.length === 0 ? (
-          <div className="flex h-[calc(100vh-84px)] items-center justify-center bg-gr-50">
-            <AlarmEmptyState />
-          </div>
-        ) : (
-          <TabsContent value="notice" className="mx-auto mt-0 max-w-[640px]">
-            {notiIsLoading ? (
-              <AlarmListSkeleton />
-            ) : (
-              <>
-                {notifications?.pages?.map(page =>
-                  page?.items?.map((noti: AlarmType) => (
-                    <div key={noti.id}>
-                      <AlarmList {...noti} />
-                    </div>
-                  ))
-                )}
-                {/* 무한 스크롤 감지 영역 */}
-                <div ref={notiRef} className="h-20 bg-transparent" />
-              </>
-            )}
-          </TabsContent>
-        )}
-        {coParentsNoti?.pages[0]?.items?.length === 0 ? (
-          <div className="flex h-[calc(100vh-84px)] items-center justify-center bg-gr-50">
-            <AlarmEmptyState />
-          </div>
-        ) : (
-          <TabsContent
-            value="coParentNotice"
-            className="mx-auto mt-0 max-w-[640px]"
-          >
-            {coParentIsLoading ? (
-              <AlarmListSkeleton />
-            ) : (
-              <>
-                {coParentsNoti?.pages?.map(page =>
-                  page?.items?.map((noti: AlarmType) => (
-                    <div key={noti.id}>
-                      <AlarmList {...noti} />
-                    </div>
-                  ))
-                )}
-                {/* 무한 스크롤 감지 영역 */}
-                <div ref={coParentRef} className="h-20 bg-transparent" />
-              </>
-            )}
-          </TabsContent>
-        )}
+        <TabsContent value="notice" className="mx-auto mt-0 max-w-[640px]">
+          {notiIsLoading ? (
+            <AlarmListSkeleton />
+          ) : notifications?.pages[0]?.items?.length === 0 ? (
+            <div className="flex h-[calc(100vh-90px)] items-center justify-center bg-gr-50">
+              <AlarmEmptyState />
+            </div>
+          ) : (
+            <>
+              {notifications?.pages?.map(page =>
+                page?.items?.map((noti: AlarmType) => (
+                  <div key={noti.id}>
+                    <AlarmList alarm={noti} refetch={refetchNotifications} />
+                  </div>
+                ))
+              )}
+              {/* 무한 스크롤 감지 영역 */}
+              <div ref={notiRef} className="h-20 bg-transparent" />
+            </>
+          )}
+        </TabsContent>
+        <TabsContent
+          value="coParentNotice"
+          className="mx-auto mt-0 max-w-[640px]"
+        >
+          {coParentIsLoading ? (
+            <AlarmListSkeleton />
+          ) : coParentsNoti?.pages[0]?.items?.length === 0 ? (
+            <div className="flex h-[calc(100vh-90px)] items-center justify-center bg-gr-50">
+              <AlarmEmptyState />
+            </div>
+          ) : (
+            <>
+              {coParentsNoti?.pages?.map(page =>
+                page?.items?.map((noti: AlarmType) => (
+                  <div key={noti.id}>
+                    <AlarmList
+                      alarm={noti}
+                      refetch={refetchCoParentNotifications}
+                    />
+                  </div>
+                ))
+              )}
+              {/* 무한 스크롤 감지 영역 */}
+              <div ref={coParentRef} className="h-20 bg-transparent" />
+            </>
+          )}
+        </TabsContent>
       </Tabs>
     </div>
   );
