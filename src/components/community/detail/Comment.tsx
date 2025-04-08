@@ -20,10 +20,10 @@ export default function Comment({
   >;
 }) {
   return (
-    <>
+    <div className={`${!comment.parentId ? 'mb-4' : ''}`}>
       <div
         className={`${
-          comment.parentId ? 'pl-8' : ''
+          comment.parentId ? 'mb-3 pl-8' : 'mb-3'
         } flex items-start justify-between px-4`}
       >
         <Profile
@@ -40,8 +40,8 @@ export default function Comment({
           <div className="flex">
             <div className="font-bold">{comment.memberNickname}</div>
           </div>
-          <div>{comment.content}</div>
-          <div className="flex text-gr-500">
+          <div className="mt-1">{comment.content}</div>
+          <div className="mt-2 flex text-gr-500">
             <div>{formatCreatedAt(comment.createdAt)}</div>
             <button className="ml-5" onClick={() => onReply(comment.id)}>
               답글 달기
@@ -61,8 +61,8 @@ export default function Comment({
         />
       </div>
       {comment.replies && comment.replies.length > 0 && (
-        <div className="pl-4">
-          {comment.replies.map((reply: CommentType) => (
+        <div className="mb-4 pl-4">
+          {comment.replies.map((reply: CommentType, index) => (
             <Comment
               key={reply.id}
               comment={reply}
@@ -73,6 +73,6 @@ export default function Comment({
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }
