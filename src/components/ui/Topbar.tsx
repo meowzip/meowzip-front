@@ -196,6 +196,14 @@ const Empty = () => {
   return <div className="h-6 w-11" />;
 };
 
+const AllRead = ({ onClick }: { onClick: () => void }) => {
+  return (
+    <Button onClick={onClick} className="px-[10px] py-1">
+      <Button.Text text="모두 읽음" className="text-btn-2 text-pr-500" />
+    </Button>
+  );
+};
+
 const TopbarTypeVariants = {
   one: 'flex justify-center items-center',
   two: 'flex justify-between items-center',
@@ -237,5 +245,6 @@ export default Object.assign(Topbar, {
   Complete,
   Today,
   DatePicker,
-  Empty
+  Empty,
+  AllRead
 });

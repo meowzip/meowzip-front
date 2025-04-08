@@ -237,8 +237,6 @@ export const getCoParentNotifications = async ({
         }
       }
     );
-    // const responseBody = response.body as { items?: any[] };
-    // return responseBody?.items;
     if (response.body) {
       const responseBody = await response.text();
       const parsedBody = JSON.parse(responseBody);
@@ -268,6 +266,28 @@ export const readNotificationOnServer = async (notificationId: number) => {
         }
       }
     );
+
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('알림 읽음 처리 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('알림 읽음 처리 중 오류 발생:');
+    }
+  }
+};
+
+export const readAllNotificationOnServer = async () => {
+  try {
+    const memberToken = getCookie('Authorization');
+
+    const response = await fetchExtendedAuth('/notifications', {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${memberToken}`
+      }
+    });
 
     return response.body;
   } catch (error) {

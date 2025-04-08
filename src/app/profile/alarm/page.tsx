@@ -8,8 +8,12 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/TabsWithLine';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { getCoParentNotifications, getNotifications } from '@/services/profile';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
+import {
+  getCoParentNotifications,
+  getNotifications,
+  readAllNotificationOnServer
+} from '@/services/profile';
 import AlarmEmptyState from '@/components/profile/AlarmEmptyState';
 import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
 import { useInView } from 'react-intersection-observer';
@@ -94,12 +98,24 @@ const AlarmPage = () => {
     );
   }, [coParentsNoti]);
 
+  const readAllNotification = useMutation({
+    mutationFn: () => readAllNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status !== 'OK') {
+        console.log('error');
+      } else {
+        refetchNotifications();
+        refetchCoParentNotifications();
+      }
+    }
+  });
+
   return (
     <div className="fixed left-1/2 top-0 z-20 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
       <Topbar type="three">
         <Topbar.Back onClick={() => router.push('/profile')} />
         <Topbar.Title title="내 소식" />
-        <Topbar.Empty />
+        <Topbar.AllRead onClick={() => readAllNotification.mutate()} />
       </Topbar>
       <Tabs
         defaultValue="notice"
@@ -125,7 +141,6 @@ const AlarmPage = () => {
                   </div>
                 ))
               )}
-              {/* 무한 스크롤 감지 영역 */}
               <div ref={notiRef} className="h-20 bg-transparent" />
             </>
           )}
@@ -152,7 +167,6 @@ const AlarmPage = () => {
                   </div>
                 ))
               )}
-              {/* 무한 스크롤 감지 영역 */}
               <div ref={coParentRef} className="h-20 bg-transparent" />
             </>
           )}
