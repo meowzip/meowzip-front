@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { CatType } from '@/types/cat';
 import CloseIcon from '../../../public/images/icons/close.svg';
 import Image from 'next/image';
+import { toast } from '../ui/hooks/useToast';
 
 type DiaryRegisterReqWithCats = Omit<DiaryRegisterReqObj, 'taggedCats'> & {
   taggedCats: CatType[];
@@ -145,27 +146,45 @@ const DiaryWriteModal = ({
   };
 
   const saveDiary = () => {
-    const params = settingParams();
+    if (registerDiaryMutation.isPending || editDiaryMutation.isPending) {
+      return;
+    }
 
-    return id
-      ? editDiaryMutation.mutate({ id, diary: params })
-      : registerDiaryMutation.mutate(params);
+    try {
+      const params = settingParams();
+
+      if (!params.content.trim()) {
+        toast({
+          title: '일지 내용을 입력해주세요.',
+          description: '일지 내용을 입력해주세요.'
+        });
+        return;
+      }
+
+      if (id) {
+        editDiaryMutation.mutate({ id, diary: params });
+      } else {
+        registerDiaryMutation.mutate(params);
+      }
+    } catch (error) {
+      console.error('일지 저장 중 오류:', error);
+    }
   };
 
   const registerDiaryMutation = useMutation({
     mutationFn: (reqObj: DiaryRegisterReqObj) => {
       return registerDiaryOnServer(reqObj);
     },
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        onClose();
-        queryClient.invalidateQueries({ queryKey: ['diaryList'] });
-        router.push('/diary');
-      } else {
-        console.error('일지 등록 중 오류:', response.message);
-      }
+    onSuccess: () => {
+      onClose();
+      queryClient.invalidateQueries({ queryKey: ['diaryList'] });
+      router.push('/diary');
     },
-    onError: (error: any) => {
+    onError: error => {
+      toast({
+        title: '일지 등록 중 오류가 발생했습니다.',
+        description: error.message || '일지 등록 중 오류가 발생했습니다.'
+      });
       console.error('일지 등록 중 오류:', error);
     }
   });
@@ -173,15 +192,15 @@ const DiaryWriteModal = ({
   const editDiaryMutation = useMutation({
     mutationFn: (reqObj: { id: number; diary: DiaryRegisterReqObj }) =>
       editDiaryOnServer(reqObj),
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        onClose();
-        queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
-      } else {
-        console.error('일지 수정 중 오류:', response.message);
-      }
+    onSuccess: () => {
+      onClose();
+      queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
     },
-    onError: (error: any) => {
+    onError: error => {
+      toast({
+        title: '일지 수정 중 오류가 발생했습니다.',
+        description: error.message || '일지 수정 중 오류가 발생했습니다.'
+      });
       console.error('일지 수정 중 오류:', error);
     }
   });
@@ -197,7 +216,12 @@ const DiaryWriteModal = ({
       <Topbar type="three">
         <Topbar.Back onClick={onClose} />
         <Topbar.Title title="일지쓰기" />
-        <Topbar.Complete onClick={saveDiary} />
+        <Topbar.Complete
+          onClick={saveDiary}
+          isLoading={
+            registerDiaryMutation.isPending || editDiaryMutation.isPending
+          }
+        />
       </Topbar>
       <div className="m-auto max-w-[640px]">
         <section className="flex items-center justify-between px-4 py-2 pt-12">

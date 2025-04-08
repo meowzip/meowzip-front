@@ -10,7 +10,7 @@ import ImageUploader from '../diary/ImageUploader';
 import { Input } from '../ui/Input';
 import useCatNameHandler from '@/hooks/zip/useCatNameHandler';
 import { DiaryObj } from '@/app/diary/diaryType';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 
 interface SignInMainProps {
   setStep: () => void;
@@ -34,6 +34,27 @@ export default function CatInfo({
   type
 }: SignInMainProps) {
   const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (
+      newCatData: CatObjType & {
+        id?: number;
+        diaries?: DiaryObj[];
+        coParents?: CoParent[];
+        dDay?: number;
+      }
+    ) => (type === 'edit' ? editCat(newCatData) : registerCat(newCatData)),
+    onSuccess: response => {
+      if (response && response.status === 200) {
+        setStep();
+        queryClient.invalidateQueries({ queryKey: ['getCats'] });
+        queryClient.invalidateQueries({ queryKey: ['catDetail'] });
+      }
+    },
+    onError: error => {
+      console.error('Error:', error);
+    }
+  });
 
   const [openBottomSheet, setOpenBottomSheet] = useState(false);
   const [textareaContent, setTextAreaContent] = useState('');
@@ -115,19 +136,10 @@ export default function CatInfo({
   };
 
   const handleOnClick = async () => {
-    const newCatData = updateCatData();
-    console.log(newCatData, 'newCatData');
     try {
-      const response =
-        type === 'edit'
-          ? await editCat(newCatData)
-          : await registerCat(newCatData);
-
-      if (response && response.status === 200) {
-        setStep();
-        queryClient.invalidateQueries({ queryKey: ['getCats'] });
-        queryClient.invalidateQueries({ queryKey: ['catDetail'] });
-      }
+      const newCatData = updateCatData();
+      console.log(newCatData, 'newCatData');
+      mutation.mutate(newCatData);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -140,7 +152,10 @@ export default function CatInfo({
         <Topbar.Title
           title={type === 'register' ? '고양이 등록(3/3)' : '정보 수정'}
         />
-        <Topbar.Complete onClick={handleOnClick} />
+        <Topbar.Complete
+          onClick={handleOnClick}
+          isLoading={mutation.isPending}
+        />
       </Topbar>
       <section className="mx-auto mt-12 flex max-w-[640px] flex-col items-center self-stretch p-6">
         <article className="flex w-full flex-col items-center justify-center gap-4 pb-8">

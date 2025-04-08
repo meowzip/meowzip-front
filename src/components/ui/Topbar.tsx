@@ -6,7 +6,6 @@ import Button from '@/components/ui/Button';
 import { HTMLAttributes } from 'react';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/atoms/diaryAtom';
-import { IoIosArrowDown } from 'react-icons/io';
 
 const Home = () => {
   return (
@@ -120,10 +119,19 @@ const Next = ({ onClick }: { onClick: () => void }) => {
   );
 };
 
-const Complete = ({ onClick }: { onClick: () => void }) => {
+const Complete = ({
+  onClick,
+  isLoading
+}: {
+  onClick: () => void;
+  isLoading?: boolean;
+}) => {
   return (
-    <Button onClick={onClick} className="px-[10px] py-1">
-      <Button.Text text="완료" className="text-btn-2 text-pr-500" />
+    <Button onClick={onClick} className="px-[10px] py-1" disabled={isLoading}>
+      <Button.Text
+        text="완료"
+        className={cn('text-btn-2', isLoading ? 'text-gr-300' : 'text-pr-500')}
+      />
     </Button>
   );
 };
