@@ -1,3 +1,5 @@
+'use client';
+
 import { Slot } from '@radix-ui/react-slot';
 import React, { forwardRef } from 'react';
 import Image from 'next/image';
