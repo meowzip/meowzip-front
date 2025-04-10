@@ -40,7 +40,7 @@ const FindCoParentsModal = ({
     isError,
     fetchNextPage
   } = useInfiniteQuery({
-    queryKey: ['coParents', catId],
+    queryKey: ['coParents', catId, keyword],
     queryFn: ({ pageParam = 1 }) =>
       getCoParents({
         keyword: keyword,
@@ -52,8 +52,10 @@ const FindCoParentsModal = ({
       return lastPage.hasNext ? allPages.length + 1 : undefined;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 5
+    staleTime: 0,
+    enabled: !!catId
   });
+
   useEffect(() => {
     if (inView) {
       fetchNextPage();
@@ -80,9 +82,9 @@ const FindCoParentsModal = ({
       requestCoParenting(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
-        console.log('error');
+        console.log('error requesting coparenting:', data);
       } else {
-        queryClient.invalidateQueries({ queryKey: ['coParents'] });
+        queryClient.invalidateQueries({ queryKey: ['coParents', catId] });
       }
     }
   });
@@ -92,25 +94,30 @@ const FindCoParentsModal = ({
       cancelCoParenting(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
-        console.log('error');
+        console.log('error canceling coparenting:', data);
       } else {
-        queryClient.invalidateQueries({ queryKey: ['coParents'] });
+        queryClient.invalidateQueries({ queryKey: ['coParents', catId] });
       }
     }
   });
 
   const toggleRequestCoParenting = () => {
+    if (!coParent || !coParent.memberId) {
+      console.error('coParent data is missing');
+      return;
+    }
     if (coParent.isRequested) {
       cancelCoParentingMutation.mutate({
         catId: catId,
         memberId: coParent.memberId
       });
-      return;
+    } else {
+      requestCoParentingMutation.mutate({
+        catId: catId,
+        memberId: coParent.memberId
+      });
     }
-    requestCoParentingMutation.mutate({
-      catId: catId,
-      memberId: coParent.memberId
-    });
+    setRequestBottomSheet(false);
   };
 
   return (
@@ -122,65 +129,97 @@ const FindCoParentsModal = ({
         </Topbar>
       </section>
       <ul className="mx-auto w-full max-w-[640px] p-4 pt-12">
+        {isLoading && !coParentList && (
+          <div className="text-center text-gr-500">로딩 중...</div>
+        )}
+        {isError && (
+          <div className="text-center text-red-500">
+            오류가 발생했습니다. 다시 시도해주세요.
+          </div>
+        )}
         {coParentList ? (
           <>
-            {coParentList?.pages?.map(page =>
-              page?.items?.map((coParent: CoParent) => (
-                <li
-                  key={coParent.memberId}
-                  className="flex items-center justify-between py-2"
-                >
-                  <div className="flex items-center gap-4">
-                    <Image
-                      src={coParent.imageUrl || 'https://github.com/shadcn.png'}
-                      alt="image"
-                      width={48}
-                      height={48}
-                      className="h-12 w-12 rounded-full"
-                    />
-                    <p className="text-body-2 text-gr-900">
-                      {coParent.nickname}
-                    </p>
-                  </div>
-                  <button
-                    className={`flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] text-btn-2 ${
-                      coParent.isRequested
-                        ? 'border border-pr-500 bg-gr-white text-pr-500'
-                        : 'bg-pr-500 text-gr-white'
-                    }`}
-                    onClick={() => openBottomSheet(coParent)}
-                  >
-                    {coParent.isRequested ? (
-                      <p>요청취소</p>
-                    ) : (
-                      <>
-                        <p>요청</p>
+            {coParentList.pages.length === 0 ||
+            coParentList.pages.every(page => page?.items?.length === 0) ? (
+              <div className="text-center text-gr-500">
+                검색 결과가 없습니다.
+              </div>
+            ) : (
+              coParentList.pages.map((page, pageIndex) => (
+                <React.Fragment key={pageIndex}>
+                  {page?.items?.map((coParentItem: CoParent) => (
+                    <li
+                      key={coParentItem.memberId}
+                      className="flex items-center justify-between py-2"
+                    >
+                      <div className="flex items-center gap-4">
                         <Image
-                          src="/images/icons/plane.svg"
-                          alt="send"
-                          width={20}
-                          height={20}
+                          src={
+                            coParentItem.imageUrl ||
+                            'https://github.com/shadcn.png'
+                          }
+                          alt={`${coParentItem.nickname} 프로필 이미지`}
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 rounded-full object-cover"
+                          onError={e => {
+                            const target = e.target as HTMLImageElement;
+                            target.onerror = null;
+                            target.src = 'https://github.com/shadcn.png';
+                          }}
                         />
-                      </>
-                    )}
-                  </button>
-                </li>
+                        <p className="text-body-2 text-gr-900">
+                          {coParentItem.nickname}
+                        </p>
+                      </div>
+                      <button
+                        className={`flex h-[34px] w-20 items-center justify-center gap-[2px] rounded-[6px] text-btn-2 ${
+                          coParentItem.isRequested
+                            ? 'border border-pr-500 bg-gr-white text-pr-500 hover:bg-pr-50'
+                            : 'bg-pr-500 text-gr-white hover:bg-pr-600'
+                        } transition-colors duration-200`}
+                        onClick={() => openBottomSheet(coParentItem)}
+                      >
+                        {coParentItem.isRequested ? (
+                          <p>요청취소</p>
+                        ) : (
+                          <>
+                            <p>요청</p>
+                            <Image
+                              src="/images/icons/plane.svg"
+                              alt="send"
+                              width={20}
+                              height={20}
+                            />
+                          </>
+                        )}
+                      </button>
+                    </li>
+                  ))}
+                </React.Fragment>
               ))
             )}
             {/* 무한 스크롤 감지 영역 */}
-            <div ref={ref} className="h-20 bg-transparent" />
+            <div ref={ref} style={{ height: '1px' }} />
           </>
         ) : (
-          <div>공동집사가 없습니다.</div>
+          !isLoading &&
+          !isError && (
+            <div className="text-center text-gr-500">
+              공동 집사 목록을 불러올 수 없습니다.
+            </div>
+          )
         )}
       </ul>
 
-      <CoParentsRequestBottomSheet
-        isVisible={requestBottomSheet}
-        setIsVisible={setRequestBottomSheet}
-        coParent={coParent}
-        toggleRequestCoParenting={toggleRequestCoParenting}
-      />
+      {coParent && coParent.memberId && (
+        <CoParentsRequestBottomSheet
+          isVisible={requestBottomSheet}
+          setIsVisible={setRequestBottomSheet}
+          coParent={coParent}
+          toggleRequestCoParenting={toggleRequestCoParenting}
+        />
+      )}
     </div>
   );
 };
