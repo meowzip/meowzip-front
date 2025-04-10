@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Button from '@/components/ui/button';
 
 export default function NotFound() {
@@ -15,14 +14,15 @@ export default function NotFound() {
         </div>
 
         <div className="flex justify-center">
-          <Link href="/">
-            <Button className="w-full rounded-md border border-gr-500 p-2">
-              <Button.Text
-                text="홈으로 돌아가기"
-                className="text-body-3 text-gr-900"
-              />
-            </Button>
-          </Link>
+          <Button
+            onClick={() => (window.location.href = '/')}
+            className="w-full rounded-md border border-gr-500 p-2"
+          >
+            <Button.Text
+              text="홈으로 돌아가기"
+              className="text-body-3 text-gr-900"
+            />
+          </Button>
         </div>
       </div>
     </div>
