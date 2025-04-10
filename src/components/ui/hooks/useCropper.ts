@@ -21,14 +21,15 @@ const useCropper = (
         viewMode: 1,
         aspectRatio: 1,
         modal: true,
-        background: false
+        background: false,
+        dragMode: 'move'
       });
 
       return () => {
         cropper.destroy();
       };
     }
-  }, [imageSrc]);
+  }, [imageSrc, imageElement]);
 
   const handleCrop = () => {
     if (imageElement.current) {
