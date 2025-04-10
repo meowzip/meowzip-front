@@ -68,11 +68,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} relative h-screen w-full bg-gr-100`}>
+      <body
+        className={`${inter.className} relative h-screen w-full overflow-hidden bg-gr-100`}
+      >
         <Providers>
           <AuthSession>
             <JotaiProvider>
-              <UserProvider>{children}</UserProvider>
+              <UserProvider>
+                <div className="h-full overflow-auto">{children}</div>
+              </UserProvider>
             </JotaiProvider>
           </AuthSession>
         </Providers>
