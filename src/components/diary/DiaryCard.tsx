@@ -17,6 +17,7 @@ const DiaryCard = ({
   images,
   taggedCats,
   memberNickname,
+  caredDateTime,
   onClick
 }: DiaryCardProps) => {
   const [showMore, setShowMore] = useState(false);
@@ -36,20 +37,6 @@ const DiaryCard = ({
   ) => {
     e.stopPropagation();
     setShowMore(!showMore);
-  };
-
-  const formatTime = (date: Date): string => {
-    let hours: number = date.getHours();
-    let hoursIn12HourFormat: string = (hours % 12 || 12).toString();
-    hoursIn12HourFormat = ('0' + hoursIn12HourFormat).slice(-2);
-
-    let minutes: string = date.getMinutes().toString();
-    minutes = ('0' + minutes).slice(-2);
-
-    let ampm: string = hours >= 12 ? '오후' : '오전';
-
-    let formattedTime: string = `${ampm} ${hoursIn12HourFormat}:${minutes}`;
-    return formattedTime;
   };
 
   const taggedCatWithStyle = taggedCats?.map((cat, idx) => ({
@@ -107,7 +94,7 @@ const DiaryCard = ({
             />
           </div>
           <h5 className="text-body-4 text-gr-500">
-            {memberNickname} • {formatTime(new Date())}
+            {memberNickname} • {caredDateTime}
           </h5>
         </article>
       </section>
