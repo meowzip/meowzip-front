@@ -1,7 +1,7 @@
 'use client';
 import AlarmList from '@/components/profile/AlarmList';
 import Topbar from '@/components/ui/Topbar';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import {
   Tabs,
   TabsContent,
@@ -45,7 +45,9 @@ const AlarmPage = () => {
     data: notifications,
     isLoading: notiIsLoading,
     fetchNextPage: fetchNextNotifications,
-    refetch: refetchNotifications
+    refetch: refetchNotifications,
+    isError: isNotiError,
+    error: notiError
   } = useInfiniteQuery({
     queryKey: ['getNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -69,7 +71,9 @@ const AlarmPage = () => {
     data: coParentsNoti,
     isLoading: coParentIsLoading,
     fetchNextPage: fetchNextCoparentNofi,
-    refetch: refetchCoParentNotifications
+    refetch: refetchCoParentNotifications,
+    isError: isCoParentNotiError,
+    error: coParentsNotiError
   } = useInfiniteQuery({
     queryKey: ['getCoparentsNotifications'],
     queryFn: ({ pageParam = 1 }) =>
@@ -115,6 +119,9 @@ const AlarmPage = () => {
       }
     }
   });
+
+  if (isNotiError) throw notiError;
+  if (isCoParentNotiError) throw coParentsNotiError;
 
   return (
     <div className="fixed left-1/2 top-0 z-20 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">

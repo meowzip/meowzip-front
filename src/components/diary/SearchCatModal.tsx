@@ -19,7 +19,12 @@ export default function SearchCatModal({
 
   const [catList, setCatList] = useState<CatType[]>([]);
 
-  const { data: cats, fetchNextPage } = useInfiniteQuery({
+  const {
+    data: cats,
+    fetchNextPage,
+    isError,
+    error
+  } = useInfiniteQuery({
     queryKey: ['getCats'],
     queryFn: ({ pageParam = 1 }) =>
       getCatsOnServer({
@@ -71,6 +76,8 @@ export default function SearchCatModal({
       setCatList(catList);
     }
   };
+
+  if (isError) throw error;
 
   return (
     <article className="w-screen bg-gr-white">

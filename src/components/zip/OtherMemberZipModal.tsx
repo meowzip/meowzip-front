@@ -21,7 +21,12 @@ const OtherMemberZipModal: React.FC<OtherMemberZipModalProps> = ({
   const router = useRouter();
   const { ref, inView } = useInView();
 
-  const { data: catList, fetchNextPage } = useInfiniteQuery({
+  const {
+    data: catList,
+    fetchNextPage,
+    isError,
+    error
+  } = useInfiniteQuery({
     queryKey: ['getCats', memberId],
     queryFn: ({ pageParam = 1 }) =>
       getCatsOnServer({
@@ -44,6 +49,8 @@ const OtherMemberZipModal: React.FC<OtherMemberZipModalProps> = ({
   const openDetailModal = (item: CatListObj) => {
     router.push(`/zip/${item.id}`);
   };
+
+  if (isError) throw error;
 
   return (
     <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-50">

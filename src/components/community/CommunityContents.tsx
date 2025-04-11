@@ -25,7 +25,9 @@ const CommunityContents = () => {
   const {
     data: feedList,
     isLoading,
-    fetchNextPage
+    fetchNextPage,
+    isError,
+    error
   } = useInfiniteQuery({
     queryKey: ['feeds'],
     queryFn: ({ pageParam = 1 }) =>
@@ -52,6 +54,8 @@ const CommunityContents = () => {
     if (showWriteModal) return;
     queryClient.invalidateQueries({ queryKey: ['feeds'] });
   }, [showWriteModal]);
+
+  if (isError) throw error;
 
   return (
     <div className="mx-auto max-w-[640px] bg-gr-white pb-24">

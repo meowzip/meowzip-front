@@ -26,13 +26,21 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const [parentCommentId, setParentCommentId] = useState<number | null>(null);
   const [isReplying, setIsReplying] = useState(false);
 
-  const { data: feedDetail } = useQuery({
+  const {
+    data: feedDetail,
+    isError: isFeedDetailError,
+    error: feedDetailError
+  } = useQuery({
     queryKey: ['feedDetail', slug],
     queryFn: () => getFeedDetail(slug),
     staleTime: 1000 * 60 * 10
   });
 
-  const { data: commentsData } = useQuery({
+  const {
+    data: commentsData,
+    isError: isCommentsDataError,
+    error: commentsDataError
+  } = useQuery({
     queryKey: ['comments', slug],
     queryFn: () => getFeedComments(slug),
     staleTime: 0
@@ -65,6 +73,9 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     setParentCommentId(null);
     setIsReplying(false);
   };
+
+  if (isFeedDetailError) throw feedDetailError;
+  if (isCommentsDataError) throw commentsDataError;
 
   return (
     <div className="fixed top-0 z-50 mx-auto flex h-screen w-full max-w-[640px] flex-col bg-gr-white">

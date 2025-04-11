@@ -38,6 +38,7 @@ const FindCoParentsModal = ({
     data: coParentList,
     isLoading,
     isError,
+    error,
     fetchNextPage
   } = useInfiniteQuery({
     queryKey: ['coParents', catId],
@@ -112,6 +113,8 @@ const FindCoParentsModal = ({
       memberId: coParent.memberId
     });
   };
+
+  if (isError) throw error;
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 mx-auto h-full min-w-[320px] max-w-[640px] overflow-scroll bg-gr-white">

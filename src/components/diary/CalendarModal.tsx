@@ -59,7 +59,7 @@ const CalendarModal = ({
     }
   };
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['diaries', selectedMonth],
     queryFn: () => getDiariesByMonth(selectedMonth),
     staleTime: 1000 * 60 * 10
@@ -94,6 +94,8 @@ const CalendarModal = ({
     }
   };
   if (!isOpen) return null;
+  if (isError) throw error;
+
   return (
     <div className="modal">
       <Modal
