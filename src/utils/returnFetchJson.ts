@@ -1,3 +1,5 @@
+import { sendDiscordErrorLog } from '@/lib/discord';
+
 import returnFetch, {
   FetchArgs,
   ReturnFetchDefaultOptions
@@ -56,6 +58,14 @@ const returnFetchJson = (args?: ReturnFetchJsonDefaultOptions) => {
       headers,
       body: init?.body && JSON.stringify(init.body)
     });
+
+    console.log('------response', response);
+    if (!response.ok) {
+      const errorText = await response.text();
+      const msg = `STATUS: ${response.status} \n ERROR_TEXT: ${errorText}`;
+      await sendDiscordErrorLog(msg, response.url);
+      throw new Error(msg);
+    }
 
     const body = parseJsonSafely(await response.text(), args?.jsonParser) as T;
 

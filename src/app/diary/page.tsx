@@ -52,7 +52,9 @@ const DiaryPage = () => {
   const {
     data: catList,
     isLoading: isCatsLoading,
-    fetchNextPage: fetchNextPageCats
+    fetchNextPage: fetchNextPageCats,
+    isError: isCatListError,
+    error: catListError
   } = useInfiniteQuery({
     queryKey: ['getCats'],
     queryFn: ({ pageParam = 1 }) =>
@@ -75,7 +77,9 @@ const DiaryPage = () => {
   const {
     data: diaryList,
     isLoading: isDiaryLoading,
-    fetchNextPage: fetchNextPageDiary
+    fetchNextPage: fetchNextPageDiary,
+    isError: isDiaryListError,
+    error: diaryListError
   } = useInfiniteQuery({
     queryKey: ['diaries', dateToString(diaryDate), selectedCatId],
     queryFn: ({ pageParam = 1 }) => {
@@ -117,6 +121,9 @@ const DiaryPage = () => {
       localStorage.removeItem('firstRun');
     }
   }, []);
+
+  if (isCatListError) throw catListError;
+  if (isDiaryListError) throw diaryListError;
 
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),

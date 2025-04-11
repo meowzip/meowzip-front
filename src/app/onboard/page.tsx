@@ -14,11 +14,17 @@ const OnBoardPage = () => {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const { data: myProfile } = useQuery({
+  const {
+    data: myProfile,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['myProfile'],
     queryFn: () => getMyProfile(),
     enabled: !showProfileModal
   });
+
+  if (isError) throw error;
 
   return (
     <section className="mx-auto max-w-[640px] px-4 pt-[60px]">

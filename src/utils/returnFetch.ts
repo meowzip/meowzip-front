@@ -1,3 +1,5 @@
+import { sendDiscordErrorLog } from '@/lib/discord';
+
 export type FetchArgs = [string | URL, RequestInit | undefined];
 
 export type ReturnFetch = typeof returnFetch;
@@ -105,6 +107,13 @@ const returnFetch =
     }
 
     const response = await fetchProvided(...requestInterceptorAppliedArgs);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      const msg = `STATUS: ${response.status} \n ERROR_TEXT: ${errorText}`;
+      await sendDiscordErrorLog(msg, response.url);
+      throw new Error(msg);
+    }
 
     return (
       defaultOptions?.interceptors?.response?.(

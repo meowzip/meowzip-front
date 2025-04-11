@@ -48,7 +48,12 @@ const BottomNavBar = () => {
   const [activeNav, setActiveNav] = useState('diary');
   const pathName = usePathname();
 
-  const { data: myProfile, isLoading } = useQuery({
+  const {
+    data: myProfile,
+    isLoading,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['myProfile'],
     queryFn: () => getMyProfile()
   });
@@ -69,6 +74,7 @@ const BottomNavBar = () => {
   };
 
   if (isLoading) return;
+  if (isError) throw error;
 
   return (
     <div className="flex w-full justify-evenly rounded-t-[20px] bg-gr-white px-2 pb-[34px] pt-2 shadow-bottomNav">

@@ -27,12 +27,22 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
     memberId: id
   };
 
-  const { data: othersProfile, isLoading: otherProfileIsLoading } = useQuery({
+  const {
+    data: othersProfile,
+    isLoading: otherProfileIsLoading,
+    isError: isOthersProfileError,
+    error: othersProfileError
+  } = useQuery({
     queryKey: ['othersProfile', id],
     queryFn: () => getClickedUserProfile(id)
   });
 
-  const { data: otherUserFeedList, isLoading: otherFeedIsLoading } = useQuery({
+  const {
+    data: otherUserFeedList,
+    isLoading: otherFeedIsLoading,
+    isError: isOtherUserFeedListError,
+    error: otherUserFeedListError
+  } = useQuery({
     queryKey: ['otherUserFeeds', id],
     queryFn: () => getOtherUserFeeds(feedReqObj)
   });
@@ -40,6 +50,9 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
   const { toggleLikeFeed, toggleBookmark } = useFeedMutations([
     'otherUserFeeds'
   ]);
+
+  if (isOthersProfileError) throw othersProfileError;
+  if (isOtherUserFeedListError) throw otherUserFeedListError;
 
   return (
     <>

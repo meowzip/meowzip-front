@@ -29,7 +29,12 @@ const SettingPage = () => {
   const [withdrawModal, setWithdrawModal] = useState(false);
   const [termsModal, setTermsModal] = useState<string>('');
 
-  const { data: pushNotofication, isSuccess } = useQuery({
+  const {
+    data: pushNotofication,
+    isSuccess,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['getPushNoti'],
     queryFn: () => getPushNotification(),
     staleTime: 1000 * 60 * 10
@@ -75,6 +80,8 @@ const SettingPage = () => {
       duration: 2000
     });
   };
+
+  if (isError) throw error;
 
   return (
     <>

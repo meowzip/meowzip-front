@@ -27,12 +27,16 @@ const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {
   const [catId, setCatId] = useState(0);
   const [errorModal, setErrorModal] = useState({ state: false, message: '' });
 
-  const { data: coParentCat, isLoading: isCoParentCatLoading } =
-    useQuery<CoParentCatResObj>({
-      queryKey: ['coParentCat', id],
-      queryFn: () => getCoParentCat(id),
-      staleTime: 1000 * 60 * 10
-    });
+  const {
+    data: coParentCat,
+    isLoading: isCoParentCatLoading,
+    isError: isCoParentCatError,
+    error: coParentCatError
+  } = useQuery<CoParentCatResObj>({
+    queryKey: ['coParentCat', id],
+    queryFn: () => getCoParentCat(id),
+    staleTime: 1000 * 60 * 10
+  });
 
   const acceptCoParentingMutation = useMutation({
     mutationFn: (coParentId: number) => acceptCoParenting(coParentId),
@@ -62,6 +66,8 @@ const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {
       }
     }
   });
+
+  if (isCoParentCatError) throw coParentCatError;
 
   return (
     <div className="fixed left-0 top-0 z-50 mx-auto h-screen w-full max-w-[640px] overflow-y-auto bg-gr-white">
