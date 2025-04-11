@@ -59,7 +59,6 @@ const returnFetchJson = (args?: ReturnFetchJsonDefaultOptions) => {
       body: init?.body && JSON.stringify(init.body)
     });
 
-    console.log('------response', response);
     if (!response.ok) {
       const errorText = await response.text();
       const msg = `STATUS: ${response.status} \n ERROR_TEXT: ${errorText}`;
