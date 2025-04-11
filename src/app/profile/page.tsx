@@ -30,12 +30,19 @@ export default function ProfilePage() {
 
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const { data: myProfile, isLoading: isProfileLoading } = useMyProfileQuery();
+  const {
+    data: myProfile,
+    isLoading: isProfileLoading,
+    isError: isMyProfileError,
+    error: myProfileError
+  } = useMyProfileQuery();
 
   const {
     data: myFeedList,
     isLoading: isFeedLoading,
-    fetchNextPage: fetchNextPagePosts
+    fetchNextPage: fetchNextPagePosts,
+    isError: isMyFeedListError,
+    error: myFeedListError
   } = useInfiniteQuery({
     queryKey: ['myFeeds'],
     queryFn: ({ pageParam = 1 }) =>
@@ -56,9 +63,10 @@ export default function ProfilePage() {
   }, [postsInView, fetchNextPagePosts]);
 
   const {
-    data: myBookmarksList,
-    isLoading: isBookmarksLoading,
-    fetchNextPage: fetchNextPageBookmarks
+    data: myBookmarkList,
+    fetchNextPage: fetchNextPageBookmarks,
+    isError: isMyBookmarkListError,
+    error: myBookmarkListError
   } = useInfiniteQuery({
     queryKey: ['myBookmarks'],
     queryFn: ({ pageParam = 1 }) =>
@@ -82,6 +90,10 @@ export default function ProfilePage() {
     'myFeeds',
     'myBookmarks'
   ]);
+
+  if (isMyFeedListError) throw myFeedListError;
+  if (isMyBookmarkListError) throw myBookmarkListError;
+  if (isMyProfileError) throw myProfileError;
 
   return (
     <>
@@ -177,14 +189,14 @@ export default function ProfilePage() {
           value="savedContents"
           className="mx-auto mt-0 max-w-[640px] pb-24"
         >
-          {myBookmarksList?.pages?.length === 0 ? (
+          {myBookmarkList?.pages?.length === 0 ? (
             <ProfileEmptyState
               title="아직 저장한 글이 없어요"
               body="간직하고 싶은 글을 저장해보세요!"
               btnText="저장하러 가기"
             />
           ) : (
-            myBookmarksList?.pages.map(page =>
+            myBookmarkList?.pages.map(page =>
               page?.items?.map((feed: FeedType) => (
                 <FeedCard
                   key={feed.id}

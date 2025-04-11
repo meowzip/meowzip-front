@@ -27,7 +27,12 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const [showCoParentsModal, setShowCoParentsModal] = useState(false);
   const [catData, setCatData] = useState<CatRegisterReqObj | null>(null);
 
-  const { data: catDetail, isLoading } = useQuery({
+  const {
+    data: catDetail,
+    isLoading,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['catDetail', id],
     queryFn: () => getCatDetail(id),
     staleTime: 1000
@@ -41,6 +46,7 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   }, [catDetail, id, catData]);
 
   if (isLoading) return <div>로딩중</div>;
+  if (isError) throw error;
 
   return (
     <>

@@ -22,7 +22,9 @@ const ZipPage = () => {
   const {
     data: catList,
     isLoading,
-    fetchNextPage
+    fetchNextPage,
+    isError,
+    error
   } = useInfiniteQuery({
     queryKey: ['getCats'],
     queryFn: ({ pageParam = 1 }) =>
@@ -46,6 +48,8 @@ const ZipPage = () => {
     setSelectedModal(item);
     router.push(`/zip/${item.id}`);
   };
+
+  if (isError) throw error;
 
   return (
     <div className="mx-auto h-screen w-full max-w-[640px] bg-gr-50">

@@ -16,7 +16,7 @@ export default function WriteComment({
 }) {
   const [comment, setComment] = useState('');
   const { registerComment } = useCommentMutation();
-  const { data: myProfile } = useMyProfileQuery();
+  const { data: myProfile, isError, error } = useMyProfileQuery();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -30,6 +30,8 @@ export default function WriteComment({
     setComment('');
     if (onCancel) onCancel();
   };
+
+  if (isError) throw error;
 
   return (
     <div className="fixed bottom-0 z-[100] mx-auto w-full max-w-[640px] bg-white">
