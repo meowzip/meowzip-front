@@ -13,6 +13,9 @@ export default function Bookmark({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleBookmark();
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
   };
 
   return (

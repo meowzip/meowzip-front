@@ -1,9 +1,9 @@
 import useCommentMutation from '@/hooks/community/useCommentMutation';
-import { Input } from '../../ui/Input';
 import Profile from '../../ui/Profile';
 import { useState, useEffect, useRef } from 'react';
 import useMyProfileQuery from '@/hooks/common/useMyProfileQuery';
 import { IoClose } from 'react-icons/io5';
+import Button from '@/components/ui/Button';
 
 export default function WriteComment({
   feedId,
@@ -17,17 +17,28 @@ export default function WriteComment({
   const [comment, setComment] = useState('');
   const { registerComment } = useCommentMutation();
   const { data: myProfile, isError, error } = useMyProfileQuery();
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (parentCommentId && inputRef.current) {
-      inputRef.current.focus();
+    if (parentCommentId && textareaRef.current) {
+      textareaRef.current.focus();
     }
   }, [parentCommentId]);
 
+  const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+    const textarea = e.target;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+
   const handleSubmit = () => {
+    if (!comment.trim()) return;
     registerComment({ feedId, comment, parentCommentId: parentCommentId ?? 0 });
     setComment('');
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     if (onCancel) onCancel();
   };
 
@@ -46,29 +57,38 @@ export default function WriteComment({
           </button>
         </div>
       )}
-      <div className="flex items-center gap-2 border-t border-gray-300 px-4 py-2">
+      <div className="flex items-end gap-2 border-t border-gray-300 px-4 py-2">
         <Profile
           items={[
             {
               id: 1,
               imageUrl: myProfile?.profileImageUrl,
-              style: 'w-10 h-10'
+              style: 'w-10 h-10 flex-shrink-0'
             }
           ]}
           lastLeft="left-[100px]"
         />
-        <Input
-          variant="comment"
-          suffix="등록"
-          value={comment}
-          placeholder={
-            parentCommentId ? '답글을 남겨주세요.' : '댓글을 남겨주세요.'
-          }
-          onChange={e => setComment(e.target.value)}
-          suffixClickHandler={handleSubmit}
-          suffixClassName={comment ? 'text-pr-500' : 'text-gr-300'}
-          ref={inputRef}
-        />
+        <div className="relative flex-1">
+          <textarea
+            ref={textareaRef}
+            value={comment}
+            onChange={handleTextareaChange}
+            placeholder={
+              parentCommentId ? '답글을 남겨주세요.' : '댓글을 남겨주세요.'
+            }
+            className="w-full flex-1 resize-none overflow-y-hidden rounded-md bg-gr-50 px-3 py-3 pr-16 text-sm focus:outline-none"
+            rows={1}
+          />
+          <Button
+            onClick={handleSubmit}
+            disabled={!comment.trim()}
+            className={`absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium ${
+              comment.trim() ? 'text-pr-500' : 'text-gr-400'
+            }`}
+          >
+            등록
+          </Button>
+        </div>
       </div>
     </div>
   );

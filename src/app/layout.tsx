@@ -7,6 +7,7 @@ import UserProvider from '@/providers/UserInfoProvider';
 import JotaiProvider from '@/providers/JotaiProvider';
 import React from 'react';
 import AuthSession from '@/providers/AuthSession';
+import MotionLayout from '@/components/common/MotionLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '냥.zip | 길냥이 돌봄 기록',
     description: '당신이 마주친 모든 길냥이들을 위해',
-    images: ['/og-image.png']
+    images: ['/images/og-image.png']
   },
   icons: {
     icon: [
@@ -75,7 +76,9 @@ export default function RootLayout({
           <AuthSession>
             <JotaiProvider>
               <UserProvider>
-                <div className="h-full overflow-auto">{children}</div>
+                <MotionLayout>
+                  <div className="h-full overflow-auto">{children}</div>
+                </MotionLayout>
               </UserProvider>
             </JotaiProvider>
           </AuthSession>
