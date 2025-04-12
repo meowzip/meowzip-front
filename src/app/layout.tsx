@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '냥.zip | 길냥이 돌봄 기록',
     description: '당신이 마주친 모든 길냥이들을 위해',
-    images: ['/og-image.png']
+    images: ['/images/og-image.png']
   },
   icons: {
     icon: [
