@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import { HTMLAttributes } from 'react';
 import { useAtom } from 'jotai';
-import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { diaryDateAtom } from '@/store/diaryAtom';
 
 const Home = () => {
   return (

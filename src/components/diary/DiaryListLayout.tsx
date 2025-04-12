@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import Topbar from '../ui/Topbar';
 import { CalendarModal } from './CalendarModal';
 import { useAtom } from 'jotai';
-import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { diaryDateAtom } from '@/store/diaryAtom';
 import { IoIosArrowDown } from 'react-icons/io';
 interface DiaryListLayoutProps {
   children: ReactNode;

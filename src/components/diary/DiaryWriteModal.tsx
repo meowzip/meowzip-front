@@ -177,7 +177,7 @@ const DiaryWriteModal = ({
     },
     onSuccess: () => {
       onClose();
-      queryClient.invalidateQueries({ queryKey: ['diaryList'] });
+      queryClient.invalidateQueries({ queryKey: ['diaries'] });
       router.push('/diary');
     },
     onError: error => {

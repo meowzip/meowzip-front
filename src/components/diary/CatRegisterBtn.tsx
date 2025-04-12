@@ -2,7 +2,7 @@ import Button from '@/components/ui/Button';
 import Image from 'next/image';
 
 interface CatRegisterBtnType {
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const CatRegisterBtn = ({ onClick }: CatRegisterBtnType) => {

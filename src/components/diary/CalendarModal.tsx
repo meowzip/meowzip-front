@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useToast } from '../ui/hooks/useToast';
 import { getDiariesByMonth } from '@/services/diary';
 import { useQuery } from '@tanstack/react-query';
-import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { diaryDateAtom } from '@/store/diaryAtom';
 import { useAtom } from 'jotai';
 
 interface CalendarModalProps {

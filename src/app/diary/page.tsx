@@ -9,8 +9,9 @@ import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryObj } from './diaryType';
 import { dateToString } from '@/utils/common';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { diaryDateAtom } from '@/atoms/diaryAtom';
+import { diaryDateAtom } from '@/store/diaryAtom';
 import {
   useQueryClient,
   useInfiniteQuery,
@@ -20,7 +21,6 @@ import { getCatsOnServer } from '@/services/cat';
 import DiaryEmptyState from '@/components/diary/DiaryEmptyState';
 import DiarySkeleton from '@/components/diary/DiarySkeleton';
 import FilterSkeleton from '@/components/diary/FilterSkeleton';
-import CatRegisterModal from '@/components/zip/CatRegisterModal';
 import CatRegisterBtn from '@/components/diary/CatRegisterBtn';
 import { useInView } from 'react-intersection-observer';
 import { getDiaries } from '@/services/diary';
@@ -34,9 +34,7 @@ const DiaryPage = () => {
   const { ref: diaryRef, inView: diaryInView } = useInView();
 
   const [diaryDate] = useAtom(diaryDateAtom);
-  const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedModal, setSelectedModal] = useState({} as DiaryObj);
-  const [showCatRegisterModal, setShowCatRegisterModal] = useState(false);
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
   const [openFirstRunModal, setOpenFirstRunModal] = useState(false);
 
@@ -109,10 +107,6 @@ const DiaryPage = () => {
       fetchNextPageDiary();
     }
   }, [diaryInView, fetchNextPageDiary]);
-  useEffect(() => {
-    if (showWriteModal) return;
-    queryClient.invalidateQueries({ queryKey: ['diaries'] });
-  }, [diaryDate, showWriteModal, queryClient]);
 
   useEffect(() => {
     const isFirstRun = localStorage.getItem('firstRun') ? true : false;
@@ -144,28 +138,6 @@ const DiaryPage = () => {
     togglePushNotification.mutate();
   };
 
-  // test code
-  // useEffect(() => {
-  //   const handleMessage = (event: MessageEvent) => {
-  //     console.log('📩 Received message:', event.data);
-
-  //     try {
-  //       const parsedData = JSON.parse(event.data);
-  //       if (parsedData.type === 'PUSH_TOKEN') {
-  //         console.log('✅ Push Token Received:', parsedData.token);
-  //       }
-  //     } catch (error) {
-  //       console.error('❌ Error parsing message data:', error);
-  //     }
-  //   };
-
-  //   window.addEventListener('message', handleMessage);
-
-  //   return () => {
-  //     window.removeEventListener('message', handleMessage);
-  //   };
-  // }, []);
-
   return (
     <>
       {openFirstRunModal ? (
@@ -196,7 +168,9 @@ const DiaryPage = () => {
             {isCatsLoading ? (
               <FilterSkeleton />
             ) : catList?.pages[0]?.items?.length === 0 ? (
-              <CatRegisterBtn onClick={() => setShowCatRegisterModal(true)} />
+              <Link href="/cat-register" scroll={false}>
+                <CatRegisterBtn onClick={() => {}} />
+              </Link>
             ) : (
               <>
                 {catList?.pages.map(page =>
@@ -214,7 +188,9 @@ const DiaryPage = () => {
                 )}
                 {/* 무한 스크롤 감지 영역 */}
                 <div ref={catsRef} className="h-20 bg-transparent" />
-                <CatRegisterBtn onClick={() => setShowCatRegisterModal(true)} />
+                <Link href="/cat-register" scroll={false}>
+                  <CatRegisterBtn />
+                </Link>
               </>
             )}
           </section>
@@ -241,19 +217,9 @@ const DiaryPage = () => {
           </section>
         </DiaryListLayout>
       )}
-      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-      {showWriteModal && (
-        <DiaryWriteModal
-          onClose={() => setShowWriteModal(false)}
-          id={selectedModal.id}
-        />
-      )}
-      {showCatRegisterModal && (
-        <CatRegisterModal
-          onClose={() => setShowCatRegisterModal(false)}
-          id={selectedModal?.id ?? 0}
-        />
-      )}
+      <Link href="/diary/write" scroll={false}>
+        <FloatingActionButton />
+      </Link>
     </>
   );
 };
