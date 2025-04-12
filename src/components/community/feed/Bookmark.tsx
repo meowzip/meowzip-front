@@ -13,8 +13,12 @@ export default function Bookmark({
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleBookmark();
-    if (navigator.vibrate) {
-      navigator.vibrate(10);
+    if (
+      typeof window !== 'undefined' &&
+      window.ReactNativeWebView &&
+      window.vibrate
+    ) {
+      window.vibrate(30);
     }
   };
 
