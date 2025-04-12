@@ -7,6 +7,7 @@ import UserProvider from '@/providers/UserInfoProvider';
 import JotaiProvider from '@/providers/JotaiProvider';
 import React from 'react';
 import AuthSession from '@/providers/AuthSession';
+import MotionLayout from '@/components/common/MotionLayout';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -75,7 +76,9 @@ export default function RootLayout({
           <AuthSession>
             <JotaiProvider>
               <UserProvider>
-                <div className="h-full overflow-auto">{children}</div>
+                <MotionLayout>
+                  <div className="h-full overflow-auto">{children}</div>
+                </MotionLayout>
               </UserProvider>
             </JotaiProvider>
           </AuthSession>
