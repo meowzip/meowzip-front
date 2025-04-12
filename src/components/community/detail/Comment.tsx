@@ -36,11 +36,13 @@ export default function Comment({
           ]}
           lastLeft="left-[100px]"
         />
-        <div className="w-[75%] text-sm">
+        <div className="w-[75%] max-w-[300px] text-sm">
           <div className="flex">
             <div className="font-bold">{comment.memberNickname}</div>
           </div>
-          <div className="mt-1">{comment.content}</div>
+          <div className="mt-1 max-w-[300px] break-words">
+            {comment.content}
+          </div>
           <div className="mt-2 flex text-gr-500">
             <div>{formatCreatedAt(comment.createdAt)}</div>
             {!comment.parentId && (
