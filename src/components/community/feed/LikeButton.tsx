@@ -19,6 +19,9 @@ const LikeButton = ({ isLiked: initialIsLiked, onClick }: LikeButtonProps) => {
     e.stopPropagation();
     setIsLiked(prev => !prev);
     onClick();
+    if (navigator.vibrate) {
+      navigator.vibrate(10);
+    }
   };
 
   return (
