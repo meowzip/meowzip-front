@@ -63,9 +63,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
-  children
+  children,
+  modal
 }: {
   children: React.ReactNode;
+  modal: React.ReactNode;
 }) {
   return (
     <html lang="ko">
@@ -79,6 +81,7 @@ export default function RootLayout({
                 <MotionLayout>
                   <div className="h-full overflow-auto">{children}</div>
                 </MotionLayout>
+                {modal}
               </UserProvider>
             </JotaiProvider>
           </AuthSession>

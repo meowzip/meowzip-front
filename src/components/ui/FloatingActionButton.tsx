@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 interface FloatingActionButtonProps {
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const FloatingActionButton = ({ onClick }: FloatingActionButtonProps) => {

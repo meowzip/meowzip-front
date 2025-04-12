@@ -28,7 +28,9 @@ export default function CatRegisterComplete({
         <article className="flex max-w-screen-sm flex-1 flex-col items-center self-stretch pt-[60px]">
           <div
             className="flex h-32 w-32 items-center justify-center gap-[10px] rounded-full bg-contain bg-no-repeat"
-            style={{ backgroundImage: `url(${catData?.croppedImage})` }}
+            style={{
+              backgroundImage: `url(${catData?.croppedImage || catData?.imageUrl})`
+            }}
           ></div>
 
           <div className="flex flex-col justify-center gap-2 self-stretch pb-4 pt-6 text-center">
