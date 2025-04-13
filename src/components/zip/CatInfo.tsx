@@ -118,6 +118,7 @@ export default function CatInfo({
       dDay?: number;
     } = {
       ...catData,
+      name: catName.value,
       sex: selectedSex || 'UNDEFINED',
       isNeutered: selectedNeutered || 'UNDEFINED',
       metAt: formatDate(selectedItem as string),
