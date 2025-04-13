@@ -24,7 +24,7 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   } = useQuery({
     queryKey: ['diaryDetail', id],
     queryFn: () => getDiaryDetail(id),
-    staleTime: 1000 * 60 * 10
+    staleTime: 0
   });
 
   useEffect(() => {

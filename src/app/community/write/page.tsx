@@ -1,7 +1,9 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSetAtom } from 'jotai';
 import { isModalActiveAtom } from '@/store/modalAtom';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
@@ -10,20 +12,31 @@ import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import FeedWriteModalSkeleton from '@/components/community/FeedWriteModalSkeleton';
 
-export default function InterceptedDiaryWriteModal() {
+export default function DiaryWritePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const setIsModalActive = useSetAtom(isModalActiveAtom);
 
-  const editId = searchParams.get('edit');
-  const feedId = editId ? parseInt(editId, 10) : undefined;
+  const [isClient, setIsClient] = useState(false);
+  const [feedId, setFeedId] = useState<number | undefined>(undefined);
 
   useEffect(() => {
+    setIsClient(true);
     setIsModalActive(true);
     return () => {
       setIsModalActive(false);
     };
   }, [setIsModalActive]);
+
+  useEffect(() => {
+    if (isClient) {
+      const searchParams = new URLSearchParams(window.location.search); // 표준 Web API 사용
+      const editParam = searchParams.get('edit');
+      const id = editParam ? parseInt(editParam, 10) : undefined;
+      if (id && !isNaN(id)) {
+        setFeedId(id);
+      }
+    }
+  }, [isClient]);
 
   const {
     data: feedDetail,
@@ -33,15 +46,19 @@ export default function InterceptedDiaryWriteModal() {
   } = useQuery({
     queryKey: ['feedDetail', feedId],
     queryFn: () => getFeedDetail(feedId as number),
-    enabled: !!feedId && !isNaN(feedId),
-    staleTime: 1000 * 60 * 5
+    enabled: isClient && typeof feedId === 'number' && !isNaN(feedId),
+    staleTime: 0
   });
 
   const handleClose = () => {
     router.back();
   };
 
-  if (isLoading && feedId) {
+  if (!isClient) {
+    return <FeedWriteModalSkeleton />;
+  }
+
+  if (isLoading && typeof feedId === 'number') {
     return <FeedWriteModalSkeleton />;
   }
 

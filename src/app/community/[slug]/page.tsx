@@ -33,7 +33,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   } = useQuery({
     queryKey: ['feedDetail', slug],
     queryFn: () => getFeedDetail(slug),
-    staleTime: 1000 * 60 * 10
+    staleTime: 0
   });
 
   const {

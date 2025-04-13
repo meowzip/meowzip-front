@@ -35,7 +35,7 @@ const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {
   } = useQuery<CoParentCatResObj>({
     queryKey: ['coParentCat', id],
     queryFn: () => getCoParentCat(id),
-    staleTime: 1000 * 60 * 10
+    staleTime: 0
   });
 
   const acceptCoParentingMutation = useMutation({

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getFeedsOnServer } from '@/services/community';
 import { FeedType } from '@/types/communityType';
 import { useRouter } from 'next/navigation';
@@ -13,7 +13,6 @@ import CommunitySkeleton from '@/components/community/CommunitySkeleton';
 import { useInView } from 'react-intersection-observer';
 
 const CommunityContents = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
   const { ref, inView } = useInView();
 
@@ -25,7 +24,8 @@ const CommunityContents = () => {
     isLoading,
     fetchNextPage,
     isError,
-    error
+    error,
+    isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['feeds'],
     queryFn: ({ pageParam = 1 }) =>
@@ -37,30 +37,41 @@ const CommunityContents = () => {
       return lastPage.hasNext ? allPages.length + 1 : undefined;
     },
     initialPageParam: 1,
-    staleTime: 1000 * 60 * 5
+    staleTime: 0
   });
+
   useEffect(() => {
-    if (inView) {
+    if (inView && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextPage, isFetchingNextPage]);
 
   const { deleteFeed, blockFeed, reportFeed, toggleLikeFeed, toggleBookmark } =
     useFeedMutations(['feeds']);
 
-  if (isError) throw error;
+  if (isError) {
+    console.error('Error fetching feeds:', error);
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  }
 
   const handleNewWrite = () => {
     router.push('/community/write');
   };
 
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
+        <CommunitySkeleton />
+        <FloatingActionButton onClick={handleNewWrite} />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
-      {isLoading ? (
-        <CommunitySkeleton />
-      ) : (
-        feedList?.pages.map(page =>
-          page?.items?.map((feed: FeedType) => (
+      {feedList?.pages.map((page, pageIndex) => (
+        <React.Fragment key={pageIndex}>
+          {page?.items?.map((feed: FeedType) => (
             <FeedCard
               key={feed.id}
               content={feed}
@@ -73,11 +84,11 @@ const CommunityContents = () => {
               toggleBookmark={() => toggleBookmark(feed)}
               hasUserArea
             />
-          ))
-        )
-      )}
-      {/* 무한 스크롤 감지 영역 */}
+          ))}
+        </React.Fragment>
+      ))}
       <div ref={ref} className="h-20 bg-transparent" />
+      {isFetchingNextPage && <CommunitySkeleton />}
       <FloatingActionButton onClick={handleNewWrite} />
       <MoreBtnBottomSheet
         type="feed"
