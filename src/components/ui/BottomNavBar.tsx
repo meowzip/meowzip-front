@@ -30,8 +30,8 @@ const BOTTOM_NAV = [
     key: 'community',
     value: '커뮤니티',
     img: {
-      active: '/images/icons/bottom-community-active.svg',
-      default: '/images/icons/bottom-community-default.svg'
+      active: '/images/icons/bottom-community-active.png',
+      default: '/images/icons/bottom-community-default.png'
     }
   },
   {
