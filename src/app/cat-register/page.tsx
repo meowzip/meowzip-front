@@ -6,7 +6,7 @@ import { useSetAtom } from 'jotai';
 import { isModalActiveAtom } from '@/store/modalAtom';
 import CatRegisterModal from '@/components/zip/CatRegisterModal';
 
-export default function InterceptedCatRegisterModal() {
+export default function CatRegisterPage() {
   const router = useRouter();
   const setIsModalActive = useSetAtom(isModalActiveAtom);
 

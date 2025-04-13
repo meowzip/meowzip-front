@@ -8,13 +8,9 @@ import { CatRegisterReqObj } from '@/app/zip/catType';
 
 interface DiaryWriteModalProps {
   onClose: () => void;
-  id: number;
 }
 
-export default function CatRegisterModal({
-  onClose,
-  id
-}: DiaryWriteModalProps) {
+export default function CatRegisterModal({ onClose }: DiaryWriteModalProps) {
   const steps = ['name', 'photo', 'info', 'complete', 'done'] as const;
 
   const [Funnel, setStep] = useFunnel(steps, 'name');

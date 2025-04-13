@@ -45,7 +45,6 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
       if (data.status !== 'OK') {
-        console.log('error');
       } else {
         refetch();
       }

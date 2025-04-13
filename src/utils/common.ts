@@ -177,7 +177,6 @@ export const logFormData = (
         const reader = new FileReader();
         reader.onload = event => {
           if (!event.target?.result) return;
-          console.log(`${pair[0]}:`, event.target.result);
         };
         reader.readAsText(pair[1]);
       } else {

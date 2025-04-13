@@ -138,7 +138,6 @@ export default function CatInfo({
   const handleOnClick = async () => {
     try {
       const newCatData = updateCatData();
-      console.log(newCatData, 'newCatData');
       mutation.mutate(newCatData);
     } catch (error) {
       console.error('Error:', error);

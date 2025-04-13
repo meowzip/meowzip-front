@@ -19,7 +19,6 @@ export const usePushToken = () => {
       try {
         const message = JSON.parse(event.data) as WebViewMessage;
         if (message.type === WebViewMessageType.PUSH_TOKEN && message.token) {
-          console.log('Received push token:', message.token);
           setFcmToken(message.token);
           localStorage.setItem('fcm_token', message.token);
 

@@ -157,7 +157,6 @@ const ImageUploader = ({
                 height={16}
                 stroke="var(--gr-white)"
                 onClick={() => {
-                  console.log(data?.key);
                   deleteImage(data?.key);
                 }}
               />
