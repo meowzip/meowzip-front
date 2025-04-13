@@ -19,8 +19,12 @@ const LikeButton = ({ isLiked: initialIsLiked, onClick }: LikeButtonProps) => {
     e.stopPropagation();
     setIsLiked(prev => !prev);
     onClick();
-    if (navigator.vibrate) {
-      navigator.vibrate(10);
+    if (
+      typeof window !== 'undefined' &&
+      window.ReactNativeWebView &&
+      window.vibrate
+    ) {
+      window.vibrate(30);
     }
   };
 

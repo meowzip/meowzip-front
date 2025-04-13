@@ -11,6 +11,7 @@ import ZipEmptyState from '@/components/zip/ZipEmptyState';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCatsOnServer } from '@/services/cat';
+import Link from 'next/link';
 
 const ZipPage = () => {
   const router = useRouter();
@@ -79,14 +80,9 @@ const ZipPage = () => {
           )}
           {/* 무한 스크롤 감지 영역 */}
           <div ref={ref} className="h-20 bg-transparent" />
-
-          <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-          {showWriteModal && (
-            <CatRegisterModal
-              onClose={() => setShowWriteModal(false)}
-              id={selectedModal?.id ?? 0}
-            />
-          )}
+          <Link href="/cat-register" scroll={false}>
+            <FloatingActionButton />
+          </Link>
         </section>
       </div>
     </div>

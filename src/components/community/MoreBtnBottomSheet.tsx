@@ -16,7 +16,7 @@ interface MoreBtnBottomSheetProps {
   onEdit?: () => void;
   onBlock?: () => void;
   onReport?: () => void;
-  showWriteModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  showWriteModal?: () => void;
 }
 
 const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
@@ -45,7 +45,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
 
   const openModalEdit = () => {
     setIsVisible(false);
-    showWriteModal && showWriteModal(true);
+    showWriteModal && showWriteModal();
     onEdit && onEdit();
   };
   const openModalDelete = () => {

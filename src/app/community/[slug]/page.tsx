@@ -149,7 +149,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         setIsVisible={() => {
           setEditBottomSheet(!editBottomSheet);
         }}
-        heightPercent={['40%', '30%']}
+        heightPercent={['50%', '60%']}
         name={feedDetail?.memberNickname}
         memberId={
           selectedComment ? selectedComment?.memberId : feedDetail?.memberId
@@ -177,7 +177,9 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
             ? reportComment(feedDetail?.id, selectedComment?.id)
             : reportFeed(feedDetail);
         }}
-        showWriteModal={selectedComment ? undefined : setShowWriteModal}
+        showWriteModal={
+          selectedComment ? undefined : () => setShowWriteModal(true)
+        }
       />
     </div>
   );
