@@ -19,8 +19,8 @@ const variants = {
     transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] }
   },
   exit: {
-    x: '-100%',
-    transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] } // 동일한 ease 커브 사
+    x: '0%',
+    transition: { duration: 0.35, ease: [0.32, 0.72, 0, 1] }
   }
 };
 
