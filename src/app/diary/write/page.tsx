@@ -4,9 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useSetAtom } from 'jotai';
 import { isModalActiveAtom } from '@/store/modalAtom';
-import CatRegisterModal from '@/components/zip/CatRegisterModal';
+import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 
-export default function InterceptedCatRegisterModal() {
+export default function InterceptedDiaryWriteModal() {
   const router = useRouter();
   const setIsModalActive = useSetAtom(isModalActiveAtom);
 
@@ -21,5 +21,5 @@ export default function InterceptedCatRegisterModal() {
     router.back();
   };
 
-  return <CatRegisterModal onClose={handleClose} />;
+  return <DiaryWriteModal onClose={handleClose} id={0} />;
 }

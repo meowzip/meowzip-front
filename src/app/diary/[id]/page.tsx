@@ -16,14 +16,13 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [showWriteModal, setShowWriteModal] = useState(false);
 
   const {
     data: diaryDetail,
     isLoading,
     isError
   } = useQuery({
-    queryKey: ['diaryDetail', id, showWriteModal],
+    queryKey: ['diaryDetail', id],
     queryFn: () => getDiaryDetail(id),
     staleTime: 1000 * 60 * 10
   });
@@ -147,16 +146,8 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
           name={diaryDetail?.memberNickname}
           memberId={diaryDetail?.memberId}
           onDelete={deleteDidary}
-          onEdit={() => setShowWriteModal(true)}
+          onEdit={() => router.push(`/diary/${id}/edit`)}
         />
-
-        {showWriteModal && diaryDetail && (
-          <DiaryWriteModal
-            onClose={() => setShowWriteModal(false)}
-            id={diaryDetail.id}
-            diaryDetail={diaryDetail}
-          />
-        )}
       </div>
     </div>
   );

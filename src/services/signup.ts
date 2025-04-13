@@ -78,7 +78,6 @@ export const deleteAccountOnServer = async () => {
       '/members/withdraw',
       requestOptions
     );
-    console.log(response, 'response');
     if (response.status === 200) {
       removeCookie('Authorization');
       location.replace('/signin');

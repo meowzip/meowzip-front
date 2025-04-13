@@ -283,7 +283,6 @@ export const registerCommentOnServer = async (reqObj: {
     );
 
     const data = await response.json();
-    console.log('댓글 등록 data:', data);
     return data;
   } catch (error) {
     console.error(error);

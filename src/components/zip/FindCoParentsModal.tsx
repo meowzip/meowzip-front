@@ -83,7 +83,6 @@ const FindCoParentsModal = ({
       requestCoParenting(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
-        console.log('error requesting coparenting:', data);
       } else {
         queryClient.invalidateQueries({ queryKey: ['coParents', catId] });
       }
@@ -95,7 +94,6 @@ const FindCoParentsModal = ({
       cancelCoParenting(reqObj),
     onSuccess: (data: any) => {
       if (data.status !== 'OK') {
-        console.log('error canceling coparenting:', data);
       } else {
         queryClient.invalidateQueries({ queryKey: ['coParents', catId] });
       }

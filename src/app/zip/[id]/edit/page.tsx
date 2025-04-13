@@ -10,7 +10,7 @@ import { getCatDetail } from '@/services/cat';
 
 export default function InterceptedCatEditModal() {
   const router = useRouter();
-  const params = useParams(); // useParams 훅 사용
+  const params = useParams();
   const setIsModalActive = useSetAtom(isModalActiveAtom);
 
   const catId = params.id ? parseInt(params.id as string, 10) : undefined;
