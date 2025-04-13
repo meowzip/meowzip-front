@@ -97,6 +97,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
       editFeedOnServer(reqObj),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
+        queryClient.invalidateQueries({ queryKey: ['feeds'] });
         onClose();
       } else {
         console.error('게시글 수정 중 오류:', response.message);

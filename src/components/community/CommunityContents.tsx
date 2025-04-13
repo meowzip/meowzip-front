@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
-import FeedWriteModal from '@/components/community/FeedWriteModal';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { getFeedsOnServer } from '@/services/community';
@@ -19,7 +18,6 @@ const CommunityContents = () => {
   const { ref, inView } = useInView();
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [showWriteModal, setShowWriteModal] = useState(false);
   const [feed, setFeed] = useState<FeedType>();
 
   const {
@@ -50,12 +48,11 @@ const CommunityContents = () => {
   const { deleteFeed, blockFeed, reportFeed, toggleLikeFeed, toggleBookmark } =
     useFeedMutations(['feeds']);
 
-  useEffect(() => {
-    if (showWriteModal) return;
-    queryClient.invalidateQueries({ queryKey: ['feeds'] });
-  }, [showWriteModal]);
-
   if (isError) throw error;
+
+  const handleNewWrite = () => {
+    router.push('/community/write');
+  };
 
   return (
     <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
@@ -81,13 +78,7 @@ const CommunityContents = () => {
       )}
       {/* 무한 스크롤 감지 영역 */}
       <div ref={ref} className="h-20 bg-transparent" />
-      <FloatingActionButton onClick={() => setShowWriteModal(true)} />
-      {showWriteModal && (
-        <FeedWriteModal
-          onClose={() => setShowWriteModal(false)}
-          feedDetail={feed}
-        />
-      )}
+      <FloatingActionButton onClick={handleNewWrite} />
       <MoreBtnBottomSheet
         type="feed"
         isVisible={editBottomSheet}
@@ -96,10 +87,14 @@ const CommunityContents = () => {
         name={feed?.writerNickname}
         memberId={feed?.writerId}
         onDelete={() => feed && deleteFeed(feed)}
-        onEdit={() => setShowWriteModal(true)}
+        onEdit={() => {
+          if (feed) {
+            router.push(`/community/write?edit=${feed.id}`);
+          }
+        }}
         onBlock={() => feed && blockFeed(feed)}
         onReport={() => feed && reportFeed(feed)}
-        showWriteModal={setShowWriteModal}
+        showWriteModal={handleNewWrite}
       />
     </div>
   );

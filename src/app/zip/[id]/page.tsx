@@ -14,7 +14,6 @@ import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
 import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
 import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
-import CatInfo from '@/components/zip/CatInfo';
 import { deleteCat, getCatDetail } from '@/services/cat';
 import { useQuery } from '@tanstack/react-query';
 
@@ -23,9 +22,7 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [coParentsBottomSheet, setCoParentsBottomSheet] = useState(false);
-  const [showCatEditModal, setShowCatEditModal] = useState(false);
   const [showCoParentsModal, setShowCoParentsModal] = useState(false);
-  const [catData, setCatData] = useState<CatRegisterReqObj | null>(null);
 
   const {
     data: catDetail,
@@ -34,16 +31,8 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
     error
   } = useQuery({
     queryKey: ['catDetail', id],
-    queryFn: () => getCatDetail(id),
-    staleTime: 1000
+    queryFn: () => getCatDetail(id)
   });
-
-  useEffect(() => {
-    if (!catDetail) return;
-    if (catDetail !== undefined && catData === null) {
-      setCatData(catDetail);
-    }
-  }, [catDetail, id, catData]);
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) throw error;
@@ -108,22 +97,16 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
           deleteCat(catDetail?.id);
           location.href = '/zip';
         }}
-        onEdit={() => setShowCatEditModal(true)}
+        onEdit={() => {
+          router.push(`/zip/${id}/edit?catId=${catDetail?.id}`);
+          setEditBottomSheet(false);
+        }}
       />
       <CoParentsBottomSheet
         isVisible={coParentsBottomSheet}
         setIsVisible={() => setCoParentsBottomSheet(!coParentsBottomSheet)}
         coParents={catDetail.coParents}
       />
-
-      {showCatEditModal && catData && (
-        <CatInfo
-          type="edit"
-          setStep={() => setShowCatEditModal(false)}
-          catData={catData}
-          setPrev={() => setShowCatEditModal(false)}
-        />
-      )}
 
       {showCoParentsModal && (
         <FindCoParentsModal
