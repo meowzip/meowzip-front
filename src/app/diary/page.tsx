@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
-import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryObj } from './diaryType';
 import { dateToString } from '@/utils/common';
@@ -25,7 +24,6 @@ import CatRegisterBtn from '@/components/diary/CatRegisterBtn';
 import { useInView } from 'react-intersection-observer';
 import { getDiaries } from '@/services/diary';
 import { togglePushNotificationOnServer } from '@/services/push-notification';
-import Modal from '@/components/ui/Modal';
 
 const DiaryPage = () => {
   const router = useRouter();
@@ -34,9 +32,8 @@ const DiaryPage = () => {
   const { ref: diaryRef, inView: diaryInView } = useInView();
 
   const [diaryDate] = useAtom(diaryDateAtom);
-  const [selectedModal, setSelectedModal] = useState({} as DiaryObj);
+  const [, setSelectedModal] = useState({} as DiaryObj);
   const [selectedCatId, setSelectedCatId] = useState<number | null>(null);
-  const [openFirstRunModal, setOpenFirstRunModal] = useState(false);
 
   const handleCatSelect = (id: number) => {
     setSelectedCatId(id === selectedCatId ? null : id);
@@ -108,14 +105,6 @@ const DiaryPage = () => {
     }
   }, [diaryInView, fetchNextPageDiary]);
 
-  useEffect(() => {
-    const isFirstRun = localStorage.getItem('firstRun') ? true : false;
-    if (isFirstRun) {
-      setOpenFirstRunModal(isFirstRun);
-      localStorage.removeItem('firstRun');
-    }
-  }, []);
-
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;
 
@@ -125,98 +114,73 @@ const DiaryPage = () => {
       if (data.status !== 'OK') {
         console.error('data.status:', data.status);
       } else {
-        // queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
+        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
       }
     }
   });
   const allowNotify = () => {
-    setOpenFirstRunModal(false);
     togglePushNotification.mutate();
   };
   const disallowNotify = () => {
-    setOpenFirstRunModal(false);
     togglePushNotification.mutate();
   };
 
   return (
     <>
-      {openFirstRunModal ? (
-        <Modal
-          contents={{
-            title: '‘냥.zip’에서 알림을 \n 보내고자 합니다.',
-            body: '경고, 사운드 및 아이콘 배지가 알림에 \n 포함 될 수 있습니다. 설정에서 이를 구성할 \n 수 있습니다.'
-          }}
-          scrim={true}
-          buttons={[
-            {
-              content: '허용',
-              btnStyle: 'w-full rounded-16 px-4 py-2 bg-pr-500',
-              textStyle: 'text-gr-white text-btn-1',
-              onClick: () => allowNotify()
-            },
-            {
-              content: '허용 안함',
-              btnStyle: 'w-full rounded-16 px-4 py-2 bg-gr-white',
-              textStyle: 'text-pr-400 text-btn-1',
-              onClick: () => disallowNotify()
-            }
-          ]}
-        />
-      ) : (
-        <DiaryListLayout>
-          <section className="flex h-28 justify-start overflow-scroll bg-gr-white px-2 scrollbar-hide">
-            {isCatsLoading ? (
-              <FilterSkeleton />
-            ) : catList?.pages[0]?.items?.length === 0 ? (
-              <Link href="/cat-register" scroll={false}>
-                <CatRegisterBtn onClick={() => {}} />
-              </Link>
-            ) : (
-              <>
-                {catList?.pages.map(page =>
-                  page?.items?.map((cat: any) => (
-                    <Filter
-                      key={cat.id}
-                      id={cat.id}
-                      imageUrl={cat.imageUrl}
-                      name={cat.name}
-                      isSelected={selectedCatId === cat.id}
-                      onClick={() => handleCatSelect(cat.id)}
-                      coParentedCount={cat.coParentedCount}
-                    />
-                  ))
-                )}
-                {/* 무한 스크롤 감지 영역 */}
-                <div ref={catsRef} className="h-20 bg-transparent" />
-                <Link href="/cat-register" scroll={false}>
-                  <CatRegisterBtn />
-                </Link>
-              </>
-            )}
-          </section>
-          <section className="mx-auto max-w-[640px] p-4">
-            {isDiaryLoading ? (
-              <div className="flex flex-col gap-4">
-                <DiarySkeleton />
-              </div>
-            ) : diaryList?.pages[0]?.items?.length === 0 ? (
-              <DiaryEmptyState />
-            ) : (
-              diaryList?.pages?.map(page =>
-                page?.items?.map((diary: DiaryObj) => (
-                  <DiaryCard
-                    key={diary.id}
-                    {...diary}
-                    onClick={() => openDetailModal(diary)}
+      <DiaryListLayout>
+        <section className="flex h-28 justify-start overflow-scroll bg-gr-white px-2 scrollbar-hide">
+          {isCatsLoading ? (
+            <FilterSkeleton />
+          ) : catList?.pages[0]?.items?.length === 0 ? (
+            <Link href="/cat-register" scroll={false}>
+              <CatRegisterBtn onClick={() => {}} />
+            </Link>
+          ) : (
+            <>
+              {catList?.pages.map(page =>
+                page?.items?.map((cat: any) => (
+                  <Filter
+                    key={cat.id}
+                    id={cat.id}
+                    imageUrl={cat.imageUrl}
+                    name={cat.name}
+                    isSelected={selectedCatId === cat.id}
+                    onClick={() => handleCatSelect(cat.id)}
+                    coParentedCount={cat.coParentedCount}
                   />
                 ))
-              )
-            )}
-            {/* 무한 스크롤 감지 영역 */}
-            <div ref={diaryRef} className="h-20 bg-transparent" />
-          </section>
-        </DiaryListLayout>
-      )}
+              )}
+              {/* 무한 스크롤 감지 영역 */}
+              <div ref={catsRef} className="h-20 bg-transparent" />
+              <Link href="/cat-register" scroll={false}>
+                <CatRegisterBtn />
+              </Link>
+            </>
+          )}
+        </section>
+        <section className="mx-auto max-w-[640px] p-4">
+          {isDiaryLoading ? (
+            <div className="flex flex-col gap-4">
+              <DiarySkeleton />
+            </div>
+          ) : diaryList?.pages[0]?.items?.length === 0 ? (
+            <DiaryEmptyState />
+          ) : (
+            diaryList?.pages?.map(page =>
+              page?.items?.map((diary: DiaryObj) => (
+                <DiaryCard
+                  key={diary.id}
+                  {...diary}
+                  onClick={() => openDetailModal(diary)}
+                />
+              ))
+            )
+          )}
+          {/* 무한 스크롤 감지 영역 */}
+          <div ref={diaryRef} className="h-20 bg-transparent" />
+        </section>
+      </DiaryListLayout>
+
       <Link href="/diary/write" scroll={false}>
         <FloatingActionButton />
       </Link>
