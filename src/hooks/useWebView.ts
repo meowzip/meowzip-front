@@ -24,7 +24,8 @@ const WEBVIEW_MESSAGE_TYPES = {
   TOKEN_SET_SUCCESS: 'TOKEN_SET_SUCCESS',
   TOKEN_SET_ERROR: 'TOKEN_SET_ERROR',
   WEB_PAGE_LOADED: 'WEB_PAGE_LOADED',
-  BRIDGE_READY: 'BRIDGE_READY'
+  BRIDGE_READY: 'BRIDGE_READY',
+  NOTIFICATION_PERMISSION: 'NOTIFICATION_PERMISSION'
 } as const;
 
 export const useWebView = (): UseWebViewReturn => {
@@ -101,6 +102,17 @@ export const useWebView = (): UseWebViewReturn => {
     [platform, safePostMessage]
   );
 
+  const requestNotiPermission = useCallback(
+    (event: CustomEvent) => {
+      safePostMessage({
+        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+        enabled: event.detail?.enabled,
+        timestamp: new Date().toISOString()
+      });
+    },
+    [safePostMessage]
+  );
+
   const handleWebViewMessage = useCallback(
     (event: MessageEvent) => {
       console.log('[웹→앱] 메시지 이벤트 발생:', {
@@ -165,6 +177,14 @@ export const useWebView = (): UseWebViewReturn => {
               timestamp: new Date().toISOString()
             });
             break;
+          case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION:
+            console.log('[웹→앱] 푸시 알림 상태 수신:', data.enabled);
+            safePostMessage({
+              type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+              enabled: data.enabled,
+              timestamp: new Date().toISOString()
+            });
+            break;
           case 'ready':
           case 'can-inline-scripts':
           case 'init-reply':
@@ -206,9 +226,11 @@ export const useWebView = (): UseWebViewReturn => {
     console.log('[웹→앱] 이벤트 리스너 등록 시작');
 
     const pushTokenListener = handlePushTokenReceived as EventListener;
+    const pushPermissionListener = requestNotiPermission as EventListener;
     const webViewMessageListener = handleWebViewMessage;
 
     window.addEventListener('pushTokenReceived', pushTokenListener);
+    window.addEventListener('pushPermissionReceived', pushPermissionListener);
     window.addEventListener('message', webViewMessageListener);
 
     console.log('[웹→앱] 이벤트 리스너 등록 완료');
@@ -233,13 +255,18 @@ export const useWebView = (): UseWebViewReturn => {
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener('pushTokenReceived', pushTokenListener);
+      window.removeEventListener(
+        'pushPermissionReceived',
+        pushPermissionListener
+      );
       window.removeEventListener('message', webViewMessageListener);
     };
   }, [
     platform,
     handlePushTokenReceived,
     handleWebViewMessage,
-    safePostMessage
+    safePostMessage,
+    requestNotiPermission
   ]);
 
   return {
