@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 

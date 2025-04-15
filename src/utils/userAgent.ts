@@ -8,6 +8,7 @@ export type WebViewMessage = {
   token?: string;
   message?: string;
   error?: string;
+  enabled?: string;
 };
 
 export const checkUserAgent = (): UserAgent => {
