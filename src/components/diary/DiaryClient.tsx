@@ -49,10 +49,32 @@ const DiaryClient = () => {
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
       }
     }
   });
+
+  useEffect(() => {
+    const handleMessage = (event: any) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'NOTIFICATION_PERMISSION') {
+          console.log('📩 NOTIFICATION_PERMISSION:', data);
+        }
+      } catch (err) {
+        console.error('메시지 파싱 오류:', err);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;

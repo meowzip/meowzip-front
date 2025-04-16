@@ -47,7 +47,7 @@ const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {
         setOpenBottomSheet(true);
         setCatId(data.data.catId);
         queryClient.invalidateQueries({
-          queryKey: ['getCoparentsNotifications']
+          predicate: query => query.queryKey[0] === 'getCoparentsNotifications'
         });
       }
     }
@@ -61,7 +61,7 @@ const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {
       } else {
         router.back();
         queryClient.invalidateQueries({
-          queryKey: ['getCoparentsNotifications']
+          predicate: query => query.queryKey[0] === 'getCoparentsNotifications'
         });
       }
     }
