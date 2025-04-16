@@ -47,7 +47,9 @@ export default function CatInfo({
     onSuccess: response => {
       if (response && response.status === 200) {
         setStep();
-        queryClient.invalidateQueries({ queryKey: ['getCats'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getCats'
+        });
         queryClient.invalidateQueries({ queryKey: ['catDetail'] });
       }
     },

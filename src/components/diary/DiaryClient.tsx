@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
@@ -49,7 +49,9 @@ const DiaryClient = () => {
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
       }
     }
   });

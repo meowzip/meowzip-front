@@ -80,7 +80,9 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
       registerFeedOnServer(reqObj),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'feeds'
+        });
         onClose();
         router.push('/community');
       } else {
@@ -97,7 +99,9 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
       editFeedOnServer(reqObj),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
-        queryClient.invalidateQueries({ queryKey: ['feeds'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'feeds'
+        });
         onClose();
       } else {
         console.error('게시글 수정 중 오류:', response.message);

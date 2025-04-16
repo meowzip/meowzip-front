@@ -176,8 +176,11 @@ const DiaryWriteModal = ({
       return registerDiaryOnServer(reqObj);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        predicate: query => query.queryKey[0] === 'diaries'
+      });
+
       onClose();
-      queryClient.invalidateQueries({ queryKey: ['diaries'] });
       router.push('/diary');
     },
     onError: error => {
@@ -193,8 +196,8 @@ const DiaryWriteModal = ({
     mutationFn: (reqObj: { id: number; diary: DiaryRegisterReqObj }) =>
       editDiaryOnServer(reqObj),
     onSuccess: () => {
-      onClose();
       queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
+      onClose();
     },
     onError: error => {
       toast({
