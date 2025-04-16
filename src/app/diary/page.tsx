@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import DiaryCard from '@/components/diary/DiaryCard';
 import Filter from '@/components/diary/Filter';
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
-import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
-import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { DiaryObj } from './diaryType';
 import { dateToString } from '@/utils/common';
 import { useRouter } from 'next/navigation';
@@ -217,9 +215,6 @@ const DiaryPage = () => {
           </section>
         </DiaryListLayout>
       )}
-      <Link href="/diary/write" scroll={false}>
-        <FloatingActionButton />
-      </Link>
     </>
   );
 };

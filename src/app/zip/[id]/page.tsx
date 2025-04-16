@@ -8,7 +8,7 @@ import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import DetailCardLayout from '@/components/zip/DetailCardLayout';
 import { DiaryObj } from '@/app/diary/diaryType';
 import ZipDetailCoParents from '@/components/zip/ZipDetailCoParents';
-import { CatRegisterReqObj, CoParent } from '@/app/zip/catType';
+import { CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
 import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
 import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
@@ -85,7 +85,6 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
           </DetailCardLayout>
         )}
       </section>
-
       <MoreBtnBottomSheet
         type="zip"
         isVisible={editBottomSheet}

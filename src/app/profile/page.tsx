@@ -183,7 +183,7 @@ export default function ProfilePage() {
             )
           )}
           {/* 무한 스크롤 감지 영역 */}
-          <div ref={postsRef} className="h-20 bg-transparent" />
+          <div ref={postsRef} className="h-20 bg-gr-50" />
         </TabsContent>
         <TabsContent
           value="savedContents"

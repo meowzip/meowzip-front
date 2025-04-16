@@ -10,9 +10,8 @@ const ZipDetailCatCard = ({ ...props }: CatBaseType) => {
       <Image
         src="/images/zip-card.svg"
         alt="zip-card"
-        width={120}
-        height={120}
-        className="w-full"
+        width={380}
+        height={380}
       />
       <div className="rounded-b-16 bg-gr-white px-6">
         <div className="flex flex-col items-center justify-center gap-1 pb-4 pt-2">
@@ -32,6 +31,7 @@ const ZipDetailCatCard = ({ ...props }: CatBaseType) => {
           width={100}
           height={100}
           className="max-h-60 rounded-xl object-cover"
+          priority
         />
         <div className="pb-6 pt-4">
           <div className="flex items-center gap-2 py-[6px]">

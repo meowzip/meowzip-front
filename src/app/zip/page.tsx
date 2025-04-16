@@ -4,8 +4,6 @@ import { CatListObj } from '@/app/zip/catType';
 import ZipCard from '@/components/zip/ZipCard';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import FloatingActionButton from '@/components/ui/FloatingActionButton';
-import CatRegisterModal from '@/components/zip/CatRegisterModal';
 import ZipSkeleton from '@/components/zip/ZipSkeleton';
 import ZipEmptyState from '@/components/zip/ZipEmptyState';
 import { useInView } from 'react-intersection-observer';
@@ -80,9 +78,6 @@ const ZipPage = () => {
           )}
           {/* 무한 스크롤 감지 영역 */}
           <div ref={ref} className="h-20 bg-transparent" />
-          <Link href="/cat-register" scroll={false}>
-            <FloatingActionButton />
-          </Link>
         </section>
       </div>
     </div>
