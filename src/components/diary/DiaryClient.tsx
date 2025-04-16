@@ -12,7 +12,6 @@ import { dateToString } from '@/utils/common';
 import { togglePushNotificationOnServer } from '@/services/push-notification';
 
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
-import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import useInfiniteDiaries from '@/hooks/diary/useInfiniteDiaries';
 import CatFilterList from '@/components/diary/CatFilterList';
 import DiaryList from '@/components/diary/DiaryList';
@@ -96,10 +95,6 @@ const DiaryClient = () => {
           onClick={handleDiaryClick}
         />
       </DiaryListLayout>
-
-      <Link href="/diary/write" scroll={false}>
-        <FloatingActionButton />
-      </Link>
     </>
   );
 };
