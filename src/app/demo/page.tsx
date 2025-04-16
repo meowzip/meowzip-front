@@ -8,7 +8,6 @@ import Carousel from '@/components/ui/Carousel';
 import Topbar from '@/components/ui/Topbar';
 import ActionButton from '@/components/ui/ActionButton';
 import Textarea from '@/components/ui/Textarea';
-import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/hooks/useToast';
 import { Input } from '@/components/ui/Input';
@@ -19,7 +18,6 @@ import Badge from '@/components/ui/Badge';
 import { Checkbox } from '@/components/ui/Checkbox';
 import Tooltip from '@/components/ui/Tooltip';
 import Modal from '@/components/ui/Modal';
-import { Calendar } from '@/components/ui/Calendar';
 
 const DemoPage = () => {
   const { toast } = useToast();
@@ -216,7 +214,6 @@ const DemoPage = () => {
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🐨 FloatingActionButton</h1>
-        <FloatingActionButton onClick={() => {}} />
       </section>
       <section className="border-b p-3">
         <h1 className="pb-1">🦦 Toast</h1>

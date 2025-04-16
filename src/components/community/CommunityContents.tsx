@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import FeedCard from '../../components/community/FeedCard';
-import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getFeedsOnServer } from '@/services/community';
@@ -62,7 +61,6 @@ const CommunityContents = () => {
     return (
       <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
         <CommunitySkeleton />
-        <FloatingActionButton onClick={handleNewWrite} />
       </div>
     );
   }
@@ -89,7 +87,6 @@ const CommunityContents = () => {
       ))}
       <div ref={ref} className="h-20 bg-transparent" />
       {isFetchingNextPage && <CommunitySkeleton />}
-      <FloatingActionButton onClick={handleNewWrite} />
       <MoreBtnBottomSheet
         type="feed"
         isVisible={editBottomSheet}

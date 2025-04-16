@@ -7,7 +7,7 @@ import UserProvider from '@/providers/UserInfoProvider';
 import JotaiProvider from '@/providers/JotaiProvider';
 import React from 'react';
 import AuthSession from '@/providers/AuthSession';
-import MotionLayout from '@/components/common/MotionLayout';
+import MainLayoutClient from '@/components/common/MainLayoutClient';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -71,16 +71,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body
-        className={`${inter.className} relative h-screen w-full overflow-hidden bg-gr-100`}
-      >
+      <body className={`${inter.className} relative h-full w-full bg-gr-100`}>
         <Providers>
           <AuthSession>
             <JotaiProvider>
               <UserProvider>
-                <MotionLayout>
-                  <div className="h-full overflow-auto">{children}</div>
-                </MotionLayout>
+                <MainLayoutClient>{children}</MainLayoutClient>
                 {modal}
               </UserProvider>
             </JotaiProvider>
