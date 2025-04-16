@@ -67,7 +67,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        className={clsx(className, 'flex items-center justify-center')}
+        className={clsx(
+          'flex items-center justify-center',
+          'transition-transform duration-75 ease-in-out active:scale-95',
+          className
+        )}
         ref={ref}
         onClick={handleClick}
         {...props}
