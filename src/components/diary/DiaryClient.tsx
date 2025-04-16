@@ -59,10 +59,10 @@ const DiaryClient = () => {
   useEffect(() => {
     const handleMessage = (event: any) => {
       try {
-        const data = JSON.parse(event.data);
-
-        if (data.type === 'NOTIFICATION_PERMISSION') {
-          console.log('📩 NOTIFICATION_PERMISSION:', data);
+        console.log('1 event.data', event.data);
+        // const data = JSON.parse(event.data);
+        if (event.data.type === 'NOTIFICATION_PERMISSION') {
+          console.log('2 NOTIFICATION_PERMISSION:', event.data);
         }
       } catch (err) {
         console.error('메시지 파싱 오류:', err);

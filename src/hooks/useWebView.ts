@@ -147,7 +147,8 @@ export const useWebView = (): UseWebViewReturn => {
           platform,
           token: data.token,
           message: data.message,
-          error: data.error
+          error: data.error,
+          enabled: data.enabled
         });
 
         switch (data.type) {
