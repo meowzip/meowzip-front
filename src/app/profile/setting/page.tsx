@@ -51,7 +51,9 @@ const SettingPage = () => {
       if (data.status !== 'OK') {
         console.error('data.status:', data.status);
       } else {
-        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
       }
     }
   });

@@ -8,7 +8,6 @@ import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { deleteDiaryOnServer, getDiaryDetail } from '@/services/diary';
 import { useRouter } from 'next/navigation';
-import DiaryWriteModal from '@/components/diary/DiaryWriteModal';
 import { CatType } from '@/types/cat';
 import Image from 'next/image';
 
