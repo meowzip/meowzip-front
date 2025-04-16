@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
 
@@ -55,6 +55,26 @@ const DiaryClient = () => {
       }
     }
   });
+
+  useEffect(() => {
+    const handleMessage = (event: any) => {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === 'NOTIFICATION_PERMISSION') {
+          console.log('📩 NOTIFICATION_PERMISSION:', data);
+        }
+      } catch (err) {
+        console.error('메시지 파싱 오류:', err);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;
