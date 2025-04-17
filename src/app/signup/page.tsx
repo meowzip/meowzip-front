@@ -12,26 +12,10 @@ import usePasswordHandler from '@/utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
 import { signInOnServer } from '@/services/signin';
 import { usePushToken } from '@/hooks/common/usePushToken';
-import { usePushPermission } from '@/hooks/common/usePushPermission';
-import { togglePushNotificationOnServer } from '@/services/push-notification';
 
 const SignUpPage = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { fcmToken } = usePushToken();
-
-  const { pushPermissionEnabled } = usePushPermission();
-  console.log('pushPermissionEnabled', pushPermissionEnabled);
-  const togglePushNotification = useMutation({
-    mutationFn: () => togglePushNotificationOnServer(),
-    onSuccess: (data: any) => {
-      if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
-        });
-      }
-    }
-  });
 
   const [openAgreeBottom, setOpenAgreeBottom] = useState(false);
   const [openModal, setOpenModal] = useState(false);

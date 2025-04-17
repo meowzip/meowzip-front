@@ -3,7 +3,7 @@ import { WebViewMessage, WebViewMessageType } from '@/types/webview';
 import { useWebView } from '@/hooks/useWebView';
 
 export const usePushPermission = () => {
-  const [pushPermissionEnabled, setPushPermissionEnabled] = useState('granted');
+  const [pushPermissionEnabled, setPushPermissionEnabled] = useState('');
   const { platform, safePostMessage } = useWebView();
 
   useEffect(() => {
