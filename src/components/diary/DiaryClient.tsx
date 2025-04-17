@@ -1,16 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useAtom } from 'jotai';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useQueryClient, useMutation } from '@tanstack/react-query';
-
 import { diaryDateAtom } from '@/store/diaryAtom';
 import { dateToString } from '@/utils/common';
-import { togglePushNotificationOnServer } from '@/services/push-notification';
-
 import DiaryListLayout from '@/components/diary/DiaryListLayout';
 import useInfiniteDiaries from '@/hooks/diary/useInfiniteDiaries';
 import CatFilterList from '@/components/diary/CatFilterList';
@@ -19,7 +14,6 @@ import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
 
 const DiaryClient = () => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { ref: catsRef, inView: catsInView } = useInView();
   const { ref: diaryRef, inView: diaryInView } = useInView();
 
@@ -43,37 +37,6 @@ const DiaryClient = () => {
   const handleDiaryClick = (id: number) => {
     router.push(`/diary/${id}`);
   };
-
-  const togglePushNotification = useMutation({
-    mutationFn: () => togglePushNotificationOnServer(),
-    onSuccess: (data: any) => {
-      if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
-        });
-      }
-    }
-  });
-
-  useEffect(() => {
-    const handleMessage = (event: any) => {
-      try {
-        console.log('1 event.data', event.data);
-        // const data = JSON.parse(event.data);
-        if (event.data.type === 'NOTIFICATION_PERMISSION') {
-          console.log('2 NOTIFICATION_PERMISSION:', event.data);
-        }
-      } catch (err) {
-        console.error('메시지 파싱 오류:', err);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;

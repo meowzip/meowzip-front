@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Input } from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useUser } from '@/contexts/EmailContext';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { signUpOnServer } from '@/services/signup';
 import { useRouter } from 'next/navigation';
 import SignupAgreeBottomSheet from '../../components/signup/SignupAgreeBottomSheet';
