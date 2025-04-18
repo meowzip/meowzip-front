@@ -98,8 +98,17 @@ export const getCatsOnServer = async ({
   memberId
 }: CatSearchOption) => {
   try {
+    const memberToken = getCookie('Authorization');
+    const requestOptions = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${memberToken}`
+      }
+    };
     const response = await fetchExtended(
-      `/cats?${objectToQueryString({ page, size, 'member-id': memberId ?? '' })}`
+      `/cats?${objectToQueryString({ page, size, 'member-id': memberId ?? '' })}`,
+      requestOptions
     );
     if (response.body) {
       const responseBody = await response.text();
