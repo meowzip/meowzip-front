@@ -1,6 +1,6 @@
 import { fetchExtended } from '@/services/cat';
 import { fetchExtendedForm, fetchExtendedAuth } from '@/services/nickname';
-import { base64ToFile, objectToQueryString } from '@/utils/common';
+import { base64ToFile, getCookie, objectToQueryString } from '@/utils/common';
 
 type FeedSearchOption = {
   page: number;
@@ -8,9 +8,19 @@ type FeedSearchOption = {
 };
 
 export const getFeedsOnServer = async ({ page, size }: FeedSearchOption) => {
+  const memberToken = getCookie('Authorization');
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${memberToken}`
+    }
+  };
+
   try {
     const response = await fetchExtended(
-      `/community?${objectToQueryString({ page, size })}`
+      `/community?${objectToQueryString({ page, size })}`,
+      requestOptions
     );
 
     if (response.body) {

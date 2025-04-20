@@ -1,5 +1,4 @@
 'use client';
-
 import CommunityContents from '@/components/community/CommunityContents';
 
 export default function CommunityPage() {
