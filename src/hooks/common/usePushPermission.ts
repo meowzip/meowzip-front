@@ -18,6 +18,7 @@ export const usePushPermission = () => {
 
       try {
         const message = JSON.parse(event.data) as WebViewMessage;
+        console.log('event.data', event.data);
         if (
           message.type === WebViewMessageType.NOTIFICATION_PERMISSION &&
           message.enabled
