@@ -104,6 +104,11 @@ export const useWebView = (): UseWebViewReturn => {
 
   const requestNotiPermission = useCallback(
     (event: CustomEvent) => {
+      console.log('❤️ 푸시 알림 여부 이벤트 수신:', {
+        platform,
+        eventType: event.type,
+        enabled: event.detail?.enabled
+      });
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
         enabled: event.detail?.enabled,

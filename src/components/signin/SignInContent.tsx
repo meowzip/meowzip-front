@@ -11,6 +11,9 @@ import Complete from '@/components/signin/Complete';
 import Topbar from '@/components/ui/Topbar';
 import { useFunnel } from '@/components/common/Funnel';
 import { useWebView } from '@/hooks/useWebView';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePushPermission } from '@/hooks/common/usePushPermission';
+import { togglePushNotificationOnServer } from '@/services/push-notification';
 
 export type Step = 'main' | 'email' | 'accountInfo' | 'password' | 'complete';
 
@@ -18,6 +21,7 @@ const SignInContent = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
 
   const steps = [
     'main',
@@ -30,6 +34,19 @@ const SignInContent = () => {
   const [Funnel, setStep] = useFunnel(steps, 'main');
 
   useWebView();
+
+  const { pushPermissionEnabled } = usePushPermission();
+  console.log('pushPermissionEnabled: ', pushPermissionEnabled);
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
 
   useEffect(() => {
     const step = searchParams.get('step') as Step;
