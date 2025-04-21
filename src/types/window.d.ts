@@ -7,4 +7,5 @@ interface Window {
   };
   vibrate(duration?: number): void;
   addVibrateToElement(elementId: string): void;
+  pushNotiPermission?: string;
 }
