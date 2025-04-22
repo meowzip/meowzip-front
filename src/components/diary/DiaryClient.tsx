@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { diaryDateAtom } from '@/store/diaryAtom';
 import { dateToString } from '@/utils/common';
@@ -11,6 +11,9 @@ import useInfiniteDiaries from '@/hooks/diary/useInfiniteDiaries';
 import CatFilterList from '@/components/diary/CatFilterList';
 import DiaryList from '@/components/diary/DiaryList';
 import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePushPermission } from '@/hooks/common/usePushPermission';
+import { togglePushNotificationOnServer } from '@/services/push-notification';
 
 const DiaryClient = () => {
   const router = useRouter();
@@ -37,6 +40,29 @@ const DiaryClient = () => {
   const handleDiaryClick = (id: number) => {
     router.push(`/diary/${id}`);
   };
+
+  // -------------- test -------------- //
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const permission = localStorage.getItem('push_permission') || '';
+    console.log('permission', permission);
+  }, []);
+  const { pushPermissionEnabled } = usePushPermission();
+  console.log('pushPermissionEnabled: ', pushPermissionEnabled);
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
+  useEffect(() => {
+    togglePushNotification.mutate();
+  }, [pushPermissionEnabled]);
+  // -------------- test end -------------- //
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;
