@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAtom } from 'jotai';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { diaryDateAtom } from '@/store/diaryAtom';
 import { dateToString } from '@/utils/common';
@@ -37,6 +37,25 @@ const DiaryClient = () => {
   const handleDiaryClick = (id: number) => {
     router.push(`/diary/${id}`);
   };
+
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.data) return;
+
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === 'NOTIFICATION_PERMISSION') {
+          const status = message.enabled;
+          console.log('❤️❤️ 푸시 권한 상태 수신됨:', status);
+        }
+      } catch (e) {
+        console.warn('메시지 파싱 실패:', e);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;
