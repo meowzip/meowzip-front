@@ -110,16 +110,16 @@ export const useWebView = (): UseWebViewReturn => {
         enabled: event.detail?.enabled
       });
 
-      if (platform === 'Web') {
-        console.log(
-          '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
-        );
-        return;
-      }
+      // if (platform === 'Web') {
+      //   console.log(
+      //     '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
+      //   );
+      //   return;
+      // }
 
       if (event.detail?.enabled) {
         console.log('[웹→앱] 푸시 알림 여부 저장 시도:', event.detail.enabled);
-        localStorage.setItem('pushPermission', event.detail.enabled);
+        localStorage.setItem('push_permission', event.detail.enabled);
         console.log('[웹→앱] 푸시 알림 여부 저장 완료');
 
         safePostMessage({
@@ -142,7 +142,7 @@ export const useWebView = (): UseWebViewReturn => {
         timestamp: new Date().toISOString()
       });
     },
-    [safePostMessage]
+    [platform, safePostMessage]
   );
 
   const handleWebViewMessage = useCallback(
@@ -211,12 +211,15 @@ export const useWebView = (): UseWebViewReturn => {
             });
             break;
           case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION:
-            console.log('[웹→앱] 푸시 알림 상태 수신:', data.enabled);
-            safePostMessage({
-              type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-              enabled: data.enabled,
-              timestamp: new Date().toISOString()
-            });
+            if (data.enabled) {
+              console.log('[웹→앱] 푸시 알림 여부 수신:', data.enabled);
+              localStorage.setItem('push_permission', data.enabled);
+              safePostMessage({
+                type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+                enabled: data.enabled,
+                timestamp: new Date().toISOString()
+              });
+            }
             break;
           case 'ready':
           case 'can-inline-scripts':
@@ -281,6 +284,16 @@ export const useWebView = (): UseWebViewReturn => {
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.PUSH_TOKEN_RECEIVED,
         token: currentToken,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    const currentPushPermission = localStorage.getItem('push_permission');
+    if (currentPushPermission) {
+      console.log('[웹→앱] 저장된 푸시 알림 여부:', currentPushPermission);
+      safePostMessage({
+        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+        enabled: currentPushPermission,
         timestamp: new Date().toISOString()
       });
     }
