@@ -23,7 +23,7 @@ export const usePushPermission = () => {
           message.enabled
         ) {
           setPushPermissionEnabled(message.enabled);
-          localStorage.setItem('pushPermission', message.enabled);
+          localStorage.setItem('push_permission', message.enabled);
           safePostMessage({
             type: 'NOTIFICATION_PERMISSION',
             enabled: message.enabled,
@@ -37,7 +37,7 @@ export const usePushPermission = () => {
       }
     };
 
-    const storedPushPermission = localStorage.getItem('pushPermission');
+    const storedPushPermission = localStorage.getItem('push_permission');
     if (storedPushPermission) {
       setPushPermissionEnabled(storedPushPermission);
       safePostMessage({
@@ -47,13 +47,13 @@ export const usePushPermission = () => {
       });
     }
 
-    if (platform !== 'Web') {
-      window.addEventListener('message', handleMessage);
+    // if (platform !== 'Web') {
+    window.addEventListener('message', handleMessage);
 
-      return () => {
-        window.removeEventListener('message', handleMessage);
-      };
-    }
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+    // }
   }, [platform, safePostMessage]);
 
   return { pushPermissionEnabled };

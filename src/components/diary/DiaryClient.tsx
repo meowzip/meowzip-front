@@ -11,6 +11,9 @@ import useInfiniteDiaries from '@/hooks/diary/useInfiniteDiaries';
 import CatFilterList from '@/components/diary/CatFilterList';
 import DiaryList from '@/components/diary/DiaryList';
 import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { usePushPermission } from '@/hooks/common/usePushPermission';
+import { togglePushNotificationOnServer } from '@/services/push-notification';
 
 const DiaryClient = () => {
   const router = useRouter();
@@ -38,24 +41,28 @@ const DiaryClient = () => {
     router.push(`/diary/${id}`);
   };
 
+  // -------------- test -------------- //
+  const queryClient = useQueryClient();
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (!event.data) return;
-
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === 'NOTIFICATION_PERMISSION') {
-          const status = message.enabled;
-          console.log('❤️❤️ 푸시 권한 상태 수신됨:', status);
-        }
-      } catch (e) {
-        console.warn('메시지 파싱 실패:', e);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    const permission = localStorage.getItem('push_permission') || '';
+    console.log('permission', permission);
   }, []);
+  const { pushPermissionEnabled } = usePushPermission();
+  console.log('pushPermissionEnabled: ', pushPermissionEnabled);
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
+  useEffect(() => {
+    togglePushNotification.mutate();
+  }, [pushPermissionEnabled]);
+  // -------------- test end -------------- //
 
   if (isCatListError) throw catListError;
   if (isDiaryListError) throw diaryListError;
