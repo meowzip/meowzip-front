@@ -42,18 +42,18 @@ export const usePushPermission = () => {
       setPushPermissionEnabled(storedPushPermission);
       safePostMessage({
         type: 'NOTIFICATION_PERMISSION',
-        token: storedPushPermission,
+        enabled: storedPushPermission,
         timestamp: new Date().toISOString()
       });
     }
 
-    // if (platform !== 'Web') {
-    window.addEventListener('message', handleMessage);
+    if (platform !== 'Web') {
+      window.addEventListener('message', handleMessage);
 
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-    // }
+      return () => {
+        window.removeEventListener('message', handleMessage);
+      };
+    }
   }, [platform, safePostMessage]);
 
   return { pushPermissionEnabled };

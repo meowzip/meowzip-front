@@ -110,12 +110,12 @@ export const useWebView = (): UseWebViewReturn => {
         enabled: event.detail?.enabled
       });
 
-      // if (platform === 'Web') {
-      //   console.log(
-      //     '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
-      //   );
-      //   return;
-      // }
+      if (platform === 'Web') {
+        console.log(
+          '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
+        );
+        return;
+      }
 
       if (event.detail?.enabled) {
         console.log('[웹→앱] 푸시 알림 여부 저장 시도:', event.detail.enabled);
@@ -124,7 +124,7 @@ export const useWebView = (): UseWebViewReturn => {
 
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-          token: event.detail.token,
+          enabled: event.detail.enabled,
           timestamp: new Date().toISOString()
         });
       } else {
