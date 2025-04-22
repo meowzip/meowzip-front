@@ -27,7 +27,7 @@ const OnBoardPage = () => {
   if (isError) throw error;
 
   return (
-    <section className="mx-auto max-w-[640px] px-4 pt-[60px]">
+    <section className="mx-auto h-full max-w-[640px] bg-gr-white px-4 pt-[60px]">
       <article className="flex items-center justify-center">
         <Image
           src={myProfile?.profileImageUrl || DEFAULT_PROFILE_IMAGE_SRC}
