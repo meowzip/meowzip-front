@@ -45,10 +45,10 @@ const DiaryClient = () => {
   const queryClient = useQueryClient();
   useEffect(() => {
     const permission = localStorage.getItem('push_permission') || '';
-    console.log('permission', permission);
+    console.log('111 permission', permission);
   }, []);
   const { pushPermissionEnabled } = usePushPermission();
-  console.log('pushPermissionEnabled: ', pushPermissionEnabled);
+  console.log('222 pushPermissionEnabled: ', pushPermissionEnabled);
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -60,6 +60,7 @@ const DiaryClient = () => {
     }
   });
   useEffect(() => {
+    console.log('333 pushPermissionEnabled', pushPermissionEnabled);
     togglePushNotification.mutate();
   }, [pushPermissionEnabled]);
   // -------------- test end -------------- //
