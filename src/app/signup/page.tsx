@@ -72,10 +72,9 @@ const SignUpPage = () => {
     },
     onSuccess: (response: any) => {
       const token = response.headers?.get('Authorization');
-      const refreshToken = response.headers?.get('Authorization-Refresh');
 
-      if (token && refreshToken) {
-        router.replace('/diary');
+      if (token) {
+        router.replace('/onboard');
       } else {
         console.error('인증 토큰이 없습니다.');
         router.replace('/signin');
