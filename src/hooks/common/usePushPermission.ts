@@ -18,12 +18,12 @@ export const usePushPermission = () => {
 
       try {
         const message = JSON.parse(event.data) as WebViewMessage;
-        console.log('event.data', event.data);
         if (
           message.type === WebViewMessageType.NOTIFICATION_PERMISSION &&
           message.enabled
         ) {
           setPushPermissionEnabled(message.enabled);
+          localStorage.setItem('pushPermission', message.enabled);
           safePostMessage({
             type: 'NOTIFICATION_PERMISSION',
             enabled: message.enabled,
@@ -36,6 +36,16 @@ export const usePushPermission = () => {
         }
       }
     };
+
+    const storedPushPermission = localStorage.getItem('pushPermission');
+    if (storedPushPermission) {
+      setPushPermissionEnabled(storedPushPermission);
+      safePostMessage({
+        type: 'NOTIFICATION_PERMISSION',
+        token: storedPushPermission,
+        timestamp: new Date().toISOString()
+      });
+    }
 
     if (platform !== 'Web') {
       window.addEventListener('message', handleMessage);
