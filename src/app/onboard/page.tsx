@@ -1,30 +1,75 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@/components/ui/Button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import OnboardProfileModal from '@/components/onboard/OnboardProfileModal';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMyProfile } from '@/services/profile';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
+import {
+  getPushNotification,
+  togglePushNotificationOnServer
+} from '@/services/push-notification';
+import { usePushPermission } from '@/hooks/common/usePushPermission';
 
 const OnBoardPage = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const {
     data: myProfile,
-    isError,
-    error
+    isError: isMyProfileError,
+    error: myProfileError
   } = useQuery({
     queryKey: ['myProfile'],
     queryFn: () => getMyProfile(),
     enabled: !showProfileModal
   });
 
-  if (isError) throw error;
+  // -------------- test -------------- //
+  const {
+    data: pushNotification,
+    isSuccess,
+    isError: isPushNotiError,
+    error: pushNotiError
+  } = useQuery({
+    queryKey: ['getPushNoti'],
+    queryFn: () => getPushNotification(),
+    staleTime: 0
+  });
+
+  const { pushPermissionEnabled } = usePushPermission();
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
+  useEffect(() => {
+    if (isSuccess && pushNotification) {
+      const shouldBeEnabled: Boolean =
+        pushPermissionEnabled === 'granted' ? true : false;
+      const currentEnabled: Boolean = pushNotification.receivePushNotification;
+      // console.log('shouldBeEnabled', shouldBeEnabled);
+      // console.log('currentEnabled', currentEnabled);
+
+      if (shouldBeEnabled !== currentEnabled) {
+        togglePushNotification.mutate();
+      }
+    }
+  }, [isSuccess, pushNotification, pushPermissionEnabled]);
+  // -------------- test end -------------- //
+
+  if (isMyProfileError) throw myProfileError;
+  if (isPushNotiError) throw pushNotiError;
 
   return (
     <section className="mx-auto h-full max-w-[640px] bg-gr-white px-4 pt-[60px]">
