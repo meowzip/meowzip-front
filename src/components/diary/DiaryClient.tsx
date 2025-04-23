@@ -11,9 +11,12 @@ import useInfiniteDiaries from '@/hooks/diary/useInfiniteDiaries';
 import CatFilterList from '@/components/diary/CatFilterList';
 import DiaryList from '@/components/diary/DiaryList';
 import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePushPermission } from '@/hooks/common/usePushPermission';
-import { togglePushNotificationOnServer } from '@/services/push-notification';
+import {
+  getPushNotification,
+  togglePushNotificationOnServer
+} from '@/services/push-notification';
 
 const DiaryClient = () => {
   const router = useRouter();
@@ -43,12 +46,18 @@ const DiaryClient = () => {
 
   // -------------- test -------------- //
   const queryClient = useQueryClient();
-  useEffect(() => {
-    const permission = localStorage.getItem('push_permission') || '';
-    console.log('111 permission', permission);
-  }, []);
+  const {
+    data: pushNotification,
+    isSuccess,
+    isError,
+    error
+  } = useQuery({
+    queryKey: ['getPushNoti'],
+    queryFn: () => getPushNotification(),
+    staleTime: 0
+  });
+
   const { pushPermissionEnabled } = usePushPermission();
-  console.log('222 pushPermissionEnabled: ', pushPermissionEnabled);
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -60,9 +69,18 @@ const DiaryClient = () => {
     }
   });
   useEffect(() => {
-    console.log('333 pushPermissionEnabled', pushPermissionEnabled);
-    togglePushNotification.mutate();
-  }, [pushPermissionEnabled]);
+    if (isSuccess && pushNotification) {
+      const shouldBeEnabled =
+        pushPermissionEnabled === 'granted' ? true : false;
+      const currentEnabled: Boolean = pushNotification.receivePushNotification;
+      console.log('shouldBeEnabled', shouldBeEnabled);
+      console.log('currentEnabled', currentEnabled);
+
+      if (shouldBeEnabled !== currentEnabled) {
+        togglePushNotification.mutate();
+      }
+    }
+  }, [isSuccess, pushNotification, pushPermissionEnabled]);
   // -------------- test end -------------- //
 
   if (isCatListError) throw catListError;
