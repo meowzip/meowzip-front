@@ -1,7 +1,7 @@
-import DiaryClient from '@/components/diary/DiaryClient';
+import DiaryContent from '@/components/diary/DiaryContent';
 
 const DiaryPage = () => {
-  return <DiaryClient />;
+  return <DiaryContent />;
 };
 
 export default DiaryPage;
