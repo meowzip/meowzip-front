@@ -12,7 +12,7 @@ import CatFilterList from '@/components/diary/CatFilterList';
 import DiaryList from '@/components/diary/DiaryList';
 import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
 
-const DiaryClient = () => {
+const DiaryContent = () => {
   const router = useRouter();
   const { ref: catsRef, inView: catsInView } = useInView();
   const { ref: diaryRef, inView: diaryInView } = useInView();
@@ -62,4 +62,4 @@ const DiaryClient = () => {
   );
 };
 
-export default DiaryClient;
+export default DiaryContent;
