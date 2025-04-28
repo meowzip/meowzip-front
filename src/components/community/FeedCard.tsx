@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import UserArea from './feed/UserArea';
 import Carousel from '@/components/ui/Carousel';
 import ButtonArea from '@/components/community/feed/ButtonArea';
-import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { FeedType } from '@/types/communityType';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 import { Skeleton } from '@/components/ui/Skeleton';
@@ -29,8 +29,6 @@ const FeedCard = ({
   hasUserArea
 }: FeedCardProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
   const [isImagesLoading, setIsImagesLoading] = useState(true);
   const [showMore, setShowMore] = useState(false);
   const [isClamped, setIsClamped] = useState(false);

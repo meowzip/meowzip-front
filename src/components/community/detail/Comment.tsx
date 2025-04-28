@@ -1,6 +1,7 @@
 import Profile from '@/components/ui/Profile';
 import Image from 'next/image';
 import { CommentType } from '@/types/communityType';
+import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 
 const formatCreatedAt = (createdAt: string) => {
   return createdAt === '0초 전' ? '방금 전' : createdAt;
@@ -30,7 +31,7 @@ export default function Comment({
           items={[
             {
               id: 1,
-              imageUrl: comment.profileImageUrl || '',
+              imageUrl: comment.profileImageUrl || DEFAULT_PROFILE_IMAGE_SRC,
               style: 'w-10 h-10'
             }
           ]}
