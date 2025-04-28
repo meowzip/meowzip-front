@@ -9,14 +9,12 @@ import ZipEmptyState from '@/components/zip/ZipEmptyState';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCatsOnServer } from '@/services/cat';
-import Link from 'next/link';
 
 const ZipPage = () => {
   const router = useRouter();
   const { ref, inView } = useInView();
 
-  const [selectedModal, setSelectedModal] = useState({} as CatListObj);
-  const [showWriteModal, setShowWriteModal] = useState(false);
+  const [, setSelectedModal] = useState({} as CatListObj);
 
   const {
     data: catList,

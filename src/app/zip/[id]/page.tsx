@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ZipDetailDiary from '../../../components/zip/ZipDetailDiary';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
