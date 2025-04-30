@@ -5,11 +5,9 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import SettingCard from '@/components/setting/SettingCard';
 import { Switch } from '@/components/ui/Switch';
-import Modal from '@/components/ui/Modal';
 import { deleteAccountOnServer } from '@/services/signup';
 import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/hooks/useToast';
-import Terms from '@/components/signup/Terms';
 import { TermsType } from '@/constants/general';
 import { signOut } from 'next-auth/react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -18,6 +16,9 @@ import {
   togglePushNotificationOnServer
 } from '@/services/push-notification';
 import { getCurrentDateInYYYYMMDD } from '@/utils/common';
+import TermsModal from '@/components/setting/TermsModal';
+import LogoutModal from '@/components/setting/LogoutModal';
+import WithdrawModal from '@/components/setting/WithdrawModal';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -123,69 +124,17 @@ const SettingPage = () => {
           </section>
         </div>
         <Toaster />
-
-        {termsModal !== '' && (
-          <div className="fixed left-0 top-0 z-[50] mx-auto h-screen w-full max-w-[640px] overflow-y-auto bg-gr-white">
-            <Topbar type="three">
-              <Topbar.Back onClick={() => setTermsModal('')} />
-              <Topbar.Title
-                title={
-                  termsModal === TermsType.TERMS_OF_USE
-                    ? '서비스 이용약관'
-                    : '개인정보 수집 및 처리방침'
-                }
-              />
-              <Topbar.Empty />
-            </Topbar>
-            <div className="flex flex-col gap-2 px-2 py-2 pt-12">
-              <Terms type={termsModal} />
-            </div>
-          </div>
-        )}
-
-        {logOutModal && (
-          <Modal
-            contents={{ title: '로그아웃 하시겠습니까?' }}
-            scrim={true}
-            buttons={[
-              {
-                content: '로그아웃',
-                btnStyle: 'w-full rounded-16 px-4 py-2 bg-sm-error-500',
-                textStyle: 'text-gr-white text-btn-1',
-                onClick: () => logOut()
-              },
-              {
-                content: '취소',
-                btnStyle: 'w-full rounded-16 px-4 py-2 bg-gr-white',
-                textStyle: 'text-gr-300 text-btn-1',
-                onClick: () => setLogOutModal(false)
-              }
-            ]}
-          />
-        )}
-        {withdrawModal && (
-          <Modal
-            contents={{
-              title: '회원탈퇴 하시겠습니까?',
-              body: '지금까지의 모든 정보가 삭제되며, \n 복구할 수 없습니다.'
-            }}
-            scrim={true}
-            buttons={[
-              {
-                content: '탈퇴하기',
-                btnStyle: 'w-full rounded-16 px-4 py-2 bg-sm-error-500',
-                textStyle: 'text-gr-white text-btn-1',
-                onClick: () => deleteAccountOnServer()
-              },
-              {
-                content: '취소',
-                btnStyle: 'w-full rounded-16 px-4 py-2 bg-gr-white',
-                textStyle: 'text-gr-300 text-btn-1',
-                onClick: () => setWithdrawModal(false)
-              }
-            ]}
-          />
-        )}
+        <TermsModal open={termsModal} onClose={() => setTermsModal('')} />
+        <LogoutModal
+          open={logOutModal}
+          onConfirm={logOut}
+          onCancel={() => setLogOutModal(false)}
+        />
+        <WithdrawModal
+          open={withdrawModal}
+          onConfirm={deleteAccountOnServer}
+          onCancel={() => setWithdrawModal(false)}
+        />
       </div>
     </>
   );
