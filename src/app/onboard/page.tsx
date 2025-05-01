@@ -30,7 +30,6 @@ const OnBoardPage = () => {
     enabled: !showProfileModal
   });
 
-  // -------------- test -------------- //
   const {
     data: pushNotification,
     isSuccess,
@@ -58,15 +57,12 @@ const OnBoardPage = () => {
       const shouldBeEnabled: Boolean =
         pushPermissionEnabled === 'granted' ? true : false;
       const currentEnabled: Boolean = pushNotification.receivePushNotification;
-      // console.log('shouldBeEnabled', shouldBeEnabled);
-      // console.log('currentEnabled', currentEnabled);
 
       if (shouldBeEnabled !== currentEnabled) {
         togglePushNotification.mutate();
       }
     }
   }, [isSuccess, pushNotification, pushPermissionEnabled]);
-  // -------------- test end -------------- //
 
   if (isMyProfileError) throw myProfileError;
   if (isPushNotiError) throw pushNotiError;

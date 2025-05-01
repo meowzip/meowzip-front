@@ -6,7 +6,7 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
@@ -14,6 +14,8 @@ import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
+import { useClickNoti } from '@/hooks/common/useClickNoti';
+import { readNotificationOnServer } from '@/services/profile';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -73,6 +75,27 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     setParentCommentId(null);
     setIsReplying(false);
   };
+
+  // -------------------- test -------------------- //
+  const { notification } = useClickNoti();
+  const readNotification = useMutation({
+    mutationFn: ({ id }: { id: number; type: string }) =>
+      readNotificationOnServer(id),
+    onSuccess: (data: any, variables: { id: number; type: string }) => {
+      if (data.status !== 'OK') {
+      } else {
+        console.log('refetch');
+      }
+    }
+  });
+  useEffect(() => {
+    if (!notification?.url.includes('community')) return;
+    readNotification.mutate({
+      id: Number(notification['notification-id']),
+      type: notification.type
+    });
+  }, [notification]);
+  // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
   if (isCommentsDataError) throw commentsDataError;

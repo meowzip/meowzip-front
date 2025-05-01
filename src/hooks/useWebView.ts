@@ -25,7 +25,8 @@ const WEBVIEW_MESSAGE_TYPES = {
   TOKEN_SET_ERROR: 'TOKEN_SET_ERROR',
   WEB_PAGE_LOADED: 'WEB_PAGE_LOADED',
   BRIDGE_READY: 'BRIDGE_READY',
-  NOTIFICATION_PERMISSION: 'NOTIFICATION_PERMISSION'
+  NOTIFICATION_PERMISSION: 'NOTIFICATION_PERMISSION',
+  NOTIFICATION_CLICKED: 'NOTIFICATION_CLICKED'
 } as const;
 
 export const useWebView = (): UseWebViewReturn => {
@@ -128,7 +129,7 @@ export const useWebView = (): UseWebViewReturn => {
           timestamp: new Date().toISOString()
         });
       } else {
-        console.warn('[웹→앱] 푸시 알림 여부 이벤트 수신됨');
+        console.warn('[웹→앱] 푸시 알림 여부 이벤트 수신 에러');
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
           error: '푸시 알림 여부 이벤트 수신 에러',
@@ -217,6 +218,20 @@ export const useWebView = (): UseWebViewReturn => {
               safePostMessage({
                 type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
                 enabled: data.enabled,
+                timestamp: new Date().toISOString()
+              });
+            }
+            break;
+          case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED:
+            if (data.notification) {
+              console.log('[웹→앱] 알림 클릭 성공:', data.notification);
+              localStorage.setItem(
+                'click_noti',
+                JSON.stringify(data.notification)
+              );
+              safePostMessage({
+                type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+                notification: data.notification,
                 timestamp: new Date().toISOString()
               });
             }
