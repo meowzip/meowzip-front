@@ -9,6 +9,7 @@ import Topbar from '@/components/ui/Topbar';
 import Image from 'next/image';
 import { updateProfileOnServer } from '@/services/nickname';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 
 interface OnboardProfileModalProps {
   onClose: () => void;
@@ -32,14 +33,19 @@ const OnboardProfileModal = ({
   const [errorObj, setErrorObj] = useState({ error: false, message: '' });
 
   useEffect(() => {
-    setNickname(myProfile?.nickname);
-    setProfileImage(prevList =>
-      prevList.map(prev => ({
-        ...prev,
-        croppedImage: myProfile?.profileImageUrl
-      }))
-    );
-  }, []);
+    // myProfile이 존재할 때만 초기화 실행
+    if (myProfile) {
+      setNickname(myProfile.nickname || '');
+
+      // 프로필 이미지 설정
+      setProfileImage(prevList =>
+        prevList.map(prev => ({
+          ...prev,
+          croppedImage: myProfile.profileImageUrl || DEFAULT_PROFILE_IMAGE_SRC
+        }))
+      );
+    }
+  }, [myProfile]); // myProfile이 변경될 때만 실행
 
   const validateNickname = (name: string) => {
     if (name.length < 2) {
@@ -102,6 +108,12 @@ const OnboardProfileModal = ({
     }
   }, [error, message]);
 
+  // 이미지가 서버 URL이면 업데이트 요청에서 제외하는 로직
+  const isServerUrl = (url: string | null): boolean => {
+    if (!url) return false;
+    return url.startsWith('http://') || url.startsWith('https://');
+  };
+
   const updateProfile = () => {
     const params: {
       nickname?: string;
@@ -112,10 +124,26 @@ const OnboardProfileModal = ({
       params.nickname = nickname;
     }
 
-    if (profileImage[0].croppedImage !== myProfile.profileImageUrl) {
-      params.profileImage = profileImage[0].croppedImage;
+    // 프로필 이미지 변경 시에만 요청에 포함
+    const isDefaultImage =
+      profileImage[0].croppedImage === DEFAULT_PROFILE_IMAGE_SRC;
+    const isUnchangedImage =
+      profileImage[0].croppedImage === myProfile.profileImageUrl;
+    const isServerImage = isServerUrl(profileImage[0].croppedImage);
+
+    // 기본 이미지가 아니고, 이전 이미지와 다른 경우이며, 서버 URL이 아닌 base64 데이터인 경우에만 업데이트
+    if (
+      !isDefaultImage &&
+      !isUnchangedImage &&
+      !isServerImage &&
+      profileImage[0].croppedImage
+    ) {
+      if (profileImage[0].croppedImage.startsWith('data:')) {
+        params.profileImage = profileImage[0].croppedImage;
+      }
     }
 
+    // 변경사항이 있을 때만 요청
     if (Object.keys(params).length > 0) {
       profileMutation.mutate(params);
     } else {
@@ -131,8 +159,11 @@ const OnboardProfileModal = ({
         queryClient.invalidateQueries({ queryKey: ['myProfile'] });
         onClose();
       } else {
-        console.error('프로필 업데이트 에러: ');
+        console.error('프로필 업데이트 에러:', data);
       }
+    },
+    onError: (error: any) => {
+      console.error('프로필 업데이트 요청 실패:', error);
     }
   });
 

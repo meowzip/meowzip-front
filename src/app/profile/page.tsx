@@ -190,9 +190,9 @@ export default function ProfilePage() {
         </TabsContent>
         <TabsContent
           value="savedContents"
-          className="mx-auto mt-0 max-w-[640px] pb-24"
+          className="mx-auto mt-0 max-w-[640px] bg-gr-50 pb-24"
         >
-          {myBookmarkList?.pages?.length === 0 ? (
+          {myBookmarkList?.pages[0]?.items.length === 0 ? (
             <ProfileEmptyState
               title="아직 저장한 글이 없어요"
               body="간직하고 싶은 글을 저장해보세요!"
