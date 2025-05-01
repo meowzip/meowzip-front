@@ -57,7 +57,7 @@ export default function WriteComment({
           </button>
         </div>
       )}
-      <div className="flex items-end gap-2 border-t border-gray-300 px-4 py-2">
+      <div className="flex items-center justify-center gap-2 border-t border-gray-300 px-4 py-2">
         <Profile
           items={[
             {
@@ -82,7 +82,7 @@ export default function WriteComment({
           <Button
             onClick={handleSubmit}
             disabled={!comment.trim()}
-            className={`absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium ${
+            className={`absolute right-4 top-1/2 flex -translate-y-1/2 items-center justify-center text-sm font-medium ${
               comment.trim() ? 'text-pr-500' : 'text-gr-400'
             }`}
           >

@@ -78,7 +78,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   if (isCommentsDataError) throw commentsDataError;
 
   return (
-    <div className="fixed top-0 z-50 mx-auto flex h-screen w-full max-w-[640px] flex-col bg-gr-white">
+    <div className="fixed top-0 z-50 mx-auto flex h-app w-full max-w-[640px] flex-col bg-gr-white">
       <Topbar type="three" className="flex-none">
         <Topbar.Back onClick={() => router.back()} />
         <Topbar.Title title="피드" />
