@@ -33,11 +33,9 @@ const OnboardProfileModal = ({
   const [errorObj, setErrorObj] = useState({ error: false, message: '' });
 
   useEffect(() => {
-    // myProfile이 존재할 때만 초기화 실행
     if (myProfile) {
       setNickname(myProfile.nickname || '');
 
-      // 프로필 이미지 설정
       setProfileImage(prevList =>
         prevList.map(prev => ({
           ...prev,
@@ -45,7 +43,7 @@ const OnboardProfileModal = ({
         }))
       );
     }
-  }, [myProfile]); // myProfile이 변경될 때만 실행
+  }, [myProfile]);
 
   const validateNickname = (name: string) => {
     if (name.length < 2) {
@@ -124,7 +122,6 @@ const OnboardProfileModal = ({
       params.nickname = nickname;
     }
 
-    // 프로필 이미지 변경 시에만 요청에 포함
     const isDefaultImage =
       profileImage[0].croppedImage === DEFAULT_PROFILE_IMAGE_SRC;
     const isUnchangedImage =
@@ -143,7 +140,6 @@ const OnboardProfileModal = ({
       }
     }
 
-    // 변경사항이 있을 때만 요청
     if (Object.keys(params).length > 0) {
       profileMutation.mutate(params);
     } else {
