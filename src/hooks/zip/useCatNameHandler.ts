@@ -9,23 +9,33 @@ const useCatNameHandler = () => {
    * @returns boolean
    */
   const validateCatName = (name: string): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailRegex.test(name);
+    if (!name || name.length >= 12) {
+      return false;
+    }
+    return true;
   };
 
   /**
    * @description debounce catName input
    */
   const debounceCatName = useCallback(
-    debounce(email => {
-      setCatName(prev => ({ ...prev, error: !validateCatName(email) }));
-    }, 300),
+    debounce(name => {
+      setCatName(prev => ({ ...prev, error: !validateCatName(name) }));
+    }, 100),
     []
   );
 
   const handleCatNameChange = (e: { target: { value: string } }) => {
-    setCatName(prev => ({ ...prev, value: e.target.value }));
-    debounceCatName(e.target.value);
+    const newValue = e.target.value;
+    setCatName(prev => {
+      const newState = {
+        ...prev,
+        value: newValue,
+        error: !validateCatName(newValue)
+      };
+      return newState;
+    });
+    debounceCatName(newValue);
   };
 
   return { catName, handleCatNameChange };

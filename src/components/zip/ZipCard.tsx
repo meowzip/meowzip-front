@@ -18,10 +18,17 @@ const ZipCard = ({
   isNeutered,
   onClick
 }: ZipCardProps) => {
+  const validImageUrl =
+    imageUrl && typeof imageUrl === 'string' && imageUrl.trim() !== ''
+      ? imageUrl
+      : '/images/zip-card.svg';
+
+  const neutered = isNeutered === 'Y';
+
   return (
     <div className="relative" onClick={onClick}>
       <div className="absolute right-0 top-0 flex items-center gap-1 p-[5px]">
-        {isNeutered && (
+        {neutered && (
           <Label.Text
             className="bg-gr-transparent-white p-1 text-gr-800"
             content="TNR"
@@ -35,7 +42,7 @@ const ZipCard = ({
         )}
       </div>
       <Image
-        src={imageUrl}
+        src={validImageUrl}
         alt="cat-image"
         layout="responsive"
         width={100}

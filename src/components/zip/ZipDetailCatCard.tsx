@@ -25,7 +25,7 @@ const ZipDetailCatCard = ({ ...props }: CatBaseType) => {
           </div>
         </div>
         <Image
-          src={props.imageUrl}
+          src={props.imageUrl || '/images/zip-card.svg'}
           alt="cat-image"
           layout="responsive"
           width={100}
