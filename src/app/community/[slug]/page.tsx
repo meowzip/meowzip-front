@@ -134,7 +134,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           ))}
         </div>
       </div>
-      <div className="z-[60] flex-none border-t border-gr-100 bg-gr-white pb-[env(safe-area-inset-bottom)] shadow-sm">
+      <div className="z-[60] flex-none border-t border-gr-100 bg-gr-white shadow-sm">
         {!isReplying && <WriteComment feedId={feedDetail?.id} />}
       </div>
       {showWriteModal && (

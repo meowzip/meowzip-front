@@ -45,7 +45,7 @@ export default function WriteComment({
   if (isError) throw error;
 
   return (
-    <div className="fixed bottom-0 z-[100] mx-auto w-full max-w-[640px] bg-white">
+    <div className="fixed bottom-0 z-[100] mx-auto w-full max-w-[640px] bg-white pb-[env(safe-area-inset-bottom)]">
       {parentCommentId && (
         <div className="flex items-center justify-between border-t border-gray-300 px-4 py-2">
           <div className="flex items-center gap-2">

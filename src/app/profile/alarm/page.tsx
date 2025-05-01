@@ -22,6 +22,8 @@ import AlarmEmptyState from '@/components/profile/AlarmEmptyState';
 import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
 import { useInView } from 'react-intersection-observer';
 import { useEffect, useMemo } from 'react';
+import { useAtom } from 'jotai';
+import { newNotificationAtom } from '@/atoms/notificationAtom';
 
 export interface AlarmType {
   id: number;
@@ -38,6 +40,7 @@ export interface AlarmType {
 const AlarmPage = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [_, setHasNewNotification] = useAtom(newNotificationAtom);
   const { ref: notiRef, inView: notiInView } = useInView();
   const { ref: coParentRef, inView: coParentInView } = useInView();
 
@@ -113,6 +116,7 @@ const AlarmPage = () => {
       if (data.status !== 'OK') {
         console.log('error');
       } else {
+        setHasNewNotification(false);
         refetchNotifications();
         refetchCoParentNotifications();
         queryClient.invalidateQueries({ queryKey: ['myProfile'] });
