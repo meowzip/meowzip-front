@@ -73,7 +73,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body className={`${inter.className} relative h-full w-full bg-gr-100`}>
+      <body
+        className={`${inter.className} relative h-screen w-full bg-gr-100 pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pt-[env(safe-area-inset-top)]`}
+      >
         <Providers>
           <AuthSession>
             <JotaiProvider>

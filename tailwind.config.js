@@ -19,6 +19,12 @@ module.exports = {
         mobile: '768px', // @media (min-width: 768px)
         tablet: '1024px' // @media (min-width: 1024px)
       },
+      height: {
+        app: 'var(--app-height)'
+      },
+      width: {
+        app: 'var(--app-width)'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
