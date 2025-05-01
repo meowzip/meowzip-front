@@ -117,7 +117,11 @@ const ImageUploader = ({
         className={`flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300 ${
           radius || 'rounded-16'
         }`}
-        style={{ backgroundImage: `url(${data?.croppedImage})` }}
+        style={{
+          backgroundImage: data?.croppedImage
+            ? `url(${data.croppedImage})`
+            : 'none'
+        }}
         onClick={() => fileInputRef.current?.click()}
       >
         {!data?.croppedImage &&
@@ -176,13 +180,15 @@ const ImageUploader = ({
         {data?.imageSrc && !data?.croppedImage && (
           <div className="fixed left-0 top-0 z-[200]">
             <div className="h-screen w-screen bg-gr-white">
-              <Image
-                ref={imageElement}
-                src={data?.imageSrc}
-                alt="cropped-image"
-                width={24}
-                height={24}
-              />
+              {data.imageSrc && (
+                <Image
+                  ref={imageElement}
+                  src={data.imageSrc}
+                  alt="cropped-image"
+                  width={24}
+                  height={24}
+                />
+              )}
               <div className="fixed left-1/2 top-20 -translate-x-1/2">
                 <Button
                   onClick={handleCrop}

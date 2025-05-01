@@ -68,18 +68,29 @@ export default function CatInfo({
   const [selectedImage, setSelectedImage] = useState({
     key: 0,
     imageSrc: '',
-    croppedImage: null
+    croppedImage: null as string | null
   });
   const { catName, handleCatNameChange } = useCatNameHandler();
 
   useEffect(() => {
-    if (type === 'edit') {
-      setSelectedSex(catData.sex);
-      setSelectedNeutered(catData.isNeutered);
-      setSelectedItem(catData.metAt);
-      setTextAreaContent(catData.memo);
+    setSelectedSex(catData.sex);
+    setSelectedNeutered(catData.isNeutered);
+    if (catData.metAt) setSelectedItem(catData.metAt);
+    if (catData.memo) setTextAreaContent(catData.memo);
+    if (catData.name)
+      handleCatNameChange({
+        target: { value: catData.name }
+      } as React.ChangeEvent<HTMLInputElement>);
+
+    if (catData.croppedImage || catData.imageUrl || catData.image) {
+      setSelectedImage({
+        key: 0,
+        imageSrc:
+          catData.croppedImage || catData.imageUrl || catData.image || '',
+        croppedImage: catData.croppedImage || null
+      });
     }
-  }, []);
+  }, [catData]);
 
   const handleSelectedChange = (selected: string) => {
     setSelectedItem(selected);
@@ -120,22 +131,58 @@ export default function CatInfo({
       dDay?: number;
     } = {
       ...catData,
-      name: catName.value,
+      name: catName.value || catData.name,
       sex: selectedSex || 'UNDEFINED',
       isNeutered: selectedNeutered || 'UNDEFINED',
       metAt: formatDate(selectedItem as string),
-      memo: textareaContent || '',
-      imageUrl: selectedImage.imageSrc || catData.imageUrl,
-      image: selectedImage.imageSrc || catData.image,
-      croppedImage: selectedImage.croppedImage || catData.croppedImage
+      memo: textareaContent || ''
     };
 
-    // 필수 필드 검증
-    if (!updatedCatData.sex || !updatedCatData.metAt) {
+    if (updatedCatData.memo === 'string') {
+      updatedCatData.memo = '';
+    }
+
+    const finalData = { ...updatedCatData };
+
+    if (selectedImage.croppedImage) {
+      finalData.croppedImage = selectedImage.croppedImage;
+      finalData.image = selectedImage.imageSrc;
+      if ('imageUrl' in finalData) {
+        delete finalData.imageUrl;
+      }
+    } else if (selectedImage.imageSrc) {
+      finalData.image = selectedImage.imageSrc;
+      finalData.croppedImage = null;
+      if ('imageUrl' in finalData) {
+        delete finalData.imageUrl;
+      }
+    } else if (
+      catData.imageUrl &&
+      catData.imageUrl !== 'string' &&
+      catData.imageUrl.trim() !== ''
+    ) {
+      finalData.imageUrl = catData.imageUrl;
+      finalData.image = null;
+      finalData.croppedImage = null;
+    } else {
+      // 기본 이미지를 사용하는 경우 (모든 이미지 필드 제거)
+      if ('imageUrl' in finalData) {
+        delete finalData.imageUrl;
+      }
+      finalData.image = null;
+      finalData.croppedImage = null;
+    }
+
+    if (!finalData.name || finalData.name.trim() === '') {
+      throw new Error('고양이 이름을 입력해주세요');
+    }
+
+    if (!finalData.sex || !finalData.metAt) {
       throw new Error('필수 정보를 입력해주세요');
     }
 
-    return updatedCatData;
+    console.log('최종 제출 데이터:', finalData);
+    return finalData;
   };
 
   const handleOnClick = async () => {
@@ -166,7 +213,7 @@ export default function CatInfo({
               <div
                 className="flex h-16 w-16 items-center justify-center gap-[10px] rounded-full bg-contain bg-no-repeat"
                 style={{
-                  backgroundImage: `url(${catData?.croppedImage || catData?.imageUrl})`
+                  backgroundImage: `url(${catData?.croppedImage || catData?.imageUrl || '/images/icons/cat-basic.svg'})`
                 }}
               ></div>
               <p className="flex flex-col justify-center text-center text-heading-1 font-bold">
@@ -185,7 +232,12 @@ export default function CatInfo({
               preview={
                 <img
                   className="h-full w-full rounded-[48px]"
-                  src={selectedImage.imageSrc || catData?.imageUrl}
+                  src={
+                    selectedImage.imageSrc ||
+                    catData?.imageUrl ||
+                    '/images/icons/cat-basic.svg'
+                  }
+                  alt={catData?.name || '고양이 이미지'}
                 />
               }
               editBtn

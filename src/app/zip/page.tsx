@@ -3,7 +3,7 @@
 import { CatListObj } from '@/app/zip/catType';
 import ZipCard from '@/components/zip/ZipCard';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import ZipSkeleton from '@/components/zip/ZipSkeleton';
 import ZipEmptyState from '@/components/zip/ZipEmptyState';
 import { useInView } from 'react-intersection-observer';
@@ -12,16 +12,20 @@ import { getCatsOnServer } from '@/services/cat';
 
 const ZipPage = () => {
   const router = useRouter();
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    rootMargin: '100px'
+  });
 
-  const [, setSelectedModal] = useState({} as CatListObj);
+  const [selectedModalId, setSelectedModalId] = useState<number | null>(null);
 
   const {
     data: catList,
     isLoading,
     fetchNextPage,
     isError,
-    error
+    error,
+    hasNextPage
   } = useInfiniteQuery({
     queryKey: ['getCats'],
     queryFn: ({ pageParam = 1 }) =>
@@ -35,16 +39,20 @@ const ZipPage = () => {
     initialPageParam: 1,
     staleTime: 0
   });
+
   useEffect(() => {
-    if (inView) {
+    if (inView && hasNextPage) {
       fetchNextPage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, hasNextPage, fetchNextPage]);
 
-  const openDetailModal = (item: CatListObj) => {
-    setSelectedModal(item);
-    router.push(`/zip/${item.id}`);
-  };
+  const openDetailModal = useCallback(
+    (item: CatListObj) => {
+      setSelectedModalId(item.id || null);
+      router.push(`/zip/${item.id}`);
+    },
+    [router]
+  );
 
   if (isError) throw error;
 
@@ -75,7 +83,9 @@ const ZipPage = () => {
             </div>
           )}
           {/* 무한 스크롤 감지 영역 */}
-          <div ref={ref} className="h-20 bg-transparent" />
+          {!isLoading && hasNextPage && (
+            <div ref={ref} className="h-20 bg-transparent" />
+          )}
         </section>
       </div>
     </div>

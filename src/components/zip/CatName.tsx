@@ -3,7 +3,7 @@ import { Input } from '../ui/Input';
 import { CatRegisterReqObj } from '@/app/zip/catType';
 import useCatNameHandler from '@/hooks/zip/useCatNameHandler';
 
-interface SignInMainProps {
+interface CatNameProps {
   setStep: () => void;
   setPrev: () => void;
   setCatData: (
@@ -15,7 +15,7 @@ export default function CatName({
   setStep,
   setCatData,
   setPrev
-}: SignInMainProps) {
+}: CatNameProps) {
   const { catName, handleCatNameChange } = useCatNameHandler();
 
   const handleNext = () => {

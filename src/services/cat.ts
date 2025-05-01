@@ -18,16 +18,20 @@ export const registerCat = async (
     diaries?: DiaryObj[];
     coParents?: CoParent[];
     dDay?: number;
+    name?: string;
   }
 ) => {
-  const { croppedImage, image, imageUrl, ...catObj } = catDataObj;
+  const { croppedImage, image, imageUrl, name, ...catObj } = catDataObj;
   const formData = new FormData();
 
-  // 기본 이미지인 경우
-  if (imageUrl) {
+  // imageUrl이 유효한 URL인 경우에만 포함 (빈 문자열이나 "string" 값이면 제외)
+  if (imageUrl && imageUrl !== 'string' && imageUrl.trim() !== '') {
+    const catJson = JSON.stringify({ ...catObj, name, imageUrl });
+    console.log('imageUrl로 등록:', catJson);
+
     formData.append(
       'cat',
-      new Blob([JSON.stringify({ ...catObj, imageUrl })], {
+      new Blob([catJson], {
         type: 'application/json'
       })
     );
@@ -35,9 +39,12 @@ export const registerCat = async (
   }
 
   // 사용자 업로드 이미지인 경우
+  const catJson = JSON.stringify({ ...catObj, name });
+  console.log('이미지 업로드로 등록:', catJson);
+
   formData.append(
     'cat',
-    new Blob([JSON.stringify(catObj)], {
+    new Blob([catJson], {
       type: 'application/json'
     })
   );
@@ -45,8 +52,19 @@ export const registerCat = async (
   // 크롭된 이미지가 있으면 크롭된 이미지를, 없으면 원본 이미지를 사용
   const imageToUpload = croppedImage || image;
   if (imageToUpload) {
-    const file = base64ToFile(imageToUpload, 'image.jpg');
-    if (file) formData.append('image', file);
+    try {
+      const file = base64ToFile(imageToUpload, 'image.jpg');
+      if (file) {
+        formData.append('image', file);
+        console.log('이미지가 formData에 추가됨');
+      } else {
+        console.log('이미지 파일 변환 실패');
+      }
+    } catch (error) {
+      console.error('이미지 변환 중 오류 발생:', error);
+    }
+  } else {
+    console.log('업로드할 이미지 없음');
   }
 
   return fetchExtended('/cats', { method: 'POST', body: formData });
@@ -60,16 +78,29 @@ export const editCat = async (
     dDay?: number;
   }
 ) => {
-  const { imageUrl, coParents, diaries, dDay, id, image, ...catObj } =
-    catDataObj;
+  const {
+    imageUrl,
+    coParents,
+    diaries,
+    dDay,
+    id,
+    image,
+    croppedImage,
+    ...catObj
+  } = catDataObj;
 
   const formData = new FormData();
   const catBlob = new Blob([JSON.stringify(catObj)], {
     type: 'application/json'
   });
   formData.append('cat', catBlob);
-  const file = base64ToFile(image, 'image.jpg');
-  file && formData.append('image', file);
+
+  // 크롭된 이미지가 있으면 크롭된 이미지를, 없으면 원본 이미지를 사용
+  const imageToUpload = croppedImage || image;
+  if (imageToUpload) {
+    const file = base64ToFile(imageToUpload, 'image.jpg');
+    if (file) formData.append('image', file);
+  }
 
   const requestOptions = { method: 'PATCH', body: formData };
 
