@@ -27,7 +27,7 @@ const HelperText: React.FC<HelperTextProps> = ({
       variants={variants}
       transition={{ duration: 0.2 }}
       className={cn(
-        'mt-1 block rounded-[4px] px-[8px] py-[2px] text-sm',
+        'mt-1 block max-w-fit rounded-[4px] px-[8px] py-[2px] text-sm',
         {
           'bg-sm-error-50 text-sm-error-500': isError,
           'bg-pr-50 text-sm-info-500': !isError

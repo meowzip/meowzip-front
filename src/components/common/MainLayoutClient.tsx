@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import MotionLayout from '@/components/common/MotionLayout';
 import BottomNavBar from '@/components/ui/BottomNavBar';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { PATHS } from '@/constants/paths';
@@ -25,11 +24,10 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
   const fabHref = fabLinkMap[pathname];
 
   return (
-    <div className="flex h-screen flex-col bg-gr-50">
+    <div className="m-auto flex h-screen max-w-[640px] flex-col bg-gr-50">
       <main className="relative flex-grow overflow-y-auto bg-gr-100">
-        <MotionLayout>{children}</MotionLayout>
+        {children}
       </main>
-
       {fabHref && <FloatingActionButton href={fabHref} />}
       {showBottomNav && <BottomNavBar />}
     </div>
