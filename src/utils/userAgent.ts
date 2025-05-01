@@ -9,6 +9,11 @@ export type WebViewMessage = {
   message?: string;
   error?: string;
   enabled?: string;
+  notification?: {
+    url: string;
+    'notification-id': number;
+    type: string;
+  };
 };
 
 export const checkUserAgent = (): UserAgent => {
