@@ -89,6 +89,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     }
   });
   useEffect(() => {
+    console.log('💧 notification', notification);
     if (!notification?.url.includes('community')) return;
     readNotification.mutate({
       id: Number(notification['notification-id']),
