@@ -9,7 +9,7 @@ const ZipEmptyState = () => {
       body="길냥이와의 추억을 기록해 보세요."
       imageTag={
         <Image
-          src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/profile/setting.svg"
+          src="/images/mockup/box-cat.svg"
           alt="empty state"
           width={200}
           height={200}
