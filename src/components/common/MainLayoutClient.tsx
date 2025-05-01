@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import BottomNavBar from '@/components/ui/BottomNavBar';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
@@ -23,11 +23,42 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
   const showBottomNav = pathsWithNav.some(p => p === pathname);
   const fabHref = fabLinkMap[pathname];
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        (e.key === '+' || e.key === '-' || e.key === '=')
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('wheel', handleWheel);
+      document.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
+
   return (
     <div className="m-auto flex h-screen max-w-[640px] flex-col bg-gr-50">
-      <main className="relative flex-grow overflow-y-auto bg-gr-100">
-        {children}
-      </main>
+      <main className="relative overflow-y-auto bg-gr-100">{children}</main>
       {fabHref && <FloatingActionButton href={fabHref} />}
       {showBottomNav && (
         <div className="absolute bottom-0 z-[100] w-full">

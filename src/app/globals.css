@@ -136,3 +136,12 @@
   background-color: black;
   border-radius: 5px 5px 0 0;
 }
+
+html,
+body {
+  touch-action: pan-x pan-y;
+  -ms-touch-action: pan-x pan-y;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+

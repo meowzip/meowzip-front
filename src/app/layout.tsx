@@ -59,6 +59,7 @@ export const metadata: Metadata = {
     width: 'device-width',
     initialScale: 1,
     maximumScale: 1,
+    minimumScale: 1,
     userScalable: false,
     viewportFit: 'cover'
   }
@@ -74,7 +75,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${inter.className} relative h-screen w-full bg-gr-100 pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] pt-[env(safe-area-inset-top)]`}
+        className={`${inter.className} relative h-screen w-full bg-gr-100 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]`}
       >
         <Providers>
           <AuthSession>
