@@ -66,7 +66,7 @@ const SignInContent = () => {
   };
 
   return (
-    <div className="bg-gr-20 h-screen w-screen">
+    <div className="bg-gr-20 h-screen">
       <div className="relative mx-auto flex h-full max-w-[640px] flex-col items-center bg-white">
         <div className="w-full pt-16">
           <Funnel>

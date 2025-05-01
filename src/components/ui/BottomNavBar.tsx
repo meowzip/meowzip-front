@@ -42,7 +42,7 @@ const BottomNavBar = () => {
   if (isError) throw error;
 
   return (
-    <div className="flex w-full justify-evenly rounded-t-[20px] bg-gr-white px-2 pb-[34px] pt-2 shadow-bottomNav">
+    <div className="flex w-full max-w-[640px] justify-evenly rounded-t-[20px] bg-gr-white px-2 pb-[34px] pt-2 shadow-bottomNav">
       {BOTTOM_NAV.map(nav => {
         const imgSrc =
           nav.key === 'profile'
