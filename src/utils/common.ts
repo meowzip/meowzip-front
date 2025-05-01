@@ -80,25 +80,53 @@ export const removeCookie = (
 };
 
 export const base64ToFile = (base64String: string | null, filename: string) => {
-  // Split the base64 string into parts
-  if (!base64String || !base64String.includes('data:')) return;
+  try {
+    // null 체크
+    if (!base64String) {
+      console.warn('base64ToFile: base64String is null or undefined');
+      return null;
+    }
 
-  const parts = base64String.split(';base64,');
-  const decodedData = window.atob(parts[1]); // Decode base64 string
+    // base64 형식 확인
+    if (!base64String.includes('data:')) {
+      console.warn(
+        'base64ToFile: Invalid base64 string format (missing "data:" prefix)'
+      );
+      return null;
+    }
 
-  // Convert decoded data to binary
-  const uint8Array = new Uint8Array(decodedData.length);
-  for (let i = 0; i < decodedData.length; ++i) {
-    uint8Array[i] = decodedData.charCodeAt(i);
+    const parts = base64String.split(';base64,');
+    if (parts.length !== 2) {
+      console.warn(
+        'base64ToFile: Invalid base64 string format (incorrect structure)'
+      );
+      return null;
+    }
+
+    // 디코딩 시도
+    let decodedData;
+    try {
+      decodedData = window.atob(parts[1]);
+    } catch (e) {
+      console.error('base64ToFile: Failed to decode base64 string', e);
+      return null;
+    }
+
+    // 이진 데이터로 변환
+    const uint8Array = new Uint8Array(decodedData.length);
+    for (let i = 0; i < decodedData.length; ++i) {
+      uint8Array[i] = decodedData.charCodeAt(i);
+    }
+
+    // Blob 및 File 생성
+    const blob = new Blob([uint8Array]);
+    const file = new File([blob], filename);
+
+    return file;
+  } catch (error) {
+    console.error('base64ToFile: Unexpected error', error);
+    return null;
   }
-
-  // Create a Blob from the binary data
-  const blob = new Blob([uint8Array]);
-
-  // Create a File from the Blob
-  const file = new File([blob], filename);
-
-  return file;
 };
 
 export const objectToQueryString = (
