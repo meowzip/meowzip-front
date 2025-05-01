@@ -29,7 +29,11 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
         {children}
       </main>
       {fabHref && <FloatingActionButton href={fabHref} />}
-      {showBottomNav && <BottomNavBar />}
+      {showBottomNav && (
+        <div className="absolute bottom-0 z-[100] w-full">
+          <BottomNavBar />
+        </div>
+      )}
     </div>
   );
 }
