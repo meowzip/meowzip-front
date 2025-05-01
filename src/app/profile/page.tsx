@@ -22,11 +22,14 @@ import ProfileEmptyState from '@/components/profile/ProfileEmptyState';
 import useMyProfileQuery from '@/hooks/common/useMyProfileQuery';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 import { useInView } from 'react-intersection-observer';
+import { useAtom } from 'jotai';
+import { newNotificationAtom } from '@/atoms/notificationAtom';
 
 export default function ProfilePage() {
   const router = useRouter();
   const { ref: postsRef, inView: postsInView } = useInView();
   const { ref: bookmarksRef, inView: bookmarksInView } = useInView();
+  const [hasNewNotification] = useAtom(newNotificationAtom);
 
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -107,7 +110,7 @@ export default function ProfilePage() {
               width={24}
               height={24}
             />
-            {myProfile?.existsNewNotification && (
+            {hasNewNotification && (
               <div className="absolute right-[3.2rem] top-1 h-2 w-2 rounded-full bg-blue-400"></div>
             )}
           </button>

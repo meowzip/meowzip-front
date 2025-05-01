@@ -54,7 +54,15 @@ export interface ButtonProps
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, onClick, asChild = false, isActive, children, ...props },
+    {
+      className,
+      onClick,
+      asChild = false,
+      isActive,
+      children,
+      disabled,
+      ...props
+    },
     ref
   ) => {
     const handleClick = (
@@ -69,11 +77,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={clsx(
           'flex items-center justify-center',
-          'transition-transform duration-75 ease-in-out active:scale-95',
+          !disabled &&
+            'transition-transform duration-75 ease-in-out active:scale-95',
           className
         )}
         ref={ref}
         onClick={handleClick}
+        disabled={disabled}
         {...props}
       >
         {children}

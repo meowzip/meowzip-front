@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button';
 import { HTMLAttributes } from 'react';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/store/diaryAtom';
+import { newNotificationAtom } from '@/atoms/notificationAtom';
 
 const Home = () => {
   return (
@@ -197,9 +198,21 @@ const Empty = () => {
 };
 
 const AllRead = ({ onClick }: { onClick: () => void }) => {
+  const [hasNewNotification] = useAtom(newNotificationAtom);
+
   return (
-    <Button onClick={onClick} className="px-[10px] py-1">
-      <Button.Text text="모두 읽음" className="text-btn-2 text-pr-500" />
+    <Button
+      onClick={onClick}
+      className="px-[10px] py-1"
+      disabled={!hasNewNotification}
+    >
+      <Button.Text
+        text="모두 읽음"
+        className={cn(
+          'text-btn-2',
+          hasNewNotification ? 'text-pr-500' : 'text-gr-300'
+        )}
+      />
     </Button>
   );
 };
