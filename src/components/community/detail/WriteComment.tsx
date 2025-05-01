@@ -76,7 +76,7 @@ export default function WriteComment({
             placeholder={
               parentCommentId ? '답글을 남겨주세요.' : '댓글을 남겨주세요.'
             }
-            className="w-full flex-1 resize-none overflow-y-hidden rounded-md bg-gr-50 px-3 py-3 pr-16 text-sm focus:outline-none"
+            className="w-full flex-1 resize-none overflow-y-hidden rounded-md bg-gr-50 px-3 py-3 pr-16 text-base text-body-2 focus:outline-none"
             rows={1}
           />
           <Button
