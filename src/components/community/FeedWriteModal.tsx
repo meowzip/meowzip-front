@@ -119,7 +119,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
   }, []);
 
   return (
-    <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-white">
+    <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-100">
       <Topbar type="three">
         <Topbar.Back onClick={onClose} />
         <Topbar.Title title="글쓰기" />
@@ -130,7 +130,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
           }
         />
       </Topbar>
-      <div className="mx-auto max-w-[640px] pb-28 pt-12">
+      <div className="mx-auto h-full max-w-[640px] bg-gr-white pb-28 pt-12">
         <article className="p-4 pt-14">
           <Textarea
             propObj={{
