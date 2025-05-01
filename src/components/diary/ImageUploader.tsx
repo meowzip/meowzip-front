@@ -117,11 +117,7 @@ const ImageUploader = ({
         className={`flex h-full w-full items-center justify-center bg-cover bg-center bg-no-repeat text-btn-3 text-gr-300 ${
           radius || 'rounded-16'
         }`}
-        style={{
-          backgroundImage: data?.croppedImage
-            ? `url(${data.croppedImage})`
-            : 'none'
-        }}
+        style={{ backgroundImage: `url(${data?.croppedImage})` }}
         onClick={() => fileInputRef.current?.click()}
       >
         {!data?.croppedImage &&
