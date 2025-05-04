@@ -105,7 +105,7 @@ export const useWebView = (): UseWebViewReturn => {
 
   const requestNotiPermission = useCallback(
     (event: CustomEvent) => {
-      console.log('푸시 알림 여부 이벤트 수신:', {
+      console.log('❤️ 푸시 알림 여부 이벤트 수신:', {
         platform,
         eventType: event.type,
         enabled: event.detail?.enabled
@@ -392,7 +392,8 @@ export const useWebView = (): UseWebViewReturn => {
     handlePushTokenReceived,
     handleWebViewMessage,
     safePostMessage,
-    requestNotiPermission
+    requestNotiPermission,
+    handleClickNotiReceived
   ]);
 
   return {
