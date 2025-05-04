@@ -266,14 +266,17 @@ export const useWebView = (): UseWebViewReturn => {
             break;
           case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED:
             if (data.notification) {
-              console.log('[웹→앱] 알림 클릭 성공:', data.notification);
+              console.log(
+                '[웹→앱] 알림 클릭 성공:',
+                JSON.stringify(data.notification)
+              );
               localStorage.setItem(
                 'click_noti',
                 JSON.stringify(data.notification)
               );
               safePostMessage({
                 type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-                notification: data.notification,
+                notification: JSON.stringify(data.notification),
                 timestamp: new Date().toISOString()
               });
             }
