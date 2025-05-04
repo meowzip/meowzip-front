@@ -181,7 +181,8 @@ export const useWebView = (): UseWebViewReturn => {
           token: data.token,
           message: data.message,
           error: data.error,
-          enabled: data.enabled
+          enabled: data.enabled,
+          notification: data.notification
         });
 
         switch (data.type) {
@@ -309,6 +310,16 @@ export const useWebView = (): UseWebViewReturn => {
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
         enabled: currentPushPermission,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    const currentClickedNoti = localStorage.getItem('click_noti');
+    if (currentClickedNoti) {
+      console.log('[웹→앱] 저장된 알림 클릭:', currentClickedNoti);
+      safePostMessage({
+        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+        notification: currentClickedNoti,
         timestamp: new Date().toISOString()
       });
     }
