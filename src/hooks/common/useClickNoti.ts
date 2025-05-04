@@ -22,6 +22,7 @@ export const useClickNoti = () => {
 
       try {
         const message = event.data as WebViewMessage;
+        console.log('!!! message', message);
         if (
           message.type === WebViewMessageType.NOTIFICATION_CLICKED &&
           message.notification
