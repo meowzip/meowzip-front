@@ -21,8 +21,10 @@ export const useClickNoti = () => {
       }
 
       try {
-        const message = event.data as WebViewMessage;
-        console.log('!!! message', message);
+        const rawData = event.data;
+        const message: WebViewMessage =
+          typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+        console.log('??? message', message);
         if (
           message.type === WebViewMessageType.NOTIFICATION_CLICKED &&
           message.notification
