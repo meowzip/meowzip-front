@@ -5,7 +5,7 @@ import { useWebView } from '@/hooks/useWebView';
 export const useClickNoti = () => {
   const [notification, setNotification] = useState({
     url: '',
-    'notification-id': '',
+    'notification-id': 0,
     type: ''
   });
   const { platform, safePostMessage } = useWebView();
@@ -21,7 +21,7 @@ export const useClickNoti = () => {
       }
 
       try {
-        const message = JSON.parse(event.data) as WebViewMessage;
+        const message = event.data as WebViewMessage;
         if (
           message.type === WebViewMessageType.NOTIFICATION_CLICKED &&
           message.notification
