@@ -327,7 +327,7 @@ export const useWebView = (): UseWebViewReturn => {
     window.addEventListener('pushTokenReceived', pushTokenListener);
     window.addEventListener('pushPermissionReceived', pushPermissionListener);
     window.addEventListener(
-      'clickNotiReceived',
+      'clickNotificationReceived',
       handleClickNotiReceivedListener
     );
     window.addEventListener('message', webViewMessageListener);
@@ -379,7 +379,7 @@ export const useWebView = (): UseWebViewReturn => {
         pushPermissionListener
       );
       window.removeEventListener(
-        'clickNotiReceived',
+        'clickNotificationReceived',
         handleClickNotiReceivedListener
       );
       window.removeEventListener('message', webViewMessageListener);
