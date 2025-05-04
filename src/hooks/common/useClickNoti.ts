@@ -28,15 +28,15 @@ export const useClickNoti = () => {
           message.type === WebViewMessageType.NOTIFICATION_CLICKED &&
           message.notification
         ) {
-          console.log('=== message.notification', message.notification);
-          setNotification(message.notification);
-          localStorage.setItem(
-            'click_noti',
-            JSON.stringify(message.notification)
-          );
+          const parsedNotification = JSON.parse(
+            message.notification
+          ) as WebViewMessage['notification'];
+          console.log('=== message.notification', parsedNotification);
+          setNotification(parsedNotification);
+          localStorage.setItem('click_noti', parsedNotification);
           safePostMessage({
             type: 'NOTIFICATION_CLICKED',
-            notification: message.notification,
+            notification: parsedNotification,
             timestamp: new Date().toISOString()
           });
         }
