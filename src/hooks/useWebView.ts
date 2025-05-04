@@ -148,10 +148,13 @@ export const useWebView = (): UseWebViewReturn => {
 
   const handleClickNotiReceived = useCallback(
     (event: CustomEvent) => {
+      const parsedNotification = JSON.parse(
+        event.detail?.notification
+      ) as WebViewMessage['notification'];
       console.log('😃 알림 클릭 이벤트 수신:', {
         platform,
         eventType: event.type,
-        notification: event.detail?.notification
+        notification: parsedNotification
       });
 
       if (platform === 'Web') {
@@ -159,14 +162,14 @@ export const useWebView = (): UseWebViewReturn => {
         return;
       }
 
-      if (event.detail?.notification) {
-        console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail.notification);
-        localStorage.setItem('click_noti', event.detail.notification);
+      if (parsedNotification) {
+        console.log('[웹→앱] 알림 클릭 저장 시도:', parsedNotification);
+        localStorage.setItem('click_noti', JSON.stringify(parsedNotification));
         console.log('[웹→앱] 알림 클릭 저장 완료');
 
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-          notification: event.detail.notification,
+          notification: parsedNotification,
           timestamp: new Date().toISOString()
         });
       } else {
@@ -180,7 +183,7 @@ export const useWebView = (): UseWebViewReturn => {
 
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-        notification: event.detail?.notification,
+        notification: parsedNotification,
         timestamp: new Date().toISOString()
       });
     },
@@ -266,14 +269,17 @@ export const useWebView = (): UseWebViewReturn => {
             break;
           case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED:
             if (data.notification) {
-              console.log('[웹→앱] 알림 클릭 성공:', data.notification);
+              console.log(
+                '[웹→앱] 알림 클릭 성공:',
+                JSON.stringify(data.notification)
+              );
               localStorage.setItem(
                 'click_noti',
                 JSON.stringify(data.notification)
               );
               safePostMessage({
                 type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-                notification: data.notification,
+                notification: JSON.stringify(data.notification),
                 timestamp: new Date().toISOString()
               });
             }
