@@ -93,12 +93,12 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     const storedClickNoti = localStorage.getItem('click_noti') || '';
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
-      : null;
+      : notification;
     console.log('💧 parsedNotification', parsedNotification);
     console.log('💧💧 notification', notification);
-    if (notification?.type !== 'COMMUNITY') return;
+    if (parsedNotification?.type !== 'COMMUNITY') return;
     readNotification.mutate({
-      id: Number(notification['notification-id']),
+      id: Number(parsedNotification['notification-id']),
       type: notification.type
     });
   }, []);
