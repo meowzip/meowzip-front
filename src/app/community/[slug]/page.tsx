@@ -91,6 +91,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   useEffect(() => {
     // if (!notification) return;
     const storedClickNoti = localStorage.getItem('click_noti') || '';
+    console.log('--------------', storedClickNoti);
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : notification;
