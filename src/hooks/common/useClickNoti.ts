@@ -30,11 +30,15 @@ export const useClickNoti = () => {
           message.notification
         ) {
           setNotification(message.notification);
-          localStorage.setItem('click_noti', message.notification);
+          localStorage.setItem(
+            'click_noti',
+            JSON.stringify(message.notification)
+          );
           safePostMessage({
             type: 'NOTIFICATION_CLICKED',
-            notification: message.notification,
-            timestamp: new Date().toISOString()
+            notification: JSON.stringify(message.notification),
+            // timestamp: new Date().toISOString()
+            timestamp: 111
           });
         }
       } catch (e) {
@@ -53,7 +57,8 @@ export const useClickNoti = () => {
       safePostMessage({
         type: 'NOTIFICATION_CLICKED',
         notification: parsedNotification,
-        timestamp: new Date().toISOString()
+        // timestamp: new Date().toISOString()
+        timestamp: 666
       });
     }
 
