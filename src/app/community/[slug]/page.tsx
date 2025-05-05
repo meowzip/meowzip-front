@@ -19,7 +19,7 @@ import { readNotificationOnServer } from '@/services/profile';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
-  const [bottomSheetHeight, setBottomSheetHeight] = useState<number>(0);
+  const [, setBottomSheetHeight] = useState<number>(0);
   const bottomSheetRef = useRef<HTMLDivElement>(null);
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
@@ -89,13 +89,19 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     }
   });
   useEffect(() => {
-    console.log('💧 notification', notification);
+    // if (!notification) return;
+    const storedClickNoti = localStorage.getItem('click_noti') || '';
+    const parsedNotification = storedClickNoti
+      ? JSON.parse(storedClickNoti)
+      : null;
+    console.log('💧 parsedNotification', parsedNotification);
+    console.log('💧💧 notification', notification);
     if (notification?.type !== 'COMMUNITY') return;
     readNotification.mutate({
       id: Number(notification['notification-id']),
       type: notification.type
     });
-  }, [notification]);
+  }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
