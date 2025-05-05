@@ -366,10 +366,13 @@ export const useWebView = (): UseWebViewReturn => {
 
     const currentClickedNoti = localStorage.getItem('click_noti');
     if (currentClickedNoti) {
-      console.log('[웹→앱] 저장된 알림 클릭:', currentClickedNoti);
+      console.log(
+        '[웹→앱] 저장된 알림 클릭:',
+        JSON.stringify(currentClickedNoti)
+      );
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-        notification: currentClickedNoti,
+        notification: JSON.stringify(currentClickedNoti),
         timestamp: new Date().toISOString()
       });
     }
