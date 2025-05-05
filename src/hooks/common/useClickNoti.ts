@@ -45,11 +45,14 @@ export const useClickNoti = () => {
     };
 
     const storedClickNoti = localStorage.getItem('click_noti');
+    const parsedNotification = storedClickNoti
+      ? JSON.parse(storedClickNoti)
+      : null;
     if (storedClickNoti) {
-      setNotification(JSON.parse(storedClickNoti));
+      setNotification(parsedNotification);
       safePostMessage({
         type: 'NOTIFICATION_CLICKED',
-        notification: storedClickNoti,
+        notification: parsedNotification,
         timestamp: new Date().toISOString()
       });
     }
