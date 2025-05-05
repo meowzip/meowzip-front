@@ -93,8 +93,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     const storedClickNoti = localStorage.getItem('click_noti') || '';
     console.log('--------------', storedClickNoti);
     const parsedNotification = storedClickNoti
-      ? JSON.parse(storedClickNoti)
+      ? JSON.parse(JSON.parse(storedClickNoti))
       : notification;
+    console.log('📦 typeof storedClickNoti:', typeof storedClickNoti); // string
+    console.log('📦 typeof parsedNotification:', typeof parsedNotification); // object여야 정상
     console.log('💧 parsedNotification', parsedNotification);
     console.log('💧💧 notification', notification);
     if (parsedNotification?.type !== 'COMMUNITY') return;
