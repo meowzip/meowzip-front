@@ -21,14 +21,14 @@ export const useClickNoti = () => {
       }
 
       try {
-        // const message: WebViewMessage =
-        // typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-        const message = JSON.parse(event.data) as WebViewMessage;
+        const message: WebViewMessage =
+          typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        // const message = JSON.parse(event.data) as WebViewMessage;
+        console.log('=== message', message);
         if (
           message.type === WebViewMessageType.NOTIFICATION_CLICKED &&
           message.notification
         ) {
-          console.log('=== message.notification', message.notification);
           setNotification(message.notification);
           localStorage.setItem('click_noti', message.notification);
           safePostMessage({
