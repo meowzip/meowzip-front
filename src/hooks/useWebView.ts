@@ -161,13 +161,17 @@ export const useWebView = (): UseWebViewReturn => {
 
       if (event.detail?.notification) {
         console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
-        localStorage.setItem('click_noti', event.detail?.notification);
+        localStorage.setItem(
+          'click_noti',
+          JSON.stringify(event.detail?.notification)
+        );
         console.log('[웹→앱] 알림 클릭 저장 완료');
 
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-          notification: event.detail.notification,
-          timestamp: new Date().toISOString()
+          notification: JSON.stringify(event.detail.notification),
+          // timestamp: new Date().toISOString()
+          timestamp: 222
         });
       } else {
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
@@ -181,7 +185,8 @@ export const useWebView = (): UseWebViewReturn => {
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
         notification: event.detail.notification,
-        timestamp: new Date().toISOString()
+        // timestamp: new Date().toISOString()
+        timestamp: 333
       });
     },
     [platform, safePostMessage]
@@ -277,7 +282,8 @@ export const useWebView = (): UseWebViewReturn => {
               safePostMessage({
                 type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
                 notification: JSON.stringify(data.notification),
-                timestamp: new Date().toISOString()
+                // timestamp: new Date().toISOString()
+                timestamp: 444
               });
             }
             break;
@@ -373,7 +379,8 @@ export const useWebView = (): UseWebViewReturn => {
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
         notification: parsedNotification,
-        timestamp: new Date().toISOString()
+        // timestamp: new Date().toISOString()
+        timestamp: 555
       });
     }
 
