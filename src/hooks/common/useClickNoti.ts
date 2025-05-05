@@ -37,8 +37,7 @@ export const useClickNoti = () => {
           safePostMessage({
             type: 'NOTIFICATION_CLICKED',
             notification: JSON.stringify(message.notification),
-            // timestamp: new Date().toISOString()
-            timestamp: 111
+            timestamp: new Date().toISOString()
           });
         }
       } catch (e) {
@@ -57,8 +56,7 @@ export const useClickNoti = () => {
       safePostMessage({
         type: 'NOTIFICATION_CLICKED',
         notification: parsedNotification,
-        // timestamp: new Date().toISOString()
-        timestamp: 666
+        timestamp: new Date().toISOString()
       });
     }
 
