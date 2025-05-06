@@ -326,16 +326,12 @@ export const useWebView = (): UseWebViewReturn => {
 
     const pushTokenListener = handlePushTokenReceived as EventListener;
     const pushPermissionListener = requestNotiPermission as EventListener;
-    const handleClickNotiReceivedListener =
-      handleClickNotiReceived as EventListener;
+    const clickNotiListener = handleClickNotiReceived as EventListener;
     const webViewMessageListener = handleWebViewMessage;
 
     window.addEventListener('pushTokenReceived', pushTokenListener);
     window.addEventListener('pushPermissionReceived', pushPermissionListener);
-    window.addEventListener(
-      'clickNotificationReceived',
-      handleClickNotiReceivedListener
-    );
+    window.addEventListener('clickNotificationReceived', clickNotiListener);
     window.addEventListener('message', webViewMessageListener);
 
     console.log('[웹→앱] 이벤트 리스너 등록 완료');
@@ -389,7 +385,7 @@ export const useWebView = (): UseWebViewReturn => {
       );
       window.removeEventListener(
         'clickNotificationReceived',
-        handleClickNotiReceivedListener
+        clickNotiListener
       );
       window.removeEventListener('message', webViewMessageListener);
     };
