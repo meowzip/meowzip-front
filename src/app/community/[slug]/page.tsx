@@ -77,7 +77,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  const { notification } = useClickNoti();
+  // const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -91,18 +91,15 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   useEffect(() => {
     // if (!notification) return;
     const storedClickNoti = localStorage.getItem('click_noti') || '';
-    console.log('--------------', storedClickNoti);
+    console.log('💧 storedClickNoti', storedClickNoti);
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
-      : notification;
-    console.log('📦 typeof storedClickNoti:', typeof storedClickNoti); // string
-    console.log('📦 typeof parsedNotification:', typeof parsedNotification); // object여야 정상
-    console.log('💧 parsedNotification', parsedNotification);
-    console.log('💧💧 notification', notification);
+      : null;
+    console.log('💧💧 parsedNotification', parsedNotification);
     if (parsedNotification?.type !== 'COMMUNITY') return;
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
-      type: notification.type
+      type: parsedNotification.type
     });
   }, []);
   // -------------------- test -------------------- //
