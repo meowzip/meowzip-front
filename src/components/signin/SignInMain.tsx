@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import Button from '@/components/ui/Button';
 import { DEFAULT_CAT_IMAGES } from '@/constants/cats';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 interface SignInMainProps {
   setStep: () => void;
@@ -10,7 +10,7 @@ interface SignInMainProps {
 
 const SignInMain = ({ setStep }: SignInMainProps) => {
   const isInWebView = () => {
-    return !!window.ReactNativeWebView;
+    return typeof window !== 'undefined' && !!window.ReactNativeWebView;
   };
 
   const handleAppleSignIn = () => {
