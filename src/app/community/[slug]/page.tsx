@@ -77,7 +77,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  // const { notification } = useClickNoti();
+  const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -92,16 +92,17 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     // if (!notification) return;
     const storedClickNoti = localStorage.getItem('click_noti') || '';
     console.log('💧 storedClickNoti', storedClickNoti);
+    console.log('💧💧 notification', notification);
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
-    console.log('💧💧 parsedNotification', parsedNotification);
+    console.log('💧💧💧 parsedNotification', parsedNotification);
     if (parsedNotification?.type !== 'COMMUNITY') return;
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
     });
-  }, []);
+  }, [slug]);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
