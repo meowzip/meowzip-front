@@ -37,7 +37,7 @@ export const useClickNoti = () => {
           );
           safePostMessage({
             type: 'NOTIFICATION_CLICKED',
-            notification: message.notification,
+            notification: JSON.stringify(message.notification),
             timestamp: new Date().toISOString()
           });
         }
