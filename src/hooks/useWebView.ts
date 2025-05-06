@@ -183,7 +183,7 @@ export const useWebView = (): UseWebViewReturn => {
 
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-        notification: event.detail.notification,
+        notification: JSON.stringify(event.detail.notification),
         timestamp: new Date().toISOString()
       });
     },
