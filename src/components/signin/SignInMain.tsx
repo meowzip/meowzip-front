@@ -3,25 +3,22 @@ import { signIn } from 'next-auth/react';
 import Button from '@/components/ui/Button';
 import { DEFAULT_CAT_IMAGES } from '@/constants/cats';
 import { useEffect } from 'react';
+import { useWebView } from '@/hooks/useWebView';
 
 interface SignInMainProps {
   setStep: () => void;
 }
 
 const SignInMain = ({ setStep }: SignInMainProps) => {
-  const isInWebView = () => {
-    return typeof window !== 'undefined' && !!window.ReactNativeWebView;
-  };
+  const { safePostMessage, platform } = useWebView();
+
+  const isWebViewEnvironment = platform !== 'Web';
 
   const handleAppleSignIn = () => {
-    if (isInWebView()) {
-      if (window.ReactNativeWebView) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({
-            type: 'REQUEST_APPLE_LOGIN'
-          })
-        );
-      }
+    if (isWebViewEnvironment) {
+      safePostMessage({
+        type: 'REQUEST_APPLE_LOGIN'
+      });
     } else {
       signIn('apple', {
         callbackUrl: '/diary',
@@ -31,9 +28,17 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
   };
 
   useEffect(() => {
-    if (!isInWebView()) return;
+    if (!isWebViewEnvironment) return;
 
     const handleMessage = async (event: MessageEvent) => {
+      // react-devtools-bridge 메시지는 무시
+      if (
+        event.source === window &&
+        event.data?.source === 'react-devtools-bridge'
+      ) {
+        return;
+      }
+
       try {
         const data = JSON.parse(event.data);
         console.log('메시지 데이터:', data);
@@ -61,7 +66,7 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [isWebViewEnvironment]);
 
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
