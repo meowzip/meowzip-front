@@ -11,8 +11,87 @@ interface SignInMainProps {
 
 const SignInMain = ({ setStep }: SignInMainProps) => {
   const { safePostMessage, platform } = useWebView();
-
   const isWebViewEnvironment = platform !== 'Web';
+
+  // ReactNative 객체 초기화
+  useEffect(() => {
+    if (isWebViewEnvironment && typeof window !== 'undefined') {
+      (window as any).ReactNative = {
+        postMessage: function (message: string) {
+          window.postMessage(message, '*');
+        }
+      };
+    }
+  }, [isWebViewEnvironment]);
+
+  useEffect(() => {
+    if (!isWebViewEnvironment) return;
+
+    const handleAppleAuthReceived = (event: CustomEvent) => {
+      try {
+        console.log('애플 인증 이벤트 수신:', event.detail);
+        if (event.detail?.token) {
+          processAppleToken(event.detail.token);
+        }
+      } catch (error) {
+        console.error('애플 인증 이벤트 처리 오류:', error);
+      }
+    };
+
+    const handleMessage = (event: MessageEvent) => {
+      // React DevTools 메시지 무시
+      if (
+        event.source === window &&
+        event.data?.source === 'react-devtools-bridge'
+      ) {
+        return;
+      }
+
+      try {
+        const data =
+          typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        console.log('메시지 데이터:', data);
+
+        if (data.type === 'APPLE_AUTH_TOKEN' && data.token) {
+          processAppleToken(data.token);
+        }
+      } catch (error) {
+        console.error('메시지 처리 오류:', error);
+      }
+    };
+
+    const processAppleToken = async (token: string) => {
+      try {
+        console.log('애플 토큰 처리 시작:', token.substring(0, 20) + '...');
+        const result = await signIn('apple', {
+          redirect: false,
+          id_token: token
+        });
+
+        if (result?.ok) {
+          window.location.href = '/diary';
+        } else {
+          console.error('Next-auth 로그인 실패:', result?.error);
+        }
+      } catch (error) {
+        console.error('애플 로그인 처리 오류:', error);
+      }
+    };
+
+    window.addEventListener(
+      'appleAuthReceived',
+      handleAppleAuthReceived as EventListener
+    );
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener(
+        'appleAuthReceived',
+        handleAppleAuthReceived as EventListener
+      );
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [isWebViewEnvironment]);
 
   const handleAppleSignIn = () => {
     if (isWebViewEnvironment) {
@@ -26,47 +105,6 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
       });
     }
   };
-
-  useEffect(() => {
-    if (!isWebViewEnvironment) return;
-
-    const handleMessage = async (event: MessageEvent) => {
-      // react-devtools-bridge 메시지는 무시
-      if (
-        event.source === window &&
-        event.data?.source === 'react-devtools-bridge'
-      ) {
-        return;
-      }
-
-      try {
-        const data = JSON.parse(event.data);
-        console.log('메시지 데이터:', data);
-
-        if (data.type === 'APPLE_AUTH_TOKEN') {
-          try {
-            const result = await signIn('apple', {
-              redirect: false,
-              id_token: data.token
-            });
-
-            if (result?.ok) {
-              window.location.href = '/diary';
-            } else {
-              console.error('Next-auth 로그인 실패:', result?.error);
-            }
-          } catch (error) {
-            console.error('애플 로그인 처리 오류:', error);
-          }
-        }
-      } catch (error) {
-        console.error('메시지 처리 오류:', error);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [isWebViewEnvironment]);
 
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
@@ -113,7 +151,7 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
                 width={48}
                 height={48}
                 src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/social-login/kakao.svg"
-                alt="google-icon"
+                alt="kakao-icon"
               />
             </button>
             <button
