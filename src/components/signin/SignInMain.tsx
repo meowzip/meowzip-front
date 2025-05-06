@@ -2,12 +2,67 @@ import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import Button from '@/components/ui/Button';
 import { DEFAULT_CAT_IMAGES } from '@/constants/cats';
+import { useState, useEffect } from 'react';
 
 interface SignInMainProps {
   setStep: () => void;
 }
 
 const SignInMain = ({ setStep }: SignInMainProps) => {
+  const isInWebView = () => {
+    return !!window.ReactNativeWebView;
+  };
+
+  const handleAppleSignIn = () => {
+    if (isInWebView()) {
+      if (window.ReactNativeWebView) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({
+            type: 'REQUEST_APPLE_LOGIN'
+          })
+        );
+      }
+    } else {
+      signIn('apple', {
+        callbackUrl: '/diary',
+        redirect: true
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!isInWebView()) return;
+
+    const handleMessage = async (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log('메시지 데이터:', data);
+
+        if (data.type === 'APPLE_AUTH_TOKEN') {
+          try {
+            const result = await signIn('apple', {
+              redirect: false,
+              id_token: data.token
+            });
+
+            if (result?.ok) {
+              window.location.href = '/diary';
+            } else {
+              console.error('Next-auth 로그인 실패:', result?.error);
+            }
+          } catch (error) {
+            console.error('애플 로그인 처리 오류:', error);
+          }
+        }
+      } catch (error) {
+        console.error('메시지 처리 오류:', error);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   return (
     <div className="p-[40px 16px 0px 16px] flex-[1 0 0] flex max-w-[640px] flex-col items-center self-stretch">
       <div className="w-full">
@@ -71,19 +126,12 @@ const SignInMain = ({ setStep }: SignInMainProps) => {
                 alt="google-icon"
               />
             </button>
-            <button
-              onClick={() =>
-                signIn('apple', {
-                  callbackUrl: '/diary',
-                  redirect: true
-                })
-              }
-            >
+            <button onClick={handleAppleSignIn}>
               <Image
                 width={48}
                 height={48}
                 src="https://meowzip.s3.ap-northeast-2.amazonaws.com/images/icon/social-login/apple.svg"
-                alt="google-icon"
+                alt="apple-icon"
               />
             </button>
           </div>
