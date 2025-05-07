@@ -122,16 +122,25 @@ const Next = ({ onClick }: { onClick: () => void }) => {
 
 const Complete = ({
   onClick,
-  isLoading
+  isLoading,
+  disabled
 }: {
   onClick: () => void;
   isLoading?: boolean;
+  disabled?: boolean;
 }) => {
   return (
-    <Button onClick={onClick} className="px-[10px] py-1" disabled={isLoading}>
+    <Button
+      onClick={onClick}
+      className="px-[10px] py-1"
+      disabled={isLoading || disabled}
+    >
       <Button.Text
         text="완료"
-        className={cn('text-btn-2', isLoading ? 'text-gr-300' : 'text-pr-500')}
+        className={cn(
+          'text-btn-2',
+          isLoading || disabled ? 'text-gr-300' : 'text-pr-500'
+        )}
       />
     </Button>
   );

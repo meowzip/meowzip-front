@@ -55,7 +55,9 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
 
   const saveFeed = () => {
     if (registerFeedMutation.isPending || editFeedMutation.isPending) return;
-
+    if (!textareaContent.trim()) {
+      return;
+    }
     return feedDetail?.id
       ? editFeedMutation.mutate({
           id: feedDetail?.id,
@@ -128,6 +130,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
           isLoading={
             registerFeedMutation.isPending || editFeedMutation.isPending
           }
+          disabled={!textareaContent.trim()}
         />
       </Topbar>
       <div className="mx-auto h-full max-w-[640px] bg-gr-white pb-28 pt-12">
