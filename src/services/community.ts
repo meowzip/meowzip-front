@@ -41,7 +41,15 @@ export const getFeedsOnServer = async ({ page, size }: FeedSearchOption) => {
 };
 
 export const getFeedDetail = async (id: number) => {
-  const response = await fetchExtended(`/community/${id}`);
+  const memberToken = getCookie('Authorization');
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${memberToken}`
+    }
+  };
+  const response = await fetchExtended(`/community/${id}`, requestOptions);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
@@ -254,8 +262,20 @@ export const toggleBookmarkOnServer = async (postId: number) => {
 };
 
 export const getFeedComments = async (postId: number) => {
+  const memberToken = getCookie('Authorization');
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${memberToken}`
+    }
+  };
+
   try {
-    const response = await fetchExtended(`/community/${postId}/comments`);
+    const response = await fetchExtended(
+      `/community/${postId}/comments`,
+      requestOptions
+    );
     if (!response.ok) return;
     const data = response.json();
     return data;
