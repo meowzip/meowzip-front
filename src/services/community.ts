@@ -133,6 +133,7 @@ export const registerFeedOnServer = async (reqObj: {
   content: string;
   images: string[];
 }) => {
+  const memberToken = getCookie('Authorization');
   const { images, content } = reqObj;
   const formData = new FormData();
   formData.append(
@@ -151,7 +152,11 @@ export const registerFeedOnServer = async (reqObj: {
 
   const requestOptions = {
     method: 'POST',
-    body: formData
+    body: formData,
+    headers: {
+      Accept: 'application/json',
+      Authorization: `Bearer ${memberToken}`
+    }
   };
 
   try {
