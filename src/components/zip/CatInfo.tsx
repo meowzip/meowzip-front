@@ -62,7 +62,7 @@ export default function CatInfo({
   const [textareaContent, setTextAreaContent] = useState('');
   const [selectedSex, setSelectedSex] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | number>(
-    todayToDateString
+    catData.metAt ? catData.metAt : todayToDateString()
   );
   const [selectedNeutered, setSelectedNeutered] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState({
@@ -75,6 +75,7 @@ export default function CatInfo({
   useEffect(() => {
     setSelectedSex(catData.sex);
     setSelectedNeutered(catData.isNeutered);
+
     if (catData.metAt) setSelectedItem(catData.metAt);
     if (catData.memo) setTextAreaContent(catData.memo);
     if (catData.name)
@@ -87,7 +88,8 @@ export default function CatInfo({
         key: 0,
         imageSrc:
           catData.croppedImage || catData.imageUrl || catData.image || '',
-        croppedImage: catData.croppedImage || null
+        croppedImage:
+          catData.croppedImage || catData.imageUrl || catData.image || ''
       });
     }
   }, [catData]);
@@ -99,28 +101,28 @@ export default function CatInfo({
   [];
 
   const formatDate = (input: string): string => {
-    if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
-      return input;
-    }
-
     if (!input || typeof input !== 'string') {
       const today = new Date();
       return today.toISOString().split('T')[0];
     }
 
-    const parts = input
-      .replace(/년|월|일/g, '')
-      .split('/')
-      .map(part => part.trim());
-
-    if (parts.length !== 3) {
-      const today = new Date();
-      return today.toISOString().split('T')[0];
+    if (/^\d{4}-\d{2}-\d{2}$/.test(input)) {
+      return input;
     }
 
-    const [year, month, day] = parts;
+    if (/^\d{4}\/\d{1,2}\/\d{1,2}$/.test(input)) {
+      const [year, month, day] = input.split('/');
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
 
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    const korDateMatch = input.match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+    if (korDateMatch) {
+      const [, year, month, day] = korDateMatch;
+      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    }
+
+    const today = new Date();
+    return today.toISOString().split('T')[0];
   };
 
   const updateCatData = () => {
@@ -165,7 +167,6 @@ export default function CatInfo({
       finalData.image = null;
       finalData.croppedImage = null;
     } else {
-      // 기본 이미지를 사용하는 경우 (모든 이미지 필드 제거)
       if ('imageUrl' in finalData) {
         delete finalData.imageUrl;
       }

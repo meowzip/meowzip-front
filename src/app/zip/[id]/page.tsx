@@ -16,6 +16,7 @@ import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
 import { deleteCat, getCatDetail } from '@/services/cat';
 import { useQuery } from '@tanstack/react-query';
+import { useToast } from '@/components/ui/hooks/useToast';
 
 const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
@@ -33,6 +34,8 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
     queryKey: ['catDetail', id],
     queryFn: () => getCatDetail(id)
   });
+
+  const { toast } = useToast();
 
   if (isLoading) return <div>로딩중</div>;
   if (isError) throw error;
@@ -54,7 +57,15 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         <DetailCardLayout
           titleObj={{
             title: '공동집사',
-            onClick: () => setCoParentsBottomSheet(true)
+            onClick: () => {
+              if (catDetail.coParents.length === 0) {
+                toast({
+                  description: '공동집사가 없습니다.'
+                });
+                return;
+              }
+              setCoParentsBottomSheet(true);
+            }
           }}
           btnObj={
             catDetail.isOwner && {
