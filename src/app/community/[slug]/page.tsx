@@ -6,7 +6,12 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
@@ -14,8 +19,7 @@ import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
-import { useClickNoti } from '@/hooks/common/useClickNoti';
-import { readNotificationOnServer } from '@/services/profile';
+import { getNotifications, readNotificationOnServer } from '@/services/profile';
 import { useWebView } from '@/hooks/useWebView';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
@@ -81,14 +85,28 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   const { platform, safePostMessage } = useWebView();
+  const { refetch: refetchNotifications } = useInfiniteQuery({
+    queryKey: ['getNotifications'],
+    queryFn: ({ pageParam = 1 }) =>
+      getNotifications({
+        page: pageParam,
+        size: 20
+      }),
+    getNextPageParam: (lastPage, allPages) => {
+      return lastPage.hasNext ? allPages.length + 1 : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 0
+  });
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
       if (data.status === 'OK') {
         queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
+          predicate: query => query.queryKey[0] === 'getNotifications'
         });
+        // refetchNotifications();
       }
     }
   });
@@ -98,16 +116,16 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       ? JSON.parse(storedClickNoti)
       : null;
     if (parsedNotification?.type !== 'COMMUNITY') return;
+    readNotification.mutate({
+      id: Number(parsedNotification['notification-id']),
+      type: parsedNotification.type
+    });
     safePostMessage({
       type: 'NOTIFICATION_CLICKED',
       notification: parsedNotification,
       timestamp: 123123
     });
-    readNotification.mutate({
-      id: Number(parsedNotification['notification-id']),
-      type: parsedNotification.type
-    });
-  }, []);
+  }, [safePostMessage]);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
