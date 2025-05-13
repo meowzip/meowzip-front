@@ -16,6 +16,7 @@ import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
 import { useClickNoti } from '@/hooks/common/useClickNoti';
 import { readNotificationOnServer } from '@/services/profile';
+import { useWebView } from '@/hooks/useWebView';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -77,6 +78,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
+  const { platform, safePostMessage } = useWebView();
   const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
@@ -98,6 +100,11 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       : null;
     console.log('💧💧💧 parsedNotification', parsedNotification);
     if (parsedNotification?.type !== 'COMMUNITY') return;
+    safePostMessage({
+      type: 'NOTIFICATION_CLICKED',
+      notification: notification,
+      timestamp: 123
+    });
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
