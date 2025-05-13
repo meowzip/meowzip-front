@@ -102,8 +102,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     if (parsedNotification?.type !== 'COMMUNITY') return;
     safePostMessage({
       type: 'NOTIFICATION_CLICKED',
-      notification: notification,
-      timestamp: 123
+      notification: parsedNotification,
+      timestamp: 123123
     });
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
