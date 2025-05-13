@@ -102,12 +102,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
-      if (data.status === 'OK') {
-        // queryClient.invalidateQueries({
-        //   predicate: query => query.queryKey[0] === 'getNotifications'
-        // });
-        refetchNotifications();
-      }
+      // queryClient.invalidateQueries({
+      //   predicate: query => query.queryKey[0] === 'getNotifications'
+      // });
+      refetchNotifications();
     }
   });
   useEffect(() => {
@@ -115,7 +113,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
-    if (parsedNotification?.type !== 'COMMUNITY') return;
+    if (parsedNotification.type !== 'COMMUNITY') return;
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
@@ -125,7 +123,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       notification: parsedNotification,
       timestamp: 123123
     });
-  }, [safePostMessage]);
+  }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
