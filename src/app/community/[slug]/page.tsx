@@ -103,10 +103,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
       if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getNotifications'
-        });
-        // refetchNotifications();
+        // queryClient.invalidateQueries({
+        //   predicate: query => query.queryKey[0] === 'getNotifications'
+        // });
+        refetchNotifications();
       }
     }
   });
