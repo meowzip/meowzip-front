@@ -6,7 +6,7 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,8 @@ import { useWebView } from '@/hooks/useWebView';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [, setBottomSheetHeight] = useState<number>(0);
   const bottomSheetRef = useRef<HTMLDivElement>(null);
 
@@ -79,26 +81,22 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   const { platform, safePostMessage } = useWebView();
-  const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
-      if (data.status !== 'OK') {
-      } else {
-        console.log('refetch');
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
       }
     }
   });
   useEffect(() => {
-    // if (!notification) return;
     const storedClickNoti = localStorage.getItem('click_noti') || '';
-    console.log('💧 notification', notification);
-    console.log('💧💧 storedClickNoti', storedClickNoti);
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
-    console.log('💧💧💧 parsedNotification', parsedNotification);
     if (parsedNotification?.type !== 'COMMUNITY') return;
     safePostMessage({
       type: 'NOTIFICATION_CLICKED',
