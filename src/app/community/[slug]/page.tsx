@@ -91,8 +91,8 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   useEffect(() => {
     // if (!notification) return;
     const storedClickNoti = localStorage.getItem('click_noti') || '';
-    console.log('💧 storedClickNoti', storedClickNoti);
-    console.log('💧💧 notification', notification);
+    console.log('💧 notification', notification);
+    console.log('💧💧 storedClickNoti', storedClickNoti);
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
@@ -102,7 +102,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
     });
-  }, [slug]);
+  }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
