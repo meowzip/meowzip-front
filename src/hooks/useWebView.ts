@@ -161,18 +161,16 @@ export const useWebView = (): UseWebViewReturn => {
         return;
       }
 
-      if (event.detail?.notification) {
-        console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
+      if (event.detail.notification) {
         localStorage.setItem(
           'click_noti',
-          JSON.stringify(event.detail?.notification)
+          JSON.stringify(event.detail.notification)
         );
-        console.log('[웹→앱] 알림 클릭 저장 완료');
 
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
           notification: event.detail.notification,
-          timestamp: new Date().toISOString()
+          timestamp: 456456
         });
       } else {
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
@@ -182,12 +180,6 @@ export const useWebView = (): UseWebViewReturn => {
           timestamp: new Date().toISOString()
         });
       }
-
-      safePostMessage({
-        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-        notification: event.detail.notification,
-        timestamp: new Date().toISOString()
-      });
     },
     [platform, safePostMessage]
   );
