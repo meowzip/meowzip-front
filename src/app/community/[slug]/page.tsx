@@ -102,10 +102,12 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
     onSuccess: (data: any, variables: { id: number; type: string }) => {
-      // queryClient.invalidateQueries({
-      //   predicate: query => query.queryKey[0] === 'getNotifications'
-      // });
-      refetchNotifications();
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getNotifications'
+        });
+        // refetchNotifications();
+      }
     }
   });
   useEffect(() => {
