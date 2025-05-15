@@ -92,7 +92,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     }
   });
   useEffect(() => {
-    const storedClickNoti = sessionStorage.getItem('click_noti') || '';
+    const storedClickNoti = localStorage.getItem('click_noti') || '';
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
