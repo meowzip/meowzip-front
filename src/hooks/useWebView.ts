@@ -162,7 +162,7 @@ export const useWebView = (): UseWebViewReturn => {
       }
 
       if (event.detail?.notification) {
-        localStorage.setItem(
+        sessionStorage.setItem(
           'click_noti',
           JSON.stringify(event.detail.notification)
         );
@@ -173,7 +173,7 @@ export const useWebView = (): UseWebViewReturn => {
           timestamp: 456456
         });
       } else {
-        localStorage.removeItem('click_noti');
+        sessionStorage.removeItem('click_noti');
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
@@ -268,7 +268,7 @@ export const useWebView = (): UseWebViewReturn => {
                 '[웹→앱] 알림 클릭 성공:',
                 JSON.stringify(data.notification)
               );
-              localStorage.setItem(
+              sessionStorage.setItem(
                 'click_noti',
                 JSON.stringify(data.notification)
               );
@@ -278,7 +278,7 @@ export const useWebView = (): UseWebViewReturn => {
                 timestamp: 789789
               });
             } else {
-              localStorage.removeItem('click_noti');
+              sessionStorage.removeItem('click_noti');
             }
             break;
           case 'ready':
