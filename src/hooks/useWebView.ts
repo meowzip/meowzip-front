@@ -173,6 +173,7 @@ export const useWebView = (): UseWebViewReturn => {
           timestamp: 456456
         });
       } else {
+        localStorage.removeItem('click_noti');
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
         safePostMessage({
           type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
@@ -356,19 +357,6 @@ export const useWebView = (): UseWebViewReturn => {
         timestamp: new Date().toISOString()
       });
     }
-
-    // const currentClickedNoti = localStorage.getItem('click_noti');
-    // const parsedNotification = currentClickedNoti
-    //   ? JSON.parse(currentClickedNoti)
-    //   : null;
-    // if (currentClickedNoti) {
-    //   console.log('[웹→앱] 저장된 알림 클릭:', parsedNotification);
-    //   safePostMessage({
-    //     type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-    //     notification: parsedNotification,
-    //     timestamp: new Date().toISOString()
-    //   });
-    // }
 
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
