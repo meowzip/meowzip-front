@@ -79,7 +79,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  const { platform, safePostMessage } = useWebView();
+  const { safePostMessage } = useWebView();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -106,7 +106,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       notification: parsedNotification,
       timestamp: 123123
     });
-  }, [slug]);
+  }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
