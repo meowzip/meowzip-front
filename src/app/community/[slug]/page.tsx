@@ -79,10 +79,6 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  const [notification, setNotification] = useState(() => {
-    const raw = localStorage.getItem('click_noti');
-    return raw ? JSON.parse(raw) : null;
-  });
   const { safePostMessage } = useWebView();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
@@ -95,24 +91,50 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       }
     }
   });
+  // useEffect(() => {
+  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
+  //   const parsedNotification = storedClickNoti
+  //     ? JSON.parse(storedClickNoti)
+  //     : null;
+  //   if (parsedNotification.type !== 'COMMUNITY') return;
+  //   readNotification.mutate({
+  //     id: Number(parsedNotification['notification-id']),
+  //     type: parsedNotification.type
+  //   });
+  //   safePostMessage({
+  //     type: 'NOTIFICATION_CLICKED',
+  //     notification: parsedNotification,
+  //     timestamp: 123123
+  //   });
+
+  //   return () => {
+  //     localStorage.removeItem('click_noti');
+  //   };
+  // }, []);
   useEffect(() => {
-    const storedClickNoti = localStorage.getItem('click_noti') || '';
-    const parsedNotification = storedClickNoti
-      ? JSON.parse(storedClickNoti)
-      : null;
-    if (notification.type !== 'COMMUNITY') return;
-    readNotification.mutate({
-      id: Number(notification['notification-id']),
-      type: notification.type
-    });
-    safePostMessage({
-      type: 'NOTIFICATION_CLICKED',
-      notification: notification,
-      timestamp: 123123
-    });
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === 'NOTIFICATION_CLICKED') {
+          readNotification.mutate({
+            id: Number(message.notification['notification-id']),
+            type: message.notification.type
+          });
+          safePostMessage({
+            type: 'NOTIFICATION_CLICKED',
+            notification: message.notification,
+            timestamp: 123123
+          });
+        }
+      } catch (error) {
+        console.error('메시지 처리 오류:', error);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
 
     return () => {
-      localStorage.removeItem('click_noti');
+      window.removeEventListener('message', handleMessage);
     };
   }, []);
   // -------------------- test -------------------- //
