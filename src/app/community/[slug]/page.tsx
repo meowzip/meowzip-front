@@ -106,6 +106,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       notification: parsedNotification,
       timestamp: 123123
     });
+
+    return () => {
+      localStorage.removeItem('click_noti');
+    };
   }, []);
   // -------------------- test -------------------- //
 
