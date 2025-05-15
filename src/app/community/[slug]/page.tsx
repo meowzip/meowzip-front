@@ -91,24 +91,57 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       }
     }
   });
+  // useEffect(() => {
+  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
+  //   const parsedNotification = storedClickNoti
+  //     ? JSON.parse(storedClickNoti)
+  //     : null;
+  //   if (parsedNotification.type !== 'COMMUNITY') return;
+  //   readNotification.mutate({
+  //     id: Number(parsedNotification['notification-id']),
+  //     type: parsedNotification.type
+  //   });
+  //   safePostMessage({
+  //     type: 'NOTIFICATION_CLICKED',
+  //     notification: parsedNotification,
+  //     timestamp: 123123
+  //   });
+
+  //   return () => {
+  //     localStorage.removeItem('click_noti');
+  //   };
+  // }, []);
   useEffect(() => {
-    const storedClickNoti = localStorage.getItem('click_noti') || '';
-    const parsedNotification = storedClickNoti
-      ? JSON.parse(storedClickNoti)
-      : null;
-    if (parsedNotification.type !== 'COMMUNITY') return;
-    readNotification.mutate({
-      id: Number(parsedNotification['notification-id']),
-      type: parsedNotification.type
-    });
-    safePostMessage({
-      type: 'NOTIFICATION_CLICKED',
-      notification: parsedNotification,
-      timestamp: 123123
-    });
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const data =
+          typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+
+        if (data?.type !== 'NOTIFICATION_CLICKED') return;
+
+        const parsedNotification = data.notification;
+
+        if (parsedNotification?.type !== 'COMMUNITY') return;
+
+        readNotification.mutate({
+          id: Number(parsedNotification['notification-id']),
+          type: parsedNotification.type
+        });
+
+        safePostMessage({
+          type: 'NOTIFICATION_CLICKED',
+          notification: parsedNotification,
+          timestamp: 121212
+        });
+      } catch (err) {
+        console.error('Invalid message data', err);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
 
     return () => {
-      localStorage.removeItem('click_noti');
+      window.removeEventListener('message', handleMessage);
     };
   }, []);
   // -------------------- test -------------------- //
