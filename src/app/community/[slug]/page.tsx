@@ -114,27 +114,36 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
       try {
+        const isFromReactNativeWebView =
+          event.origin === 'null' || event.origin === undefined;
+
         const data =
           typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
 
-        if (data?.type !== 'NOTIFICATION_CLICKED') return;
+        if (
+          isFromReactNativeWebView &&
+          data?.type === 'NOTIFICATION_CLICKED' &&
+          data?.notification
+        ) {
+          const notification = data.notification;
 
-        const parsedNotification = data.notification;
+          if (notification?.type !== 'COMMUNITY') return;
 
-        if (parsedNotification?.type !== 'COMMUNITY') return;
+          readNotification.mutate({
+            id: Number(notification['notification-id']),
+            type: notification.type
+          });
 
-        readNotification.mutate({
-          id: Number(parsedNotification['notification-id']),
-          type: parsedNotification.type
-        });
+          safePostMessage({
+            type: 'NOTIFICATION_CLICKED',
+            notification,
+            timestamp: 121212
+          });
 
-        safePostMessage({
-          type: 'NOTIFICATION_CLICKED',
-          notification: parsedNotification,
-          timestamp: 121212
-        });
+          localStorage.removeItem('click_noti');
+        }
       } catch (err) {
-        console.error('Invalid message data', err);
+        console.error('[WebView Message Error]', err);
       }
     };
 
