@@ -79,6 +79,10 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
+  const [notification, setNotification] = useState(() => {
+    const raw = localStorage.getItem('click_noti');
+    return raw ? JSON.parse(raw) : null;
+  });
   const { safePostMessage } = useWebView();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
@@ -91,66 +95,24 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       }
     }
   });
-  // useEffect(() => {
-  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
-  //   const parsedNotification = storedClickNoti
-  //     ? JSON.parse(storedClickNoti)
-  //     : null;
-  //   if (parsedNotification.type !== 'COMMUNITY') return;
-  //   readNotification.mutate({
-  //     id: Number(parsedNotification['notification-id']),
-  //     type: parsedNotification.type
-  //   });
-  //   safePostMessage({
-  //     type: 'NOTIFICATION_CLICKED',
-  //     notification: parsedNotification,
-  //     timestamp: 123123
-  //   });
-
-  //   return () => {
-  //     localStorage.removeItem('click_noti');
-  //   };
-  // }, []);
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        const isFromReactNativeWebView =
-          event.origin === 'null' || event.origin === undefined;
-
-        const data =
-          typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-
-        if (
-          isFromReactNativeWebView &&
-          data?.type === 'NOTIFICATION_CLICKED' &&
-          data?.notification
-        ) {
-          const notification = data.notification;
-
-          if (notification?.type !== 'COMMUNITY') return;
-
-          readNotification.mutate({
-            id: Number(notification['notification-id']),
-            type: notification.type
-          });
-
-          safePostMessage({
-            type: 'NOTIFICATION_CLICKED',
-            notification,
-            timestamp: 121212
-          });
-
-          localStorage.removeItem('click_noti');
-        }
-      } catch (err) {
-        console.error('[WebView Message Error]', err);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
+    const storedClickNoti = localStorage.getItem('click_noti') || '';
+    const parsedNotification = storedClickNoti
+      ? JSON.parse(storedClickNoti)
+      : null;
+    if (notification.type !== 'COMMUNITY') return;
+    readNotification.mutate({
+      id: Number(notification['notification-id']),
+      type: notification.type
+    });
+    safePostMessage({
+      type: 'NOTIFICATION_CLICKED',
+      notification: notification,
+      timestamp: 123123
+    });
 
     return () => {
-      window.removeEventListener('message', handleMessage);
+      localStorage.removeItem('click_noti');
     };
   }, []);
   // -------------------- test -------------------- //
