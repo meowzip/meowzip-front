@@ -161,7 +161,7 @@ export const useWebView = (): UseWebViewReturn => {
         return;
       }
 
-      if (event.detail.notification) {
+      if (event.detail?.notification) {
         localStorage.setItem(
           'click_noti',
           JSON.stringify(event.detail.notification)
@@ -277,6 +277,8 @@ export const useWebView = (): UseWebViewReturn => {
                 notification: data.notification,
                 timestamp: 789789
               });
+            } else {
+              localStorage.removeItem('click_noti');
             }
             break;
           case 'ready':
