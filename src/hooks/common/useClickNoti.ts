@@ -42,10 +42,19 @@ export const useClickNoti = () => {
   //   [platform, safePostMessage]
   // );
 
-  const handleClickNotiReceived = useCallback(
+  const handleWebViewMessage = useCallback(
     (event: MessageEvent) => {
+      console.log('[웹→앱] 메시지 이벤트 발생:', {
+        platform,
+        eventType: event.type,
+        data:
+          typeof event.data === 'string'
+            ? event.data
+            : JSON.stringify(event.data)
+      });
+
       if (platform === 'Web') {
-        console.log('[웹] 웹 환경에서는 이벤트 리스너를 등록하지 않습니다.');
+        console.log('[웹] 웹 환경에서는 웹뷰 메시지를 처리하지 않습니다.');
         return;
       }
 
@@ -65,34 +74,38 @@ export const useClickNoti = () => {
         switch (data.type) {
           case 'NOTIFICATION_CLICKED':
             if (data.notification) {
+              console.log('[웹→앱] 알림 클릭 성공:', data.notification);
+              localStorage.setItem(
+                'click_noti',
+                JSON.stringify(data.notification)
+              );
               setNotification(data.notification);
               safePostMessage({
                 type: 'NOTIFICATION_CLICKED',
                 notification: data.notification,
-                timestamp: new Date().toISOString()
-              });
-            } else {
-              console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
-              safePostMessage({
-                type: 'NOTIFICATION_CLICKED',
-                error: '알림 클릭 이벤트 수신 에러',
-                timestamp: new Date().toISOString()
+                timestamp: 777777
               });
             }
+            break;
+          case 'ready':
+          case 'can-inline-scripts':
+          case 'init-reply':
+            console.log('[웹→앱] iOS 초기화 메시지:', {
+              type: data.type,
+              platform,
+              message: data.message
+            });
             break;
           default:
             console.log('[웹→앱] 미처리 메시지 타입:', {
               type: data.type,
               data: event.data
             });
-            break;
         }
       } catch (e) {
-        console.error('[웹→앱] 메시지 처리 오류:', e);
-        safePostMessage({
-          type: 'ERROR',
-          error: '메시지 처리 오류',
-          timestamp: new Date().toISOString()
+        console.error('[웹→앱] 메시지 처리 중 에러:', {
+          error: e,
+          originalData: event.data
         });
       }
     },
@@ -105,17 +118,20 @@ export const useClickNoti = () => {
       return;
     }
 
-    const clickNotiListener = handleClickNotiReceived as EventListener;
+    // const clickNotiListener = handleClickNotiReceived as EventListener;
+    // window.addEventListener('clickNotificationReceived', clickNotiListener);
 
-    window.addEventListener('clickNotificationReceived', clickNotiListener);
+    const webViewMessageListener = handleWebViewMessage;
+    window.addEventListener('message', webViewMessageListener);
 
     return () => {
-      window.removeEventListener(
-        'clickNotificationReceived',
-        clickNotiListener
-      );
+      // window.removeEventListener(
+      //   'clickNotificationReceived',
+      //   clickNotiListener
+      // );
+      window.removeEventListener('message', webViewMessageListener);
     };
-  }, [platform, safePostMessage]);
+  }, [platform, safePostMessage, handleWebViewMessage]);
 
   return { notification };
 };
