@@ -16,7 +16,7 @@ import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
 import { readNotificationOnServer } from '@/services/profile';
 import { useWebView } from '@/hooks/useWebView';
-// import { useClickNoti } from '@/hooks/common/useClickNoti';
+import { useClickNoti } from '@/hooks/common/useClickNoti';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -81,7 +81,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   const { safePostMessage } = useWebView();
-  // const { notification } = useClickNoti();
+  const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -93,7 +93,18 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       }
     }
   });
-
+  // useEffect(() => {
+  //   if (notification?.type !== 'COMMUNITY') return;
+  //   readNotification.mutate({
+  //     id: Number(notification['notification-id']),
+  //     type: notification.type
+  //   });
+  //   safePostMessage({
+  //     type: 'NOTIFICATION_CLICKED',
+  //     notification: notification,
+  //     timestamp: 123123
+  //   });
+  // }, [notification]);
   useEffect(() => {
     const storedClickNoti = localStorage.getItem('click_noti') || '';
     const parsedNotification = storedClickNoti
@@ -109,11 +120,11 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       notification: parsedNotification,
       timestamp: 123123
     });
-    // safePostMessage({
-    //   type: 'NOTIFICATION_CLICKED',
-    //   notification: notification,
-    //   timestamp: 999999
-    // });
+    safePostMessage({
+      type: 'NOTIFICATION_CLICKED',
+      notification: notification,
+      timestamp: 999999
+    });
 
     return () => {
       localStorage.removeItem('click_noti');
