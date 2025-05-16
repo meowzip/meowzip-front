@@ -4,10 +4,14 @@ import { type WebViewMessage } from '@/utils/userAgent';
 
 export const useClickNoti = () => {
   const { platform, safePostMessage } = useWebView();
-  const [notification, setNotification] = useState({
-    type: '',
-    'notification-id': 0,
-    url: ''
+  const [notification, setNotification] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('click_noti');
+      return saved
+        ? JSON.parse(saved)
+        : { type: '', 'notification-id': 0, url: '' };
+    }
+    return { type: '', 'notification-id': 0, url: '' };
   });
 
   // const handleClickNotiReceived = useCallback(
@@ -120,16 +124,18 @@ export const useClickNoti = () => {
 
     // const clickNotiListener = handleClickNotiReceived as EventListener;
     // window.addEventListener('clickNotificationReceived', clickNotiListener);
-
-    const webViewMessageListener = handleWebViewMessage;
-    window.addEventListener('message', webViewMessageListener);
+    const webViewMessageListener = handleWebViewMessage as EventListener;
+    window.addEventListener(
+      'clickNotificationReceived',
+      webViewMessageListener
+    );
 
     return () => {
-      // window.removeEventListener(
-      //   'clickNotificationReceived',
-      //   clickNotiListener
-      // );
-      window.removeEventListener('message', webViewMessageListener);
+      // window.removeEventListener('message', webViewMessageListener);
+      window.removeEventListener(
+        'clickNotificationReceived',
+        webViewMessageListener
+      );
     };
   }, [platform, safePostMessage, handleWebViewMessage]);
 
