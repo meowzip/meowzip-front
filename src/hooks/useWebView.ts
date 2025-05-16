@@ -261,23 +261,23 @@ export const useWebView = (): UseWebViewReturn => {
               });
             }
             break;
-          case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED:
-            if (data.notification) {
-              console.log(
-                '[웹→앱] 알림 클릭 성공:',
-                JSON.stringify(data.notification)
-              );
-              localStorage.setItem(
-                'click_noti',
-                JSON.stringify(data.notification)
-              );
-              safePostMessage({
-                type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-                notification: data.notification,
-                timestamp: 789789
-              });
-            }
-            break;
+          // case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED:
+          //   if (data.notification) {
+          //     console.log(
+          //       '[웹→앱] 알림 클릭 성공:',
+          //       JSON.stringify(data.notification)
+          //     );
+          //     localStorage.setItem(
+          //       'click_noti',
+          //       JSON.stringify(data.notification)
+          //     );
+          //     safePostMessage({
+          //       type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+          //       notification: data.notification,
+          //       timestamp: 789789
+          //     });
+          //   }
+          //   break;
           case 'ready':
           case 'can-inline-scripts':
           case 'init-reply':
@@ -320,12 +320,12 @@ export const useWebView = (): UseWebViewReturn => {
 
     const pushTokenListener = handlePushTokenReceived as EventListener;
     const pushPermissionListener = requestNotiPermission as EventListener;
-    // const clickNotiListener = handleClickNotiReceived as EventListener;
+    const clickNotiListener = handleClickNotiReceived as EventListener;
     const webViewMessageListener = handleWebViewMessage;
 
     window.addEventListener('pushTokenReceived', pushTokenListener);
     window.addEventListener('pushPermissionReceived', pushPermissionListener);
-    // window.addEventListener('clickNotificationReceived', clickNotiListener);
+    window.addEventListener('clickNotificationReceived', clickNotiListener);
     window.addEventListener('message', webViewMessageListener);
 
     console.log('[웹→앱] 이벤트 리스너 등록 완료');
@@ -364,10 +364,10 @@ export const useWebView = (): UseWebViewReturn => {
         'pushPermissionReceived',
         pushPermissionListener
       );
-      // window.removeEventListener(
-      //   'clickNotificationReceived',
-      //   clickNotiListener
-      // );
+      window.removeEventListener(
+        'clickNotificationReceived',
+        clickNotiListener
+      );
       window.removeEventListener('message', webViewMessageListener);
     };
   }, [
@@ -375,8 +375,8 @@ export const useWebView = (): UseWebViewReturn => {
     handlePushTokenReceived,
     handleWebViewMessage,
     safePostMessage,
-    requestNotiPermission
-    // handleClickNotiReceived
+    requestNotiPermission,
+    handleClickNotiReceived
   ]);
 
   return {
