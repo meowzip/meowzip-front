@@ -1,17 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useWebView } from '@/hooks/useWebView';
-import { type WebViewMessage } from '@/utils/userAgent';
 
 export const useClickNoti = () => {
   const { platform, safePostMessage } = useWebView();
-  const [notification, setNotification] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('click_noti');
-      return saved
-        ? JSON.parse(saved)
-        : { type: '', 'notification-id': 0, url: '' };
-    }
-    return { type: '', 'notification-id': 0, url: '' };
+  const [notification, setNotification] = useState({
+    type: '',
+    'notification-id': 0,
+    url: ''
   });
 
   const handleClickNotiReceived = useCallback(
@@ -32,7 +27,7 @@ export const useClickNoti = () => {
         safePostMessage({
           type: 'NOTIFICATION_CLICKED',
           notification: event.detail.notification,
-          timestamp: 666666
+          timestamp: 444444
         });
       } else {
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
@@ -53,10 +48,14 @@ export const useClickNoti = () => {
     }
 
     const clickNotiListener = handleClickNotiReceived as EventListener;
+
     window.addEventListener('clickNotificationReceived', clickNotiListener);
 
     return () => {
-      window.removeEventListener('message', clickNotiListener);
+      window.removeEventListener(
+        'clickNotificationReceived',
+        clickNotiListener
+      );
     };
   }, [platform, safePostMessage, handleClickNotiReceived]);
 
