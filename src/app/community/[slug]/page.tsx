@@ -93,38 +93,43 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       }
     }
   });
+  // useEffect(() => {
+  //   if (notification?.type !== 'COMMUNITY') return;
+  //   readNotification.mutate({
+  //     id: Number(notification['notification-id']),
+  //     type: notification.type
+  //   });
+  //   safePostMessage({
+  //     type: 'NOTIFICATION_CLICKED',
+  //     notification: notification,
+  //     timestamp: 123123
+  //   });
+  // }, [notification]);
   useEffect(() => {
-    if (notification?.type !== 'COMMUNITY') return;
+    const storedClickNoti = localStorage.getItem('click_noti') || '';
+    const parsedNotification = storedClickNoti
+      ? JSON.parse(storedClickNoti)
+      : null;
+    if (parsedNotification.type !== 'COMMUNITY') return;
     readNotification.mutate({
-      id: Number(notification['notification-id']),
-      type: notification.type
+      id: Number(parsedNotification['notification-id']),
+      type: parsedNotification.type
+    });
+    safePostMessage({
+      type: 'NOTIFICATION_CLICKED',
+      notification: parsedNotification,
+      timestamp: 123123
     });
     safePostMessage({
       type: 'NOTIFICATION_CLICKED',
       notification: notification,
-      timestamp: 123123
+      timestamp: 999999
     });
-  }, [notification]);
-  // useEffect(() => {
-  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
-  //   const parsedNotification = storedClickNoti
-  //     ? JSON.parse(storedClickNoti)
-  //     : null;
-  //   if (parsedNotification.type !== 'COMMUNITY') return;
-  //   readNotification.mutate({
-  //     id: Number(parsedNotification['notification-id']),
-  //     type: parsedNotification.type
-  //   });
-  //   safePostMessage({
-  //     type: 'NOTIFICATION_CLICKED',
-  //     notification: parsedNotification,
-  //     timestamp: 123123
-  //   });
 
-  //   return () => {
-  //     localStorage.removeItem('click_noti');
-  //   };
-  // }, []);
+    return () => {
+      localStorage.removeItem('click_noti');
+    };
+  }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
