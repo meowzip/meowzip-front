@@ -97,7 +97,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     const parsedNotification = storedClickNoti
       ? JSON.parse(storedClickNoti)
       : null;
-    if (parsedNotification.type !== 'COMMUNITY') return;
+    if (!parsedNotification || parsedNotification.type !== 'COMMUNITY') return;
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
