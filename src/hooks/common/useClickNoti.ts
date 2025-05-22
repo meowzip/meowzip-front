@@ -38,6 +38,7 @@ export const useClickNoti = () => {
         id: Number(event.detail?.notification['notification-id']),
         type: event.detail?.notification.type
       });
+      setNotification(event.detail?.notification);
 
       // if (event.detail?.notification) {
       //   console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
@@ -88,7 +89,7 @@ export const useClickNoti = () => {
         clickNotiListener
       );
     };
-  }, [handleClickNotiReceived]);
+  }, [handleClickNotiReceived, notification]);
 
   return { handleClickNotiReceived, notification };
 };
