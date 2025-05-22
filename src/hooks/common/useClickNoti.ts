@@ -3,11 +3,13 @@ import { WebViewMessage, WebViewMessageType } from '@/types/webview';
 import { useWebView } from '@/hooks/useWebView';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { readNotificationOnServer } from '@/services/profile';
+import { usePathname } from 'next/navigation';
 
 export const useClickNoti = () => {
   const { platform, safePostMessage } = useWebView();
   const [notification, setNotification] = useState<WebViewMessage | null>(null);
   const queryClient = useQueryClient();
+  const pathName = usePathname();
 
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
@@ -70,7 +72,7 @@ export const useClickNoti = () => {
       // });
       // console.log('222222', notification);
     },
-    [platform, safePostMessage]
+    [platform, pathName]
   );
 
   useEffect(() => {
