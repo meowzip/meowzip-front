@@ -81,31 +81,31 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   const { notification } = useClickNoti();
-  const readNotification = useMutation({
-    mutationFn: ({ id }: { id: number; type: string }) =>
-      readNotificationOnServer(id),
-    onSuccess: (data: any, variables: { id: number; type: string }) => {
-      if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getNotifications'
-        });
-      }
-    }
-  });
+  // const readNotification = useMutation({
+  //   mutationFn: ({ id }: { id: number; type: string }) =>
+  //     readNotificationOnServer(id),
+  //   onSuccess: (data: any, variables: { id: number; type: string }) => {
+  //     if (data.status === 'OK') {
+  //       queryClient.invalidateQueries({
+  //         predicate: query => query.queryKey[0] === 'getNotifications'
+  //       });
+  //     }
+  //   }
+  // });
 
-  useEffect(() => {
-    const storedClickNoti = localStorage.getItem('click_noti') || '';
-    const parsedNotification = storedClickNoti
-      ? JSON.parse(storedClickNoti)
-      : null;
-    if (!parsedNotification || parsedNotification.type !== 'COMMUNITY') return;
-    console.log('--------notification', notification);
-    console.log('========parsedNotification', parsedNotification);
-    readNotification.mutate({
-      id: Number(parsedNotification['notification-id']),
-      type: parsedNotification.type
-    });
-  }, []);
+  // useEffect(() => {
+  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
+  //   const parsedNotification = storedClickNoti
+  //     ? JSON.parse(storedClickNoti)
+  //     : null;
+  //   if (!parsedNotification || parsedNotification.type !== 'COMMUNITY') return;
+  //   console.log('--------notification', notification);
+  //   console.log('========parsedNotification', parsedNotification);
+  //   readNotification.mutate({
+  //     id: Number(parsedNotification['notification-id']),
+  //     type: parsedNotification.type
+  //   });
+  // }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;

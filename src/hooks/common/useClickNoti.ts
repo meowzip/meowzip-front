@@ -1,10 +1,25 @@
 import { useCallback, useEffect, useState } from 'react';
 import { WebViewMessage, WebViewMessageType } from '@/types/webview';
 import { useWebView } from '@/hooks/useWebView';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { readNotificationOnServer } from '@/services/profile';
 
 export const useClickNoti = () => {
   const { platform, safePostMessage } = useWebView();
   const [notification, setNotification] = useState<WebViewMessage | null>(null);
+  const queryClient = useQueryClient();
+
+  const readNotification = useMutation({
+    mutationFn: ({ id }: { id: number; type: string }) =>
+      readNotificationOnServer(id),
+    onSuccess: (data: any, variables: { id: number; type: string }) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getNotifications'
+        });
+      }
+    }
+  });
 
   const handleClickNotiReceived = useCallback(
     (event: CustomEvent) => {
@@ -19,35 +34,40 @@ export const useClickNoti = () => {
         return;
       }
 
-      if (event.detail?.notification) {
-        console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
-        localStorage.setItem(
-          'click_noti',
-          JSON.stringify(event.detail?.notification)
-        );
-        setNotification(event.detail?.notification);
-
-        safePostMessage({
-          type: 'NOTIFICATION_CLICKED',
-          notification: event.detail.notification,
-          timestamp: 111111
-        });
-        console.log('111111', notification);
-      } else {
-        console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
-        safePostMessage({
-          type: 'NOTIFICATION_CLICKED',
-          error: '알림 클릭 이벤트 수신 에러',
-          timestamp: new Date().toISOString()
-        });
-      }
-
-      safePostMessage({
-        type: 'NOTIFICATION_CLICKED',
-        notification: event.detail.notification,
-        timestamp: 222222
+      readNotification.mutate({
+        id: Number(event.detail?.notification['notification-id']),
+        type: event.detail?.notification.type
       });
-      console.log('222222', notification);
+
+      // if (event.detail?.notification) {
+      //   console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
+      //   localStorage.setItem(
+      //     'click_noti',
+      //     JSON.stringify(event.detail?.notification)
+      //   );
+      //   setNotification(event.detail?.notification);
+
+      //   safePostMessage({
+      //     type: 'NOTIFICATION_CLICKED',
+      //     notification: event.detail.notification,
+      //     timestamp: 111111
+      //   });
+      //   console.log('111111', notification);
+      // } else {
+      //   console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
+      //   safePostMessage({
+      //     type: 'NOTIFICATION_CLICKED',
+      //     error: '알림 클릭 이벤트 수신 에러',
+      //     timestamp: new Date().toISOString()
+      //   });
+      // }
+
+      // safePostMessage({
+      //   type: 'NOTIFICATION_CLICKED',
+      //   notification: event.detail.notification,
+      //   timestamp: 222222
+      // });
+      // console.log('222222', notification);
     },
     [platform, safePostMessage]
   );
