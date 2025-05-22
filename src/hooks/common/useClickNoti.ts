@@ -32,6 +32,7 @@ export const useClickNoti = () => {
           notification: event.detail.notification,
           timestamp: 111111
         });
+        console.log('111111', notification);
       } else {
         console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
         safePostMessage({
@@ -46,6 +47,7 @@ export const useClickNoti = () => {
         notification: event.detail.notification,
         timestamp: 222222
       });
+      console.log('222222', notification);
     },
     [platform, safePostMessage]
   );
