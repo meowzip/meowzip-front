@@ -16,6 +16,7 @@ import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
 import { readNotificationOnServer } from '@/services/profile';
 import { useWebView } from '@/hooks/useWebView';
+import { useClickNoti } from '@/hooks/common/useClickNoti';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -80,6 +81,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   const { safePostMessage } = useWebView();
+  const { clickNoti } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -107,6 +109,13 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       notification: parsedNotification,
       timestamp: 123123
     });
+    if (clickNoti) {
+      safePostMessage({
+        type: 'NOTIFICATION_CLICKED',
+        notification: clickNoti,
+        timestamp: 999999
+      });
+    }
   }, []);
   // -------------------- test -------------------- //
 
