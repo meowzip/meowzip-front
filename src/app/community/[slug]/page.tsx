@@ -80,7 +80,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  const { notification } = useClickNoti();
+  useClickNoti();
   // const readNotification = useMutation({
   //   mutationFn: ({ id }: { id: number; type: string }) =>
   //     readNotificationOnServer(id),
