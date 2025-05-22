@@ -148,48 +148,48 @@ export const useWebView = (): UseWebViewReturn => {
     [platform, safePostMessage]
   );
 
-  const handleClickNotiReceived = useCallback(
-    (event: CustomEvent) => {
-      console.log('😃 알림 클릭 이벤트 수신:', {
-        platform,
-        eventType: event.type,
-        notification: event.detail?.notification
-      });
+  // const handleClickNotiReceived = useCallback(
+  //   (event: CustomEvent) => {
+  //     console.log('😃 알림 클릭 이벤트 수신:', {
+  //       platform,
+  //       eventType: event.type,
+  //       notification: event.detail?.notification
+  //     });
 
-      if (platform === 'Web') {
-        console.log('[웹] 웹 환경에서는 알림 클릭 이벤트를 처리하지 않습니다.');
-        return;
-      }
+  //     if (platform === 'Web') {
+  //       console.log('[웹] 웹 환경에서는 알림 클릭 이벤트를 처리하지 않습니다.');
+  //       return;
+  //     }
 
-      if (event.detail?.notification) {
-        console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
-        localStorage.setItem(
-          'click_noti',
-          JSON.stringify(event.detail?.notification)
-        );
+  //     if (event.detail?.notification) {
+  //       console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
+  //       localStorage.setItem(
+  //         'click_noti',
+  //         JSON.stringify(event.detail?.notification)
+  //       );
 
-        safePostMessage({
-          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-          notification: event.detail.notification,
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
-        safePostMessage({
-          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-          error: '알림 클릭 이벤트 수신 에러',
-          timestamp: new Date().toISOString()
-        });
-      }
+  //       safePostMessage({
+  //         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+  //         notification: event.detail.notification,
+  //         timestamp: new Date().toISOString()
+  //       });
+  //     } else {
+  //       console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
+  //       safePostMessage({
+  //         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+  //         error: '알림 클릭 이벤트 수신 에러',
+  //         timestamp: new Date().toISOString()
+  //       });
+  //     }
 
-      safePostMessage({
-        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-        notification: event.detail.notification,
-        timestamp: new Date().toISOString()
-      });
-    },
-    [platform, safePostMessage]
-  );
+  //     safePostMessage({
+  //       type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
+  //       notification: event.detail.notification,
+  //       timestamp: new Date().toISOString()
+  //     });
+  //   },
+  //   [platform, safePostMessage]
+  // );
 
   const handleWebViewMessage = useCallback(
     (event: MessageEvent) => {
@@ -324,12 +324,12 @@ export const useWebView = (): UseWebViewReturn => {
 
     const pushTokenListener = handlePushTokenReceived as EventListener;
     const pushPermissionListener = requestNotiPermission as EventListener;
-    const clickNotiListener = handleClickNotiReceived as EventListener;
+    // const clickNotiListener = handleClickNotiReceived as EventListener;
     const webViewMessageListener = handleWebViewMessage;
 
     window.addEventListener('pushTokenReceived', pushTokenListener);
     window.addEventListener('pushPermissionReceived', pushPermissionListener);
-    window.addEventListener('clickNotificationReceived', clickNotiListener);
+    // window.addEventListener('clickNotificationReceived', clickNotiListener);
     window.addEventListener('message', webViewMessageListener);
 
     console.log('[웹→앱] 이벤트 리스너 등록 완료');
@@ -361,19 +361,6 @@ export const useWebView = (): UseWebViewReturn => {
       });
     }
 
-    // const currentClickedNoti = localStorage.getItem('click_noti');
-    // const parsedNotification = currentClickedNoti
-    //   ? JSON.parse(currentClickedNoti)
-    //   : null;
-    // if (currentClickedNoti) {
-    //   console.log('[웹→앱] 저장된 알림 클릭:', parsedNotification);
-    //   safePostMessage({
-    //     type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
-    //     notification: parsedNotification,
-    //     timestamp: new Date().toISOString()
-    //   });
-    // }
-
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener('pushTokenReceived', pushTokenListener);
@@ -381,10 +368,10 @@ export const useWebView = (): UseWebViewReturn => {
         'pushPermissionReceived',
         pushPermissionListener
       );
-      window.removeEventListener(
-        'clickNotificationReceived',
-        clickNotiListener
-      );
+      // window.removeEventListener(
+      //   'clickNotificationReceived',
+      //   clickNotiListener
+      // );
       window.removeEventListener('message', webViewMessageListener);
     };
   }, [
@@ -392,8 +379,8 @@ export const useWebView = (): UseWebViewReturn => {
     handlePushTokenReceived,
     handleWebViewMessage,
     safePostMessage,
-    requestNotiPermission,
-    handleClickNotiReceived
+    requestNotiPermission
+    // handleClickNotiReceived
   ]);
 
   return {

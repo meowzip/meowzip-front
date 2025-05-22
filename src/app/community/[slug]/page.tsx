@@ -80,8 +80,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   };
 
   // -------------------- test -------------------- //
-  const { safePostMessage } = useWebView();
-  const { clickNoti } = useClickNoti();
+  const { notification } = useClickNoti();
   const readNotification = useMutation({
     mutationFn: ({ id }: { id: number; type: string }) =>
       readNotificationOnServer(id),
@@ -100,22 +99,11 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       ? JSON.parse(storedClickNoti)
       : null;
     if (!parsedNotification || parsedNotification.type !== 'COMMUNITY') return;
+    console.log('notification', notification);
     readNotification.mutate({
       id: Number(parsedNotification['notification-id']),
       type: parsedNotification.type
     });
-    safePostMessage({
-      type: 'NOTIFICATION_CLICKED',
-      notification: parsedNotification,
-      timestamp: 123123
-    });
-    if (clickNoti) {
-      safePostMessage({
-        type: 'NOTIFICATION_CLICKED',
-        notification: clickNoti,
-        timestamp: 999999
-      });
-    }
   }, []);
   // -------------------- test -------------------- //
 
