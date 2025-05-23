@@ -6,7 +6,7 @@ import FeedCard from '@/components/community/FeedCard';
 import Comment from '@/components/community/detail/Comment';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import FeedWriteModal from '@/components/community/FeedWriteModal';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
@@ -14,13 +14,10 @@ import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
-import { readNotificationOnServer } from '@/services/profile';
-import { useWebView } from '@/hooks/useWebView';
 import { useClickNoti } from '@/hooks/common/useClickNoti';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
   const [, setBottomSheetHeight] = useState<number>(0);
   const bottomSheetRef = useRef<HTMLDivElement>(null);
@@ -81,31 +78,6 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   // -------------------- test -------------------- //
   useClickNoti();
-  // const readNotification = useMutation({
-  //   mutationFn: ({ id }: { id: number; type: string }) =>
-  //     readNotificationOnServer(id),
-  //   onSuccess: (data: any, variables: { id: number; type: string }) => {
-  //     if (data.status === 'OK') {
-  //       queryClient.invalidateQueries({
-  //         predicate: query => query.queryKey[0] === 'getNotifications'
-  //       });
-  //     }
-  //   }
-  // });
-
-  // useEffect(() => {
-  //   const storedClickNoti = localStorage.getItem('click_noti') || '';
-  //   const parsedNotification = storedClickNoti
-  //     ? JSON.parse(storedClickNoti)
-  //     : null;
-  //   if (!parsedNotification || parsedNotification.type !== 'COMMUNITY') return;
-  //   console.log('--------notification', notification);
-  //   console.log('========parsedNotification', parsedNotification);
-  //   readNotification.mutate({
-  //     id: Number(parsedNotification['notification-id']),
-  //     type: parsedNotification.type
-  //   });
-  // }, []);
   // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;

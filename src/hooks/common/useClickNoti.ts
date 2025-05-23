@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useState } from 'react';
-import { WebViewMessage, WebViewMessageType } from '@/types/webview';
+import { useEffect, useState } from 'react';
+import { WebViewMessage } from '@/types/webview';
 import { useWebView } from '@/hooks/useWebView';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { readNotificationOnServer } from '@/services/profile';
 import { usePathname } from 'next/navigation';
 
 export const useClickNoti = () => {
-  const { platform, safePostMessage } = useWebView();
+  const { platform } = useWebView();
   const [notification, setNotification] = useState<WebViewMessage | null>(null);
   const queryClient = useQueryClient();
   const pathName = usePathname();
@@ -40,36 +40,53 @@ export const useClickNoti = () => {
       type: event.detail?.notification.type
     });
     setNotification(event.detail?.notification);
+  };
 
-    // if (event.detail?.notification) {
-    //   console.log('[웹→앱] 알림 클릭 저장 시도:', event.detail?.notification);
-    //   localStorage.setItem(
-    //     'click_noti',
-    //     JSON.stringify(event.detail?.notification)
-    //   );
-    //   setNotification(event.detail?.notification);
+  const handleWebViewMessage = (event: MessageEvent) => {
+    console.log('🌼 메시지 이벤트 발생:', {
+      platform,
+      eventType: event.type,
+      data:
+        typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
+    });
 
-    //   safePostMessage({
-    //     type: 'NOTIFICATION_CLICKED',
-    //     notification: event.detail.notification,
-    //     timestamp: 111111
-    //   });
-    //   console.log('111111', notification);
-    // } else {
-    //   console.warn('[웹→앱] 알림 클릭 이벤트 수신 에러');
-    //   safePostMessage({
-    //     type: 'NOTIFICATION_CLICKED',
-    //     error: '알림 클릭 이벤트 수신 에러',
-    //     timestamp: new Date().toISOString()
-    //   });
-    // }
+    if (platform === 'Web') {
+      console.log('[웹] 웹 환경에서는 웹뷰 메시지를 처리하지 않습니다.');
+      return;
+    }
 
-    // safePostMessage({
-    //   type: 'NOTIFICATION_CLICKED',
-    //   notification: event.detail.notification,
-    //   timestamp: 222222
-    // });
-    // console.log('222222', notification);
+    try {
+      let data: WebViewMessage;
+      if (typeof event.data === 'string') {
+        try {
+          data = JSON.parse(event.data);
+        } catch (e) {
+          console.log('[웹→앱] 문자열 파싱 실패, 원본 데이터 사용');
+          data = { type: event.data as any };
+        }
+      } else {
+        data = event.data;
+      }
+
+      switch (data.type) {
+        case 'NOTIFICATION_CLICKED':
+          if (data.notification) {
+            console.log('🌼🌼 알림 클릭 성공:', data.notification);
+          }
+          break;
+
+        default:
+          console.log('🌼🌼🌼 미처리 메시지 타입:', {
+            type: data.type,
+            data: event.data
+          });
+      }
+    } catch (e) {
+      console.error('[웹→앱] 메시지 처리 중 에러:', {
+        error: e,
+        originalData: event.data
+      });
+    }
   };
 
   useEffect(() => {
@@ -77,9 +94,10 @@ export const useClickNoti = () => {
       console.log('[웹] 웹 환경에서는 이벤트 리스너를 등록하지 않습니다.');
       return;
     }
-
     const clickNotiListener = handleClickNotiReceived as EventListener;
+    const webViewMessageListener = handleWebViewMessage;
     window.addEventListener('clickNotificationReceived', clickNotiListener);
+    window.addEventListener('message', webViewMessageListener);
 
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
@@ -87,8 +105,9 @@ export const useClickNoti = () => {
         'clickNotificationReceived',
         clickNotiListener
       );
+      window.removeEventListener('message', webViewMessageListener);
     };
-  }, [handleClickNotiReceived, platform, pathName]);
+  }, [handleClickNotiReceived, handleWebViewMessage, pathName]);
 
   return { handleClickNotiReceived, notification };
 };
