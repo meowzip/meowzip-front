@@ -54,7 +54,6 @@ export const useClickNoti = () => {
       data:
         typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
     });
-    console.log('🌼🌼 event', event);
 
     if (platform === 'Web') {
       console.log('[웹] 웹 환경에서는 웹뷰 메시지를 처리하지 않습니다.');
@@ -73,17 +72,22 @@ export const useClickNoti = () => {
       } else {
         data = event.data;
       }
-      console.log('🌼🌼🌼 data', data);
+      console.log('🌼🌼 data', data);
 
       switch (data.type) {
         case 'NOTIFICATION_CLICKED':
           if (data.notification) {
-            console.log('🌼🌼🌼🌼 알림 클릭 성공:', data.notification);
+            console.log('🌼🌼🌼 알림 클릭 성공:', data.notification);
+            safePostMessage({
+              type: 'NOTIFICATION_CLICKED',
+              notification: data.notification,
+              timestamp: 999999
+            });
           }
           break;
 
         default:
-          console.log('🌼🌼🌼🌼🌼 미처리 메시지 타입:', {
+          console.log('🌼🌼🌼🌼 미처리 메시지 타입:', {
             type: data.type,
             data: event.data
           });
@@ -123,25 +127,6 @@ export const useClickNoti = () => {
       window.removeEventListener('message', webViewMessageListener);
     };
   }, [handleClickNotiReceived, pathName]);
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      try {
-        const message = JSON.parse(event.data);
-        if (message.type === 'NOTIFICATION_CLICKED') {
-          console.log('🌼 푸시 수신 🌼 : ', message.data);
-        }
-      } catch (e) {
-        console.error('메시지 처리 오류:', e);
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-
-    return () => {
-      window.removeEventListener('message', handleMessage);
-    };
-  }, []);
 
   return { handleClickNotiReceived, notification };
 };
