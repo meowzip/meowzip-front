@@ -14,7 +14,6 @@ import { getFeedComments } from '@/services/community';
 import { CommentType } from '@/types/communityType';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
-import { useClickNoti } from '@/hooks/common/useClickNoti';
 
 const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const router = useRouter();
@@ -75,8 +74,6 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     setParentCommentId(null);
     setIsReplying(false);
   };
-
-  useClickNoti();
 
   if (isFeedDetailError) throw feedDetailError;
   if (isCommentsDataError) throw commentsDataError;
