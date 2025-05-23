@@ -42,7 +42,7 @@ export const useClickNoti = () => {
     setNotification(event.detail?.notification);
     safePostMessage({
       type: 'NOTIFICATION_CLICKED',
-      enabled: event.detail.enabled,
+      notification: event.detail.notification,
       timestamp: 121212
     });
   };
