@@ -107,6 +107,13 @@ export const useClickNoti = () => {
     window.addEventListener('clickNotificationReceived', clickNotiListener);
     window.addEventListener('message', webViewMessageListener);
 
+    if (window.ReactNativeWebView?.postMessage) {
+      safePostMessage({
+        type: 'BRIDGE_READY',
+        timestamp: 343434
+      });
+    }
+
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener(
