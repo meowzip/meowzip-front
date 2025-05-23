@@ -8,6 +8,7 @@ import JotaiProvider from '@/providers/JotaiProvider';
 import React from 'react';
 import AuthSession from '@/providers/AuthSession';
 import MainLayoutClient from '@/components/common/MainLayoutClient';
+import ClickNotiProvider from '@/providers/ClickNotiProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -81,6 +82,7 @@ export default function RootLayout({
           <AuthSession>
             <JotaiProvider>
               <UserProvider>
+                <ClickNotiProvider />
                 <MainLayoutClient>{children}</MainLayoutClient>
                 {modal}
               </UserProvider>
