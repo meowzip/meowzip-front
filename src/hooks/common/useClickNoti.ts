@@ -124,5 +124,24 @@ export const useClickNoti = () => {
     };
   }, [handleClickNotiReceived, pathName]);
 
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      try {
+        const message = JSON.parse(event.data);
+        if (message.type === 'NOTIFICATION_CLICKED') {
+          console.log('🌼 푸시 수신 🌼 : ', message.data);
+        }
+      } catch (e) {
+        console.error('메시지 처리 오류:', e);
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+
   return { handleClickNotiReceived, notification };
 };
