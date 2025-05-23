@@ -6,7 +6,7 @@ import { readNotificationOnServer } from '@/services/profile';
 import { usePathname } from 'next/navigation';
 
 export const useClickNoti = () => {
-  const { platform } = useWebView();
+  const { platform, safePostMessage } = useWebView();
   const [notification, setNotification] = useState<WebViewMessage | null>(null);
   const queryClient = useQueryClient();
   const pathName = usePathname();
@@ -40,6 +40,11 @@ export const useClickNoti = () => {
       type: event.detail?.notification.type
     });
     setNotification(event.detail?.notification);
+    safePostMessage({
+      type: 'NOTIFICATION_CLICKED',
+      enabled: event.detail.enabled,
+      timestamp: 121212
+    });
   };
 
   const handleWebViewMessage = (event: MessageEvent) => {
