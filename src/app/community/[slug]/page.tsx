@@ -76,9 +76,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
     setIsReplying(false);
   };
 
-  // -------------------- test -------------------- //
   useClickNoti();
-  // -------------------- test -------------------- //
 
   if (isFeedDetailError) throw feedDetailError;
   if (isCommentsDataError) throw commentsDataError;
