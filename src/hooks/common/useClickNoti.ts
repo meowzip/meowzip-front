@@ -42,52 +42,54 @@ export const useClickNoti = () => {
     setNotification(event.detail?.notification);
   };
 
-  // const handleWebViewMessage = (event: MessageEvent) => {
-  //   console.log('🌼 메시지 이벤트 발생:', {
-  //     platform,
-  //     eventType: event.type,
-  //     data:
-  //       typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
-  //   });
+  const handleWebViewMessage = (event: MessageEvent) => {
+    console.log('🌼 메시지 이벤트 발생:', {
+      platform,
+      eventType: event.type,
+      data:
+        typeof event.data === 'string' ? event.data : JSON.stringify(event.data)
+    });
+    console.log('🌼🌼 event', event);
 
-  //   if (platform === 'Web') {
-  //     console.log('[웹] 웹 환경에서는 웹뷰 메시지를 처리하지 않습니다.');
-  //     return;
-  //   }
+    if (platform === 'Web') {
+      console.log('[웹] 웹 환경에서는 웹뷰 메시지를 처리하지 않습니다.');
+      return;
+    }
 
-  //   try {
-  //     let data: WebViewMessage;
-  //     if (typeof event.data === 'string') {
-  //       try {
-  //         data = JSON.parse(event.data);
-  //       } catch (e) {
-  //         console.log('[웹→앱] 문자열 파싱 실패, 원본 데이터 사용');
-  //         data = { type: event.data as any };
-  //       }
-  //     } else {
-  //       data = event.data;
-  //     }
+    try {
+      let data: WebViewMessage;
+      if (typeof event.data === 'string') {
+        try {
+          data = JSON.parse(event.data);
+        } catch (e) {
+          console.log('[웹→앱] 문자열 파싱 실패, 원본 데이터 사용');
+          data = { type: event.data as any };
+        }
+      } else {
+        data = event.data;
+      }
+      console.log('🌼🌼🌼 data', data);
 
-  //     switch (data.type) {
-  //       case 'NOTIFICATION_CLICKED':
-  //         if (data.notification) {
-  //           console.log('🌼🌼 알림 클릭 성공:', data.notification);
-  //         }
-  //         break;
+      switch (data.type) {
+        case 'NOTIFICATION_CLICKED':
+          if (data.notification) {
+            console.log('🌼🌼🌼🌼 알림 클릭 성공:', data.notification);
+          }
+          break;
 
-  //       default:
-  //         console.log('🌼🌼🌼 미처리 메시지 타입:', {
-  //           type: data.type,
-  //           data: event.data
-  //         });
-  //     }
-  //   } catch (e) {
-  //     console.error('[웹→앱] 메시지 처리 중 에러:', {
-  //       error: e,
-  //       originalData: event.data
-  //     });
-  //   }
-  // };
+        default:
+          console.log('🌼🌼🌼🌼🌼 미처리 메시지 타입:', {
+            type: data.type,
+            data: event.data
+          });
+      }
+    } catch (e) {
+      console.error('[웹→앱] 메시지 처리 중 에러:', {
+        error: e,
+        originalData: event.data
+      });
+    }
+  };
 
   useEffect(() => {
     if (platform === 'Web') {
@@ -96,20 +98,9 @@ export const useClickNoti = () => {
     }
 
     const clickNotiListener = handleClickNotiReceived as EventListener;
-    // const webViewMessageListener = handleWebViewMessage;
+    const webViewMessageListener = handleWebViewMessage;
     window.addEventListener('clickNotificationReceived', clickNotiListener);
-    // window.addEventListener('message', webViewMessageListener);
-
-    // 💥 최초 이벤트 누락 방지
-    if (window.notification) {
-      const notificationData = window.notification;
-      console.log('🧠 초기 알림 클릭 처리:', notificationData);
-      handleClickNotiReceived(
-        new CustomEvent('clickNotificationReceived', {
-          detail: { notification: notificationData }
-        })
-      );
-    }
+    window.addEventListener('message', webViewMessageListener);
 
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
@@ -117,7 +108,7 @@ export const useClickNoti = () => {
         'clickNotificationReceived',
         clickNotiListener
       );
-      // window.removeEventListener('message', webViewMessageListener);
+      window.removeEventListener('message', webViewMessageListener);
     };
   }, [handleClickNotiReceived, pathName]);
 
