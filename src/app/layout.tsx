@@ -82,7 +82,7 @@ export default function RootLayout({
           <AuthSession>
             <JotaiProvider>
               <UserProvider>
-                {/* <ClickNotiProvider /> */}
+                <ClickNotiProvider />
                 <MainLayoutClient>{children}</MainLayoutClient>
                 {modal}
               </UserProvider>

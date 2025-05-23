@@ -68,16 +68,5 @@ export const useClickNoti = () => {
     };
   }, [platform, pathName, safePostMessage, handleClickNotiReceived]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.ReactNativeWebView?.postMessage) {
-        window.ReactNativeWebView.postMessage(
-          JSON.stringify({ type: 'BRIDGE_READY' })
-        );
-        console.log('🌼 BRIDGE_READY 전송 완료 🌼');
-      }
-    }
-  }, []);
-
   return { handleClickNotiReceived, notification };
 };
