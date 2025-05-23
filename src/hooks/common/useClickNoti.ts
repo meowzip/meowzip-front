@@ -119,13 +119,6 @@ export const useClickNoti = () => {
     window.addEventListener('clickNotificationReceived', clickNotiListener);
     window.addEventListener('message', webViewMessageListener);
 
-    if (window.ReactNativeWebView?.postMessage) {
-      safePostMessage({
-        type: 'BRIDGE_READY',
-        timestamp: 343434
-      });
-    }
-
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener(
@@ -141,6 +134,17 @@ export const useClickNoti = () => {
     handleClickNotiReceived,
     handleWebViewMessage
   ]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.ReactNativeWebView?.postMessage) {
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ type: 'BRIDGE_READY' })
+        );
+        console.log('🌼 BRIDGE_READY 전송 완료 🌼');
+      }
+    }
+  }, []);
 
   return { handleClickNotiReceived, notification };
 };
