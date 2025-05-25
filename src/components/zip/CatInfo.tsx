@@ -146,18 +146,12 @@ export default function CatInfo({
 
     const finalData = { ...updatedCatData };
 
-    if (selectedImage.croppedImage) {
-      finalData.croppedImage = selectedImage.croppedImage;
-      finalData.image = selectedImage.imageSrc;
-      if ('imageUrl' in finalData) {
-        delete finalData.imageUrl;
-      }
-    } else if (selectedImage.imageSrc) {
-      finalData.image = selectedImage.imageSrc;
+    if (catData.croppedImage) {
+      finalData.croppedImage = catData.croppedImage;
+      finalData.image = catData.image;
+    } else if (catData.image) {
+      finalData.image = catData.image;
       finalData.croppedImage = null;
-      if ('imageUrl' in finalData) {
-        delete finalData.imageUrl;
-      }
     } else if (
       catData.imageUrl &&
       catData.imageUrl !== 'string' &&
@@ -167,9 +161,6 @@ export default function CatInfo({
       finalData.image = null;
       finalData.croppedImage = null;
     } else {
-      if ('imageUrl' in finalData) {
-        delete finalData.imageUrl;
-      }
       finalData.image = null;
       finalData.croppedImage = null;
     }
