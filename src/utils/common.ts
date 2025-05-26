@@ -229,3 +229,7 @@ export const getCurrentDateInYYYYMMDD = () => {
   const date = today.getDate();
   return `${year}.${month}.${date}`;
 };
+
+export const getMemberToken = () => {
+  return getCookie('Authorization');
+};
