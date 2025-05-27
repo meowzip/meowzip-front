@@ -1,17 +1,13 @@
-import { fetchExtendedAuth } from '@/services/nickname';
-import { getCookie } from '@/utils/common';
+import { getAuthHeader } from '@/utils/common';
+import { fetchAuthJson } from '@/utils/fetch';
 
 export const getPushNotification = async () => {
   try {
-    const memberToken = getCookie('Authorization');
     const requestOptions = {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     };
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       '/members/notifications',
       requestOptions
     );
@@ -34,14 +30,11 @@ export const getPushNotification = async () => {
 
 export const togglePushNotificationOnServer = async () => {
   try {
-    const memberToken = getCookie('Authorization');
     const requestOptions = {
       method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     };
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       '/members/notifications',
       requestOptions
     );

@@ -2,15 +2,10 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
 import AppleProvider, { AppleProfile } from 'next-auth/providers/apple';
-import returnFetchJson from '@/utils/returnFetchJson';
 import { cookies } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
 import { parseCookieString } from '@/utils/common';
-
-const fetchExtended = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
-  headers: { Accept: 'application/json' }
-});
+import { fetchPublicJson } from '@/utils/fetch';
 
 const handler = NextAuth({
   providers: [
@@ -95,7 +90,7 @@ const signInOnServerWithSocial = async (reqObj: {
       credentials: 'include' as RequestCredentials
     };
 
-    const response = await fetchExtended('/members/login', requestOptions);
+    const response = await fetchPublicJson('/members/login', requestOptions);
     const token = response.headers.get('Authorization');
     const setCookies = response.headers.get('set-cookie');
     const parsedCookie = parseCookieString(setCookies || '');
@@ -141,7 +136,7 @@ const signUpOnServerWithSocialLogin = async (reqObj: {
       credentials: 'include' as RequestCredentials
     };
 
-    const response = await fetchExtended('/members/sign-up', requestOptions);
+    const response = await fetchPublicJson('/members/sign-up', requestOptions);
 
     if (response.status === 200) {
       await signInOnServerWithSocial({

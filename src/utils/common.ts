@@ -230,6 +230,7 @@ export const getCurrentDateInYYYYMMDD = () => {
   return `${year}.${month}.${date}`;
 };
 
-export const getMemberToken = () => {
-  return getCookie('Authorization');
+export const getAuthHeader = () => {
+  const token = getCookie('Authorization');
+  return token ? { Authorization: `Bearer ${token}` } : null;
 };

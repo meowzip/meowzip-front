@@ -1,13 +1,8 @@
-import returnFetchJson from '@/utils/returnFetchJson';
-
-const fetchExtended = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
-  headers: { Accept: 'application/json' }
-});
+import { fetchPublicJson } from '@/utils/fetch';
 
 export const checkMembershipByEmail = async (email: string) => {
   try {
-    const response = await fetchExtended(
+    const response = await fetchPublicJson(
       `/members/email-exists?email=${encodeURIComponent(email)}`,
       { method: 'GET' }
     );
@@ -34,7 +29,7 @@ export const signInOnServer = async (reqObj: {
       body: reqObj,
       credentials: 'include' as RequestCredentials
     };
-    const response = await fetchExtended('/members/login', requestOptions);
+    const response = await fetchPublicJson('/members/login', requestOptions);
     const token = response.headers.get('Authorization');
 
     if (token) {
@@ -57,7 +52,7 @@ export const sendPwdResetEmail = async (reqObj: { email: string }) => {
       headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await fetchExtended(
+    const response = await fetchPublicJson(
       '/members/send-password-reset-email',
       requestOptions
     );

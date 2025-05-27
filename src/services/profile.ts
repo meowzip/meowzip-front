@@ -1,18 +1,13 @@
-import { fetchExtended } from '@/services/cat';
-import { fetchExtendedAuth } from '@/services/signup';
-import { getCookie, objectToQueryString } from '@/utils/common';
+import { getAuthHeader, getCookie, objectToQueryString } from '@/utils/common';
+import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 
 export const getMyProfile = async () => {
   try {
-    const memberToken = getCookie('Authorization');
     const requestOptions = {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     };
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       '/profiles/my-profile',
       requestOptions
     );
@@ -41,21 +36,16 @@ export const getMyFeeds = async ({
   size: number;
 }) => {
   try {
-    const memberToken = getCookie('Authorization');
-
     const queryParams = new URLSearchParams({
       page: page.toString(),
       size: size.toString()
     });
 
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/profiles/posts?${queryParams.toString()}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
     if (response.body) {
@@ -80,21 +70,16 @@ export const getMyBookmarks = async ({
   size: number;
 }) => {
   try {
-    const memberToken = getCookie('Authorization');
-
     const queryParams = new URLSearchParams({
       page: page.toString(),
       size: size.toString()
     });
 
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/profiles/bookmarks?${queryParams.toString()}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
     if (response.body) {
@@ -117,15 +102,11 @@ export const getClickedUserProfile = async (memberId: number) => {
       'member-id': memberId.toString()
     });
 
-    const memberToken = getCookie('Authorization');
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       `/profiles?${queryParams.toString()}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
 
@@ -166,14 +147,11 @@ export const getOtherUserFeeds = async ({
       'member-id': memberId.toString()
     });
 
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       `/profiles/posts?${queryParams.toString()}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
     const responseBody = response.body as { items?: any[] };
@@ -192,16 +170,11 @@ type NotiSearchOption = {
 
 export const getNotifications = async ({ page, size }: NotiSearchOption) => {
   try {
-    const memberToken = getCookie('Authorization');
-
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/notifications?${objectToQueryString({ page, size })}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
     if (response.body) {
@@ -225,16 +198,11 @@ export const getCoParentNotifications = async ({
   size
 }: NotiSearchOption) => {
   try {
-    const memberToken = getCookie('Authorization');
-
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/notifications/co-parent?${objectToQueryString({ page, size })}`,
       {
         method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${memberToken}`
-        }
+        headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
     if (response.body) {
@@ -255,17 +223,10 @@ export const getCoParentNotifications = async ({
 
 export const readNotificationOnServer = async (notificationId: number) => {
   try {
-    const memberToken = getCookie('Authorization');
-
-    const response = await fetchExtendedAuth(
-      `/notifications/${notificationId}`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${memberToken}`
-        }
-      }
-    );
+    const response = await fetchAuthJson(`/notifications/${notificationId}`, {
+      method: 'PATCH',
+      headers: { Accept: 'application/json', ...getAuthHeader() }
+    });
 
     return response.body;
   } catch (error) {
@@ -280,13 +241,9 @@ export const readNotificationOnServer = async (notificationId: number) => {
 
 export const readAllNotificationOnServer = async () => {
   try {
-    const memberToken = getCookie('Authorization');
-
-    const response = await fetchExtendedAuth('/notifications', {
+    const response = await fetchAuthJson('/notifications', {
       method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     });
 
     return response.body;

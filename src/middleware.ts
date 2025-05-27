@@ -1,14 +1,6 @@
-import { cookies } from 'next/headers';
+import { fetchPublicJson } from '@/utils/fetch';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import returnFetchJson from '@/utils/returnFetchJson';
-
-const fetchExtended = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
-  headers: {
-    Accept: 'application/json'
-  }
-});
 
 const PROTECTED_ROUTES: string[] = [
   '/',
@@ -109,7 +101,7 @@ const refreshAccessToken = async (
   };
 
   try {
-    const response = await fetchExtended('/tokens/refresh', {
+    const response = await fetchPublicJson('/tokens/refresh', {
       method: 'POST',
       ...reqOptions
     });
