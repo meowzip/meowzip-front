@@ -1,13 +1,5 @@
-import returnFetchJson from '@/utils/returnFetchJson';
-import { getCookie, removeCookie } from '@/utils/common';
-
-export const fetchExtendedPublic = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
-  headers: { Accept: 'application/json' }
-});
-export const fetchExtendedAuth = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0'
-});
+import { getAuthHeader, removeCookie } from '@/utils/common';
+import { fetchAuthJson, fetchPublicJson } from '@/utils/fetch';
 
 export const signUpOnServer = async (reqObj: {
   email: string;
@@ -21,10 +13,7 @@ export const signUpOnServer = async (reqObj: {
       body: reqObj
     };
 
-    const response = await fetchExtendedPublic(
-      '/members/sign-up',
-      requestOptions
-    );
+    const response = await fetchPublicJson('/members/sign-up', requestOptions);
 
     return response.body;
   } catch (error) {
@@ -48,7 +37,7 @@ export const resetPwdOnServer = async (reqObj: {
       headers: { 'Content-Type': 'application/json' }
     };
 
-    const response = await fetchExtendedPublic(
+    const response = await fetchPublicJson(
       '/members/reset-password',
       requestOptions
     );
@@ -66,18 +55,11 @@ export const resetPwdOnServer = async (reqObj: {
 
 export const deleteAccountOnServer = async () => {
   try {
-    const memberToken = getCookie('Authorization');
     const requestOptions = {
       method: 'PATCH',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     };
-    const response = await fetchExtendedAuth(
-      '/members/withdraw',
-      requestOptions
-    );
+    const response = await fetchAuthJson('/members/withdraw', requestOptions);
     if (response.status === 200) {
       removeCookie('Authorization');
       location.replace('/signin');

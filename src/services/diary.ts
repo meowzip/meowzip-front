@@ -1,7 +1,10 @@
 import { DiaryRegisterReqObj } from '@/app/diary/diaryType';
-import { fetchExtended } from '@/services/cat';
-import { fetchExtendedForm, fetchExtendedAuth } from '@/services/nickname';
-import { base64ToFile, getCookie, objectToQueryString } from '@/utils/common';
+import {
+  base64ToFile,
+  getAuthHeader,
+  objectToQueryString
+} from '@/utils/common';
+import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 
 type DiarySearchOption = {
   page: number;
@@ -15,17 +18,13 @@ interface DiaryObj extends DiaryRegisterReqObj {
 }
 
 export const getDiaries = async (reqObj: DiarySearchOption) => {
-  const memberToken = getCookie('Authorization');
   const requestOptions = {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/diaries?${objectToQueryString(reqObj)}`,
       requestOptions
     );
@@ -53,7 +52,11 @@ export const getDiaries = async (reqObj: DiarySearchOption) => {
 };
 
 export const getDiaryDetail = async (id: number) => {
-  const response = await fetchExtendedAuth(`/diaries/${id}`);
+  const requestOptions = {
+    method: 'GET',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
+  };
+  const response = await fetchAuthJson(`/diaries/${id}`, requestOptions);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
@@ -81,11 +84,12 @@ export const registerDiaryOnServer = async (reqObj: DiaryRegisterReqObj) => {
 
   const requestOptions = {
     method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
     body: formData
   };
 
   try {
-    const response = await fetchExtendedForm('/diaries', requestOptions);
+    const response = await fetchAuth('/diaries', requestOptions);
 
     const data = await response.json();
     return data;
@@ -100,16 +104,12 @@ export const registerDiaryOnServer = async (reqObj: DiaryRegisterReqObj) => {
 };
 
 export const getDiariesByMonth = async (date: Date) => {
-  const memberToken = getCookie('Authorization');
   const requestOptions = {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  const response = await fetchExtendedAuth(
+  const response = await fetchAuthJson(
     `/diaries/monthly?year=${date.getFullYear()}&month=${date.getMonth() + 1}`,
     requestOptions
   );
@@ -131,11 +131,12 @@ const filterCaredDiaries = (diaries: any) => {
 
 export const deleteDiaryOnServer = async (id: number) => {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(`/diaries/${id}`, requestOptions);
+    const response = await fetchAuth(`/diaries/${id}`, requestOptions);
 
     const data = await response.json();
     return data;
@@ -172,14 +173,12 @@ export const editDiaryOnServer = async (reqObj: {
 
   const requestOptions = {
     method: 'PATCH',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
     body: formData
   };
 
   try {
-    const response = await fetchExtendedForm(
-      `/diaries/${reqObj.id}`,
-      requestOptions
-    );
+    const response = await fetchAuth(`/diaries/${reqObj.id}`, requestOptions);
 
     const data = await response.json();
     return data;

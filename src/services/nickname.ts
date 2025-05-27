@@ -1,22 +1,16 @@
-import returnFetch from '@/utils/returnFetch';
-import returnFetchJson from '@/utils/returnFetchJson';
-import { getCookie } from '@/utils/common';
+import { getAuthHeader } from '@/utils/common';
 import { base64ToFile } from '@/utils/common';
-
-const memberToken = getCookie('Authorization');
-
-export const fetchExtendedAuth = returnFetchJson({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0',
-  headers: {
-    Accept: 'application/json',
-    Authorization: `Bearer ${memberToken}`
-  }
-});
+import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 
 export const validateNicknameOnServer = async (nickname: string) => {
   try {
-    const response = await fetchExtendedAuth(
-      `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`
+    const requestOptions = {
+      method: 'GET',
+      headers: { Accept: 'application/json', ...getAuthHeader() }
+    };
+    const response = await fetchAuthJson(
+      `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`,
+      requestOptions
     );
 
     return response.body;
@@ -29,11 +23,6 @@ export const validateNicknameOnServer = async (nickname: string) => {
     }
   }
 };
-
-export const fetchExtendedForm = returnFetch({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0',
-  headers: { Authorization: `Bearer ${memberToken}` }
-});
 
 export const updateProfileOnServer = async (reqObj: {
   nickname?: string;
@@ -57,10 +46,14 @@ export const updateProfileOnServer = async (reqObj: {
     }
   }
 
-  const requestOptions = { method: 'PATCH', body: formData };
+  const requestOptions = {
+    method: 'PATCH',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
+    body: formData
+  };
 
   try {
-    const response = await fetchExtendedForm('/members', requestOptions);
+    const response = await fetchAuth('/members', requestOptions);
     const data = await response.json();
     return data;
   } catch (error) {

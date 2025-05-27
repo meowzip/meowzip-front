@@ -1,6 +1,9 @@
-import { fetchExtended } from '@/services/cat';
-import { fetchExtendedForm, fetchExtendedAuth } from '@/services/nickname';
-import { base64ToFile, getCookie, objectToQueryString } from '@/utils/common';
+import {
+  base64ToFile,
+  getAuthHeader,
+  objectToQueryString
+} from '@/utils/common';
+import { fetchAuth } from '@/utils/fetch';
 
 type FeedSearchOption = {
   page: number;
@@ -8,17 +11,13 @@ type FeedSearchOption = {
 };
 
 export const getFeedsOnServer = async ({ page, size }: FeedSearchOption) => {
-  const memberToken = getCookie('Authorization');
   const requestOptions = {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/community?${objectToQueryString({ page, size })}`,
       requestOptions
     );
@@ -41,15 +40,11 @@ export const getFeedsOnServer = async ({ page, size }: FeedSearchOption) => {
 };
 
 export const getFeedDetail = async (id: number) => {
-  const memberToken = getCookie('Authorization');
   const requestOptions = {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
-  const response = await fetchExtended(`/community/${id}`, requestOptions);
+  const response = await fetchAuth(`/community/${id}`, requestOptions);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
@@ -60,14 +55,12 @@ export const getFeedDetail = async (id: number) => {
 
 export const deleteFeedOnServer = async (id: number) => {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
-      `/community/${id}`,
-      requestOptions
-    );
+    const response = await fetchAuth(`/community/${id}`, requestOptions);
 
     const data = await response.json();
     return data;
@@ -84,12 +77,12 @@ export const deleteFeedOnServer = async (id: number) => {
 export const blockWriterOnServer = async (postId: number) => {
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { Accept: 'application/json', ...getAuthHeader() },
     body: JSON.stringify({ postId })
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/block-writer`,
       requestOptions
     );
@@ -108,11 +101,12 @@ export const blockWriterOnServer = async (postId: number) => {
 
 export const reportFeedOnServer = async (postId: number) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/report`,
       requestOptions
     );
@@ -133,7 +127,6 @@ export const registerFeedOnServer = async (reqObj: {
   content: string;
   images: string[];
 }) => {
-  const memberToken = getCookie('Authorization');
   const { images, content } = reqObj;
   const formData = new FormData();
   formData.append(
@@ -152,15 +145,12 @@ export const registerFeedOnServer = async (reqObj: {
 
   const requestOptions = {
     method: 'POST',
-    body: formData,
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() },
+    body: formData
   };
 
   try {
-    const response = await fetchExtendedForm('/community', requestOptions);
+    const response = await fetchAuth('/community', requestOptions);
 
     const data = await response.json();
     return data;
@@ -199,14 +189,12 @@ export const editFeedOnServer = async (reqObj: {
 
   const requestOptions = {
     method: 'PATCH',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
     body: formData
   };
 
   try {
-    const response = await fetchExtendedForm(
-      `/community/${reqObj.id}`,
-      requestOptions
-    );
+    const response = await fetchAuth(`/community/${reqObj.id}`, requestOptions);
 
     const data = await response.json();
     return data;
@@ -222,11 +210,12 @@ export const editFeedOnServer = async (reqObj: {
 
 export const toggleLikeFeedOnServer = async (postId: number) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/like`,
       requestOptions
     );
@@ -245,11 +234,12 @@ export const toggleLikeFeedOnServer = async (postId: number) => {
 
 export const toggleBookmarkOnServer = async (postId: number) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/bookmark`,
       requestOptions
     );
@@ -267,17 +257,13 @@ export const toggleBookmarkOnServer = async (postId: number) => {
 };
 
 export const getFeedComments = async (postId: number) => {
-  const memberToken = getCookie('Authorization');
   const requestOptions = {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      Authorization: `Bearer ${memberToken}`
-    }
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/community/${postId}/comments`,
       requestOptions
     );
@@ -307,12 +293,12 @@ export const registerCommentOnServer = async (reqObj: {
 
   const requestOptions = {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
     body: JSON.stringify(reqParams)
   };
 
   try {
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/community/${reqObj.postId}/comments`,
       requestOptions
     );
@@ -337,11 +323,12 @@ export const deleteCommentOnServer = async ({
   commentId: number;
 }) => {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/comments/${commentId}`,
       requestOptions
     );
@@ -359,11 +346,12 @@ export const deleteCommentOnServer = async ({
 };
 export const blockCommentWriterOnServer = async (postId: number) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/block-writer`,
       requestOptions
     );
@@ -388,11 +376,12 @@ export const reportCommentOnServer = async ({
   commentId: number;
 }) => {
   const requestOptions = {
-    method: 'POST'
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedForm(
+    const response = await fetchAuth(
       `/community/${postId}/comments/${commentId}/report`,
       requestOptions
     );

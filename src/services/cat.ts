@@ -1,16 +1,8 @@
 import { DiaryObj } from '@/app/diary/diaryType';
-import returnFetch from '@/utils/returnFetch';
-import { base64ToFile } from '@/utils/common';
-import { getCookie } from '@/utils/common';
+import { base64ToFile, getAuthHeader } from '@/utils/common';
 import { objectToQueryString } from '@/utils/common';
-import { fetchExtendedAuth } from '@/services/nickname';
 import { CatObjType, CoParent } from '@/app/zip/catType';
-
-const memberToken = getCookie('Authorization');
-export const fetchExtended = returnFetch({
-  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0',
-  headers: { Authorization: `Bearer ${memberToken}` }
-});
+import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 
 export const registerCat = async (
   catDataObj: CatObjType & {
@@ -35,7 +27,11 @@ export const registerCat = async (
         type: 'application/json'
       })
     );
-    return fetchExtended('/cats', { method: 'POST', body: formData });
+    return fetchAuth('/cats', {
+      method: 'POST',
+      headers: { Accept: 'application/json', ...getAuthHeader() },
+      body: formData
+    });
   }
 
   // 사용자 업로드 이미지인 경우
@@ -67,7 +63,7 @@ export const registerCat = async (
     console.log('업로드할 이미지 없음');
   }
 
-  return fetchExtended('/cats', { method: 'POST', body: formData });
+  return fetchAuth('/cats', { method: 'POST', body: formData });
 };
 
 export const editCat = async (
@@ -102,10 +98,14 @@ export const editCat = async (
     if (file) formData.append('image', file);
   }
 
-  const requestOptions = { method: 'PATCH', body: formData };
+  const requestOptions = {
+    method: 'PATCH',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
+    body: formData
+  };
 
   try {
-    const response = await fetchExtended(`/cats/${id}`, requestOptions);
+    const response = await fetchAuth(`/cats/${id}`, requestOptions);
     return response;
   } catch (error) {
     console.error(error);
@@ -129,15 +129,11 @@ export const getCatsOnServer = async ({
   memberId
 }: CatSearchOption) => {
   try {
-    const memberToken = getCookie('Authorization');
     const requestOptions = {
       method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${memberToken}`
-      }
+      headers: { Accept: 'application/json', ...getAuthHeader() }
     };
-    const response = await fetchExtended(
+    const response = await fetchAuth(
       `/cats?${objectToQueryString({ page, size, 'member-id': memberId ?? '' })}`,
       requestOptions
     );
@@ -160,7 +156,12 @@ export const getCatsOnServer = async ({
 
 export const getCatDetail = async (id: number) => {
   try {
-    const response = await fetchExtendedAuth(`/cats/${id}`);
+    const requestOptions = {
+      method: 'GET',
+      headers: { Accept: 'application/json', ...getAuthHeader() }
+    };
+
+    const response = await fetchAuthJson(`/cats/${id}`, requestOptions);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -183,11 +184,12 @@ export const requestCoParenting = async (reqObj: {
 }) => {
   const requestOptions = {
     method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
     body: reqObj
   };
 
   try {
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       '/cats/co-parents/request',
       requestOptions
     );
@@ -205,9 +207,12 @@ export const requestCoParenting = async (reqObj: {
 
 export const acceptCoParenting = async (coParentId: number) => {
   try {
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       `/cats/co-parents/${coParentId}/accept`,
-      { method: 'POST' }
+      {
+        method: 'POST',
+        headers: { Accept: 'application/json', ...getAuthHeader() }
+      }
     );
 
     return response.body;
@@ -223,9 +228,12 @@ export const acceptCoParenting = async (coParentId: number) => {
 
 export const rejectCoParenting = async (coParentId: number) => {
   try {
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       `/cats/co-parents/${coParentId}/reject`,
-      { method: 'POST' }
+      {
+        method: 'POST',
+        headers: { Accept: 'application/json', ...getAuthHeader() }
+      }
     );
 
     return response.body;
@@ -241,7 +249,10 @@ export const rejectCoParenting = async (coParentId: number) => {
 
 export const getCoParentCat = async (coParentId: number) => {
   try {
-    const response = await fetchExtended(`/cats/co-parents/${coParentId}`);
+    const response = await fetchAuth(`/cats/co-parents/${coParentId}`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', ...getAuthHeader() }
+    });
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -266,8 +277,12 @@ type CoParentsSearchOption = {
 
 export const getCoParents = async (reqObj: CoParentsSearchOption) => {
   try {
-    const response = await fetchExtended(
-      `/cats/co-parents/members?${objectToQueryString(reqObj)}`
+    const response = await fetchAuth(
+      `/cats/co-parents/members?${objectToQueryString(reqObj)}`,
+      {
+        method: 'GET',
+        headers: { Accept: 'application/json', ...getAuthHeader() }
+      }
     );
     if (response.body) {
       const responseBody = await response.text();
@@ -288,11 +303,12 @@ export const cancelCoParenting = async (reqObj: {
   memberId: number;
 }) => {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtendedAuth(
+    const response = await fetchAuthJson(
       `/cats/co-parents/cancel?cat-id=${reqObj.catId}&requested-member-id=${reqObj.memberId}`,
       requestOptions
     );
@@ -310,11 +326,12 @@ export const cancelCoParenting = async (reqObj: {
 
 export const deleteCat = async (id: number) => {
   const requestOptions = {
-    method: 'DELETE'
+    method: 'DELETE',
+    headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
   try {
-    const response = await fetchExtended(`/cats/${id}`, requestOptions);
+    const response = await fetchAuth(`/cats/${id}`, requestOptions);
     return response.body;
   } catch (error) {
     console.error(error);
