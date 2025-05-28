@@ -80,50 +80,48 @@ export default function SearchCatModal({
   if (isError) throw error;
 
   return (
-    <article className="w-screen bg-gr-white">
-      <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
-        <Topbar type="search" className="justify-start">
-          <Topbar.Back onClick={closeCurrentModal} />
-          <Topbar.SearchInput onChange={handleOnChange} />
-        </Topbar>
-        <ul className="mx-auto flex max-w-[640px] flex-col gap-2 px-4 py-2 pt-12">
-          {catList ? (
-            <>
-              {catList?.map((cat: CatType) => (
-                <li
-                  key={cat.id}
-                  className="flex items-center gap-4 py-2"
-                  onClick={() => selectCat(cat)}
-                >
+    <div className="fixed left-0 top-0 z-[50] h-screen w-full overflow-y-auto bg-gr-white">
+      <Topbar type="search" className="justify-start">
+        <Topbar.Back onClick={closeCurrentModal} />
+        <Topbar.SearchInput onChange={handleOnChange} />
+      </Topbar>
+      <ul className="mx-auto flex max-w-[640px] flex-col gap-2 px-4 py-2 pt-12">
+        {catList ? (
+          <>
+            {catList?.map((cat: CatType) => (
+              <li
+                key={cat.id}
+                className="flex items-center gap-4 py-2"
+                onClick={() => selectCat(cat)}
+              >
+                <Image
+                  src={cat.imageUrl}
+                  alt="cat-image"
+                  width={48}
+                  height={48}
+                  className="h-12 w-12 rounded-full"
+                />
+                <div className="flex gap-2">
+                  <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
                   <Image
-                    src={cat.imageUrl}
-                    alt="cat-image"
-                    width={48}
-                    height={48}
-                    className="h-12 w-12 rounded-full"
+                    src={`/images/icons/gender-${cat.sex}.svg`}
+                    alt="cat-gender"
+                    width={16}
+                    height={16}
+                    className={`rounded-full ${
+                      cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
+                    }`}
                   />
-                  <div className="flex gap-2">
-                    <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
-                    <Image
-                      src={`/images/icons/gender-${cat.sex}.svg`}
-                      alt="cat-gender"
-                      width={16}
-                      height={16}
-                      className={`rounded-full ${
-                        cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
-                      }`}
-                    />
-                  </div>
-                </li>
-              ))}
-              {/* 무한 스크롤 감지 영역 */}
-              <div ref={ref} className="h-20 bg-transparent" />
-            </>
-          ) : (
-            <div>고양이가 없습니다.</div>
-          )}
-        </ul>
-      </div>
-    </article>
+                </div>
+              </li>
+            ))}
+            {/* 무한 스크롤 감지 영역 */}
+            <div ref={ref} className="h-20 bg-transparent" />
+          </>
+        ) : (
+          <div>고양이가 없습니다.</div>
+        )}
+      </ul>
+    </div>
   );
 }
