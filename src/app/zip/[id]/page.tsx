@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { deleteCat, getCatDetail } from '@/services/cat';
 import { useQuery } from '@tanstack/react-query';
 import { useToast } from '@/components/ui/hooks/useToast';
+import CatDetailSkeleton from '@/components/zip/CatDetailSkeleton';
 
 const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
@@ -37,7 +38,7 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
 
   const { toast } = useToast();
 
-  if (isLoading) return <div>로딩중</div>;
+  if (isLoading) return <CatDetailSkeleton />;
   if (isError) throw error;
 
   return (
