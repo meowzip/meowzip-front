@@ -12,6 +12,7 @@ const ZipDetailCatCard = ({ ...props }: CatBaseType) => {
         alt="zip-card"
         width={380}
         height={380}
+        className="w-full"
       />
       <div className="rounded-b-16 bg-gr-white px-6">
         <div className="flex flex-col items-center justify-center gap-1 pb-4 pt-2">
