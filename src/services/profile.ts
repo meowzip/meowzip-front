@@ -139,7 +139,6 @@ export const getOtherUserFeeds = async ({
   memberId: number;
 }) => {
   try {
-    const memberToken = getCookie('Authorization');
     const queryParams = new URLSearchParams({
       page: page.toString(),
       size: size.toString(),
