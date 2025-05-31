@@ -56,13 +56,23 @@ export const getDiaryDetail = async (id: number) => {
     method: 'GET',
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
-  const response = await fetchAuthJson(`/diaries/${id}`, requestOptions);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
 
-  const data = (response.body as any).data;
-  return data;
+  try {
+    const response = await fetchAuthJson(`/diaries/${id}`, requestOptions);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = (response.body as any).data;
+    return data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('일지 상세 조회 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('일지 상세 조회 중 오류 발생:');
+    }
+  }
 };
 
 export const registerDiaryOnServer = async (reqObj: DiaryRegisterReqObj) => {
@@ -109,20 +119,28 @@ export const getDiariesByMonth = async (date: Date) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  const response = await fetchAuthJson(
-    `/diaries/monthly?year=${date.getFullYear()}&month=${date.getMonth() + 1}`,
-    requestOptions
-  );
-  if (!response.ok) return [];
+  try {
+    const response = await fetchAuthJson(
+      `/diaries/monthly?year=${date.getFullYear()}&month=${date.getMonth() + 1}`,
+      requestOptions
+    );
+    if (!response.ok) return [];
+    if (typeof response.body !== 'object') {
+      console.error('fetchAuthJson에서 예상치 못한 응답 형식입니다.');
+      return [];
+    }
 
-  if (typeof response.body !== 'object') {
-    console.error('fetchExtendedAuth에서 예상치 못한 응답 형식입니다.');
-    return [];
+    const data = (response.body as any).items || [];
+    const filterCaredDiariesData = filterCaredDiaries(data);
+    return filterCaredDiariesData;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('일지 월별 조회 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('일지 월별 조회 중 오류 발생:');
+    }
   }
-
-  const data = (response.body as any).items || [];
-  const filterCaredDiariesData = filterCaredDiaries(data);
-  return filterCaredDiariesData;
 };
 
 const filterCaredDiaries = (diaries: any) => {

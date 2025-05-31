@@ -12,6 +12,9 @@ export const validateNicknameOnServer = async (nickname: string) => {
       `/members/validate-nickname?nickname=${encodeURIComponent(nickname)}`,
       requestOptions
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {

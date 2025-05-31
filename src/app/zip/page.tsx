@@ -17,7 +17,7 @@ const ZipPage = () => {
     rootMargin: '100px'
   });
 
-  const [selectedModalId, setSelectedModalId] = useState<number | null>(null);
+  const [, setSelectedModalId] = useState<number | null>(null);
 
   const {
     data: catList,

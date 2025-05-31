@@ -11,14 +11,12 @@ export const getPushNotification = async () => {
       '/members/notifications',
       requestOptions
     );
-
-    const isSuccess = (response.body as any).status;
-    if (isSuccess) {
-      const data = (response.body as any).data;
-      return data;
-    } else {
-      throw new Error('푸시 알람 여부 조회 중 오류 발생:');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+
+    const data = (response.body as any).data;
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('푸시 알람 여부 조회 중 오류 발생:' + error.message);
@@ -38,6 +36,9 @@ export const togglePushNotificationOnServer = async () => {
       '/members/notifications',
       requestOptions
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {

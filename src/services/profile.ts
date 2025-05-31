@@ -11,14 +11,12 @@ export const getMyProfile = async () => {
       '/profiles/my-profile',
       requestOptions
     );
-
-    const isSuccess = (response.body as any).status;
-    if (isSuccess) {
-      const data = (response.body as any).data;
-      return data;
-    } else {
-      throw new Error('내 프로필 조회 중 오류 발생:');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+
+    const data = (response.body as any).data;
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('내 프로필 조회 중 오류 발생:' + error.message);
@@ -109,15 +107,12 @@ export const getClickedUserProfile = async (memberId: number) => {
         headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
-
-    const responseBody = response.body as any;
-    const isSuccess = responseBody.status;
-
-    if (isSuccess) {
-      return responseBody.data;
-    } else {
-      throw new Error('사용자 프로필 조회 중 오류 발생');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+
+    const data = (response.body as any).data;
+    return data;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('사용자 프로필 조회 중 오류 발생: ' + error.message);
@@ -139,7 +134,6 @@ export const getOtherUserFeeds = async ({
   memberId: number;
 }) => {
   try {
-    const memberToken = getCookie('Authorization');
     const queryParams = new URLSearchParams({
       page: page.toString(),
       size: size.toString(),
@@ -156,6 +150,13 @@ export const getOtherUserFeeds = async ({
     );
     const responseBody = response.body as { items?: any[] };
     return responseBody?.items;
+    // if (response.body) {
+    //   const responseBody = await response.text();
+    //   const parsedBody = JSON.parse(responseBody);
+    //   return parsedBody;
+    // } else {
+    //   throw new Error('응답 본문이 없습니다.');
+    // }
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('내 피드 조회 중 오류 발생: ' + error.message);
