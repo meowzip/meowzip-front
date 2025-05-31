@@ -193,6 +193,9 @@ export const requestCoParenting = async (reqObj: {
       '/cats/co-parents/request',
       requestOptions
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {
@@ -214,6 +217,9 @@ export const acceptCoParenting = async (coParentId: number) => {
         headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {
@@ -235,6 +241,9 @@ export const rejectCoParenting = async (coParentId: number) => {
         headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {
@@ -312,6 +321,9 @@ export const cancelCoParenting = async (reqObj: {
       `/cats/co-parents/cancel?cat-id=${reqObj.catId}&requested-member-id=${reqObj.memberId}`,
       requestOptions
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
     return response.body;
   } catch (error) {
