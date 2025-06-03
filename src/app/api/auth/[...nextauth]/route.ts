@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
-import AppleProvider, { AppleProfile } from 'next-auth/providers/apple';
+import AppleProvider from 'next-auth/providers/apple';
 import { cookies } from 'next/headers';
 import { checkMembershipByEmail } from '@/services/signin';
 import { parseCookieString } from '@/utils/common';
