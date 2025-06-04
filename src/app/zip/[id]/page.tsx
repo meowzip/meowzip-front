@@ -12,7 +12,6 @@ import { CoParent } from '@/app/zip/catType';
 import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
 import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
 import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
-import { Toaster } from '@/components/ui/Toaster';
 import Link from 'next/link';
 import { deleteCat, getCatDetail } from '@/services/cat';
 import { useQuery } from '@tanstack/react-query';
@@ -125,7 +124,6 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
           catId={catDetail.id}
         />
       )}
-      <Toaster />
     </>
   );
 };
