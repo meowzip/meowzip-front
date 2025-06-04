@@ -1,11 +1,13 @@
 import AlarmMessage from '@/components/profile/AlarmMessage';
 import CoParentButton from '@/components/profile/CoParentButton';
 import { useToast } from '@/components/ui/hooks/useToast';
-import { Toaster } from '@/components/ui/Toaster';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { readNotificationOnServer } from '@/services/profile';
+import {
+  readNotificationOnServer,
+  validateNotification
+} from '@/services/profile';
 import { useMutation } from '@tanstack/react-query';
 import { AlarmType } from '@/app/profile/alarm/page';
 
@@ -34,7 +36,12 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
     setShowMessage(true);
     router.push(link);
   };
-  const readAlarm = (link: string, id: number, type = 'UNDEFINED') => {
+
+  const readAlarm = async (link: string, id: number, type = 'UNDEFINED') => {
+    const { isValid, message } = await validateNotification(id);
+    if (!isValid) {
+      return toast({ description: message });
+    }
     if (type === 'REQUEST') return;
     router.push(link);
     readNotification.mutate({ id, type });
@@ -98,7 +105,6 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
           </div>
         )}
       </div>
-      <Toaster />
       {showMessage && <AlarmMessage />}
     </>
   );

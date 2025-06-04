@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import SettingCard from '@/components/setting/SettingCard';
 import { Switch } from '@/components/ui/Switch';
 import { deleteAccountOnServer } from '@/services/signup';
-import { Toaster } from '@/components/ui/Toaster';
 import { useToast } from '@/components/ui/hooks/useToast';
 import { TermsType } from '@/constants/general';
 import { signOut } from 'next-auth/react';
@@ -123,7 +122,6 @@ const SettingPage = () => {
             <p>meowzzip@gmail.com으로 보내주세요</p>
           </section>
         </div>
-        <Toaster />
         <TermsModal open={termsModal} onClose={() => setTermsModal('')} />
         <LogoutModal
           open={logOutModal}
