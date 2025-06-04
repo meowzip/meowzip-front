@@ -267,8 +267,12 @@ export const validateNotification = async (notificationId: number) => {
         headers: { Accept: 'application/json', ...getAuthHeader() }
       }
     );
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
 
-    return response.body;
+    const data = await response.json();
+    return data.data;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
