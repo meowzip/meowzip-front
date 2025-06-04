@@ -257,3 +257,24 @@ export const readAllNotificationOnServer = async () => {
     }
   }
 };
+
+export const validateNotification = async (notificationId: number) => {
+  try {
+    const response = await fetchAuth(
+      `/notifications/${notificationId}/validate`,
+      {
+        method: 'GET',
+        headers: { Accept: 'application/json', ...getAuthHeader() }
+      }
+    );
+
+    return response.body;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof Error) {
+      throw new Error('알림 유효성 검사 중 오류 발생:' + error.message);
+    } else {
+      throw new Error('알림 유효성 검사 중 오류 발생:');
+    }
+  }
+};
