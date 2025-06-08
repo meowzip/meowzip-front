@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import BottomNavBar from '@/components/ui/BottomNavBar';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
@@ -22,6 +22,19 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
   const pathname = usePathname();
   const showBottomNav = pathsWithNav.some(p => p === pathname);
   const fabHref = fabLinkMap[pathname];
+  const [showNavAnimation, setShowNavAnimation] = useState(false);
+
+  useEffect(() => {
+    if (showBottomNav) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setShowNavAnimation(true);
+        });
+      });
+    } else {
+      setShowNavAnimation(false);
+    }
+  }, [showBottomNav]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -61,7 +74,9 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
       <main className="relative overflow-y-auto bg-gr-100">{children}</main>
       {fabHref && <FloatingActionButton href={fabHref} />}
       {showBottomNav && (
-        <div className="absolute bottom-0 z-[100] w-full">
+        <div
+          className={`absolute bottom-0 z-[100] w-full transition-transform duration-300 ${showNavAnimation ? 'translate-y-0' : 'translate-y-full'}`}
+        >
           <BottomNavBar />
         </div>
       )}
