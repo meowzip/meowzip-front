@@ -25,7 +25,9 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
   const onClickCoParentBtn = (
     isExpired: boolean,
     isResponded: boolean,
-    link: string
+    link: string,
+    id: number,
+    type: string
   ) => {
     if (isExpired) {
       return toast({
@@ -41,6 +43,7 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
     }
     setShowMessage(true);
     router.push(link);
+    readNotification.mutate({ id, type });
   };
 
   const readAlarm = async (link: string, id: number, type = 'UNDEFINED') => {
@@ -48,7 +51,7 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
     if (!isValid) {
       return toast({ description: message, duration: 1000 });
     }
-    if (type === 'REQUEST') return;
+    if (type === 'COPARENT_REQUEST') return;
     router.push(link);
     readNotification.mutate({ id, type });
   };
@@ -99,11 +102,12 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
           <div className="pt-2">
             <CoParentButton
               onClick={() => {
-                readNotification.mutate({ id: alarm.id, type: 'REQUEST' });
                 onClickCoParentBtn(
                   !!alarm.isExpired,
                   !!alarm.isResponded,
-                  alarm.link
+                  alarm.link,
+                  alarm.id,
+                  alarm.type
                 );
               }}
               isRead={alarm.isRead}
