@@ -60,7 +60,8 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
             onClick: () => {
               if (catDetail.coParents.length === 0) {
                 toast({
-                  description: '공동집사가 없습니다.'
+                  description: '공동집사가 없습니다.',
+                  duration: 1000
                 });
                 return;
               }
