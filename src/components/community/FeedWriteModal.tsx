@@ -134,7 +134,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
         />
       </Topbar>
       <div className="mx-auto h-full max-w-[640px] bg-gr-white pb-28 pt-12">
-        <article className="p-4 pt-14">
+        <article className="p-4">
           <Textarea
             propObj={{
               placeholder: '사람들과 나누고 싶은 일들을 공유해보세요!',
