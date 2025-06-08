@@ -9,11 +9,13 @@ import { useQuery } from '@tanstack/react-query';
 import { getFeedDetail } from '@/services/community';
 import Topbar from '@/components/ui/Topbar';
 import FeedWriteModalSkeleton from '@/components/community/FeedWriteModalSkeleton';
+import { useModalAnimation } from '@/hooks/useModalAnimation';
 
 export default function InterceptedDiaryWriteModal() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const setIsModalActive = useSetAtom(isModalActiveAtom);
+  const { handleClose: animatedClose, animationClasses } = useModalAnimation();
 
   const editId = searchParams.get('edit');
   const feedId = editId ? parseInt(editId, 10) : undefined;
@@ -37,20 +39,24 @@ export default function InterceptedDiaryWriteModal() {
     staleTime: 0
   });
 
-  const handleClose = () => {
-    router.back();
-  };
-
   if (isLoading && feedId) {
-    return <FeedWriteModalSkeleton />;
+    return (
+      <div
+        className={`fixed left-1/2 top-0 z-50 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white ${animationClasses}`}
+      >
+        <FeedWriteModalSkeleton />
+      </div>
+    );
   }
 
   if (isError) {
     console.error('피드 상세 정보 조회 오류:', error);
     return (
-      <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-white">
+      <div
+        className={`fixed left-1/2 top-0 z-50 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white ${animationClasses}`}
+      >
         <Topbar type="one">
-          <Topbar.Back onClick={handleClose} />
+          <Topbar.Back onClick={animatedClose} />
           <Topbar.Title title="오류" />
         </Topbar>
         <div className="pt-14 text-center">
@@ -60,5 +66,11 @@ export default function InterceptedDiaryWriteModal() {
     );
   }
 
-  return <FeedWriteModal onClose={handleClose} feedDetail={feedDetail} />;
+  return (
+    <div
+      className={`fixed left-1/2 top-0 z-50 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white ${animationClasses}`}
+    >
+      <FeedWriteModal onClose={animatedClose} feedDetail={feedDetail} />
+    </div>
+  );
 }
