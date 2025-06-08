@@ -28,10 +28,16 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
     link: string
   ) => {
     if (isExpired) {
-      return toast({ description: '요청 수락 기간이 지난 메시지입니다.' });
+      return toast({
+        description: '요청 수락 기간이 지난 메시지입니다.',
+        duration: 1000
+      });
     }
     if (isResponded) {
-      return toast({ description: '이미 응답한 메시지입니다.' });
+      return toast({
+        description: '이미 응답한 메시지입니다.',
+        duration: 1000
+      });
     }
     setShowMessage(true);
     router.push(link);
@@ -40,7 +46,7 @@ const AlarmList = ({ alarm, refetch }: AlarmListProps) => {
   const readAlarm = async (link: string, id: number, type = 'UNDEFINED') => {
     const { isValid, message } = await validateNotification(id);
     if (!isValid) {
-      return toast({ description: message });
+      return toast({ description: message, duration: 1000 });
     }
     if (type === 'REQUEST') return;
     router.push(link);
