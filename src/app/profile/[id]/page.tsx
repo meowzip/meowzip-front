@@ -9,8 +9,6 @@ import Button from '@/components/ui/Button';
 import { FeedType } from '@/types/communityType';
 import FeedCard from '@/components/community/FeedCard';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
-import OtherMemberZipModal from '@/components/zip/OtherMemberZipModal';
-import { useState } from 'react';
 import ProfileSkeleton from '@/components/profile/ProfileSkeleton';
 import ProfileFeedSkeleton from '@/components/profile/ProfileFeedSkeleton';
 import RightIcon from '../../../../public/images/icons/right.svg';
@@ -18,8 +16,6 @@ import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 
 const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
-
-  const [showZipModal, setShowZipModal] = useState(false);
 
   const feedReqObj = {
     page: 0,
@@ -94,7 +90,7 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
         <article className="flex items-center justify-between px-4 py-3">
           <div className="text-heading-4 text-gr-900">피드</div>
           <Button
-            onClick={() => setShowZipModal(true)}
+            onClick={() => router.push(`/profile/${id}/zip`)}
             className="h-[28px] rounded-16 bg-gr-50 py-2 pl-3 pr-[6px]"
           >
             <Button.Text
@@ -122,13 +118,6 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
           )}
         </article>
       </section>
-      {showZipModal && (
-        <OtherMemberZipModal
-          onClose={() => setShowZipModal(false)}
-          memberId={id}
-          memberName={othersProfile.nickname}
-        />
-      )}
     </>
   );
 };
