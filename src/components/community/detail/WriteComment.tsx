@@ -15,7 +15,7 @@ export default function WriteComment({
   onCancel?: () => void;
 }) {
   const [comment, setComment] = useState('');
-  const { registerComment } = useCommentMutation();
+  const { registerComment, isRegisteringComment } = useCommentMutation();
   const { data: myProfile, isError, error } = useMyProfileQuery();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -32,14 +32,23 @@ export default function WriteComment({
     textarea.style.height = `${textarea.scrollHeight}px`;
   };
 
-  const handleSubmit = () => {
-    if (!comment.trim()) return;
-    registerComment({ feedId, comment, parentCommentId: parentCommentId ?? 0 });
-    setComment('');
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
+  const handleSubmit = async () => {
+    if (!comment.trim() || isRegisteringComment) return;
+
+    try {
+      await registerComment({
+        feedId,
+        comment,
+        parentCommentId: parentCommentId ?? 0
+      });
+      setComment('');
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
+      if (onCancel) onCancel();
+    } catch (error) {
+      console.error('댓글 등록 실패:', error);
     }
-    if (onCancel) onCancel();
   };
 
   if (isError) throw error;
@@ -52,7 +61,11 @@ export default function WriteComment({
             <div className="h-4 w-1 rounded-full bg-pr-500" />
             <span className="text-body-3 text-gr-600">답글 작성 중</span>
           </div>
-          <button onClick={onCancel} className="flex items-center text-gr-600">
+          <button
+            onClick={onCancel}
+            className="flex items-center text-gr-600"
+            disabled={isRegisteringComment}
+          >
             <IoClose size={20} />
           </button>
         </div>
@@ -76,17 +89,29 @@ export default function WriteComment({
             placeholder={
               parentCommentId ? '답글을 남겨주세요.' : '댓글을 남겨주세요.'
             }
-            className="w-full flex-1 resize-none overflow-y-hidden rounded-md bg-gr-50 px-3 py-3 pr-16 text-base text-body-2 focus:outline-none"
+            className={`w-full flex-1 resize-none overflow-y-hidden rounded-md bg-gr-50 px-3 py-3 pr-16 text-base text-body-2 focus:outline-none ${
+              isRegisteringComment ? 'opacity-50' : ''
+            }`}
             rows={1}
+            disabled={isRegisteringComment}
           />
           <Button
             onClick={handleSubmit}
-            disabled={!comment.trim()}
-            className={`absolute right-4 top-1/2 flex -translate-y-1/2 items-center justify-center text-sm font-medium ${
-              comment.trim() ? 'text-pr-500' : 'text-gr-400'
+            disabled={!comment.trim() || isRegisteringComment}
+            className={`absolute right-3 top-1/2 flex h-8 w-12 -translate-y-1/2 items-center justify-center rounded text-sm font-medium ${
+              comment.trim() && !isRegisteringComment
+                ? 'text-pr-500'
+                : 'text-gr-400'
             }`}
           >
-            등록
+            {isRegisteringComment ? (
+              <div className="flex items-center gap-1">
+                <div className="h-3 w-3 animate-spin rounded-full border-2 border-pr-500 border-t-transparent"></div>
+                <span className="text-xs">등록중</span>
+              </div>
+            ) : (
+              '등록'
+            )}
           </Button>
         </div>
       </div>
