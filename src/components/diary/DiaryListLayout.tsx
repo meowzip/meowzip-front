@@ -3,7 +3,6 @@ import Topbar from '../ui/Topbar';
 import { CalendarModal } from './CalendarModal';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/store/diaryAtom';
-import { IoIosArrowDown } from 'react-icons/io';
 interface DiaryListLayoutProps {
   children: ReactNode;
 }
@@ -17,18 +16,6 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   const toggleCalendar = () => {
     setCalendarOpen(!isCalendarOpen);
   };
-  const toggleBottomSheet = () => {
-    setBottomSheetVisible(!bottomSheetVisible);
-  };
-
-  const formatDate = (date: Date): string => {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: 'long'
-    };
-    return date.toLocaleDateString('ko-KR', options);
-  };
-  const formattedMonth = formatDate(selectedMonth);
 
   const changeSearchDiaryDate = (day: 'dayBefore' | 'nextDay') => {
     if (day === 'dayBefore') {
@@ -40,25 +27,15 @@ const DiaryListLayout = ({ children }: DiaryListLayoutProps) => {
   };
   return (
     <>
-      {isCalendarOpen ? (
-        <Topbar type="three">
-          <Topbar.Back onClick={() => setCalendarOpen(false)} />
-          <Topbar.Title title={formattedMonth} onClick={toggleBottomSheet}>
-            <IoIosArrowDown className="ml-1" />
-          </Topbar.Title>
-          <Topbar.Empty />
-        </Topbar>
-      ) : (
-        <Topbar type="three">
-          <Topbar.Home />
-          <Topbar.Today
-            onClick={toggleCalendar}
-            onLeftClick={() => changeSearchDiaryDate('dayBefore')}
-            onRightClick={() => changeSearchDiaryDate('nextDay')}
-          />
-          <Topbar.Calendar onClick={toggleCalendar} />
-        </Topbar>
-      )}
+      <Topbar type="three">
+        <Topbar.Home />
+        <Topbar.Today
+          onClick={toggleCalendar}
+          onLeftClick={() => changeSearchDiaryDate('dayBefore')}
+          onRightClick={() => changeSearchDiaryDate('nextDay')}
+        />
+        <Topbar.Calendar onClick={toggleCalendar} />
+      </Topbar>
       <CalendarModal
         isOpen={isCalendarOpen}
         setCalendarOpen={setCalendarOpen}
