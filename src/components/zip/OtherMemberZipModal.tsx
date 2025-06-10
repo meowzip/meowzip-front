@@ -6,6 +6,7 @@ import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getCatsOnServer } from '@/services/cat';
+import ZipSkeleton from '@/components/zip/ZipSkeleton';
 
 interface OtherMemberZipModalProps {
   onClose: () => void;
@@ -24,6 +25,7 @@ const OtherMemberZipModal: React.FC<OtherMemberZipModalProps> = ({
   const {
     data: catList,
     fetchNextPage,
+    isLoading,
     isError,
     error
   } = useInfiniteQuery({
@@ -61,14 +63,18 @@ const OtherMemberZipModal: React.FC<OtherMemberZipModalProps> = ({
       </Topbar>
       <section className="pb-30 h-screen bg-gr-50 px-4 pt-16">
         <div className="grid grid-cols-2 gap-4 pb-28">
-          {catList?.pages?.map(page =>
-            page?.items?.map((cat: CatListObj) => (
-              <ZipCard
-                key={cat.id}
-                {...cat}
-                onClick={() => openDetailModal(cat)}
-              />
-            ))
+          {isLoading ? (
+            <ZipSkeleton />
+          ) : (
+            catList?.pages?.map(page =>
+              page?.items?.map((cat: CatListObj) => (
+                <ZipCard
+                  key={cat.id}
+                  {...cat}
+                  onClick={() => openDetailModal(cat)}
+                />
+              ))
+            )
           )}
           {/* 무한 스크롤 감지 영역 */}
           <div ref={ref} className="h-20 bg-transparent" />
