@@ -16,10 +16,18 @@ const useCommentMutation = () => {
     feedId: number;
     comment: string;
   }) => {
-    registerCommentMutation.mutate({
-      parentCommentId: reqObj.parentCommentId,
-      postId: Number(reqObj.feedId),
-      content: reqObj.comment
+    return new Promise((resolve, reject) => {
+      registerCommentMutation.mutate(
+        {
+          parentCommentId: reqObj.parentCommentId,
+          postId: Number(reqObj.feedId),
+          content: reqObj.comment
+        },
+        {
+          onSuccess: data => resolve(data),
+          onError: error => reject(error)
+        }
+      );
     });
   };
 
@@ -140,7 +148,8 @@ const useCommentMutation = () => {
     deleteComment,
     reportComment,
     blockComment,
-    registerComment
+    registerComment,
+    isRegisteringComment: registerCommentMutation.isPending
   };
 };
 
