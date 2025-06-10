@@ -4,14 +4,14 @@ import OtherMemberZipModal from '@/components/zip/OtherMemberZipModal';
 import ZipSkeleton from '@/components/zip/ZipSkeleton';
 import { getClickedUserProfile } from '@/services/profile';
 import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useModalAnimation } from '@/hooks/useModalAnimation';
 
 export default function OtherMemeberZipModalPage({
   params
 }: {
   params: { id: number };
 }) {
-  const router = useRouter();
+  const { handleClose, animationClasses } = useModalAnimation();
 
   const {
     data: othersProfile,
@@ -27,10 +27,14 @@ export default function OtherMemeberZipModalPage({
   if (isError) throw error;
 
   return (
-    <OtherMemberZipModal
-      memberId={params.id}
-      onClose={() => router.back()}
-      memberName={othersProfile.nickname}
-    />
+    <div
+      className={`fixed left-1/2 top-0 z-50 h-screen w-full max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white ${animationClasses}`}
+    >
+      <OtherMemberZipModal
+        memberId={params.id}
+        onClose={handleClose}
+        memberName={othersProfile.nickname}
+      />
+    </div>
   );
 }
