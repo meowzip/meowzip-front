@@ -5,6 +5,8 @@ import { usePathname } from 'next/navigation';
 import BottomNavBar from '@/components/ui/BottomNavBar';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { PATHS } from '@/constants/paths';
+import { usePageLoading } from '@/hooks/usePageLoading';
+import Loading from '@/components/common/Loading';
 
 const pathsWithNav = [PATHS.DIARY, PATHS.ZIP, PATHS.COMMUNITY, PATHS.PROFILE];
 
@@ -20,6 +22,7 @@ interface MainLayoutClientProps {
 
 export default function MainLayoutClient({ children }: MainLayoutClientProps) {
   const pathname = usePathname();
+  const isPageLoading = usePageLoading();
   const showBottomNav = pathsWithNav.some(p => p === pathname);
   const fabHref = fabLinkMap[pathname];
   const [showNavAnimation, setShowNavAnimation] = useState(false);
@@ -68,6 +71,14 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
       document.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
+
+  if (isPageLoading) {
+    return (
+      <div className="m-auto flex h-screen max-w-[640px] flex-col bg-gr-50">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="m-auto flex h-screen max-w-[640px] flex-col bg-gr-50">

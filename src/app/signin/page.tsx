@@ -1,21 +1,7 @@
-'use client';
-
-import { Suspense } from 'react';
-import dynamic from 'next/dynamic';
-
-const SignInContent = dynamic(
-  () => import('@/components/signin/SignInContent'),
-  {
-    ssr: false
-  }
-);
+import SignInContent from '@/components/signin/SignInContent';
 
 const SignInPage = () => {
-  return (
-    <Suspense fallback={<div>로딩 중...</div>}>
-      <SignInContent />
-    </Suspense>
-  );
+  return <SignInContent />;
 };
 
 export default SignInPage;

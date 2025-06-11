@@ -51,7 +51,7 @@ const SignInContent = () => {
       main: 'main',
       email: 'main',
       accountInfo: 'email',
-      password: 'accountInfo',
+      password: 'email',
       complete: 'password'
     };
 
