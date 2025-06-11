@@ -1,3 +1,5 @@
+'use client';
+
 import { forwardRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 import HelperText from './HelperText';

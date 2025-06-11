@@ -1,5 +1,5 @@
 import './globals.css';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/Toaster';
 import Providers from './providers';
@@ -9,6 +9,8 @@ import React from 'react';
 import AuthSession from '@/providers/AuthSession';
 import MainLayoutClient from '@/components/common/MainLayoutClient';
 import ClickNotiProvider from '@/providers/ClickNotiProvider';
+import Loading from '@/components/common/Loading';
+import DelayedSuspense from '@/components/common/DelayedSuspense';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -55,15 +57,16 @@ export const metadata: Metadata = {
         type: 'image/png'
       }
     ]
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    minimumScale: 1,
-    userScalable: false,
-    viewportFit: 'cover'
   }
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  minimumScale: 1,
+  userScalable: false,
+  viewportFit: 'cover'
 };
 
 export default function RootLayout({
@@ -83,7 +86,9 @@ export default function RootLayout({
             <JotaiProvider>
               <UserProvider>
                 <ClickNotiProvider />
-                <MainLayoutClient>{children}</MainLayoutClient>
+                <DelayedSuspense fallback={<Loading />} delay={200}>
+                  <MainLayoutClient>{children}</MainLayoutClient>
+                </DelayedSuspense>
                 {modal}
               </UserProvider>
             </JotaiProvider>
