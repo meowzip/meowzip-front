@@ -1,3 +1,5 @@
+'use client';
+
 import { Input } from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { resetPwdOnServer } from '../../services/signup';
