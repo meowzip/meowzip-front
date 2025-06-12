@@ -30,7 +30,11 @@ const DiaryContent = () => {
       selectedCatId
     });
 
-  const handleCatSelect = (id: number) => {
+  const handleCatSelect = (id: number | null) => {
+    if (id === null) {
+      setSelectedCatId(null);
+      return;
+    }
     setSelectedCatId(prev => (prev === id ? null : id));
   };
 

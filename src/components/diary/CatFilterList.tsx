@@ -9,7 +9,7 @@ interface Props {
   catList: InfiniteQueryResponse<CatFilterType>;
   isLoading: boolean;
   selectedCatId: number | null;
-  onSelect: (id: number) => void;
+  onSelect: (id: number | null) => void;
   catsRef: (node?: Element | null) => void;
 }
 
@@ -30,6 +30,15 @@ const CatFilterList = ({
         </Link>
       ) : (
         <>
+          <Filter
+            key="all"
+            id={-1}
+            imageUrl="/images/icons/all-cats.svg"
+            name="전체보기"
+            isSelected={selectedCatId === null}
+            onClick={() => onSelect(null)}
+            coParentedCount={0}
+          />
           {catList?.pages.map(page =>
             page?.items?.map((cat: any) => (
               <Filter
