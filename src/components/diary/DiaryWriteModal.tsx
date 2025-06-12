@@ -59,8 +59,8 @@ const DiaryWriteModal = ({
 
   const [textareaContent, setTextareaContent] = useState('');
   const [currentTime, setCurrentTime] = useState({
-    hour: new Date().getHours().toString().padStart(2, '0'),
-    minute: new Date().getMinutes().toString().padStart(2, '0')
+    hour: '00',
+    minute: '00'
   });
   const [chipObjList, setChipObjList] = useState([
     { key: 'food', content: '🐟 사료', checked: false },
@@ -114,6 +114,16 @@ const DiaryWriteModal = ({
     });
     return updatedImageList.slice(0, 3);
   };
+  useEffect(() => {
+    if (!diaryDetail) {
+      const now = new Date();
+      setCurrentTime({
+        hour: now.getHours().toString().padStart(2, '0'),
+        minute: now.getMinutes().toString().padStart(2, '0')
+      });
+    }
+  }, []);
+
   useEffect(() => {
     settingDiaryDetail();
   }, [diaryDetail]);
@@ -180,7 +190,6 @@ const DiaryWriteModal = ({
         predicate: query => query.queryKey[0] === 'diaries'
       });
 
-      onClose();
       router.push('/diary');
     },
     onError: error => {
