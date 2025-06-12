@@ -2,6 +2,7 @@ import BottomSheet from '@/components/ui/BottomSheet';
 import React from 'react';
 import Image from 'next/image';
 import { CoParent } from '@/app/zip/catType';
+import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 
 interface CoParentsBottomSheetProps {
   isVisible: boolean;
@@ -31,7 +32,7 @@ const CoParentsBottomSheet = ({
             className="flex items-center justify-start gap-4 py-2"
           >
             <Image
-              src={coParent.imageUrl}
+              src={coParent.imageUrl || DEFAULT_PROFILE_IMAGE_SRC}
               alt="zip-card"
               width={48}
               height={48}
