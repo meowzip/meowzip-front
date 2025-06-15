@@ -177,14 +177,15 @@ const ImageUploader = ({
           <div className="fixed left-0 top-0 z-[200]">
             <div className="h-screen w-screen bg-gr-white">
               {data.imageSrc && (
-                <Image
-                  ref={imageElement}
-                  src={data.imageSrc}
-                  alt="cropped-image"
-                  width={800}
-                  height={800}
-                  className="flex items-center justify-center"
-                />
+                <div className="flex items-center justify-center">
+                  <Image
+                    ref={imageElement}
+                    src={data.imageSrc}
+                    alt="cropped-image"
+                    width={800}
+                    height={800}
+                  />
+                </div>
               )}
               <div className="fixed left-1/2 top-20 -translate-x-1/2">
                 <Button
