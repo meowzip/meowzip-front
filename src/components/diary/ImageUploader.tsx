@@ -183,6 +183,7 @@ const ImageUploader = ({
                   alt="cropped-image"
                   width={800}
                   height={800}
+                  className="flex items-center justify-center"
                 />
               )}
               <div className="fixed left-1/2 top-20 -translate-x-1/2">
