@@ -174,31 +174,27 @@ const ImageUploader = ({
       {/* crop image */}
       <section className="w-full">
         {data?.imageSrc && !data?.croppedImage && (
-          <div className="fixed left-0 top-0 z-[200]">
-            <div className="h-screen w-screen bg-gr-white">
-              {data.imageSrc && (
-                <div className="flex items-center justify-center">
-                  <Image
-                    ref={imageElement}
-                    src={data.imageSrc}
-                    alt="cropped-image"
-                    width={800}
-                    height={800}
-                  />
-                </div>
-              )}
-              <div className="fixed left-1/2 top-20 -translate-x-1/2">
-                <Button
-                  onClick={handleCrop}
-                  className="w-full rounded-full border border-white bg-transparent px-4 py-2"
-                  disabled={false}
-                >
-                  <Button.Text
-                    text="이미지 자르기"
-                    className="text-btn-1 text-gr-white"
-                  />
-                </Button>
-              </div>
+          <div className="fixed left-0 top-0 z-[200] h-screen w-screen bg-gr-white">
+            {data.imageSrc && (
+              <Image
+                ref={imageElement}
+                src={data.imageSrc}
+                alt="cropped-image"
+                width={800}
+                height={800}
+              />
+            )}
+            <div className="fixed left-1/2 top-20 -translate-x-1/2">
+              <Button
+                onClick={handleCrop}
+                className="w-full rounded-full border border-white bg-transparent px-4 py-2"
+                disabled={false}
+              >
+                <Button.Text
+                  text="이미지 자르기"
+                  className="text-btn-1 text-gr-white"
+                />
+              </Button>
             </div>
           </div>
         )}
