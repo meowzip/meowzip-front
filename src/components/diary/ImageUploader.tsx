@@ -174,7 +174,7 @@ const ImageUploader = ({
       {/* crop image */}
       <section className="w-full">
         {data?.imageSrc && !data?.croppedImage && (
-          <div className="fixed left-0 top-0 z-[200] flex items-center justify-center bg-gr-white">
+          <div className="fixed left-0 top-0 z-[200] flex h-screen w-screen items-center justify-center bg-gr-white">
             {data.imageSrc && (
               <Image
                 ref={imageElement}
