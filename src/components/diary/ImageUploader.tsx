@@ -181,8 +181,8 @@ const ImageUploader = ({
                   ref={imageElement}
                   src={data.imageSrc}
                   alt="cropped-image"
-                  width={24}
-                  height={24}
+                  fill
+                  className="object-contain"
                 />
               )}
               <div className="fixed left-1/2 top-20 -translate-x-1/2">
