@@ -172,30 +172,34 @@ const ImageUploader = ({
         </section>
       )}
       {/* crop image */}
-      <section className="w-full">
+      <section>
         {data?.imageSrc && !data?.croppedImage && (
-          <div className="fixed left-0 top-0 z-[200] flex h-screen w-screen items-center justify-center bg-gr-white">
-            {data.imageSrc && (
-              <Image
-                ref={imageElement}
-                src={data.imageSrc}
-                alt="cropped-image"
-                width={800}
-                height={800}
-                className="max-h-full max-w-full"
-              />
-            )}
-            <div className="fixed left-1/2 top-20 -translate-x-1/2">
-              <Button
-                onClick={handleCrop}
-                className="w-full rounded-full border border-white bg-transparent px-4 py-2"
-                disabled={false}
-              >
-                <Button.Text
-                  text="이미지 자르기"
-                  className="text-btn-1 text-gr-white"
+          // <div className="fixed left-0 top-0 z-[200] flex h-screen w-screen items-center justify-center bg-gr-white">
+          <div className="fixed left-0 top-0 z-[200]">
+            <div className="h-screen w-screen bg-gr-white">
+              {data.imageSrc && (
+                <Image
+                  ref={imageElement}
+                  src={data.imageSrc}
+                  alt="cropped-image"
+                  // width={800}
+                  // height={800}
+                  fill
+                  className="max-h-full max-w-full"
                 />
-              </Button>
+              )}
+              <div className="fixed left-1/2 top-20 -translate-x-1/2">
+                <Button
+                  onClick={handleCrop}
+                  className="w-full rounded-full border border-white bg-transparent px-4 py-2"
+                  disabled={false}
+                >
+                  <Button.Text
+                    text="이미지 자르기"
+                    className="text-btn-1 text-gr-white"
+                  />
+                </Button>
+              </div>
             </div>
           </div>
         )}
