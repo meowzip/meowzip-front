@@ -26,7 +26,7 @@ const useCropper = (
         viewMode: 1,
         aspectRatio: 1,
         modal: true,
-        background: false,
+        background: true,
         dragMode: 'move'
       });
 
