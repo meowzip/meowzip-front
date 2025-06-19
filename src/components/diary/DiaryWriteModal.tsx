@@ -190,7 +190,10 @@ const DiaryWriteModal = ({
         predicate: query => query.queryKey[0] === 'diaries'
       });
 
-      router.push('/diary');
+      onClose();
+      setTimeout(() => {
+        router.push('/diary');
+      }, 350);
     },
     onError: error => {
       toast({
