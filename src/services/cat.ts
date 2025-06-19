@@ -63,7 +63,11 @@ export const registerCat = async (
     console.log('업로드할 이미지 없음');
   }
 
-  return fetchAuth('/cats', { method: 'POST', body: formData });
+  return fetchAuth('/cats', {
+    method: 'POST',
+    headers: { Accept: 'application/json', ...getAuthHeader() },
+    body: formData
+  });
 };
 
 export const editCat = async (
