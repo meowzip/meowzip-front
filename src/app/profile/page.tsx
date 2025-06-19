@@ -23,7 +23,7 @@ import useMyProfileQuery from '@/hooks/common/useMyProfileQuery';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 import { useInView } from 'react-intersection-observer';
 import { useAtom } from 'jotai';
-import { newNotificationAtom } from '@/atoms/notificationAtom';
+import { newNotificationAtom } from '@/store/notificationAtom';
 
 export default function ProfilePage() {
   const router = useRouter();
