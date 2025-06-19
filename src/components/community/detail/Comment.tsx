@@ -2,6 +2,7 @@ import Profile from '@/components/ui/Profile';
 import Image from 'next/image';
 import { CommentType } from '@/types/communityType';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
+import { useRouter } from 'next/navigation';
 
 const formatCreatedAt = (createdAt: string) => {
   return createdAt === '0초 전' ? '방금 전' : createdAt;
@@ -20,6 +21,7 @@ export default function Comment({
     React.SetStateAction<CommentType | undefined>
   >;
 }) {
+  const router = useRouter();
   return (
     <div className={`${!comment.parentId ? '' : ''}`}>
       <div
@@ -32,10 +34,11 @@ export default function Comment({
             {
               id: 1,
               imageUrl: comment.profileImageUrl || DEFAULT_PROFILE_IMAGE_SRC,
-              style: 'w-10 h-10'
+              style: 'w-10 h-10 cursor-pointer'
             }
           ]}
           lastLeft="left-[100px]"
+          onClick={() => router.push(`/profile/${comment.memberId}`)}
         />
         <div className="w-[75%] text-sm">
           <div className="flex">

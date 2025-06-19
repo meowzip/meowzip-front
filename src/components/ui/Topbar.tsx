@@ -6,7 +6,7 @@ import Button from '@/components/ui/Button';
 import { HTMLAttributes } from 'react';
 import { useAtom } from 'jotai';
 import { diaryDateAtom } from '@/store/diaryAtom';
-import { newNotificationAtom } from '@/atoms/notificationAtom';
+import { newNotificationAtom } from '@/store/notificationAtom';
 
 const Home = () => {
   return (

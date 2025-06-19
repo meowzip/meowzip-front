@@ -18,6 +18,28 @@ import { CatType } from '@/types/cat';
 import CloseIcon from '../../../public/images/icons/close.svg';
 import Image from 'next/image';
 import { toast } from '../ui/hooks/useToast';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const diaryFormSchema = z.object({
+  content: z.string().max(500, '일지는 500자 이하로 작성해주세요.'),
+  caredDate: z.string(),
+  caredTime: z.object({
+    hour: z.string(),
+    minute: z.string()
+  }),
+  isGivenWater: z.boolean(),
+  isFeed: z.boolean(),
+  taggedCats: z
+    .array(z.custom<CatType>())
+    .min(1, '고양이를 최소 1마리 이상 선택해주세요.'),
+  images: z
+    .array(z.custom<ImageUploadData>())
+    .max(3, '이미지는 최대 3개까지 업로드 가능합니다.')
+});
+
+type DiaryFormData = z.infer<typeof diaryFormSchema>;
 
 type DiaryRegisterReqWithCats = Omit<DiaryRegisterReqObj, 'taggedCats'> & {
   taggedCats: CatType[];
@@ -37,13 +59,60 @@ const DiaryWriteModal = ({
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const caredDate = () => {
+  const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
     const date = today.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${date}`;
   };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    return {
+      hour: now.getHours().toString().padStart(2, '0'),
+      minute: now.getMinutes().toString().padStart(2, '0')
+    };
+  };
+
+  const form = useForm<DiaryFormData>({
+    resolver: zodResolver(diaryFormSchema),
+    defaultValues: {
+      content: '',
+      caredDate: getCurrentDate(),
+      caredTime: getCurrentTime(),
+      isGivenWater: false,
+      isFeed: false,
+      taggedCats: [],
+      images: [
+        { key: 1, imageSrc: null, croppedImage: null },
+        { key: 2, imageSrc: null, croppedImage: null },
+        { key: 3, imageSrc: null, croppedImage: null }
+      ]
+    }
+  });
+
+  const {
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+    handleSubmit,
+    reset
+  } = form;
+
+  const watchedData = watch();
+  const {
+    content,
+    caredTime,
+    isGivenWater,
+    isFeed,
+    taggedCats,
+    images,
+    caredDate
+  } = watchedData;
+
+  const [searchCatModal, setSearchCatModal] = useState(false);
+  const [selectTimeBottomSheet, setSelectTimeBottomSheet] = useState(false);
 
   const formatDateToISO = (dateStr: string) => {
     if (dateStr.includes('-')) return dateStr;
@@ -55,47 +124,6 @@ const DiaryWriteModal = ({
     const month = match[1].padStart(2, '0');
     const day = match[2].padStart(2, '0');
     return `${year}-${month}-${day}`;
-  };
-
-  const [textareaContent, setTextareaContent] = useState('');
-  const [currentTime, setCurrentTime] = useState({
-    hour: '00',
-    minute: '00'
-  });
-  const [chipObjList, setChipObjList] = useState([
-    { key: 'food', content: '🐟 사료', checked: false },
-    { key: 'water', content: '💧 물', checked: false }
-  ]);
-  const [searchCatModal, setSearchCatModal] = useState(false);
-  const [selectTimeBottomSheet, setSelectTimeBottomSheet] = useState(false);
-  const [taggedCatList, setTaggedCatList] = useState<CatType[]>([]);
-  const [diaryImageList, setDiaryImageList] = useState<ImageUploadData[]>([
-    { key: 1, imageSrc: null, croppedImage: null },
-    { key: 2, imageSrc: null, croppedImage: null },
-    { key: 3, imageSrc: null, croppedImage: null }
-  ]);
-  const [caredDateState, setCaredDateState] = useState(caredDate());
-
-  const settingDiaryDetail = () => {
-    if (!diaryDetail) return;
-
-    setTextareaContent(diaryDetail.content);
-    setCurrentTime({
-      hour: diaryDetail.caredTime.split(':')[0].split(' ')[1],
-      minute: diaryDetail.caredTime.split(':')[1]
-    });
-    setCaredDateState(diaryDetail.caredDate);
-    setChipObjList(prevList =>
-      prevList.map(prevChip =>
-        prevChip.key === 'food'
-          ? { ...prevChip, checked: diaryDetail.isFeed }
-          : prevChip.key === 'water'
-            ? { ...prevChip, checked: diaryDetail.isGivenWater }
-            : prevChip
-      )
-    );
-    setDiaryImageList(updateDiaryImages(diaryDetail?.images));
-    setTaggedCatList(diaryDetail.taggedCats);
   };
 
   const updateDiaryImages = (images: string[]) => {
@@ -114,70 +142,88 @@ const DiaryWriteModal = ({
     });
     return updatedImageList.slice(0, 3);
   };
+
   useEffect(() => {
-    if (!diaryDetail) {
-      const now = new Date();
-      setCurrentTime({
-        hour: now.getHours().toString().padStart(2, '0'),
-        minute: now.getMinutes().toString().padStart(2, '0')
+    if (diaryDetail) {
+      reset({
+        content: diaryDetail.content,
+        caredDate: diaryDetail.caredDate,
+        caredTime: {
+          hour:
+            diaryDetail.caredTime.split(':')[0].split(' ')[1] ||
+            diaryDetail.caredTime.split(':')[0],
+          minute: diaryDetail.caredTime.split(':')[1]
+        },
+        isGivenWater: diaryDetail.isGivenWater,
+        isFeed: diaryDetail.isFeed,
+        taggedCats: diaryDetail.taggedCats,
+        images: updateDiaryImages(diaryDetail?.images || [])
       });
     }
-  }, []);
-
-  useEffect(() => {
-    settingDiaryDetail();
-  }, [diaryDetail]);
+  }, [diaryDetail, reset]);
 
   const displayTime = () => {
-    const { hour, minute } = currentTime;
+    const { hour, minute } = caredTime;
     const formattedHour = hour.padStart(2, '0');
     const formattedMinute = minute.padStart(2, '0');
     return `${formattedHour}:${formattedMinute}`;
   };
 
-  const settingParams = () => {
-    const images = diaryImageList
-      ?.filter(diary => diary.croppedImage)
-      ?.map(diary => diary.croppedImage);
+  const prepareSubmitData = (data: DiaryFormData): DiaryRegisterReqObj => {
+    const processedImages = data.images
+      ?.filter(img => img.croppedImage)
+      ?.map(img => img.croppedImage)
+      ?.filter(img => img !== null) as string[];
 
-    const rawDate = id ? caredDateState : caredDate();
-    const formattedDate = formatDateToISO(rawDate);
+    const formattedDate = formatDateToISO(data.caredDate);
 
     return {
-      isGivenWater: chipObjList.find(chip => chip.key === 'water')
-        ?.checked as boolean,
-      isFeed: chipObjList.find(chip => chip.key === 'food')?.checked as boolean,
-      content: textareaContent,
+      isGivenWater: data.isGivenWater,
+      isFeed: data.isFeed,
+      content: data.content,
       caredDate: formattedDate,
       caredTime: displayTime(),
-      catIds: taggedCatList.map(cat => cat.id),
-      images: images.filter(image => image !== null) as string[]
+      taggedCats: data.taggedCats.map(cat => Number(cat.id)),
+      images: processedImages
     };
   };
 
-  const saveDiary = () => {
-    if (registerDiaryMutation.isPending || editDiaryMutation.isPending) {
+  const onSubmit = (data: DiaryFormData) => {
+    if (isSubmitting) return;
+
+    // 내용이 없을 때 알림
+    if (!data.content.trim()) {
+      toast({
+        description: '간단한 돌봄 기록이라도 남겨보세요!'
+      });
       return;
     }
 
     try {
-      const params = settingParams();
-
-      if (!params.content.trim()) {
-        toast({
-          title: '일지 내용을 입력해주세요.',
-          description: '일지 내용을 입력해주세요.'
-        });
-        return;
-      }
+      const submitData = prepareSubmitData(data);
 
       if (id) {
-        editDiaryMutation.mutate({ id, diary: params });
+        editDiaryMutation.mutate({ id, diary: submitData });
       } else {
-        registerDiaryMutation.mutate(params);
+        registerDiaryMutation.mutate(submitData);
       }
     } catch (error) {
       console.error('일지 저장 중 오류:', error);
+    }
+  };
+
+  const onError = (errors: any) => {
+    if (errors.taggedCats) {
+      toast({
+        title: '고양이 선택 필요',
+        description:
+          errors.taggedCats.message || '고양이를 최소 1마리 이상 선택해주세요.'
+      });
+    } else if (errors.images) {
+      toast({
+        title: '이미지 업로드 중 오류가 발생했어요.',
+        description: errors.images.message
+      });
     }
   };
 
@@ -190,7 +236,10 @@ const DiaryWriteModal = ({
         predicate: query => query.queryKey[0] === 'diaries'
       });
 
-      router.push('/diary');
+      onClose();
+      setTimeout(() => {
+        router.push('/diary');
+      }, 350);
     },
     onError: error => {
       toast({
@@ -217,11 +266,49 @@ const DiaryWriteModal = ({
     }
   });
 
-  useEffect(() => {
-    return () => {
-      setDiaryImageList([]);
-    };
-  }, []);
+  const handleChipClick = (chipKey: 'food' | 'water') => {
+    if (chipKey === 'food') {
+      setValue('isFeed', !isFeed);
+    } else if (chipKey === 'water') {
+      setValue('isGivenWater', !isGivenWater);
+    }
+  };
+
+  const handleRemoveCat = (catId: string) => {
+    const updatedCats = taggedCats.filter(cat => cat.id !== catId);
+    setValue('taggedCats', updatedCats);
+  };
+
+  const handleTimeChange = (time: { hour: string; minute: string }) => {
+    setValue('caredTime', time);
+  };
+
+  const handleImageUpload = (
+    newImages:
+      | ImageUploadData[]
+      | ((prev: ImageUploadData[]) => ImageUploadData[])
+  ) => {
+    if (typeof newImages === 'function') {
+      setValue('images', newImages(images));
+    } else {
+      setValue('images', newImages);
+    }
+  };
+
+  const handleAddCats = (
+    cats: CatType[] | ((prev: CatType[]) => CatType[])
+  ) => {
+    if (typeof cats === 'function') {
+      setValue('taggedCats', cats(taggedCats));
+    } else {
+      setValue('taggedCats', cats);
+    }
+  };
+
+  const chipObjList = [
+    { key: 'food', content: '🐟 사료', checked: isFeed },
+    { key: 'water', content: '💧 물', checked: isGivenWater }
+  ];
 
   return (
     <>
@@ -230,16 +317,22 @@ const DiaryWriteModal = ({
           <Topbar.Back onClick={onClose} />
           <Topbar.Title title="일지쓰기" />
           <Topbar.Complete
-            onClick={saveDiary}
+            onClick={handleSubmit(onSubmit, onError)}
             isLoading={
-              registerDiaryMutation.isPending || editDiaryMutation.isPending
+              isSubmitting ||
+              registerDiaryMutation.isPending ||
+              editDiaryMutation.isPending
             }
           />
         </Topbar>
-        <div className="m-auto max-w-[640px]">
+        <form
+          onSubmit={handleSubmit(onSubmit, onError)}
+          className="m-auto max-w-[640px]"
+        >
           <section className="flex items-center justify-between px-4 py-2 pt-12">
             <h5 className="py-2 text-heading-5 text-gr-900">돌봄 시간</h5>
             <Button
+              type="button"
               onClick={() => {
                 setSelectTimeBottomSheet(!selectTimeBottomSheet);
               }}
@@ -259,10 +352,10 @@ const DiaryWriteModal = ({
                 <Textarea
                   propObj={{
                     placeholder: '오늘 하루의 돌봄 일지를 기록해보세요.',
-                    content: textareaContent,
+                    content: content,
                     maxLength: 500
                   }}
-                  onChange={e => setTextareaContent(e)}
+                  onChange={value => setValue('content', value)}
                 />
               </div>
             </article>
@@ -270,21 +363,20 @@ const DiaryWriteModal = ({
               <h5 className="p-4 text-heading-5 text-gr-900">
                 사진
                 <span className="text-pr-500">
-                  {diaryImageList.filter(diary => diary.croppedImage).length ||
-                    0}
+                  {images.filter(diary => diary.croppedImage).length || 0}
                 </span>
                 /3
               </h5>
               <div className="flex gap-3 px-4">
-                {diaryImageList.map((diary, idx: number) => {
-                  if (idx === 0 || diaryImageList[idx - 1].croppedImage) {
+                {images.map((diary, idx: number) => {
+                  if (idx === 0 || images[idx - 1].croppedImage) {
                     return (
                       <ImageUploader
                         key={diary.key}
                         data={diary}
                         deleteBtn
-                        onUpload={setDiaryImageList}
-                        images={diaryImageList}
+                        onUpload={handleImageUpload}
+                        images={images}
                       />
                     );
                   }
@@ -300,13 +392,7 @@ const DiaryWriteModal = ({
                       key={chip.key}
                       propObj={chip}
                       onClick={() =>
-                        setChipObjList(prevList =>
-                          prevList.map(prevChip =>
-                            prevChip.key === chip.key
-                              ? { ...prevChip, checked: !prevChip.checked }
-                              : prevChip
-                          )
-                        )
+                        handleChipClick(chip.key as 'food' | 'water')
                       }
                     />
                   );
@@ -327,8 +413,8 @@ const DiaryWriteModal = ({
                 </div>
                 <div className="px-4 pb-10 pt-4">
                   <TimeInput
-                    time={currentTime}
-                    setTime={setCurrentTime}
+                    time={caredTime}
+                    setTime={handleTimeChange}
                     setSelectTimeBottomSheet={setSelectTimeBottomSheet}
                   />
                 </div>
@@ -338,9 +424,7 @@ const DiaryWriteModal = ({
               <div className="flex items-center justify-between p-4">
                 <h5 className="text-heading-5 text-gr-900">
                   고양이 태그
-                  <span className="pl-1 text-pr-500">
-                    {taggedCatList.length}
-                  </span>
+                  <span className="pl-1 text-pr-500">{taggedCats.length}</span>
                 </h5>
                 <BackIcon
                   width={16}
@@ -351,7 +435,7 @@ const DiaryWriteModal = ({
                 />
               </div>
               <ul className="px-4 py-1 pb-20">
-                {taggedCatList.map((cat: CatType) => {
+                {taggedCats.map((cat: CatType) => {
                   return (
                     <li
                       key={cat.id}
@@ -381,11 +465,7 @@ const DiaryWriteModal = ({
                           width={12}
                           height={12}
                           stroke="var(--gr-white)"
-                          onClick={() => {
-                            setTaggedCatList(prevList =>
-                              prevList.filter(prevCat => prevCat.id !== cat.id)
-                            );
-                          }}
+                          onClick={() => handleRemoveCat(cat.id)}
                         />
                       </div>
                     </li>
@@ -394,12 +474,12 @@ const DiaryWriteModal = ({
               </ul>
             </article>
           </section>
-        </div>
+        </form>
       </div>
       {searchCatModal && (
         <SearchCatModal
           setSearchCatModal={setSearchCatModal}
-          setTaggedCatList={setTaggedCatList}
+          setTaggedCatList={handleAddCats}
         />
       )}
     </>

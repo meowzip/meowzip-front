@@ -1,7 +1,7 @@
 import { getMyProfile } from '@/services/profile';
 import { useQuery } from '@tanstack/react-query';
 import { useAtom } from 'jotai';
-import { newNotificationAtom } from '@/atoms/notificationAtom';
+import { newNotificationAtom } from '@/store/notificationAtom';
 import { useEffect } from 'react';
 
 export default function useMyProfileQuery() {

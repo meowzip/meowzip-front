@@ -17,6 +17,7 @@ const CommunityContents = () => {
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [feed, setFeed] = useState<FeedType>();
+  const [deletingFeedId, setDeletingFeedId] = useState<number | null>(null);
 
   const {
     data: feedList,
@@ -57,6 +58,16 @@ const CommunityContents = () => {
     router.push('/community/write');
   };
 
+  const handleDeleteWithAnimation = (feedToDelete: FeedType) => {
+    setDeletingFeedId(feedToDelete.id);
+    setEditBottomSheet(false);
+
+    setTimeout(() => {
+      deleteFeed(feedToDelete);
+      setDeletingFeedId(null);
+    }, 300);
+  };
+
   if (isLoading) {
     return (
       <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
@@ -70,18 +81,26 @@ const CommunityContents = () => {
       {feedList?.pages.map((page, pageIndex) => (
         <React.Fragment key={pageIndex}>
           {page?.items?.map((feed: FeedType) => (
-            <FeedCard
+            <div
               key={feed.id}
-              content={feed}
-              goToDetail={() => router.push(`/community/${feed.id}`)}
-              openBottomSheet={() => {
-                setFeed(feed);
-                setEditBottomSheet(true);
-              }}
-              toggleLikeFeed={() => toggleLikeFeed(feed)}
-              toggleBookmark={() => toggleBookmark(feed)}
-              hasUserArea
-            />
+              className={`transition-all duration-500 ease-out ${
+                deletingFeedId === feed.id
+                  ? '-translate-y-2 transform opacity-0'
+                  : 'translate-y-0 transform opacity-100'
+              }`}
+            >
+              <FeedCard
+                content={feed}
+                goToDetail={() => router.push(`/community/${feed.id}`)}
+                openBottomSheet={() => {
+                  setFeed(feed);
+                  setEditBottomSheet(true);
+                }}
+                toggleLikeFeed={() => toggleLikeFeed(feed)}
+                toggleBookmark={() => toggleBookmark(feed)}
+                hasUserArea
+              />
+            </div>
           ))}
         </React.Fragment>
       ))}
@@ -94,7 +113,7 @@ const CommunityContents = () => {
         heightPercent={['50%', '40%']}
         name={feed?.writerNickname}
         memberId={feed?.writerId}
-        onDelete={() => feed && deleteFeed(feed)}
+        onDelete={() => feed && handleDeleteWithAnimation(feed)}
         onEdit={() => {
           if (feed) {
             router.push(`/community/write?edit=${feed.id}`);

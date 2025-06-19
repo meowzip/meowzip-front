@@ -23,7 +23,7 @@ import AlarmListSkeleton from '@/components/profile/AlarmListSkeleton';
 import { useInView } from 'react-intersection-observer';
 import { useEffect, useMemo } from 'react';
 import { useAtom } from 'jotai';
-import { newNotificationAtom } from '@/atoms/notificationAtom';
+import { newNotificationAtom } from '@/store/notificationAtom';
 
 export interface AlarmType {
   id: number;
