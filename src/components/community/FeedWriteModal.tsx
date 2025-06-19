@@ -8,6 +8,23 @@ import { FeedType } from '@/types/communityType';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { editFeedOnServer, registerFeedOnServer } from '@/services/community';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useToast } from '@/components/ui/hooks/useToast';
+
+const feedSchema = z.object({
+  content: z
+    .string()
+    .min(1, '내용을 입력해주세요.')
+    .max(500, '최대 500자까지 입력 가능합니다.'),
+  images: z
+    .array(z.string())
+    .max(3, '최대 3장까지 업로드 가능합니다.')
+    .optional()
+});
+
+type FeedFormValues = z.infer<typeof feedSchema>;
 
 interface FeedWriteModalProps {
   onClose: () => void;
@@ -17,19 +34,36 @@ interface FeedWriteModalProps {
 const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const [textareaContent, setTextareaContent] = useState('');
+  const {
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+    reset
+  } = useForm<FeedFormValues>({
+    resolver: zodResolver(feedSchema),
+    defaultValues: {
+      content: '',
+      images: []
+    }
+  });
+
   const [feedImageList, setFeedImageList] = useState<ImageUploadData[]>([
     { key: 1, imageSrc: null, croppedImage: null },
     { key: 2, imageSrc: null, croppedImage: null },
     { key: 3, imageSrc: null, croppedImage: null }
   ]);
 
+  const watchedContent = watch('content');
+
   const settingFeedDetail = () => {
     if (!feedDetail) return;
 
-    setTextareaContent(feedDetail.content);
+    setValue('content', feedDetail.content);
     setFeedImageList(updateFeedImages(feedDetail?.images));
+    setValue('images', feedDetail.images || []);
   };
 
   const updateFeedImages = (images: string[]) => {
@@ -53,28 +87,38 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
     settingFeedDetail();
   }, [feedDetail]);
 
-  const saveFeed = () => {
+  useEffect(() => {
+    const images = feedImageList
+      ?.filter(feed => feed.croppedImage)
+      ?.map(feed => feed.croppedImage)
+      .filter(image => image !== null) as string[];
+
+    setValue('images', images);
+  }, [feedImageList, setValue]);
+
+  const onSubmit = (data: FeedFormValues) => {
     if (registerFeedMutation.isPending || editFeedMutation.isPending) return;
-    if (!textareaContent.trim()) {
-      return;
-    }
+
+    const submitData = {
+      content: data.content,
+      images: data.images || []
+    };
+
     return feedDetail?.id
       ? editFeedMutation.mutate({
           id: feedDetail?.id,
-          ...settingParams()
+          ...submitData
         })
-      : registerFeedMutation.mutate(settingParams());
+      : registerFeedMutation.mutate(submitData);
   };
 
-  const settingParams: () => { content: string; images: string[] } = () => {
-    const images = feedImageList
-      ?.filter(feed => feed.croppedImage)
-      ?.map(feed => feed.croppedImage);
-
-    return {
-      content: textareaContent,
-      images: images.filter(image => image !== null) as string[]
-    };
+  const onError = () => {
+    if (errors.content) {
+      toast({
+        description: errors.content.message,
+        duration: 2000
+      });
+    }
   };
 
   const registerFeedMutation = useMutation({
@@ -117,8 +161,9 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
   useEffect(() => {
     return () => {
       setFeedImageList([]);
+      reset();
     };
-  }, []);
+  }, [reset]);
 
   return (
     <div className="fixed left-0 top-0 z-20 h-screen w-full overflow-y-auto bg-gr-100">
@@ -126,11 +171,11 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
         <Topbar.Back onClick={onClose} />
         <Topbar.Title title="글쓰기" />
         <Topbar.Complete
-          onClick={saveFeed}
+          onClick={handleSubmit(onSubmit, onError)}
           isLoading={
             registerFeedMutation.isPending || editFeedMutation.isPending
           }
-          disabled={!textareaContent.trim()}
+          disabled={!watchedContent?.trim()}
         />
       </Topbar>
       <div className="mx-auto h-full max-w-[640px] bg-gr-white pb-28 pt-12">
@@ -138,10 +183,10 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
           <Textarea
             propObj={{
               placeholder: '사람들과 나누고 싶은 일들을 공유해보세요!',
-              content: textareaContent,
+              content: watchedContent || '',
               maxLength: 500
             }}
-            onChange={e => setTextareaContent(e)}
+            onChange={e => setValue('content', e)}
           />
         </article>
         <article>
