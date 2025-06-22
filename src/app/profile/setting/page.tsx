@@ -84,7 +84,7 @@ const SettingPage = () => {
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
-      (window as any).ReactNativeWebView.postMessage('OPEN_SETTINGS');
+      (window as any).ReactNativeWebView.postMessage({ type: 'OPEN_SETTINGS' });
     } else {
       alert('앱 설정에서 푸시 알림을 직접 변경해주세요.');
     }
