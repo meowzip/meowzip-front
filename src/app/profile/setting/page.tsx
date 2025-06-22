@@ -19,12 +19,14 @@ import TermsModal from '@/components/setting/TermsModal';
 import LogoutModal from '@/components/setting/LogoutModal';
 import WithdrawModal from '@/components/setting/WithdrawModal';
 import { usePushPermission } from '@/hooks/common/usePushPermission';
+import { useWebView } from '@/hooks/useWebView';
 
 const SettingPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { pushPermissionEnabled } = usePushPermission();
+  const { safePostMessage } = useWebView();
 
   const [switchOn, setSwitchOn] = useState(false);
   const [logOutModal, setLogOutModal] = useState(false);
@@ -84,7 +86,10 @@ const SettingPage = () => {
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
-      (window as any).ReactNativeWebView.postMessage({ type: 'OPEN_SETTINGS' });
+      safePostMessage({
+        type: 'OPEN_SETTINGS',
+        timestamp: new Date().toISOString()
+      });
     } else {
       alert('앱 설정에서 푸시 알림을 직접 변경해주세요.');
     }
