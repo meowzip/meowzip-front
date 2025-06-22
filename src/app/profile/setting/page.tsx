@@ -18,11 +18,13 @@ import { getCurrentDateInYYYYMMDD } from '@/utils/common';
 import TermsModal from '@/components/setting/TermsModal';
 import LogoutModal from '@/components/setting/LogoutModal';
 import WithdrawModal from '@/components/setting/WithdrawModal';
+import { usePushPermission } from '@/hooks/common/usePushPermission';
 
 const SettingPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { pushPermissionEnabled } = usePushPermission();
 
   const [switchOn, setSwitchOn] = useState(false);
   const [logOutModal, setLogOutModal] = useState(false);
@@ -41,9 +43,15 @@ const SettingPage = () => {
   });
   useEffect(() => {
     if (isSuccess) {
+      const shouldBeEnabled = pushPermissionEnabled === 'granted';
+      const currentEnabled = pushNotofication.receivePushNotification;
+
+      if (shouldBeEnabled !== currentEnabled) {
+        togglePushNotification.mutate();
+      }
       setSwitchOn(pushNotofication.receivePushNotification);
     }
-  }, [pushNotofication]);
+  }, [pushNotofication, pushPermissionEnabled]);
 
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
@@ -74,6 +82,14 @@ const SettingPage = () => {
     }
   };
 
+  const sendMessageToRN = () => {
+    if ((window as any).ReactNativeWebView) {
+      (window as any).ReactNativeWebView.postMessage('OPEN_SETTINGS');
+    } else {
+      alert('앱 설정에서 푸시 알림을 직접 변경해주세요.');
+    }
+  };
+
   const toggleSwitch = () => {
     setSwitchOn(!switchOn);
     togglePushNotification.mutate();
@@ -101,7 +117,8 @@ const SettingPage = () => {
                 알림을 꺼도 내 소식에서 확인할 수 있어요
               </h1>
             </div>
-            <Switch checked={switchOn} onCheckedChange={toggleSwitch} />
+            {/* <Switch checked={switchOn} onCheckedChange={toggleSwitch} /> */}
+            <Switch checked={switchOn} onCheckedChange={sendMessageToRN} />
           </section>
           <section className="h-2 bg-gr-50" />
           <section>
