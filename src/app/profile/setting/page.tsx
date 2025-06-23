@@ -55,11 +55,11 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
+    console.log('1 pushPermissionEnabled', pushPermissionEnabled);
     if (isSuccess && pushNotification) {
       const shouldBeEnabled: Boolean =
         pushPermissionEnabled === 'granted' ? true : false;
       const currentEnabled: Boolean = pushNotification.receivePushNotification;
-      console.log('1 pushPermissionEnabled', pushPermissionEnabled);
       console.log('2 shouldBeEnabled', shouldBeEnabled);
       console.log('3 currentEnabled', currentEnabled);
 
