@@ -25,7 +25,6 @@ const SettingPage = () => {
   const router = useRouter();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { pushPermissionEnabled } = usePushPermission();
   const { safePostMessage } = useWebView();
 
   const [switchOn, setSwitchOn] = useState(false);
@@ -34,7 +33,7 @@ const SettingPage = () => {
   const [termsModal, setTermsModal] = useState<string>('');
 
   const {
-    data: pushNotofication,
+    data: pushNotification,
     isSuccess,
     isError,
     error
@@ -43,30 +42,31 @@ const SettingPage = () => {
     queryFn: () => getPushNotification(),
     staleTime: 0
   });
-  useEffect(() => {
-    if (isSuccess) {
-      const shouldBeEnabled = pushPermissionEnabled === 'granted';
-      const currentEnabled = pushNotofication.receivePushNotification;
 
-      if (shouldBeEnabled !== currentEnabled) {
-        togglePushNotification.mutate();
-      }
-      setSwitchOn(pushNotofication.receivePushNotification);
-    }
-  }, [pushNotofication, pushPermissionEnabled]);
-
+  const { pushPermissionEnabled } = usePushPermission();
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
-      if (data.status !== 'OK') {
-        console.error('data.status:', data.status);
-      } else {
+      if (data.status === 'OK') {
         queryClient.invalidateQueries({
           predicate: query => query.queryKey[0] === 'getPushNoti'
         });
       }
     }
   });
+  useEffect(() => {
+    if (isSuccess && pushNotification) {
+      console.log('pushPermissionEnabled', pushPermissionEnabled);
+      const shouldBeEnabled: Boolean =
+        pushPermissionEnabled === 'granted' ? true : false;
+      const currentEnabled: Boolean = pushNotification.receivePushNotification;
+
+      if (shouldBeEnabled !== currentEnabled) {
+        toggleSwitch();
+      }
+      setSwitchOn(pushNotification.receivePushNotification);
+    }
+  }, [isSuccess, pushNotification, pushPermissionEnabled]);
 
   const logOut = async () => {
     try {
