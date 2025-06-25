@@ -22,6 +22,7 @@ export const usePushPermission = () => {
           message.type === WebViewMessageType.NOTIFICATION_PERMISSION &&
           message.enabled
         ) {
+          console.log('=====message.enabled', message.enabled);
           setPushPermissionEnabled(message.enabled);
           localStorage.setItem('push_permission', message.enabled);
           safePostMessage({

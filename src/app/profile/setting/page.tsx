@@ -76,22 +76,6 @@ const SettingPage = () => {
     storedPushPermission
   ]);
 
-  const logOut = async () => {
-    try {
-      document.cookie =
-        'Authorization-Refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-
-      setTimeout(() => {
-        document.cookie =
-          'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        signOut({ redirect: true });
-        window.location.href = '/signin';
-      }, 100);
-    } catch (error) {
-      console.error('로그아웃 중 오류 발생:', error);
-    }
-  };
-
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
       safePostMessage({
@@ -110,6 +94,22 @@ const SettingPage = () => {
       description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${switchOn ? '철회' : '동의'} 했어요`,
       duration: 2000
     });
+  };
+
+  const logOut = async () => {
+    try {
+      document.cookie =
+        'Authorization-Refresh=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+
+      setTimeout(() => {
+        document.cookie =
+          'Authorization=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        signOut({ redirect: true });
+        window.location.href = '/signin';
+      }, 100);
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+    }
   };
 
   if (isError) throw error;
