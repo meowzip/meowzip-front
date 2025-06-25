@@ -44,6 +44,7 @@ const SettingPage = () => {
   });
 
   const { pushPermissionEnabled } = usePushPermission();
+  const storedPushPermission = localStorage.getItem('push_permission');
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -55,19 +56,25 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    console.log('1 pushPermissionEnabled', pushPermissionEnabled);
+    console.log('0 storedPushPermission: ', storedPushPermission);
+    console.log('1 pushPermissionEnabled: ', pushPermissionEnabled);
     if (isSuccess && pushNotification) {
       const shouldBeEnabled: Boolean =
         pushPermissionEnabled === 'granted' ? true : false;
       const currentEnabled: Boolean = pushNotification.receivePushNotification;
-      console.log('2 shouldBeEnabled', shouldBeEnabled);
-      console.log('3 currentEnabled', currentEnabled);
+      console.log('2 shouldBeEnabled: ', shouldBeEnabled);
+      console.log('3 currentEnabled: ', currentEnabled);
 
       if (shouldBeEnabled !== currentEnabled) {
         toggleSwitch();
       }
     }
-  }, [isSuccess, pushNotification, pushPermissionEnabled]);
+  }, [
+    isSuccess,
+    pushNotification,
+    pushPermissionEnabled,
+    storedPushPermission
+  ]);
 
   const logOut = async () => {
     try {
