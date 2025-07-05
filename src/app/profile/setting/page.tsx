@@ -56,6 +56,7 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
+    console.log('🔥 pushNotification on server: ', pushNotification);
     console.log('0 storedPushPermission: ', storedPushPermission);
     console.log('1 pushPermissionEnabled: ', pushPermissionEnabled);
     if (isSuccess && pushNotification) {
