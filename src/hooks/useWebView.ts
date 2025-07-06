@@ -1,5 +1,10 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { checkUserAgent, type WebViewMessage } from '@/utils/userAgent';
+import {
+  getPushNotification,
+  togglePushNotificationOnServer
+} from '@/services/push-notification';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface UseWebViewReturn {
   isAndroid: boolean;
@@ -103,6 +108,27 @@ export const useWebView = (): UseWebViewReturn => {
     [platform, safePostMessage]
   );
 
+  const queryClient = useQueryClient();
+  const {
+    data: pushPermission,
+    isSuccess,
+    isError,
+    error
+  } = useQuery({
+    queryKey: ['getPushNoti'],
+    queryFn: () => getPushNotification(),
+    staleTime: 0
+  });
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
   const requestNotiPermission = useCallback(
     (event: CustomEvent) => {
       console.log('❤️ 푸시 알림 여부 이벤트 수신:', {
@@ -128,6 +154,19 @@ export const useWebView = (): UseWebViewReturn => {
           enabled: event.detail.enabled,
           timestamp: new Date().toISOString()
         });
+
+        if (isSuccess && pushPermission) {
+          const shouldBeEnabled: Boolean =
+            event.detail.enabled === 'granted' ? true : false;
+          const currentEnabled: Boolean =
+            pushPermission.receivePushNotification;
+          console.log('1111 shouldBeEnabled: ', shouldBeEnabled);
+          console.log('2222 currentEnabled: ', currentEnabled);
+
+          if (shouldBeEnabled !== currentEnabled) {
+            togglePushNotification.mutate();
+          }
+        }
       } else {
         console.warn('[웹→앱] 푸시 알림 여부 이벤트 수신 에러');
         safePostMessage({

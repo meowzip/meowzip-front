@@ -33,7 +33,7 @@ const SettingPage = () => {
   const [termsModal, setTermsModal] = useState<string>('');
 
   const {
-    data: pushNotification,
+    data: pushPermission,
     isSuccess,
     isError,
     error
@@ -44,7 +44,6 @@ const SettingPage = () => {
   });
 
   const { pushPermissionEnabled } = usePushPermission();
-  const storedPushPermission = localStorage.getItem('push_permission');
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -56,13 +55,11 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    console.log('🔥 pushNotification on server: ', pushNotification);
-    console.log('0 storedPushPermission: ', storedPushPermission);
     console.log('1 pushPermissionEnabled: ', pushPermissionEnabled);
-    if (isSuccess && pushNotification) {
+    if (isSuccess && pushPermission) {
       const shouldBeEnabled: Boolean =
         pushPermissionEnabled === 'granted' ? true : false;
-      const currentEnabled: Boolean = pushNotification.receivePushNotification;
+      const currentEnabled: Boolean = pushPermission.receivePushNotification;
       console.log('2 shouldBeEnabled: ', shouldBeEnabled);
       console.log('3 currentEnabled: ', currentEnabled);
 
@@ -70,12 +67,7 @@ const SettingPage = () => {
         toggleSwitch();
       }
     }
-  }, [
-    isSuccess,
-    pushNotification,
-    pushPermissionEnabled,
-    storedPushPermission
-  ]);
+  }, [isSuccess, pushPermission, pushPermissionEnabled]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
