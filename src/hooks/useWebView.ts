@@ -1,10 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { checkUserAgent, type WebViewMessage } from '@/utils/userAgent';
-import {
-  getPushNotification,
-  togglePushNotificationOnServer
-} from '@/services/push-notification';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface UseWebViewReturn {
   isAndroid: boolean;
