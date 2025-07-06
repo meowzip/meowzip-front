@@ -31,7 +31,7 @@ const OnBoardPage = () => {
   });
 
   const {
-    data: pushNotification,
+    data: pushPermission,
     isSuccess,
     isError: isPushNotiError,
     error: pushNotiError
@@ -53,16 +53,16 @@ const OnBoardPage = () => {
     }
   });
   useEffect(() => {
-    if (isSuccess && pushNotification) {
+    if (isSuccess && pushPermission) {
       const shouldBeEnabled: Boolean =
         pushPermissionEnabled === 'granted' ? true : false;
-      const currentEnabled: Boolean = pushNotification.receivePushNotification;
+      const currentEnabled: Boolean = pushPermission.receivePushNotification;
 
       if (shouldBeEnabled !== currentEnabled) {
         togglePushNotification.mutate();
       }
     }
-  }, [isSuccess, pushNotification, pushPermissionEnabled]);
+  }, [isSuccess, pushPermission, pushPermissionEnabled]);
 
   if (isMyProfileError) throw myProfileError;
   if (isPushNotiError) throw pushNotiError;
