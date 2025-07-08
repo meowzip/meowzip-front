@@ -70,7 +70,7 @@ export const usePushAlarmPermission = () => {
       //   }
       // }
 
-      setPermission(event.detail?.enabled);
+      setPermission(event.detail?.enabled === 'granted' ? true : false);
       safePostMessage({
         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
         enabled: event.detail?.enabled,
