@@ -83,7 +83,9 @@ export const useWebView = (): UseWebViewReturn => {
 
       if (event.detail?.token) {
         console.log('[웹→앱] FCM 토큰 저장 시도:', event.detail.token);
-        localStorage.setItem('fcm_token', event.detail.token);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('fcm_token', event.detail.token);
+        }
         console.log('[웹→앱] FCM 토큰 저장 완료');
 
         safePostMessage({
@@ -120,7 +122,9 @@ export const useWebView = (): UseWebViewReturn => {
 
       if (event.detail?.enabled) {
         console.log('[웹→앱] 푸시 알림 여부 저장 시도:', event.detail.enabled);
-        localStorage.setItem('push_permission', event.detail.enabled);
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('push_permission', event.detail.enabled);
+        }
         console.log('[웹→앱] 푸시 알림 여부 저장 완료');
 
         safePostMessage({
@@ -189,7 +193,9 @@ export const useWebView = (): UseWebViewReturn => {
           case WEBVIEW_MESSAGE_TYPES.PUSH_TOKEN_RECEIVED:
             if (data.token) {
               console.log('[웹→앱] FCM 토큰 저장 시도 (메시지):', data.token);
-              localStorage.setItem('fcm_token', data.token);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('fcm_token', data.token);
+              }
               console.log('[웹→앱] FCM 토큰 저장 완료 (메시지)');
 
               safePostMessage({
@@ -215,7 +221,9 @@ export const useWebView = (): UseWebViewReturn => {
           case WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION:
             if (data.enabled) {
               console.log('[웹→앱] 푸시 알림 여부 수신:', data.enabled);
-              localStorage.setItem('push_permission', data.enabled);
+              if (typeof window !== 'undefined') {
+                localStorage.setItem('push_permission', data.enabled);
+              }
               safePostMessage({
                 type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
                 enabled: data.enabled,
@@ -280,24 +288,26 @@ export const useWebView = (): UseWebViewReturn => {
       });
     }
 
-    const currentToken = localStorage.getItem('fcm_token');
-    if (currentToken) {
-      console.log('[웹→앱] 저장된 FCM 토큰:', currentToken);
-      safePostMessage({
-        type: WEBVIEW_MESSAGE_TYPES.PUSH_TOKEN_RECEIVED,
-        token: currentToken,
-        timestamp: new Date().toISOString()
-      });
-    }
+    if (typeof window !== 'undefined') {
+      const currentToken = localStorage.getItem('fcm_token');
+      if (currentToken) {
+        console.log('[웹→앱] 저장된 FCM 토큰:', currentToken);
+        safePostMessage({
+          type: WEBVIEW_MESSAGE_TYPES.PUSH_TOKEN_RECEIVED,
+          token: currentToken,
+          timestamp: new Date().toISOString()
+        });
+      }
 
-    const currentPushPermission = localStorage.getItem('push_permission');
-    if (currentPushPermission) {
-      console.log('[웹→앱] 저장된 푸시 알림 여부:', currentPushPermission);
-      safePostMessage({
-        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-        enabled: currentPushPermission,
-        timestamp: new Date().toISOString()
-      });
+      const currentPushPermission = localStorage.getItem('push_permission');
+      if (currentPushPermission) {
+        console.log('[웹→앱] 저장된 푸시 알림 여부:', currentPushPermission);
+        safePostMessage({
+          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+          enabled: currentPushPermission,
+          timestamp: new Date().toISOString()
+        });
+      }
     }
 
     return () => {

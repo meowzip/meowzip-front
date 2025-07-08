@@ -10,27 +10,29 @@ import { sendPwdResetEmail, signInOnServer } from '@/services/signin';
 import { useRouter } from 'next/navigation';
 import Modal from '../ui/Modal';
 import { usePushToken } from '@/hooks/common/usePushToken';
+import { useLocalStorageString } from '@/hooks/common/useLocalStorage';
 
 export default function Password() {
   const { password, handlePwdChange } = usePasswordHandler();
   const { email } = useUser();
   const router = useRouter();
   const { fcmToken } = usePushToken();
+  const { value: storedToken, setValue: setStoredToken } =
+    useLocalStorageString('fcm_token');
   const [showModal, setShowModal] = useState(false);
   const [showFindModal, setShowFindModal] = useState(false);
 
   const signIn = () => {
-    const storedToken = localStorage.getItem('fcm_token') || '';
     const currentToken = fcmToken || '';
 
     if (storedToken !== currentToken && currentToken) {
-      localStorage.setItem('fcm_token', currentToken);
+      setStoredToken(currentToken);
     }
 
     signInMutation.mutate({
       email: email,
       password: password.value,
-      fcmToken: currentToken || storedToken
+      fcmToken: currentToken || (storedToken ?? '')
     });
   };
 

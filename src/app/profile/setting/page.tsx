@@ -20,7 +20,7 @@ import LogoutModal from '@/components/setting/LogoutModal';
 import WithdrawModal from '@/components/setting/WithdrawModal';
 import { usePushPermission } from '@/hooks/common/usePushPermission';
 import { useWebView } from '@/hooks/useWebView';
-import { usePushAlarmPermission } from '@/hooks/common/usePushAlarmPermission';
+import { useLocalStorageString } from '@/hooks/common/useLocalStorage';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -43,14 +43,25 @@ const SettingPage = () => {
     queryFn: () => getPushNotification(),
     staleTime: 0
   });
-  // const switchOn = pushPermission?.receivePushNotification === true;
-  const { permission } = usePushAlarmPermission();
+
+  const { pushPermissionEnabled } = usePushPermission();
+  const { value: storedPushPermission } = useLocalStorageString('push_permission', '');
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
   useEffect(() => {
-    console.log('🍋🍋🍋🍋 permission: ', permission);
+    console.log('🍋🍋🍋🍋 permission: ', pushPermissionEnabled);
     if (isSuccess && pushPermission) {
       console.log('🍋🍋🍋🍋🍋 pushPermission:', pushPermission);
     }
-  }, [pushPermission]);
+  }, [pushPermission, pushPermissionEnabled]);
   // const { pushPermissionEnabled } = usePushPermission();
   // const togglePushNotification = useMutation({
   //   mutationFn: () => togglePushNotificationOnServer(),
