@@ -105,50 +105,48 @@ export const useWebView = (): UseWebViewReturn => {
     [platform, safePostMessage]
   );
 
-  const requestNotiPermission = useCallback(
-    (event: CustomEvent) => {
-      console.log('❤️ 푸시 알림 여부 이벤트 수신:', {
-        platform,
-        eventType: event.type,
-        enabled: event.detail?.enabled
-      });
+  // const requestNotiPermission = useCallback(
+  //   (event: CustomEvent) => {
+  //     console.log('❤️ 푸시 알림 여부 이벤트 수신:', {
+  //       platform,
+  //       eventType: event.type,
+  //       enabled: event.detail?.enabled
+  //     });
 
-      if (platform === 'Web') {
-        console.log(
-          '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
-        );
-        return;
-      }
+  //     if (platform === 'Web') {
+  //       console.log(
+  //         '[웹] 웹 환경에서는 푸시 알림 여부 이벤트를 처리하지 않습니다.'
+  //       );
+  //       return;
+  //     }
 
-      if (event.detail?.enabled) {
-        console.log('[웹→앱] 푸시 알림 여부 저장 시도:', event.detail.enabled);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('push_permission', event.detail.enabled);
-        }
-        console.log('[웹→앱] 푸시 알림 여부 저장 완료');
+  //     if (event.detail?.enabled) {
+  //       console.log('[웹→앱] 푸시 알림 여부 저장 시도:', event.detail.enabled);
+  //       localStorage.setItem('push_permission', event.detail.enabled);
+  //       console.log('[웹→앱] 푸시 알림 여부 저장 완료');
 
-        safePostMessage({
-          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-          enabled: event.detail.enabled,
-          timestamp: new Date().toISOString()
-        });
-      } else {
-        console.warn('[웹→앱] 푸시 알림 여부 이벤트 수신 에러');
-        safePostMessage({
-          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-          error: '푸시 알림 여부 이벤트 수신 에러',
-          timestamp: new Date().toISOString()
-        });
-      }
+  //       safePostMessage({
+  //         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+  //         enabled: event.detail.enabled,
+  //         timestamp: new Date().toISOString()
+  //       });
+  //     } else {
+  //       console.warn('[웹→앱] 푸시 알림 여부 이벤트 수신 에러');
+  //       safePostMessage({
+  //         type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+  //         error: '푸시 알림 여부 이벤트 수신 에러',
+  //         timestamp: new Date().toISOString()
+  //       });
+  //     }
 
-      safePostMessage({
-        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-        enabled: event.detail?.enabled,
-        timestamp: new Date().toISOString()
-      });
-    },
-    [platform, safePostMessage]
-  );
+  //     safePostMessage({
+  //       type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+  //       enabled: event.detail?.enabled,
+  //       timestamp: new Date().toISOString()
+  //     });
+  //   },
+  //   [platform, safePostMessage]
+  // );
 
   const handleWebViewMessage = useCallback(
     (event: MessageEvent) => {
@@ -272,11 +270,11 @@ export const useWebView = (): UseWebViewReturn => {
     console.log('[웹→앱] 이벤트 리스너 등록 시작');
 
     const pushTokenListener = handlePushTokenReceived as EventListener;
-    const pushPermissionListener = requestNotiPermission as EventListener;
+    // const pushPermissionListener = requestNotiPermission as EventListener;
     const webViewMessageListener = handleWebViewMessage;
 
     window.addEventListener('pushTokenReceived', pushTokenListener);
-    window.addEventListener('pushPermissionReceived', pushPermissionListener);
+    // window.addEventListener('pushPermissionReceived', pushPermissionListener);
     window.addEventListener('message', webViewMessageListener);
 
     console.log('[웹→앱] 이벤트 리스너 등록 완료');
@@ -313,18 +311,18 @@ export const useWebView = (): UseWebViewReturn => {
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener('pushTokenReceived', pushTokenListener);
-      window.removeEventListener(
-        'pushPermissionReceived',
-        pushPermissionListener
-      );
+      // window.removeEventListener(
+      //   'pushPermissionReceived',
+      //   pushPermissionListener
+      // );
       window.removeEventListener('message', webViewMessageListener);
     };
   }, [
     platform,
     handlePushTokenReceived,
     handleWebViewMessage,
-    safePostMessage,
-    requestNotiPermission
+    safePostMessage
+    // requestNotiPermission
   ]);
 
   return {

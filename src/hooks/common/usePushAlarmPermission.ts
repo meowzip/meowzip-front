@@ -88,15 +88,12 @@ export const usePushAlarmPermission = () => {
 
     const pushPermissionListener =
       requestPushPermissionReceived as EventListener;
-    window.addEventListener(
-      'clickNotificationReceived',
-      pushPermissionListener
-    );
+    window.addEventListener('pushPermissionReceived', pushPermissionListener);
 
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener(
-        'clickNotificationReceived',
+        'pushPermissionReceived',
         pushPermissionListener
       );
     };
