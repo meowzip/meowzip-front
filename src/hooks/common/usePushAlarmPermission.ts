@@ -1,47 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useWebView, WEBVIEW_MESSAGE_TYPES } from '@/hooks/useWebView';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePathname } from 'next/navigation';
-import {
-  getPushNotification,
-  togglePushNotificationOnServer
-} from '@/services/push-notification';
-import { toast } from '@/components/ui/hooks/useToast';
-import { getCurrentDateInYYYYMMDD } from '@/utils/common';
 
 export const usePushAlarmPermission = () => {
   const { platform, safePostMessage } = useWebView();
   const [permission, setPermission] = useState<boolean>(false);
-  const queryClient = useQueryClient();
   const pathName = usePathname();
-
-  const {
-    data: pushPermission,
-    isSuccess,
-    isError,
-    error
-  } = useQuery({
-    queryKey: ['getPushNoti'],
-    queryFn: () => getPushNotification(),
-    staleTime: 0
-  });
-
-  if (isError) throw error;
-
-  const togglePushNotification = useMutation({
-    mutationFn: () => togglePushNotificationOnServer(),
-    onSuccess: (data: any) => {
-      if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
-        });
-        toast({
-          description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${pushPermission.receivePushNotification ? '철회' : '동의'} 했어요`,
-          duration: 2000
-        });
-      }
-    }
-  });
 
   const requestPushPermissionReceived = useCallback(
     (event: CustomEvent) => {
