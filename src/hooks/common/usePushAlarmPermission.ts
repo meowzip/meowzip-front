@@ -26,6 +26,8 @@ export const usePushAlarmPermission = () => {
     staleTime: 0
   });
 
+  if (isError) throw error;
+
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
