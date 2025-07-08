@@ -18,9 +18,7 @@ import { getCurrentDateInYYYYMMDD } from '@/utils/common';
 import TermsModal from '@/components/setting/TermsModal';
 import LogoutModal from '@/components/setting/LogoutModal';
 import WithdrawModal from '@/components/setting/WithdrawModal';
-import { usePushPermission } from '@/hooks/common/usePushPermission';
 import { useWebView } from '@/hooks/useWebView';
-import { useLocalStorageString } from '@/hooks/common/useLocalStorage';
 import { usePushAlarmPermission } from '@/hooks/common/usePushAlarmPermission';
 
 const SettingPage = () => {
@@ -29,7 +27,6 @@ const SettingPage = () => {
   const queryClient = useQueryClient();
   const { safePostMessage } = useWebView();
 
-  // const [switchOn, setSwitchOn] = useState(false);
   const [logOutModal, setLogOutModal] = useState(false);
   const [withdrawModal, setWithdrawModal] = useState(false);
   const [termsModal, setTermsModal] = useState<string>('');
@@ -45,14 +42,7 @@ const SettingPage = () => {
     staleTime: 0
   });
 
-  // const { pushPermissionEnabled } = usePushPermission();
   const { permission } = usePushAlarmPermission();
-  useEffect(() => {
-    console.log('🍋🍋🍋🍋 permission: ', permission);
-    if (isSuccess && pushPermission) {
-      console.log('🍋🍋🍋🍋🍋 pushPermission:', pushPermission);
-    }
-  }, [pushPermission, permission]);
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -64,7 +54,9 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    console.log('1 pushPermissionEnabled: ', permission);
+    console.log('🍋🍋 permission: ', permission);
+    console.log('🍋🍋🍋 pushPermission:', pushPermission);
+
     if (isSuccess && pushPermission) {
       const shouldBeEnabled: Boolean = permission;
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
@@ -89,10 +81,9 @@ const SettingPage = () => {
   };
 
   const toggleSwitch = () => {
-    // setSwitchOn(!switchOn);
     togglePushNotification.mutate();
     toast({
-      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${permission ? '철회' : '동의'} 했어요`,
+      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${permission ? '동의' : '철회'} 했어요`,
       duration: 2000
     });
   };
@@ -131,7 +122,6 @@ const SettingPage = () => {
                 알림을 꺼도 내 소식에서 확인할 수 있어요
               </h1>
             </div>
-            {/* <Switch checked={switchOn} onCheckedChange={toggleSwitch} /> */}
             <Switch
               checked={pushPermission?.receivePushNotification}
               onCheckedChange={sendMessageToRN}
