@@ -54,14 +54,11 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    console.log('🍋🍋 permission: ', permission);
-    console.log('🍋🍋🍋 pushPermission:', pushPermission);
-
     if (isSuccess && pushPermission) {
       const shouldBeEnabled: Boolean = permission;
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
-      console.log('2 shouldBeEnabled: ', shouldBeEnabled);
-      console.log('3 currentEnabled: ', currentEnabled);
+      console.log('🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
+      console.log('🍋🍋🍋 currentEnabled: ', currentEnabled);
 
       if (shouldBeEnabled !== currentEnabled) {
         toggleSwitch();
