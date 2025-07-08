@@ -20,6 +20,7 @@ import LogoutModal from '@/components/setting/LogoutModal';
 import WithdrawModal from '@/components/setting/WithdrawModal';
 import { usePushPermission } from '@/hooks/common/usePushPermission';
 import { useWebView } from '@/hooks/useWebView';
+import { usePushAlarmPermission } from '@/hooks/common/usePushAlarmPermission';
 
 const SettingPage = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const SettingPage = () => {
     staleTime: 0
   });
   const switchOn = pushPermission?.receivePushNotification === true;
-
+  usePushAlarmPermission();
   // const { pushPermissionEnabled } = usePushPermission();
   // const togglePushNotification = useMutation({
   //   mutationFn: () => togglePushNotificationOnServer(),
