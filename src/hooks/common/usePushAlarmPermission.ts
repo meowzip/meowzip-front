@@ -43,7 +43,7 @@ export const usePushAlarmPermission = () => {
     }
   });
 
-  const requestNotiPermissionReceived = useCallback(
+  const requestPushPermissionReceived = useCallback(
     (event: CustomEvent) => {
       console.log('🍋 푸시 알림 여부 이벤트 수신:', {
         platform,
@@ -86,17 +86,21 @@ export const usePushAlarmPermission = () => {
       return;
     }
 
-    const clickNotiListener = requestNotiPermissionReceived as EventListener;
-    window.addEventListener('clickNotificationReceived', clickNotiListener);
+    const pushPermissionListener =
+      requestPushPermissionReceived as EventListener;
+    window.addEventListener(
+      'clickNotificationReceived',
+      pushPermissionListener
+    );
 
     return () => {
       console.log('[웹→앱] 이벤트 리스너 제거');
       window.removeEventListener(
         'clickNotificationReceived',
-        clickNotiListener
+        pushPermissionListener
       );
     };
-  }, [platform, pathName, safePostMessage, requestNotiPermissionReceived]);
+  }, [platform, pathName, safePostMessage, requestPushPermissionReceived]);
 
-  return { requestNotiPermissionReceived, permission };
+  return { requestPushPermissionReceived, permission };
 };

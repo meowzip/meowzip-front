@@ -33,21 +33,24 @@ const SettingPage = () => {
   const [withdrawModal, setWithdrawModal] = useState(false);
   const [termsModal, setTermsModal] = useState<string>('');
 
-  // const {
-  //   data: pushPermission,
-  //   isSuccess,
-  //   isError,
-  //   error
-  // } = useQuery({
-  //   queryKey: ['getPushNoti'],
-  //   queryFn: () => getPushNotification(),
-  //   staleTime: 0
-  // });
+  const {
+    data: pushPermission,
+    isSuccess,
+    isError,
+    error
+  } = useQuery({
+    queryKey: ['getPushNoti'],
+    queryFn: () => getPushNotification(),
+    staleTime: 0
+  });
   // const switchOn = pushPermission?.receivePushNotification === true;
   const { permission } = usePushAlarmPermission();
   useEffect(() => {
     console.log('🍋🍋🍋🍋 permission: ', permission);
-  }, [permission]);
+    if (isSuccess && pushPermission) {
+      console.log('🍋🍋🍋🍋🍋 pushPermission:', pushPermission);
+    }
+  }, [pushPermission]);
   // const { pushPermissionEnabled } = usePushPermission();
   // const togglePushNotification = useMutation({
   //   mutationFn: () => togglePushNotificationOnServer(),
@@ -129,7 +132,10 @@ const SettingPage = () => {
               </h1>
             </div>
             {/* <Switch checked={switchOn} onCheckedChange={toggleSwitch} /> */}
-            <Switch checked={permission} onCheckedChange={sendMessageToRN} />
+            <Switch
+              checked={pushPermission?.receivePushNotification}
+              onCheckedChange={sendMessageToRN}
+            />
           </section>
           <section className="h-2 bg-gr-50" />
           <section>
