@@ -46,17 +46,6 @@ const SettingPage = () => {
   });
 
   // const { pushPermissionEnabled } = usePushPermission();
-  // const togglePushNotification = useMutation({
-  //   mutationFn: () => togglePushNotificationOnServer(),
-  //   onSuccess: (data: any) => {
-  //     if (data.status === 'OK') {
-  //       queryClient.invalidateQueries({
-  //         predicate: query => query.queryKey[0] === 'getPushNoti'
-  //       });
-  //     }
-  //   }
-  // });
-
   const { permission } = usePushAlarmPermission();
   useEffect(() => {
     console.log('🍋🍋🍋🍋 permission: ', permission);
@@ -64,31 +53,29 @@ const SettingPage = () => {
       console.log('🍋🍋🍋🍋🍋 pushPermission:', pushPermission);
     }
   }, [pushPermission, permission]);
-  // const { pushPermissionEnabled } = usePushPermission();
-  // const togglePushNotification = useMutation({
-  //   mutationFn: () => togglePushNotificationOnServer(),
-  //   onSuccess: (data: any) => {
-  //     if (data.status === 'OK') {
-  //       queryClient.invalidateQueries({
-  //         predicate: query => query.queryKey[0] === 'getPushNoti'
-  //       });
-  //     }
-  //   }
-  // });
-  // useEffect(() => {
-  //   console.log('1 pushPermissionEnabled: ', pushPermissionEnabled);
-  //   if (isSuccess && pushPermission) {
-  //     const shouldBeEnabled: Boolean =
-  //       pushPermissionEnabled === 'granted' ? true : false;
-  //     const currentEnabled: Boolean = pushPermission.receivePushNotification;
-  //     console.log('2 shouldBeEnabled: ', shouldBeEnabled);
-  //     console.log('3 currentEnabled: ', currentEnabled);
+  const togglePushNotification = useMutation({
+    mutationFn: () => togglePushNotificationOnServer(),
+    onSuccess: (data: any) => {
+      if (data.status === 'OK') {
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+      }
+    }
+  });
+  useEffect(() => {
+    console.log('1 pushPermissionEnabled: ', permission);
+    if (isSuccess && pushPermission) {
+      const shouldBeEnabled: Boolean = permission;
+      const currentEnabled: Boolean = pushPermission.receivePushNotification;
+      console.log('2 shouldBeEnabled: ', shouldBeEnabled);
+      console.log('3 currentEnabled: ', currentEnabled);
 
-  //     if (shouldBeEnabled !== currentEnabled) {
-  //       toggleSwitch();
-  //     }
-  //   }
-  // }, [isSuccess, pushPermission, pushPermissionEnabled]);
+      if (shouldBeEnabled !== currentEnabled) {
+        toggleSwitch();
+      }
+    }
+  }, [isSuccess, pushPermission, permission]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
@@ -101,14 +88,14 @@ const SettingPage = () => {
     }
   };
 
-  // const toggleSwitch = () => {
-  //   setSwitchOn(!switchOn);
-  //   togglePushNotification.mutate();
-  //   toast({
-  //     description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${switchOn ? '철회' : '동의'} 했어요`,
-  //     duration: 2000
-  //   });
-  // };
+  const toggleSwitch = () => {
+    // setSwitchOn(!switchOn);
+    togglePushNotification.mutate();
+    toast({
+      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${permission ? '철회' : '동의'} 했어요`,
+      duration: 2000
+    });
+  };
 
   const logOut = async () => {
     try {
@@ -126,7 +113,7 @@ const SettingPage = () => {
     }
   };
 
-  // if (isError) throw error;
+  if (isError) throw error;
 
   return (
     <>
