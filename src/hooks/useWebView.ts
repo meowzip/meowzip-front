@@ -1,10 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { checkUserAgent, type WebViewMessage } from '@/utils/userAgent';
-import {
-  getPushNotification,
-  togglePushNotificationOnServer
-} from '@/services/push-notification';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface UseWebViewReturn {
   isAndroid: boolean;
@@ -21,7 +16,7 @@ declare global {
   }
 }
 
-const WEBVIEW_MESSAGE_TYPES = {
+export const WEBVIEW_MESSAGE_TYPES = {
   CONSOLE_LOG: 'CONSOLE_LOG',
   CONSOLE_ERROR: 'CONSOLE_ERROR',
   CONSOLE_WARN: 'CONSOLE_WARN',
