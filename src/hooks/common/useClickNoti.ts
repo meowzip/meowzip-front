@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { WebViewMessage } from '@/types/webview';
-import { useWebView } from '@/hooks/useWebView';
+import { useWebView, WEBVIEW_MESSAGE_TYPES } from '@/hooks/useWebView';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { readNotificationOnServer } from '@/services/profile';
 import { usePathname } from 'next/navigation';
@@ -42,7 +42,7 @@ export const useClickNoti = () => {
       });
       setNotification(event.detail?.notification);
       safePostMessage({
-        type: 'NOTIFICATION_CLICKED',
+        type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_CLICKED,
         notification: event.detail.notification,
         timestamp: 121212
       });
