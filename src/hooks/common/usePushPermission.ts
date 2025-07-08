@@ -5,10 +5,10 @@ import { useWebView } from '@/hooks/useWebView';
 export const usePushPermission = () => {
   const [pushPermissionEnabled, setPushPermissionEnabled] = useState('');
   const { platform, safePostMessage } = useWebView();
+  const isClient = typeof window !== 'undefined';
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // react-devtools-bridge 메시지는 무시
       if (
         event.source === window &&
         event.data?.source === 'react-devtools-bridge'
@@ -24,7 +24,9 @@ export const usePushPermission = () => {
         ) {
           console.log('=====message.enabled', message.enabled);
           setPushPermissionEnabled(message.enabled);
-          localStorage.setItem('push_permission', message.enabled);
+          if (isClient) {
+            localStorage.setItem('push_permission', message.enabled);
+          }
           safePostMessage({
             type: 'NOTIFICATION_PERMISSION',
             enabled: message.enabled,
@@ -38,7 +40,9 @@ export const usePushPermission = () => {
       }
     };
 
-    const storedPushPermission = localStorage.getItem('push_permission');
+    const storedPushPermission = isClient
+      ? localStorage.getItem('push_permission')
+      : null;
     if (storedPushPermission) {
       setPushPermissionEnabled(storedPushPermission);
       safePostMessage({
@@ -48,7 +52,7 @@ export const usePushPermission = () => {
       });
     }
 
-    if (platform !== 'Web') {
+    if (platform !== 'Web' && isClient) {
       window.addEventListener('message', handleMessage);
 
       return () => {

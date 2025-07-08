@@ -3,7 +3,7 @@ import Button from '@/components/ui/Button';
 import { useUser } from '@/contexts/EmailContext';
 import Image from 'next/image';
 import { hideEmail } from '@/utils/common';
-import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface CheckAccountProps {
   setStep: () => void;
@@ -12,6 +12,7 @@ interface CheckAccountProps {
 export default function CheckAccount({ setStep }: CheckAccountProps) {
   const { email, loginType } = useUser();
   const hiddenEmail = hideEmail(email);
+  const router = useRouter();
 
   return (
     <section className="w-full px-6 pt-12 text-[24px] font-bold text-gray-800">
@@ -30,8 +31,7 @@ export default function CheckAccount({ setStep }: CheckAccountProps) {
       </div>
       <Button
         onClick={() => {
-          signIn();
-          setStep();
+          router.push('/signin');
         }}
         className="w-full rounded-16 bg-pr-500 px-4 py-2"
       >
