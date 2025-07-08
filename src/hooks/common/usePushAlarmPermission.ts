@@ -58,17 +58,17 @@ export const usePushAlarmPermission = () => {
         return;
       }
 
-      if (isSuccess && pushPermission) {
-        const shouldBeEnabled: Boolean =
-          event.detail?.enabled === 'granted' ? true : false;
-        const currentEnabled: Boolean = pushPermission.receivePushNotification;
-        console.log('🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
-        console.log('🍋🍋🍋 currentEnabled: ', currentEnabled);
+      // if (isSuccess && pushPermission) {
+      //   const shouldBeEnabled: Boolean =
+      //     event.detail?.enabled === 'granted' ? true : false;
+      //   const currentEnabled: Boolean = pushPermission.receivePushNotification;
+      //   console.log('🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
+      //   console.log('🍋🍋🍋 currentEnabled: ', currentEnabled);
 
-        if (shouldBeEnabled !== currentEnabled) {
-          togglePushNotification.mutate();
-        }
-      }
+      //   if (shouldBeEnabled !== currentEnabled) {
+      //     togglePushNotification.mutate();
+      //   }
+      // }
 
       setPermission(event.detail?.enabled);
       safePostMessage({
