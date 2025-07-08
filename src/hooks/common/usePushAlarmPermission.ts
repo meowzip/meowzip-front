@@ -6,6 +6,8 @@ import {
   getPushNotification,
   togglePushNotificationOnServer
 } from '@/services/push-notification';
+import { toast } from '@/components/ui/hooks/useToast';
+import { getCurrentDateInYYYYMMDD } from '@/utils/common';
 
 export const usePushAlarmPermission = () => {
   const { platform, safePostMessage } = useWebView();
@@ -24,12 +26,18 @@ export const usePushAlarmPermission = () => {
     staleTime: 0
   });
 
+  if (isError) throw error;
+
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
         queryClient.invalidateQueries({
           predicate: query => query.queryKey[0] === 'getPushNoti'
+        });
+        toast({
+          description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${pushPermission.receivePushNotification ? '철회' : '동의'} 했어요`,
+          duration: 2000
         });
       }
     }

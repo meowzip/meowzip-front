@@ -33,18 +33,21 @@ const SettingPage = () => {
   const [withdrawModal, setWithdrawModal] = useState(false);
   const [termsModal, setTermsModal] = useState<string>('');
 
-  const {
-    data: pushPermission,
-    isSuccess,
-    isError,
-    error
-  } = useQuery({
-    queryKey: ['getPushNoti'],
-    queryFn: () => getPushNotification(),
-    staleTime: 0
-  });
-  const switchOn = pushPermission?.receivePushNotification === true;
-  usePushAlarmPermission();
+  // const {
+  //   data: pushPermission,
+  //   isSuccess,
+  //   isError,
+  //   error
+  // } = useQuery({
+  //   queryKey: ['getPushNoti'],
+  //   queryFn: () => getPushNotification(),
+  //   staleTime: 0
+  // });
+  // const switchOn = pushPermission?.receivePushNotification === true;
+  const { permission } = usePushAlarmPermission();
+  useEffect(() => {
+    console.log('🍋🍋🍋🍋 permission: ', permission);
+  }, [permission]);
   // const { pushPermissionEnabled } = usePushPermission();
   // const togglePushNotification = useMutation({
   //   mutationFn: () => togglePushNotificationOnServer(),
@@ -82,14 +85,14 @@ const SettingPage = () => {
     }
   };
 
-  const toggleSwitch = () => {
-    // setSwitchOn(!switchOn);
-    // togglePushNotification.mutate();
-    toast({
-      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${switchOn ? '철회' : '동의'} 했어요`,
-      duration: 2000
-    });
-  };
+  // const toggleSwitch = () => {
+  //   setSwitchOn(!switchOn);
+  //   togglePushNotification.mutate();
+  //   toast({
+  //     description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${switchOn ? '철회' : '동의'} 했어요`,
+  //     duration: 2000
+  //   });
+  // };
 
   const logOut = async () => {
     try {
@@ -107,7 +110,7 @@ const SettingPage = () => {
     }
   };
 
-  if (isError) throw error;
+  // if (isError) throw error;
 
   return (
     <>
@@ -126,7 +129,7 @@ const SettingPage = () => {
               </h1>
             </div>
             {/* <Switch checked={switchOn} onCheckedChange={toggleSwitch} /> */}
-            <Switch checked={switchOn} onCheckedChange={sendMessageToRN} />
+            <Switch checked={permission} onCheckedChange={sendMessageToRN} />
           </section>
           <section className="h-2 bg-gr-50" />
           <section>
