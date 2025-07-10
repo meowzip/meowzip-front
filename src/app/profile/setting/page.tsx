@@ -35,7 +35,8 @@ const SettingPage = () => {
     data: pushPermission,
     isSuccess,
     isError,
-    error
+    error,
+    refetch
   } = useQuery({
     queryKey: ['getPushNoti'],
     queryFn: () => getPushNotification(),
@@ -47,22 +48,23 @@ const SettingPage = () => {
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
-        });
+        // queryClient.invalidateQueries({
+        //   predicate: query => query.queryKey[0] === 'getPushNoti'
+        // });
+        refetch();
       }
     }
   });
   useEffect(() => {
-    if (isSuccess && pushPermission) {
+    if (isSuccess) {
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
       const shouldBeEnabled: Boolean = permission;
-      console.log('🍋🍋 currentEnabled: ', currentEnabled);
-      console.log('🍋🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
 
       if (shouldBeEnabled === currentEnabled) return;
 
       toggleSwitch();
+      console.log('🍋🍋 currentEnabled: ', currentEnabled);
+      console.log('🍋🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
     }
   }, [permission]);
 
