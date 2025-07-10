@@ -55,16 +55,16 @@ const SettingPage = () => {
   });
   useEffect(() => {
     if (isSuccess && pushPermission) {
-      const shouldBeEnabled: Boolean = permission;
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
-      console.log('🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
-      console.log('🍋🍋🍋 currentEnabled: ', currentEnabled);
+      const shouldBeEnabled: Boolean = permission;
+      console.log('🍋🍋 currentEnabled: ', currentEnabled);
+      console.log('🍋🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
 
-      if (shouldBeEnabled !== currentEnabled) {
-        toggleSwitch();
-      }
+      if (shouldBeEnabled === currentEnabled) return;
+
+      toggleSwitch();
     }
-  }, [isSuccess, pushPermission, permission]);
+  }, [permission]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
