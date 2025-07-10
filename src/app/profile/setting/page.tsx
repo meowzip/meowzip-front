@@ -35,8 +35,7 @@ const SettingPage = () => {
     data: pushPermission,
     isSuccess,
     isError,
-    error,
-    refetch
+    error
   } = useQuery({
     queryKey: ['getPushNoti'],
     queryFn: () => getPushNotification(),
@@ -48,25 +47,22 @@ const SettingPage = () => {
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        // queryClient.invalidateQueries({
-        //   predicate: query => query.queryKey[0] === 'getPushNoti'
-        // });
-        refetch();
+        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
       }
     }
   });
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && pushPermission) {
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
       const shouldBeEnabled: Boolean = permission;
 
       if (shouldBeEnabled === currentEnabled) return;
 
       toggleSwitch();
-      console.log('🍋🍋 currentEnabled: ', currentEnabled);
-      console.log('🍋🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
+      console.log('🍋 서버 상태 [currentEnabled]: ', currentEnabled);
+      console.log('🍋 앱 상태 [shouldBeEnabled]: ', shouldBeEnabled);
     }
-  }, [isSuccess, pushPermission.receivePushNotification]);
+  }, [isSuccess, pushPermission.receivePushNotification, permission]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
