@@ -297,15 +297,15 @@ export const useWebView = (): UseWebViewReturn => {
         });
       }
 
-      const currentPushPermission = localStorage.getItem('push_permission');
-      if (currentPushPermission) {
-        console.log('[웹→앱] 저장된 푸시 알림 여부:', currentPushPermission);
-        safePostMessage({
-          type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
-          enabled: currentPushPermission,
-          timestamp: new Date().toISOString()
-        });
-      }
+      // const currentPushPermission = localStorage.getItem('push_permission');
+      // if (currentPushPermission) {
+      //   console.log('[웹→앱] 저장된 푸시 알림 여부:', currentPushPermission);
+      //   safePostMessage({
+      //     type: WEBVIEW_MESSAGE_TYPES.NOTIFICATION_PERMISSION,
+      //     enabled: currentPushPermission,
+      //     timestamp: new Date().toISOString()
+      //   });
+      // }
     }
 
     return () => {

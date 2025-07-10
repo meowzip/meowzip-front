@@ -1,11 +1,9 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useWebView, WEBVIEW_MESSAGE_TYPES } from '@/hooks/useWebView';
-import { usePathname } from 'next/navigation';
 
 export const usePushAlarmPermission = () => {
   const { platform, safePostMessage } = useWebView();
   const [permission, setPermission] = useState<boolean>(false);
-  const pathName = usePathname();
 
   const requestPushPermissionReceived = useCallback(
     (event: CustomEvent) => {
@@ -49,7 +47,7 @@ export const usePushAlarmPermission = () => {
         pushPermissionListener
       );
     };
-  }, [platform, pathName, safePostMessage, requestPushPermissionReceived]);
+  }, [platform, safePostMessage, requestPushPermissionReceived]);
 
   return { requestPushPermissionReceived, permission };
 };
