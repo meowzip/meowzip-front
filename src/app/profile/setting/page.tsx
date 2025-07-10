@@ -66,7 +66,7 @@ const SettingPage = () => {
       console.log('🍋🍋 currentEnabled: ', currentEnabled);
       console.log('🍋🍋🍋 shouldBeEnabled: ', shouldBeEnabled);
     }
-  }, [permission]);
+  }, [isSuccess, pushPermission.receivePushNotification]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
