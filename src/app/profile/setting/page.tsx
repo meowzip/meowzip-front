@@ -54,17 +54,14 @@ const SettingPage = () => {
   useEffect(() => {
     if (
       isSuccess &&
+      permission !== null &&
       pushPermission.receivePushNotification !== undefined &&
       pushPermission.receivePushNotification !== permission
     ) {
-      const currentEnabled: Boolean = pushPermission.receivePushNotification;
-      const shouldBeEnabled: Boolean = permission;
-
-      if (shouldBeEnabled === currentEnabled) return;
+      console.log('🍋 [서버 상태]: ', pushPermission.receivePushNotification);
+      console.log('🍋 [앱 상태]: ', permission);
 
       toggleSwitch();
-      console.log('🍋 서버 상태 [currentEnabled]: ', currentEnabled);
-      console.log('🍋 앱 상태 [shouldBeEnabled]: ', shouldBeEnabled);
     }
   }, [permission]);
 
