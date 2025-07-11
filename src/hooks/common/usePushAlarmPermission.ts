@@ -3,7 +3,7 @@ import { useWebView, WEBVIEW_MESSAGE_TYPES } from '@/hooks/useWebView';
 
 export const usePushAlarmPermission = () => {
   const { platform, safePostMessage } = useWebView();
-  const [permission, setPermission] = useState<boolean>(false);
+  const [permission, setPermission] = useState<boolean | null>(null);
 
   const requestPushPermissionReceived = useCallback(
     (event: CustomEvent) => {
