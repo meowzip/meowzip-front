@@ -52,7 +52,7 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    if (isSuccess && pushPermission) {
+    if (isSuccess && pushPermission.receivePushNotification !== undefined) {
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
       const shouldBeEnabled: Boolean = permission;
 
