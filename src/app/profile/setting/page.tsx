@@ -52,7 +52,11 @@ const SettingPage = () => {
     }
   });
   useEffect(() => {
-    if (isSuccess && pushPermission.receivePushNotification !== undefined) {
+    if (
+      isSuccess &&
+      pushPermission.receivePushNotification !== undefined &&
+      pushPermission.receivePushNotification !== permission
+    ) {
       const currentEnabled: Boolean = pushPermission.receivePushNotification;
       const shouldBeEnabled: Boolean = permission;
 
@@ -62,7 +66,7 @@ const SettingPage = () => {
       console.log('🍋 서버 상태 [currentEnabled]: ', currentEnabled);
       console.log('🍋 앱 상태 [shouldBeEnabled]: ', shouldBeEnabled);
     }
-  }, [isSuccess, pushPermission.receivePushNotification, permission]);
+  }, [permission]);
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
