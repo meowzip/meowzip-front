@@ -151,9 +151,13 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           setEditBottomSheet(!editBottomSheet);
         }}
         heightPercent={['50%', '60%']}
-        name={feedDetail?.memberNickname}
+        name={
+          selectedComment
+            ? selectedComment?.memberNickname
+            : feedDetail?.writerNickname
+        }
         memberId={
-          selectedComment ? selectedComment?.memberId : feedDetail?.memberId
+          selectedComment ? selectedComment?.memberId : feedDetail?.writerId
         }
         onDelete={() => {
           selectedComment
