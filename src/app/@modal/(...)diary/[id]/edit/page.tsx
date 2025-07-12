@@ -9,7 +9,11 @@ import { getDiaryDetail } from '@/services/diary';
 const DiaryEditModalPage = ({ params: { id } }: { params: { id: number } }) => {
   const router = useRouter();
 
-  const { data: diaryDetail } = useQuery({
+  const {
+    data: diaryDetail,
+    isLoading,
+    isError
+  } = useQuery({
     queryKey: ['diaryDetail', id],
     queryFn: () => getDiaryDetail(id),
     staleTime: 0
@@ -19,10 +23,20 @@ const DiaryEditModalPage = ({ params: { id } }: { params: { id: number } }) => {
     router.back();
   };
 
-  if (!diaryDetail) {
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black bg-opacity-50">
+        <div className="rounded-lg bg-white p-4 shadow-xl">
+          <p>일지 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError || !diaryDetail) {
     console.error('일지 상세 정보를 불러오는데 실패했거나 데이터가 없습니다.');
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black bg-opacity-50">
         <div className="rounded-lg bg-white p-4 shadow-xl">
           <p>일지 정보를 불러오는 데 실패했습니다.</p>
           <button
@@ -37,11 +51,15 @@ const DiaryEditModalPage = ({ params: { id } }: { params: { id: number } }) => {
   }
 
   return (
-    <DiaryWriteModal
-      onClose={handleClose}
-      id={diaryDetail.id}
-      diaryDetail={diaryDetail}
-    />
+    <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black bg-opacity-50">
+      <div className="h-screen w-full max-w-[640px] overflow-hidden bg-white">
+        <DiaryWriteModal
+          onClose={handleClose}
+          id={diaryDetail.id}
+          diaryDetail={diaryDetail}
+        />
+      </div>
+    </div>
   );
 };
 
