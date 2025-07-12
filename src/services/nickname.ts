@@ -41,11 +41,6 @@ export const updateProfileOnServer = async (reqObj: {
     if (reqObj.profileImage.startsWith('data:')) {
       const file = base64ToFile(reqObj.profileImage, 'image.jpg');
       file && formData.append('profileImage', file);
-    } else {
-      console.log(
-        '기본 이미지 또는 외부 URL은 파일로 변환하지 않습니다:',
-        reqObj.profileImage
-      );
     }
   }
 

@@ -194,7 +194,6 @@ const DiaryWriteModal = ({
   const onSubmit = (data: DiaryFormData) => {
     if (isSubmitting) return;
 
-    // 고양이 선택 여부 체크
     if (!data.taggedCats || data.taggedCats.length === 0) {
       toast({
         description: '고양이를 선택해주세요'
@@ -202,7 +201,6 @@ const DiaryWriteModal = ({
       return;
     }
 
-    // 내용이 없을 때 알림
     if (!data.content.trim()) {
       toast({
         description: '간단한 돌봄 기록이라도 남겨보세요!'
@@ -323,7 +321,6 @@ const DiaryWriteModal = ({
       shouldDirty: true
     });
 
-    // 폼 검증 재실행
     await trigger('taggedCats');
   };
 

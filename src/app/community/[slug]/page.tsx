@@ -55,10 +55,6 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
   const comments = commentsData?.items || [];
 
   useEffect(() => {
-    if (!feedDetail) return;
-  }, [slug, feedDetail]);
-
-  useEffect(() => {
     if (bottomSheetRef.current) {
       const height = bottomSheetRef.current.scrollHeight;
       setBottomSheetHeight(height);

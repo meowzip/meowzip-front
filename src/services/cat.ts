@@ -19,7 +19,6 @@ export const registerCat = async (
   // imageUrl이 유효한 URL인 경우에만 포함 (빈 문자열이나 "string" 값이면 제외)
   if (imageUrl && imageUrl !== 'string' && imageUrl.trim() !== '') {
     const catJson = JSON.stringify({ ...catObj, name, imageUrl });
-    console.log('imageUrl로 등록:', catJson);
 
     formData.append(
       'cat',
@@ -36,7 +35,6 @@ export const registerCat = async (
 
   // 사용자 업로드 이미지인 경우
   const catJson = JSON.stringify({ ...catObj, name });
-  console.log('이미지 업로드로 등록:', catJson);
 
   formData.append(
     'cat',
@@ -52,15 +50,10 @@ export const registerCat = async (
       const file = base64ToFile(imageToUpload, 'image.jpg');
       if (file) {
         formData.append('image', file);
-        console.log('이미지가 formData에 추가됨');
-      } else {
-        console.log('이미지 파일 변환 실패');
       }
     } catch (error) {
       console.error('이미지 변환 중 오류 발생:', error);
     }
-  } else {
-    console.log('업로드할 이미지 없음');
   }
 
   return fetchAuth('/cats', {

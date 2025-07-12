@@ -207,17 +207,7 @@ export const logFormData = (
           if (!event.target?.result) return;
         };
         reader.readAsText(pair[1]);
-      } else {
-        console.log(`${pair[0]}: ${pair[1]}`);
       }
-    }
-  } else if (formData instanceof URLSearchParams) {
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-  } else {
-    for (let key in formData) {
-      console.log(`${key}: ${formData[key]}`);
     }
   }
 };
