@@ -199,7 +199,6 @@ export default function CatInfo({
         updatedCatData.croppedImage = null;
       }
 
-      console.log('최종 제출 데이터:', updatedCatData);
       mutation.mutate(updatedCatData);
     } catch (error) {
       console.error('Error:', error);

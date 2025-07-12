@@ -47,7 +47,7 @@ type DiaryRegisterReqWithCats = Omit<DiaryRegisterReqObj, 'taggedCats'> & {
 
 interface DiaryWriteModalProps {
   onClose: () => void;
-  id: number;
+  id?: number;
   diaryDetail?: DiaryRegisterReqWithCats;
 }
 
@@ -97,7 +97,8 @@ const DiaryWriteModal = ({
     setValue,
     formState: { errors, isSubmitting },
     handleSubmit,
-    reset
+    reset,
+    trigger
   } = form;
 
   const watchedData = watch();
@@ -177,13 +178,15 @@ const DiaryWriteModal = ({
 
     const formattedDate = formatDateToISO(data.caredDate);
 
+    const catIds = data.taggedCats.map(cat => Number(cat.id));
+
     return {
       isGivenWater: data.isGivenWater,
       isFeed: data.isFeed,
       content: data.content,
       caredDate: formattedDate,
       caredTime: displayTime(),
-      taggedCats: data.taggedCats.map(cat => Number(cat.id)),
+      catIds: catIds,
       images: processedImages
     };
   };
@@ -191,7 +194,13 @@ const DiaryWriteModal = ({
   const onSubmit = (data: DiaryFormData) => {
     if (isSubmitting) return;
 
-    // 내용이 없을 때 알림
+    if (!data.taggedCats || data.taggedCats.length === 0) {
+      toast({
+        description: '고양이를 선택해주세요'
+      });
+      return;
+    }
+
     if (!data.content.trim()) {
       toast({
         description: '간단한 돌봄 기록이라도 남겨보세요!'
@@ -215,9 +224,7 @@ const DiaryWriteModal = ({
   const onError = (errors: any) => {
     if (errors.taggedCats) {
       toast({
-        title: '고양이 선택 필요',
-        description:
-          errors.taggedCats.message || '고양이를 최소 1마리 이상 선택해주세요.'
+        description: '고양이를 선택해주세요'
       });
     } else if (errors.images) {
       toast({
@@ -255,6 +262,9 @@ const DiaryWriteModal = ({
       editDiaryOnServer(reqObj),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
+      toast({
+        description: '일지가 성공적으로 수정되었습니다.'
+      });
       onClose();
     },
     onError: error => {
@@ -295,14 +305,23 @@ const DiaryWriteModal = ({
     }
   };
 
-  const handleAddCats = (
+  const handleAddCats = async (
     cats: CatType[] | ((prev: CatType[]) => CatType[])
   ) => {
+    let newCats: CatType[];
+
     if (typeof cats === 'function') {
-      setValue('taggedCats', cats(taggedCats));
+      newCats = cats(taggedCats);
     } else {
-      setValue('taggedCats', cats);
+      newCats = cats;
     }
+
+    setValue('taggedCats', newCats, {
+      shouldValidate: true,
+      shouldDirty: true
+    });
+
+    await trigger('taggedCats');
   };
 
   const chipObjList = [
@@ -312,7 +331,7 @@ const DiaryWriteModal = ({
 
   return (
     <>
-      <div className="h-screen w-full max-w-[640px] overflow-y-auto">
+      <div className="h-full w-full overflow-y-auto">
         <Topbar type="three">
           <Topbar.Back onClick={onClose} />
           <Topbar.Title title="일지쓰기" />

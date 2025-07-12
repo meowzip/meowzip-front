@@ -130,7 +130,7 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
           predicate: query => query.queryKey[0] === 'feeds'
         });
         onClose();
-        router.push('/community');
+        router.replace('/community');
       } else {
         console.error('게시글 등록 중 오류:', response.message);
       }

@@ -37,7 +37,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       iconEnd,
       onClear,
       disabled,
-      // validator,
       error,
       helperText,
       loading,

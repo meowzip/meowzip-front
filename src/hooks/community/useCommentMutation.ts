@@ -6,7 +6,6 @@ import {
   reportCommentOnServer,
   registerCommentOnServer
 } from '@/services/community';
-registerCommentOnServer;
 
 const useCommentMutation = () => {
   const queryClient = useQueryClient();

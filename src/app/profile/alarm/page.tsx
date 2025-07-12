@@ -113,9 +113,7 @@ const AlarmPage = () => {
   const readAllNotification = useMutation({
     mutationFn: () => readAllNotificationOnServer(),
     onSuccess: (data: any) => {
-      if (data.status !== 'OK') {
-        console.log('error');
-      } else {
+      if (data.status === 'OK') {
         setHasNewNotification(false);
         refetchNotifications();
         refetchCoParentNotifications();
