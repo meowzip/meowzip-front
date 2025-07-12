@@ -1,6 +1,4 @@
-import { fetchPublicJson } from '@/utils/fetch';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 const PROTECTED_ROUTES: string[] = [
   '/',
@@ -23,27 +21,33 @@ export const middleware = async (
   )?.value;
 
   if (!accessToken && !refreshToken) {
-    return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
+    return handlePublicAndProtectedRoutes({ currentPath, request });
   }
 
   if (accessToken && !checkExpiredToken(accessToken)) {
-    return handlePublicAndProtectedRoutes(currentPath, accessToken, request);
+    return handlePublicAndProtectedRoutes({
+      currentPath,
+      accessToken,
+      request
+    });
   }
 
-  try {
-    const newAccessToken = await refreshAccessToken(refreshToken);
-    return handleTokenRefresh(newAccessToken, request);
-  } catch (error) {
-    console.error('Error:', error);
-    return redirectToSignIn(request);
+  if (refreshToken) {
+    return NextResponse.next();
+  } else {
+    return handlePublicAndProtectedRoutes({ currentPath, request });
   }
 };
 
-const handlePublicAndProtectedRoutes = (
-  currentPath: string,
-  accessToken: string | undefined,
-  request: NextRequest
-): NextResponse => {
+const handlePublicAndProtectedRoutes = ({
+  currentPath,
+  accessToken,
+  request
+}: {
+  currentPath: string;
+  accessToken?: string;
+  request: NextRequest;
+}): NextResponse => {
   if (!accessToken && PROTECTED_ROUTES.includes(currentPath)) {
     return redirectToSignIn(request);
   }
@@ -67,61 +71,6 @@ const redirectToHome = (request: NextRequest): NextResponse => {
   return NextResponse.redirect(url);
 };
 
-const handleTokenRefresh = (
-  newAccessToken: string | undefined,
-  request: NextRequest
-): NextResponse => {
-  if (newAccessToken) {
-    const response = handlePublicAndProtectedRoutes(
-      request.nextUrl.pathname,
-      newAccessToken,
-      request
-    );
-    response.cookies.set('Authorization', newAccessToken, {
-      maxAge: 60 * 60 * 2,
-      secure: true,
-      path: '/'
-    });
-    return response;
-  }
-  return redirectToSignIn(request);
-};
-
-const refreshAccessToken = async (
-  refreshToken: string | undefined
-): Promise<string> => {
-  if (!refreshToken) {
-    throw new Error('No refresh token available');
-  }
-
-  const reqOptions = {
-    headers: {
-      Cookie: `Authorization-Refresh=${refreshToken}`
-    }
-  };
-
-  try {
-    const response = await fetchPublicJson('/tokens/refresh', {
-      method: 'POST',
-      ...reqOptions
-    });
-
-    if (response.ok) {
-      const newAccessToken: string | null =
-        response.headers.get('authorization');
-      if (newAccessToken) {
-        return newAccessToken;
-      } else {
-        throw new Error('Authorization token not found in the response');
-      }
-    } else {
-      throw new Error('Failed to refresh token');
-    }
-  } catch (error) {
-    throw error;
-  }
-};
-
 const checkExpiredToken = (accessToken: string): boolean => {
   try {
     const payloadBase64: string = accessToken.split('.')[1];
@@ -132,9 +81,10 @@ const checkExpiredToken = (accessToken: string): boolean => {
     return expirationTimeMs < Date.now();
   } catch (error) {
     console.error('Failed to decode or check token expiration:', error);
-    throw new Error('Invalid token format');
+    return true;
   }
 };
+
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|images|favicon.ico|_next/data|_next/chunks).*)'

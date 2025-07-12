@@ -24,21 +24,25 @@ export const signInOnServer = async (reqObj: {
   fcmToken: string;
 }) => {
   try {
-    const requestOptions = {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
-      body: reqObj,
-      credentials: 'include' as RequestCredentials
-    };
-    const response = await fetchPublicJson('/members/login', requestOptions);
-    const token = response.headers.get('Authorization');
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(reqObj),
+      credentials: 'include'
+    });
 
-    if (token) {
-      document.cookie = `Authorization=${token}; path=/; max-age=3600; secure;`;
-      return response;
-    } else {
-      const errorData = (await response.body) as any;
-      throw new Error(errorData.message || '로그인 요청 중 오류 발생');
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || '로그인 요청 중 오류 발생');
     }
+
+    const data = await response.json();
+    return {
+      ok: true,
+      body: data
+    };
   } catch (error) {
     throw error;
   }
