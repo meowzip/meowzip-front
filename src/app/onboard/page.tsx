@@ -46,9 +46,7 @@ const OnBoardPage = () => {
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
       if (data.status === 'OK') {
-        queryClient.invalidateQueries({
-          predicate: query => query.queryKey[0] === 'getPushNoti'
-        });
+        queryClient.invalidateQueries({ queryKey: ['getPushNoti'] });
       }
     }
   });
