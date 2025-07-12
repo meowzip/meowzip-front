@@ -45,8 +45,11 @@ export default function Password() {
       return signInOnServer(reqObj);
     },
     onSuccess: (response: any) => {
-      if (response.status === 200) {
-        router.replace('/diary');
+      if (response.ok) {
+        const { body } = response;
+        const redirectTo = body?.redirectTo || '/diary';
+
+        window.location.href = redirectTo;
       } else {
         router.replace('/signin');
       }

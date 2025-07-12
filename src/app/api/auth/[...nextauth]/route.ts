@@ -35,8 +35,6 @@ const handler = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log('🔍 Apple 로그인 응답:', { user, account });
-
       try {
         const [signInInfo, signInResult] = await Promise.all([
           checkMembershipByEmail(user.email || ''),
@@ -69,12 +67,6 @@ const handler = NextAuth({
       const cookieList = cookies();
       const isMember = cookieList.get('Authorization');
       return isMember ? '/diary' : '/signin';
-    }
-  },
-  events: {
-    async signOut() {
-      cookies().delete('Authorization');
-      cookies().delete('Authorization-Refresh');
     }
   }
 });
