@@ -12,7 +12,7 @@ import {
   getPushNotification,
   togglePushNotificationOnServer
 } from '@/services/push-notification';
-import { usePushPermission } from '@/hooks/common/usePushPermission';
+import { usePushAlarmPermission } from '@/hooks/common/usePushAlarmPermission';
 
 const OnBoardPage = () => {
   const router = useRouter();
@@ -41,7 +41,7 @@ const OnBoardPage = () => {
     staleTime: 0
   });
 
-  const { pushPermissionEnabled } = usePushPermission();
+  const { permission } = usePushAlarmPermission();
   const togglePushNotification = useMutation({
     mutationFn: () => togglePushNotificationOnServer(),
     onSuccess: (data: any) => {
@@ -53,16 +53,18 @@ const OnBoardPage = () => {
     }
   });
   useEffect(() => {
-    if (isSuccess && pushPermission) {
-      const shouldBeEnabled: Boolean =
-        pushPermissionEnabled === 'granted' ? true : false;
-      const currentEnabled: Boolean = pushPermission.receivePushNotification;
+    if (
+      isSuccess &&
+      permission !== null &&
+      pushPermission.receivePushNotification !== undefined &&
+      pushPermission.receivePushNotification !== permission
+    ) {
+      console.log('🍋 [서버 상태]: ', pushPermission.receivePushNotification);
+      console.log('🍋 [앱 상태]: ', permission);
 
-      if (shouldBeEnabled !== currentEnabled) {
-        togglePushNotification.mutate();
-      }
+      togglePushNotification.mutate();
     }
-  }, [isSuccess, pushPermission, pushPermissionEnabled]);
+  }, [permission]);
 
   if (isMyProfileError) throw myProfileError;
   if (isPushNotiError) throw pushNotiError;

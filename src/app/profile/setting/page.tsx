@@ -59,12 +59,17 @@ const SettingPage = () => {
       pushPermission.receivePushNotification !== undefined &&
       pushPermission.receivePushNotification !== permission
     ) {
-      console.log('🍋 [서버 상태]: ', pushPermission.receivePushNotification);
-      console.log('🍋 [앱 상태]: ', permission);
-
       toggleSwitch();
     }
   }, [permission]);
+
+  const toggleSwitch = () => {
+    togglePushNotification.mutate();
+    toast({
+      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${permission ? '동의' : '철회'} 했어요`,
+      duration: 2000
+    });
+  };
 
   const sendMessageToRN = () => {
     if ((window as any).ReactNativeWebView) {
@@ -75,14 +80,6 @@ const SettingPage = () => {
     } else {
       alert('앱 설정에서 푸시 알림을 직접 변경해주세요.');
     }
-  };
-
-  const toggleSwitch = () => {
-    togglePushNotification.mutate();
-    toast({
-      description: `${getCurrentDateInYYYYMMDD()} 앱 푸시 수신 동의를 ${permission ? '동의' : '철회'} 했어요`,
-      duration: 2000
-    });
   };
 
   const logOut = async () => {
