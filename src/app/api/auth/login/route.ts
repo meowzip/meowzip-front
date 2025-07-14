@@ -11,11 +11,20 @@ const extractCookieValue = (
   return cookieMatch ? cookieMatch[1] : null;
 };
 
+const getCookieDomain = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (!isProduction) {
+    return 'localhost';
+  }
+
+  return '.meowzip.com';
+};
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { email, password, fcmToken } = body;
-
     const requestOptions = {
       method: 'POST',
       body: { email, password, fcmToken },
@@ -56,12 +65,13 @@ export async function POST(request: NextRequest) {
     );
 
     const isProduction = process.env.NODE_ENV === 'production';
+    const cookieDomain = getCookieDomain();
 
     const baseCookieOptions = {
       secure: isProduction,
       path: '/',
       sameSite: 'lax' as const,
-      ...(isProduction ? {} : { domain: 'localhost' })
+      domain: cookieDomain
     };
 
     successResponse.cookies.set('Authorization', accessToken, {
