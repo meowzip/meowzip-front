@@ -3,10 +3,10 @@ import FilterSkeleton from './FilterSkeleton';
 import CatRegisterBtn from './CatRegisterBtn';
 import Link from 'next/link';
 import { InfiniteQueryResponse } from '@/types/infiniteListType';
-import { CatFilterType } from '@/types/cat';
+import { CatListObj } from '@/types/cat';
 
 interface Props {
-  catList: InfiniteQueryResponse<CatFilterType>;
+  catList: InfiniteQueryResponse<CatListObj>;
   isLoading: boolean;
   selectedCatId: number | null;
   onSelect: (id: number | null) => void;
