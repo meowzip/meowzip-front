@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Topbar from '../ui/Topbar';
 import { Input } from '../ui/Input';
-import { CatRegisterReqObj } from '@/app/zip/catType';
+import { CatRegisterReqObj } from '@/types/cat';
 import { useToast } from '../ui/hooks/useToast';
 
 const catNameSchema = z.object({

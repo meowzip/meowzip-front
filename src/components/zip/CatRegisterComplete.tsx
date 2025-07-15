@@ -1,5 +1,5 @@
 import Topbar from '../ui/Topbar';
-import { CatRegisterReqObj } from '@/app/zip/catType';
+import { CatRegisterReqObj } from '@/types/cat';
 import { useRouter } from 'next/navigation';
 
 interface SignInMainProps {

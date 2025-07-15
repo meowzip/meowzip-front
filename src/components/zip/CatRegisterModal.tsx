@@ -4,7 +4,7 @@ import CatName from './CatName';
 import CatInfo from './CatInfo';
 import CatPhoto from './CatPhoto';
 import CatRegisterComplete from './CatRegisterComplete';
-import { CatRegisterReqObj } from '@/app/zip/catType';
+import { CatRegisterReqObj } from '@/types/cat';
 
 interface DiaryWriteModalProps {
   onClose: () => void;

@@ -1,6 +1,6 @@
 'use client';
 
-import { CatListObj } from '@/app/zip/catType';
+import { CatListObj } from '@/types/cat';
 import ZipCard from '@/components/zip/ZipCard';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';

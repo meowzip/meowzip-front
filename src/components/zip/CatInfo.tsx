@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { CatObjType, CatRegisterReqObj, CoParent } from '@/app/zip/catType';
+import { CatObjType, CatRegisterReqObj, CoParent } from '@/types/cat';
 import Topbar from '../ui/Topbar';
 import Textarea from '../ui/Textarea';
 import BottomSheet from '../ui/BottomSheet';

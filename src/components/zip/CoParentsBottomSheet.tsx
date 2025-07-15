@@ -1,7 +1,7 @@
 import BottomSheet from '@/components/ui/BottomSheet';
 import React from 'react';
 import Image from 'next/image';
-import { CoParent } from '@/app/zip/catType';
+import { CoParent } from '@/types/cat';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 
 interface CoParentsBottomSheetProps {

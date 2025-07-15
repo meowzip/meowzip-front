@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation';
 import CoParentAlarmSkeleton from '@/components/profile/CoParentAlarmSkeleton';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 import { DEFAULT_CAT_IMAGES, NEUTERING } from '@/constants/cats';
-import { CoParentCatResObj } from '@/app/zip/catType';
+import { CoParentCatResObj } from '@/types/cat';
 import Modal from '@/components/ui/Modal';
 
 const CoParentAlarmPage = ({ params: { id } }: { params: { id: number } }) => {

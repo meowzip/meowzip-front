@@ -1,4 +1,4 @@
-import { CatListObj } from '@/app/zip/catType';
+import { CatListObj } from '@/types/cat';
 import Topbar from '@/components/ui/Topbar';
 import { useRouter } from 'next/navigation';
 import ZipCard from '@/components/zip/ZipCard';

@@ -2,7 +2,7 @@ import BottomSheet from '@/components/ui/BottomSheet';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
-import { CoParent } from '@/app/zip/catType';
+import { CoParent } from '@/types/cat';
 import { useToast } from '@/components/ui/hooks/useToast';
 
 interface CoparentsRequestBottomSheetProps {

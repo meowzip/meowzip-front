@@ -1,7 +1,7 @@
 import { DiaryObj } from '@/app/diary/diaryType';
 import { base64ToFile, getAuthHeader } from '@/utils/common';
 import { objectToQueryString } from '@/utils/common';
-import { CatObjType, CoParent } from '@/app/zip/catType';
+import { CatObjType, CoParent } from '@/types/cat';
 import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 
 export const registerCat = async (
