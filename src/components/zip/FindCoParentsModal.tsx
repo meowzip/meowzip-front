@@ -1,6 +1,6 @@
 'use client';
 
-import { CoParent } from '@/app/zip/catType';
+import { CoParent } from '@/types/cat';
 import Topbar from '@/components/ui/Topbar';
 import CoParentsRequestBottomSheet from '@/components/zip/CoParentsRequestBottomSheet';
 import {

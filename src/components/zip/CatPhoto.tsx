@@ -1,6 +1,6 @@
 import Topbar from '../ui/Topbar';
 import ImageUploader from '@/components/diary/ImageUploader';
-import { CatRegisterReqObj } from '@/app/zip/catType';
+import { CatRegisterReqObj } from '@/types/cat';
 import Filter from '../diary/Filter';
 import { useState } from 'react';
 import { DEFAULT_CAT_IMAGES, DEFAULT_IMAGE_SRC } from '@/constants/cats';

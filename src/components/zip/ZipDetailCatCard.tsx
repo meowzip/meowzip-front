@@ -1,4 +1,4 @@
-import { CatBaseType } from '@/app/zip/catType';
+import { CatBaseType } from '@/types/cat';
 import Label from '@/components/ui/Label';
 import { NEUTERING } from '@/constants/cats';
 import Image from 'next/image';

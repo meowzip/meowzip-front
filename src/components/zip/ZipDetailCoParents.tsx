@@ -1,4 +1,4 @@
-import { CoParent } from '@/app/zip/catType';
+import { CoParent } from '@/types/cat';
 import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
 import Image from 'next/image';
 
