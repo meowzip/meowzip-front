@@ -7,44 +7,20 @@ import { useEffect, useState, useCallback } from 'react';
 import ZipSkeleton from '@/components/zip/ZipSkeleton';
 import ZipEmptyState from '@/components/zip/ZipEmptyState';
 import { useInView } from 'react-intersection-observer';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { getCatsOnServer } from '@/services/cat';
+import useInfiniteCats from '@/hooks/diary/useInfiniteCats';
 
 const ZipPage = () => {
   const router = useRouter();
-  const { ref, inView } = useInView({
+
+  const { ref: catsRef, inView: catsInView } = useInView({
     threshold: 0.1,
     rootMargin: '100px'
   });
 
   const [, setSelectedModalId] = useState<number | null>(null);
 
-  const {
-    data: catList,
-    isLoading,
-    fetchNextPage,
-    isError,
-    error,
-    hasNextPage
-  } = useInfiniteQuery({
-    queryKey: ['getCats'],
-    queryFn: ({ pageParam = 1 }) =>
-      getCatsOnServer({
-        page: pageParam,
-        size: 10
-      }),
-    getNextPageParam: (lastPage, allPages) => {
-      return lastPage.hasNext ? allPages.length + 1 : undefined;
-    },
-    initialPageParam: 1,
-    staleTime: 0
-  });
-
-  useEffect(() => {
-    if (inView && hasNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, fetchNextPage]);
+  const { catList, isCatsLoading, isCatListError, catListError } =
+    useInfiniteCats(catsInView);
 
   const openDetailModal = useCallback(
     (item: CatListObj) => {
@@ -54,7 +30,7 @@ const ZipPage = () => {
     [router]
   );
 
-  if (isError) throw error;
+  if (isCatListError) throw catListError;
 
   return (
     <div className="mx-auto h-screen w-full max-w-[640px] bg-gr-50">
@@ -63,7 +39,7 @@ const ZipPage = () => {
       </h1>
       <div className="bg-gr-50">
         <section className="p-4 px-4 pb-28">
-          {isLoading ? (
+          {isCatsLoading ? (
             <div className="grid grid-cols-2 gap-4">
               <ZipSkeleton />
             </div>
@@ -83,8 +59,8 @@ const ZipPage = () => {
             </div>
           )}
           {/* 무한 스크롤 감지 영역 */}
-          {!isLoading && hasNextPage && (
-            <div ref={ref} className="h-20 bg-transparent" />
+          {!isCatsLoading && (
+            <div ref={catsRef} className="h-20 bg-transparent" />
           )}
         </section>
       </div>
