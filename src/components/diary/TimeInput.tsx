@@ -109,6 +109,7 @@ const TimeInput = ({
       </div>
       <div className="p-[0 16px] flex h-[48px] justify-center gap-2 pt-14">
         <Button
+          type="button"
           onClick={() => {
             setSelectTimeBottomSheet(false);
           }}
@@ -118,6 +119,7 @@ const TimeInput = ({
           <Button.Text text="취소" className="text-btn-1 text-gr-800" />
         </Button>
         <Button
+          type="button"
           onClick={() => {
             setTime(localTime);
             setSelectTimeBottomSheet(false);
