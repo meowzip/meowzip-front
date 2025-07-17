@@ -7,9 +7,10 @@ interface TextareaProps {
   };
   disabled?: boolean;
   onChange: (content: string) => void;
+  onFocus?: () => void;
 }
 
-const Textarea = ({ propObj, disabled, onChange }: TextareaProps) => {
+const Textarea = ({ propObj, disabled, onChange, onFocus }: TextareaProps) => {
   return (
     <div className={`flex flex-col gap-[6px] ${propObj.style}`}>
       <textarea
@@ -19,6 +20,7 @@ const Textarea = ({ propObj, disabled, onChange }: TextareaProps) => {
         disabled={disabled}
         value={propObj.content}
         onChange={e => onChange(e.target.value)}
+        onFocus={onFocus}
         maxLength={propObj.maxLength}
       />
       {propObj.maxLength && (

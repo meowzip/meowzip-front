@@ -234,6 +234,17 @@ export default function CatInfo({
     return `${year}년  /  ${month}월  /  ${day}일`;
   };
 
+  const handleFocus = () => {
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+      setTimeout(() => {
+        document.activeElement?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 300);
+    }
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 mx-auto h-full min-w-[320px] max-w-[640px] overflow-y-auto bg-gr-white">
       <Topbar type="three">
@@ -451,6 +462,7 @@ export default function CatInfo({
               onChange={(value: string) =>
                 setValue('memo', value, { shouldValidate: true })
               }
+              onFocus={handleFocus}
             />
             {errors.memo && (
               <p className="mt-1 text-sm text-red-500">{errors.memo.message}</p>
