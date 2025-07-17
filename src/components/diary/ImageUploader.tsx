@@ -5,7 +5,8 @@ import {
   Dispatch,
   ReactNode,
   SetStateAction,
-  useRef
+  useRef,
+  useEffect
 } from 'react';
 import Button from '@/components/ui/Button';
 import Image from 'next/image';
@@ -96,6 +97,20 @@ const ImageUploader = ({
     imageElement,
     onUpload
   );
+
+  useEffect(() => {
+    const isCropModalOpen = data?.imageSrc && !data?.croppedImage;
+
+    if (isCropModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [data?.imageSrc, data?.croppedImage]);
 
   return (
     <div
