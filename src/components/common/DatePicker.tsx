@@ -1,9 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Picker from '../ui/picker/Picker';
-
-const years = Array.from({ length: 5 }, (_, i) => 2021 + i);
-const months = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
-const days = Array.from({ length: 31 }, (_, i) => `${i + 1}일`);
 
 type DatePickerProps = {
   onSelectedChange: (selected: string) => void;
@@ -11,9 +7,17 @@ type DatePickerProps = {
 
 const DatePicker = ({ onSelectedChange }: DatePickerProps) => {
   const today = new Date();
-  const initialYear = today.getFullYear();
-  const initialMonth = `${today.getMonth() + 1}월`; // JavaScript months are 0-based
-  const initialDay = `${today.getDate()}일`;
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth() + 1;
+  const currentDay = today.getDate();
+
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - 2 + i);
+  const months = Array.from({ length: 12 }, (_, i) => `${i + 1}월`);
+  const days = Array.from({ length: 31 }, (_, i) => `${i + 1}일`);
+
+  const initialYear = currentYear;
+  const initialMonth = `${currentMonth}월`;
+  const initialDay = `${currentDay}일`;
 
   const [selectedYear, setSelectedYear] = useState<string | number>(
     initialYear
@@ -22,6 +26,15 @@ const DatePicker = ({ onSelectedChange }: DatePickerProps) => {
     initialMonth
   );
   const [selectedDay, setSelectedDay] = useState<string | number>(initialDay);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleYearChange = (year: string | number) => {
     setSelectedYear(year);
@@ -37,22 +50,62 @@ const DatePicker = ({ onSelectedChange }: DatePickerProps) => {
 
   return (
     <div className="flex flex-col items-center rounded-lg bg-white">
-      <div className="flex items-center justify-center gap-[9px] self-stretch px-4 pb-8 pt-4">
-        <Picker
-          list={years}
-          onSelectedChange={handleYearChange}
-          initialSelected={initialYear}
-        />
-        <Picker
-          list={months}
-          onSelectedChange={handleMonthChange}
-          initialSelected={initialMonth}
-        />
-        <Picker
-          list={days}
-          onSelectedChange={handleDayChange}
-          initialSelected={initialDay}
-        />
+      <div
+        className="flex items-start justify-center gap-[9px] self-stretch px-4 pb-8 pt-4"
+        style={{
+          height: '180px',
+          alignItems: 'flex-start'
+        }}
+      >
+        {isReady && (
+          <>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start'
+              }}
+            >
+              <Picker
+                key="year-picker"
+                list={years}
+                onSelectedChange={handleYearChange}
+                initialSelected={initialYear}
+              />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start'
+              }}
+            >
+              <Picker
+                key="month-picker"
+                list={months}
+                onSelectedChange={handleMonthChange}
+                initialSelected={initialMonth}
+              />
+            </div>
+            <div
+              style={{
+                flex: 1,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start'
+              }}
+            >
+              <Picker
+                key="day-picker"
+                list={days}
+                onSelectedChange={handleDayChange}
+                initialSelected={initialDay}
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className="flex h-12 w-full flex-1 items-start justify-center gap-2 self-stretch px-4">
         <button
