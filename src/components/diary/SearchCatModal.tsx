@@ -77,6 +77,19 @@ export default function SearchCatModal({
     }
   };
 
+  const handleImageError = (
+    e: React.SyntheticEvent<HTMLImageElement, Event>
+  ) => {
+    const target = e.target as HTMLImageElement;
+    target.src = '/images/icons/unknown.svg';
+  };
+
+  const getGenderIconPath = (sex: string) => {
+    const validSexes = ['F', 'M', 'UNDEFINED'];
+    const normalizedSex = validSexes.includes(sex) ? sex : 'UNDEFINED';
+    return `/images/icons/gender-${normalizedSex}.svg`;
+  };
+
   if (isError) throw error;
 
   return (
@@ -95,27 +108,30 @@ export default function SearchCatModal({
                 onClick={() => selectCat(cat)}
               >
                 <Image
-                  src={cat.imageUrl}
+                  src={cat.imageUrl || '/images/icons/unknown.svg'}
                   alt="cat-image"
                   width={48}
                   height={48}
                   className="h-12 w-12 rounded-full"
+                  onError={handleImageError}
+                  unoptimized
                 />
                 <div className="flex gap-2">
                   <h5 className="text-body-2 text-gr-900">{cat.name}</h5>
                   <Image
-                    src={`/images/icons/gender-${cat.sex}.svg`}
+                    src={getGenderIconPath(cat.sex)}
                     alt="cat-gender"
                     width={16}
                     height={16}
                     className={`rounded-full ${
                       cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
                     }`}
+                    onError={handleImageError}
+                    unoptimized
                   />
                 </div>
               </li>
             ))}
-            {/* 무한 스크롤 감지 영역 */}
             <div ref={ref} className="h-20 bg-transparent" />
           </>
         ) : (
