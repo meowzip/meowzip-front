@@ -51,15 +51,15 @@ const Carousel: React.FC<CarouselProps> = ({ images, style }) => {
         onSwiper={swiper => {
           swiperRef.current = swiper;
         }}
-        className="h-full w-full"
+        className="relative h-full w-full"
       >
         {images.map((image, index) => (
-          <SwiperSlide key={index} className="relative">
+          <SwiperSlide key={index} className="relative h-full w-full">
             <Image
               src={image}
               alt={`slide-${index}`}
               fill
-              className={`object-cover ${style}`}
+              className={`h-full w-full object-cover ${style}`}
               sizes="(max-width: 640px) 100vw, 640px"
             />
           </SwiperSlide>

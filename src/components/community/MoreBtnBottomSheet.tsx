@@ -3,7 +3,7 @@ import BottomSheet from '@/components/ui/BottomSheet';
 import Modal from '@/components/ui/Modal';
 import { getCookie } from '@/utils/common';
 import { jwtDecode } from 'jwt-decode';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface MoreBtnBottomSheetProps {
   type: 'feed' | 'zip' | 'diary' | 'comment';
@@ -19,7 +19,7 @@ interface MoreBtnBottomSheetProps {
   showWriteModal?: () => void;
 }
 
-const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
+const MoreBtnBottomSheet = ({
   type,
   isVisible,
   setIsVisible,
@@ -31,7 +31,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
   onBlock,
   onReport,
   showWriteModal
-}) => {
+}: MoreBtnBottomSheetProps) => {
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState<{
     title: string;
@@ -39,9 +39,20 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
     primaryBtn: { content: string; onClick: () => void };
     secondaryBtn: { content: string };
   }>();
+  const [decodedMemberId, setDecodedMemberId] = useState<number | null>(null);
 
-  const token = getCookie('Authorization');
-  const decodedToken: { memberId: number } = jwtDecode(token);
+  useEffect(() => {
+    const token = getCookie('Authorization');
+    if (token) {
+      try {
+        const decodedToken: { memberId: number } = jwtDecode(token);
+        setDecodedMemberId(decodedToken.memberId);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+        setDecodedMemberId(null);
+      }
+    }
+  }, []);
 
   const openModalEdit = () => {
     setIsVisible(false);
@@ -108,7 +119,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
           heightPercent={heightPercent}
         >
           <div className="px-4">
-            {(decodedToken?.memberId === memberId && type !== 'comment') ||
+            {(decodedMemberId === memberId && type !== 'comment') ||
             type === 'zip' ? (
               <>
                 <ActionButton
@@ -124,7 +135,7 @@ const MoreBtnBottomSheet: React.FC<MoreBtnBottomSheetProps> = ({
               </>
             ) : (
               <>
-                {decodedToken?.memberId === memberId && type === 'comment' ? (
+                {decodedMemberId === memberId && type === 'comment' ? (
                   <ActionButton
                     icon="/images/icons/delete.svg"
                     content="삭제하기"

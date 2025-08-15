@@ -52,7 +52,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
 
   const { blockComment, reportComment, deleteComment } = useCommentMutation();
 
-  const comments = commentsData?.items || [];
+  const comments = (commentsData as any)?.items || [];
 
   useEffect(() => {
     if (bottomSheetRef.current) {
@@ -83,16 +83,18 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
       </Topbar>
       <div className="flex-1 overflow-y-auto">
         <div className="pb-24 pt-12">
-          <FeedCard
-            variant="detail"
-            content={feedDetail}
-            openBottomSheet={() => {
-              setEditBottomSheet(true);
-            }}
-            toggleLikeFeed={() => toggleLikeFeed(feedDetail)}
-            toggleBookmark={() => toggleBookmark(feedDetail)}
-            hasUserArea
-          />
+          {feedDetail && (
+            <FeedCard
+              variant="detail"
+              content={feedDetail}
+              openBottomSheet={() => {
+                setEditBottomSheet(true);
+              }}
+              toggleLikeFeed={() => toggleLikeFeed(feedDetail)}
+              toggleBookmark={() => toggleBookmark(feedDetail)}
+              hasUserArea
+            />
+          )}
           {comments.length === 0 && (
             <p className="py-8 text-center text-sm text-gr-300">
               아직 댓글이 없어요
@@ -109,18 +111,18 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
                 setSelectedComment={setSelectedComment}
                 onReply={handleReply}
               />
-              {isReplying && parentCommentId === comment.id && (
+              {isReplying && parentCommentId === comment.id && feedDetail && (
                 <WriteComment
-                  feedId={feedDetail?.id}
+                  feedId={feedDetail.id}
                   parentCommentId={parentCommentId}
                   onCancel={handleCancelReply}
                 />
               )}
               {comment.replies?.map((reply: CommentType) => (
                 <Fragment key={reply.id}>
-                  {isReplying && parentCommentId === reply.id && (
+                  {isReplying && parentCommentId === reply.id && feedDetail && (
                     <WriteComment
-                      feedId={feedDetail?.id}
+                      feedId={feedDetail.id}
                       parentCommentId={parentCommentId}
                       onCancel={handleCancelReply}
                     />
@@ -132,7 +134,7 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
         </div>
       </div>
       <div className="z-[60] flex-none border-t border-gr-100 bg-gr-white shadow-sm">
-        {!isReplying && <WriteComment feedId={feedDetail?.id} />}
+        {!isReplying && feedDetail && <WriteComment feedId={feedDetail.id} />}
       </div>
       {showWriteModal && (
         <FeedWriteModal
@@ -156,12 +158,14 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           selectedComment ? selectedComment?.memberId : feedDetail?.writerId
         }
         onDelete={() => {
-          selectedComment
-            ? deleteComment({
-                postId: feedDetail?.id,
-                commentId: selectedComment?.id
-              })
-            : deleteFeed(feedDetail);
+          if (selectedComment && feedDetail) {
+            deleteComment({
+              postId: feedDetail.id,
+              commentId: selectedComment.id
+            });
+          } else if (feedDetail) {
+            deleteFeed(feedDetail);
+          }
         }}
         onEdit={() => {
           if (!selectedComment) {
@@ -169,14 +173,18 @@ const DetailPage = ({ params: { slug } }: { params: { slug: number } }) => {
           }
         }}
         onBlock={() => {
-          selectedComment
-            ? blockComment(feedDetail?.id)
-            : blockFeed(feedDetail);
+          if (selectedComment && feedDetail) {
+            blockComment(feedDetail.id);
+          } else if (feedDetail) {
+            blockFeed(feedDetail);
+          }
         }}
         onReport={() => {
-          selectedComment
-            ? reportComment(feedDetail?.id, selectedComment?.id)
-            : reportFeed(feedDetail);
+          if (selectedComment && feedDetail) {
+            reportComment(feedDetail.id, selectedComment.id);
+          } else if (feedDetail) {
+            reportFeed(feedDetail);
+          }
         }}
         showWriteModal={
           selectedComment ? undefined : () => setShowWriteModal(true)

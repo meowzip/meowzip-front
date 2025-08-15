@@ -1,5 +1,5 @@
 import Profile from '@/components/ui/Profile';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
@@ -21,12 +21,23 @@ const UserArea = ({
   onClick
 }: UserProps) => {
   const router = useRouter();
+  const [memberId, setMemberId] = useState<number | null>(null);
 
-  const token = getCookie('Authorization');
-  const decodedToken: { memberId: number } = jwtDecode(token);
+  useEffect(() => {
+    const token = getCookie('Authorization');
+    if (token) {
+      try {
+        const decodedToken: { memberId: number } = jwtDecode(token);
+        setMemberId(decodedToken.memberId);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+        setMemberId(null);
+      }
+    }
+  }, []);
 
   const navigateDetailProfile = () => {
-    if (writerId === decodedToken.memberId) {
+    if (memberId && writerId === memberId) {
       router.push(`/profile`);
     } else {
       router.push(`/profile/${writerId}`);

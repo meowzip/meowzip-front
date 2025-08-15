@@ -53,13 +53,6 @@ const refreshTokenIfNeeded = async (): Promise<string | null> => {
 
       console.error('토큰 리프레시 실패:', response.status);
 
-      if (
-        typeof window !== 'undefined' &&
-        (response.status === 401 || response.status === 403)
-      ) {
-        window.location.href = '/signin';
-      }
-
       return null;
     } catch (error) {
       console.error('토큰 리프레시 에러:', error);
@@ -175,4 +168,8 @@ export const fetchAuthJson = returnFetchJson({
 export const fetchPublicJson = returnFetchJson({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0',
   headers: { Accept: 'application/json' }
+});
+
+export const fetchRaw = returnFetch({
+  baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/public/v1.0.0'
 });

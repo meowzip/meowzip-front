@@ -5,6 +5,20 @@ import returnFetch, {
   ReturnFetchDefaultOptions
 } from './returnFetch';
 
+export class HttpError extends Error {
+  status: number;
+  response: Response;
+  body: any;
+
+  constructor(response: Response, body: any) {
+    super(`HTTP error! status: ${response.status}`);
+    this.name = 'HttpError';
+    this.status = response.status;
+    this.response = response;
+    this.body = body;
+  }
+}
+
 export type ReturnFetchJson = typeof returnFetchJson;
 
 export type ReturnFetchJsonDefaultOptions = ReturnFetchDefaultOptions & {
@@ -60,10 +74,11 @@ const returnFetchJson = (args?: ReturnFetchJsonDefaultOptions) => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      const msg = `STATUS: ${response.status} \n ERROR_TEXT: ${errorText}`;
+      const errorBody = parseJsonSafely(await response.text());
+      const msg = `STATUS: ${response.status} 
+ ERROR_TEXT: ${JSON.stringify(errorBody)}`;
       await sendDiscordErrorLog(msg, response.url);
-      throw new Error(msg);
+      throw new HttpError(response, errorBody);
     }
 
     const body = parseJsonSafely(await response.text(), args?.jsonParser) as T;

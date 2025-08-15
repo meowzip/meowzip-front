@@ -3,7 +3,9 @@ import {
   getAuthHeader,
   objectToQueryString
 } from '@/utils/common';
-import { fetchAuth } from '@/utils/fetch';
+import { fetchAuthJson } from '@/utils/fetch';
+import { FeedType } from '@/types/communityType';
+import { PageResponse } from '@/types/infiniteListType';
 
 type FeedSearchOption = {
   page: number;
@@ -16,41 +18,24 @@ export const getFeedsOnServer = async ({ page, size }: FeedSearchOption) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community?${objectToQueryString({ page, size })}`,
-      requestOptions
-    );
+  const response = await fetchAuthJson<PageResponse<FeedType>>(
+    `/community?${objectToQueryString({ page, size })}`,
+    requestOptions
+  );
 
-    if (response.body) {
-      const responseBody = await response.text();
-      const parsedBody = JSON.parse(responseBody);
-      return parsedBody;
-    } else {
-      throw new Error('응답 본문이 없습니다.');
-    }
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 목록 조회 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 목록 조회 중 오류 발생:');
-    }
-  }
+  return response.body;
 };
 
-export const getFeedDetail = async (id: number) => {
+export const getFeedDetail = async (id: number): Promise<FeedType> => {
   const requestOptions = {
     method: 'GET',
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
-  const response = await fetchAuth(`/community/${id}`, requestOptions);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-
-  const data = await response.json();
-  return data.data;
+  const response = await fetchAuthJson<{ data: FeedType }>(
+    `/community/${id}`,
+    requestOptions
+  );
+  return response.body.data;
 };
 
 export const deleteFeedOnServer = async (id: number) => {
@@ -59,44 +44,22 @@ export const deleteFeedOnServer = async (id: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(`/community/${id}`, requestOptions);
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 삭제 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 삭제 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(`/community/${id}`, requestOptions);
+  return response.body;
 };
 
 export const blockWriterOnServer = async (postId: number) => {
   const requestOptions = {
     method: 'POST',
     headers: { Accept: 'application/json', ...getAuthHeader() },
-    body: JSON.stringify({ postId })
+    body: { postId }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/block-writer`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 차단 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 차단 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/block-writer`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const reportFeedOnServer = async (postId: number) => {
@@ -105,22 +68,11 @@ export const reportFeedOnServer = async (postId: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/report`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 신고 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 신고 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/report`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const registerFeedOnServer = async (reqObj: {
@@ -149,19 +101,8 @@ export const registerFeedOnServer = async (reqObj: {
     body: formData
   };
 
-  try {
-    const response = await fetchAuth('/community', requestOptions);
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 등록 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 등록 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson('/community', requestOptions);
+  return response.body;
 };
 
 export const editFeedOnServer = async (reqObj: {
@@ -193,19 +134,11 @@ export const editFeedOnServer = async (reqObj: {
     body: formData
   };
 
-  try {
-    const response = await fetchAuth(`/community/${reqObj.id}`, requestOptions);
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 등록 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 등록 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${reqObj.id}`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const toggleLikeFeedOnServer = async (postId: number) => {
@@ -214,22 +147,11 @@ export const toggleLikeFeedOnServer = async (postId: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/like`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 좋아요 토글 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 좋아요 토글 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/like`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const toggleBookmarkOnServer = async (postId: number) => {
@@ -238,22 +160,11 @@ export const toggleBookmarkOnServer = async (postId: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/bookmark`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 북마크 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 북마크 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/bookmark`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const getFeedComments = async (postId: number) => {
@@ -262,17 +173,11 @@ export const getFeedComments = async (postId: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/comments`,
-      requestOptions
-    );
-    if (!response.ok) return;
-    const data = response.json();
-    return data;
-  } catch {
-    throw new Error('댓글 조회 중 오류 발생');
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/comments`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const registerCommentOnServer = async (reqObj: {
@@ -294,25 +199,14 @@ export const registerCommentOnServer = async (reqObj: {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
-    body: JSON.stringify(reqParams)
+    body: reqParams
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${reqObj.postId}/comments`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('게시글 차단 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('게시글 차단 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${reqObj.postId}/comments`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const deleteCommentOnServer = async ({
@@ -327,22 +221,11 @@ export const deleteCommentOnServer = async ({
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/comments/${commentId}`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('댓글 삭제 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('댓글 삭제 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/comments/${commentId}`,
+    requestOptions
+  );
+  return response.body;
 };
 export const blockCommentWriterOnServer = async (postId: number) => {
   const requestOptions = {
@@ -350,22 +233,11 @@ export const blockCommentWriterOnServer = async (postId: number) => {
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/block-writer`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('댓글 작성자 차단 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('댓글 작성자 차단 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/block-writer`,
+    requestOptions
+  );
+  return response.body;
 };
 
 export const reportCommentOnServer = async ({
@@ -380,20 +252,9 @@ export const reportCommentOnServer = async ({
     headers: { Accept: 'application/json', ...getAuthHeader() }
   };
 
-  try {
-    const response = await fetchAuth(
-      `/community/${postId}/comments/${commentId}/report`,
-      requestOptions
-    );
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(error);
-    if (error instanceof Error) {
-      throw new Error('댓글 신고 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('댓글 신고 중 오류 발생:');
-    }
-  }
+  const response = await fetchAuthJson(
+    `/community/${postId}/comments/${commentId}/report`,
+    requestOptions
+  );
+  return response.body;
 };
