@@ -109,10 +109,10 @@ const returnFetch =
     const response = await fetchProvided(...requestInterceptorAppliedArgs);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      const msg = `STATUS: ${response.status} \n ERROR_TEXT: ${errorText}`;
+      const errorText = await response.clone().text();
+      const msg = `STATUS: ${response.status} 
+ ERROR_TEXT: ${errorText}`;
       await sendDiscordErrorLog(msg, response.url);
-      throw new Error(msg);
     }
 
     return (

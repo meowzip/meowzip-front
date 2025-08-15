@@ -1,22 +1,47 @@
 'use client';
 
 import { useState } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+  MutationCache
+} from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { HttpError } from '@/utils/returnFetchJson';
+import { authStore, sessionExpiredModalAtom } from '@/store/authAtom';
 
 const Providers = ({ children }: any): React.JSX.Element => {
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            retry: 0,
-            staleTime: 0
-          }
+  const [queryClient] = useState(() => {
+    const handleUnauthorizedError = (error: unknown) => {
+      const isModalOpen = authStore.get(sessionExpiredModalAtom);
+
+      if (isModalOpen) {
+        return;
+      }
+
+      if (error instanceof HttpError && error.status === 401) {
+        queryClient.clear();
+        authStore.set(sessionExpiredModalAtom, true);
+      }
+    };
+
+    return new QueryClient({
+      queryCache: new QueryCache({
+        onError: handleUnauthorizedError
+      }),
+      mutationCache: new MutationCache({
+        onError: handleUnauthorizedError
+      }),
+      defaultOptions: {
+        queries: {
+          refetchOnWindowFocus: false,
+          retry: 0,
+          staleTime: 0
         }
-      })
-  );
+      }
+    });
+  });
 
   return (
     <QueryClientProvider client={queryClient}>

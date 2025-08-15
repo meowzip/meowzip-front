@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import BottomNavBar from '@/components/ui/BottomNavBar';
 import FloatingActionButton from '@/components/ui/FloatingActionButton';
 import { PATHS } from '@/constants/paths';
+import SessionExpiredModal from './SessionExpiredModal';
 
 const pathsWithNav = [PATHS.DIARY, PATHS.ZIP, PATHS.COMMUNITY, PATHS.PROFILE];
 
@@ -80,6 +81,7 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
           <BottomNavBar />
         </div>
       )}
+      <SessionExpiredModal />
     </div>
   );
 }

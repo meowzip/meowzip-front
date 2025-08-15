@@ -34,7 +34,7 @@ const CommunityContents = () => {
         size: 10
       }),
     getNextPageParam: (lastPage, allPages) => {
-      return lastPage.hasNext ? allPages.length + 1 : undefined;
+      return (lastPage as any).hasNext ? allPages.length + 1 : undefined;
     },
     initialPageParam: 1,
     staleTime: 0
@@ -80,7 +80,7 @@ const CommunityContents = () => {
     <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
       {feedList?.pages.map((page, pageIndex) => (
         <React.Fragment key={pageIndex}>
-          {page?.items?.map((feed: FeedType) => (
+          {(page as any)?.items?.map((feed: FeedType) => (
             <div
               key={feed.id}
               className={`transition-all duration-500 ease-out ${

@@ -1,5 +1,7 @@
-import { fetchPublicJson } from '@/utils/fetch';
+import { fetchRaw } from '@/utils/fetch';
 import { NextRequest, NextResponse } from 'next/server';
+
+let refreshPromise: Promise<NextResponse> | null = null;
 
 const extractCookieValue = (
   setCookieHeader: string,
@@ -28,7 +30,9 @@ const clearPreviousTokens = (response: NextResponse) => {
   });
 };
 
-export async function POST(request: NextRequest) {
+const performTokenRefresh = async (
+  request: NextRequest
+): Promise<NextResponse> => {
   try {
     const refreshToken = request.cookies.get('Authorization-Refresh')?.value;
 
@@ -46,17 +50,23 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    const response = await fetchPublicJson('/tokens/refresh', requestOptions);
+    const response = await fetchRaw('/tokens/refresh', requestOptions);
 
     if (!response.ok) {
-      return NextResponse.json(
+      const errorData = await response.text();
+      console.error(
+        `Backend refresh request failed with status: ${response.status}`,
+        errorData
+      );
+      const errorResponse = NextResponse.json(
         { error: '토큰 새로고침 실패' },
         { status: response.status }
       );
+      clearPreviousTokens(errorResponse);
+      return errorResponse;
     }
 
     const newAccessToken = response.headers.get('Authorization');
-
     const setCookieHeader = response.headers.get('set-cookie');
     const newRefreshToken = setCookieHeader
       ? extractCookieValue(setCookieHeader, 'Authorization-Refresh')
@@ -106,5 +116,24 @@ export async function POST(request: NextRequest) {
       { error: '토큰 새로고침 처리 중 오류 발생' },
       { status: 500 }
     );
+  }
+};
+
+export async function POST(request: NextRequest) {
+  if (refreshPromise) {
+    console.log('>>> Ongoing refresh request. Waiting...');
+    const response = await refreshPromise;
+    return response.clone();
+  }
+
+  console.log('>>> Starting new refresh request.');
+  refreshPromise = performTokenRefresh(request);
+
+  try {
+    const response = await refreshPromise;
+    return response.clone();
+  } finally {
+    console.log('>>> Refresh request finished. Releasing lock.');
+    refreshPromise = null;
   }
 }
