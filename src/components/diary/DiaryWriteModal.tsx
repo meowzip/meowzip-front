@@ -260,8 +260,11 @@ const DiaryWriteModal = ({
   const editDiaryMutation = useMutation({
     mutationFn: (reqObj: { id: number; diary: DiaryRegisterReqObj }) =>
       editDiaryOnServer(reqObj),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
+      queryClient.invalidateQueries({
+        predicate: q => q.queryKey[0] === 'diaries'
+      });
       toast({
         description: '일지가 성공적으로 수정되었습니다.'
       });

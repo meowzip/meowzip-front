@@ -341,7 +341,19 @@ export const deleteCat = async (id: number) => {
 
   try {
     const response = await fetchAuth(`/cats/${id}`, requestOptions);
-    return response.body;
+    if (!response.ok) {
+      const msg = await (async () => {
+        try {
+          const body = await response.text();
+          return body || '요청 실패';
+        } catch {
+          return '요청 실패';
+        }
+      })();
+
+      throw new Error(msg);
+    }
+    return true;
   } catch (error) {
     console.error(error);
     if (error instanceof Error) {
