@@ -104,9 +104,17 @@ const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
         heightPercent={['50%', '40%']}
         name={catDetail?.name}
         memberId={catDetail?.id}
-        onDelete={() => {
-          deleteCat(catDetail?.id);
-          location.href = '/zip';
+        onDelete={async () => {
+          try {
+            await deleteCat(catDetail?.id);
+            toast({ description: '삭제되었습니다.', duration: 1000 });
+            router.replace('/zip');
+          } catch (e) {
+            toast({
+              description: '삭제에 실패했습니다. 잠시 후 다시 시도해주세요.',
+              duration: 1500
+            });
+          }
         }}
         onEdit={() => {
           router.push(`/zip/${id}/edit?catId=${catDetail?.id}`);
