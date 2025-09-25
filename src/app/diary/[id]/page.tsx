@@ -82,11 +82,11 @@ const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
             <h5 className="text-end text-body-4 text-gr-500">
               {diaryDetail?.memberNickname} • {diaryDetail?.caredTime}
             </h5>
-            <div className="flex h-[300px] w-full">
-              {diaryDetail?.images && (
+            {diaryDetail?.images.length > 0 && (
+              <div className="flex h-[300px] w-full">
                 <Carousel images={diaryDetail?.images} style="rounded-16" />
-              )}
-            </div>
+              </div>
+            )}
             <h4 className="w-full whitespace-pre-line text-body-3 text-gr-black">
               {diaryDetail?.content}
             </h4>
