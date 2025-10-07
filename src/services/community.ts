@@ -3,7 +3,7 @@ import {
   getAuthHeader,
   objectToQueryString
 } from '@/utils/common';
-import { fetchAuthJson } from '@/utils/fetch';
+import { fetchAuth, fetchAuthJson } from '@/utils/fetch';
 import { FeedType } from '@/types/communityType';
 import { PageResponse } from '@/types/infiniteListType';
 
@@ -101,8 +101,9 @@ export const registerFeedOnServer = async (reqObj: {
     body: formData
   };
 
-  const response = await fetchAuthJson('/community', requestOptions);
-  return response.body;
+  const response = await fetchAuth('/community', requestOptions);
+  const data = await response.json();
+  return data;
 };
 
 export const editFeedOnServer = async (reqObj: {
@@ -134,11 +135,9 @@ export const editFeedOnServer = async (reqObj: {
     body: formData
   };
 
-  const response = await fetchAuthJson(
-    `/community/${reqObj.id}`,
-    requestOptions
-  );
-  return response.body;
+  const response = await fetchAuth(`/community/${reqObj.id}`, requestOptions);
+  const data = await response.json();
+  return data;
 };
 
 export const toggleLikeFeedOnServer = async (postId: number) => {

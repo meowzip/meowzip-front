@@ -2,9 +2,10 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import Topbar from '@/components/ui/Topbar';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { deleteCat } from '@/services/cat';
+import { deleteCat, getCatDetail } from '@/services/cat';
 import { useToast } from '@/components/ui/hooks/useToast';
 import ZipDetailContent from './ZipDetailContent';
 import CoParentsBottomSheet from './CoParentsBottomSheet';
@@ -15,9 +16,19 @@ interface ZipDetailClientProps {
   id: number;
 }
 
-const ZipDetailClient = ({ catDetail, id }: ZipDetailClientProps) => {
+const ZipDetailClient = ({
+  catDetail: initialCatDetail,
+  id
+}: ZipDetailClientProps) => {
   const router = useRouter();
   const { toast } = useToast();
+
+  const { data: catDetail } = useQuery({
+    queryKey: ['catDetail', id],
+    queryFn: () => getCatDetail(id),
+    initialData: initialCatDetail,
+    staleTime: 5 * 60 * 1000
+  });
 
   const [editBottomSheet, setEditBottomSheet] = useState(false);
   const [coParentsBottomSheet, setCoParentsBottomSheet] = useState(false);

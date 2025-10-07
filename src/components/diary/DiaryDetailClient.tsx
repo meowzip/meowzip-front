@@ -2,10 +2,10 @@
 
 import React, { useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import Topbar from '@/components/ui/Topbar';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { deleteDiaryOnServer } from '@/services/diary';
+import { deleteDiaryOnServer, getDiaryDetail } from '@/services/diary';
 import DiaryDetailContent from './DiaryDetailContent';
 
 interface DiaryDetailClientProps {
@@ -13,14 +13,28 @@ interface DiaryDetailClientProps {
   id: number;
 }
 
-const DiaryDetailClient = ({ diaryDetail, id }: DiaryDetailClientProps) => {
+const DiaryDetailClient = ({
+  diaryDetail: initialDiaryDetail,
+  id
+}: DiaryDetailClientProps) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [editBottomSheet, setEditBottomSheet] = useState(false);
+
+  const { data: diaryDetail } = useQuery({
+    queryKey: ['diaryDetail', id],
+    queryFn: () => getDiaryDetail(id),
+    initialData: initialDiaryDetail,
+    staleTime: 5 * 60 * 1000
+  });
 
   const deleteDiaryMutation = useMutation({
     mutationFn: (id: number) => deleteDiaryOnServer(id),
     onSuccess: (response: any) => {
       if (response.status === 'OK') {
+        queryClient.removeQueries({
+          predicate: query => query.queryKey[0] === 'diaries'
+        });
         router.push('/diary');
       } else {
         console.error('일지 삭제 중 오류:', response.message);

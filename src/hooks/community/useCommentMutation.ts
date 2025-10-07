@@ -38,13 +38,12 @@ const useCommentMutation = () => {
     }) => registerCommentOnServer(reqObj),
     onSuccess: (response: any, variables) => {
       if (response.status === 'OK') {
-        const postIdStr = String(variables.postId);
         queryClient.invalidateQueries({
-          queryKey: ['comments', postIdStr],
+          queryKey: ['comments', variables.postId],
           refetchType: 'active'
         });
         queryClient.invalidateQueries({
-          queryKey: ['feedDetail', postIdStr],
+          queryKey: ['feedDetail', variables.postId],
           refetchType: 'active'
         });
       }

@@ -16,7 +16,7 @@ const DiaryEditModalPage = ({ params: { id } }: { params: { id: number } }) => {
   } = useQuery({
     queryKey: ['diaryDetail', id],
     queryFn: () => getDiaryDetail(id),
-    staleTime: 0
+    staleTime: 5 * 60 * 1000
   });
 
   const handleClose = () => {
