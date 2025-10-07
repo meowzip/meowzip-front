@@ -9,7 +9,7 @@ import {
   validateNotification
 } from '@/services/profile';
 import { useMutation } from '@tanstack/react-query';
-import { AlarmType } from '@/app/profile/alarm/page';
+import { AlarmType } from './AlarmPageClient';
 
 interface AlarmListProps {
   alarm: AlarmType;
