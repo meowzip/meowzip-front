@@ -14,7 +14,10 @@ export default function CatRegisterComplete({
 }: SignInMainProps) {
   const router = useRouter();
   const handleMoveToDiaryWrite = () => {
-    router.push('/diary');
+    router.back();
+    setTimeout(() => {
+      router.push('/diary/write');
+    }, 300);
   };
 
   return (
