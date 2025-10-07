@@ -42,6 +42,14 @@ const isTokenExpired = (token: string): boolean => {
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
 
+const getRefreshTokenUrl = (): string => {
+  if (typeof window === 'undefined') {
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    return `${baseUrl}/api/auth/refresh-token`;
+  }
+  return '/api/auth/refresh-token';
+};
+
 const refreshTokenIfNeeded = async (): Promise<string | null> => {
   if (isRefreshing && refreshPromise) {
     return refreshPromise;
@@ -50,10 +58,33 @@ const refreshTokenIfNeeded = async (): Promise<string | null> => {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const response = await fetch('/api/auth/refresh-token', {
+      const refreshUrl = getRefreshTokenUrl();
+      const requestOptions: RequestInit = {
         method: 'POST',
         credentials: 'include'
-      });
+      };
+
+      if (typeof window === 'undefined') {
+        try {
+          const { cookies } = await import('next/headers');
+          const cookieStore = cookies();
+          const refreshToken = cookieStore.get('Authorization-Refresh')?.value;
+
+          if (!refreshToken) {
+            console.error('서버 사이드: Refresh Token이 없습니다');
+            return null;
+          }
+
+          requestOptions.headers = {
+            Cookie: `Authorization-Refresh=${refreshToken}`
+          };
+        } catch (error) {
+          console.error('서버 사이드 쿠키 읽기 실패:', error);
+          return null;
+        }
+      }
+
+      const response = await fetch(refreshUrl, requestOptions);
 
       if (response.ok) {
         const data = await response.json();
@@ -105,7 +136,9 @@ export const fetchAuth = returnFetch({
       ];
     },
     response: async (response, [url, requestInit], fetch) => {
-      if (response.status === 401) {
+      const isRetry = (requestInit as any)?._isRetry;
+
+      if (response.status === 401 && !isRetry) {
         const newToken = await refreshTokenIfNeeded();
         if (newToken) {
           const headers = new Headers(requestInit?.headers);
@@ -114,10 +147,16 @@ export const fetchAuth = returnFetch({
           const retryResponse = await fetch(url, {
             ...requestInit,
             headers,
-            credentials: 'include'
-          });
+            credentials: 'include',
+            _isRetry: true // 재시도 플래그 추가
+          } as any);
 
           return retryResponse;
+        } else {
+          if (typeof window !== 'undefined') {
+            console.error('세션이 만료되었습니다. 다시 로그인해주세요.');
+            window.location.href = '/signin';
+          }
         }
       }
 
@@ -155,7 +194,9 @@ export const fetchAuthJson = returnFetchJson({
       ];
     },
     response: async (response, [url, requestInit], fetch) => {
-      if (response.status === 401) {
+      const isRetry = (requestInit as any)?._isRetry;
+
+      if (response.status === 401 && !isRetry) {
         const newToken = await refreshTokenIfNeeded();
         if (newToken) {
           const headers = new Headers(requestInit?.headers);
@@ -164,10 +205,16 @@ export const fetchAuthJson = returnFetchJson({
           const retryResponse = await fetch(url, {
             ...requestInit,
             headers,
-            credentials: 'include'
-          });
+            credentials: 'include',
+            _isRetry: true
+          } as any);
 
           return retryResponse;
+        } else {
+          if (typeof window !== 'undefined') {
+            console.error('세션이 만료되었습니다. 다시 로그인해주세요.');
+            window.location.href = '/signin';
+          }
         }
       }
 
