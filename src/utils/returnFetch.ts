@@ -93,7 +93,6 @@ const returnFetch =
       defaultOptions
     );
 
-    // apply request interceptor
     const fetchProvided = defaultOptions?.fetch || fetch;
     let requestInterceptorAppliedArgs: FetchArgs;
     if (defaultOptions?.interceptors?.request) {
@@ -113,6 +112,15 @@ const returnFetch =
       const msg = `STATUS: ${response.status} 
  ERROR_TEXT: ${errorText}`;
       await sendDiscordErrorLog(msg, response.url);
+
+      let errorMessage = `요청 실패 (상태 코드: ${response.status})`;
+      try {
+        const errorData = JSON.parse(errorText);
+        if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch {}
+      throw new Error(errorMessage);
     }
 
     return (

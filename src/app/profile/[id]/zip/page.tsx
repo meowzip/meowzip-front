@@ -16,8 +16,8 @@ export async function generateMetadata({
 
   if (!params.id || isNaN(id)) {
     return {
-      title: '모음집 | 냥집사',
-      description: '냥집사 고양이 모음집'
+      title: '모음집 | 냥.zip',
+      description: '냥.zip 고양이 모음집'
     };
   }
 
@@ -25,7 +25,7 @@ export async function generateMetadata({
     const profileData = await getClickedUserProfile(id);
 
     return {
-      title: `${profileData.nickname}님의 모음집 | 냥집사`,
+      title: `${profileData.nickname}님의 모음집 | 냥.zip`,
       description: `${profileData.nickname}님이 돌보는 고양이들을 만나보세요`,
       openGraph: {
         title: `${profileData.nickname}님의 모음집`,
@@ -38,8 +38,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '모음집 | 냥집사',
-      description: '냥집사 고양이 모음집'
+      title: '모음집 | 냥.zip',
+      description: '냥.zip 고양이 모음집'
     };
   }
 }

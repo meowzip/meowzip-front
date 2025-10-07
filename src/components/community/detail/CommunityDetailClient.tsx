@@ -2,15 +2,16 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import WriteComment from './WriteComment';
 import MoreBtnBottomSheet from '../MoreBtnBottomSheet';
-import FeedWriteModal from '../FeedWriteModal';
 import Topbar from '@/components/ui/Topbar';
 import useFeedMutations from '@/hooks/community/useFeedMutations';
 import useCommentMutation from '@/hooks/community/useCommentMutation';
 import { FeedType, CommentType } from '@/types/communityType';
 import FeedDetailContent from './FeedDetailContent';
 import CommentList from './CommentList';
+import { getFeedDetail, getFeedComments } from '@/services/community';
 
 interface CommunityDetailClientProps {
   feedDetail: FeedType;
@@ -19,7 +20,7 @@ interface CommunityDetailClientProps {
 }
 
 const CommunityDetailClient = ({
-  feedDetail: initialFeed,
+  feedDetail: initialFeedDetail,
   comments: initialComments,
   slug
 }: CommunityDetailClientProps) => {
@@ -27,8 +28,24 @@ const CommunityDetailClient = ({
   const bottomSheetRef = useRef<HTMLDivElement>(null);
   const [, setBottomSheetHeight] = useState<number>(0);
 
+  const { data: initialFeed } = useQuery({
+    queryKey: ['feedDetail', slug],
+    queryFn: () => getFeedDetail(slug),
+    initialData: initialFeedDetail,
+    staleTime: 5 * 60 * 1000
+  });
+
+  const { data: commentsData } = useQuery({
+    queryKey: ['comments', slug],
+    queryFn: async () => {
+      const data = await getFeedComments(slug);
+      return (data as any)?.items || [];
+    },
+    initialData: initialComments,
+    staleTime: 5 * 60 * 1000
+  });
+
   const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [showWriteModal, setShowWriteModal] = useState(false);
   const [selectedComment, setSelectedComment] = useState<CommentType>();
   const [parentCommentId, setParentCommentId] = useState<number | null>(null);
   const [isReplying, setIsReplying] = useState(false);
@@ -70,7 +87,7 @@ const CommunityDetailClient = ({
             onToggleLike={() => toggleLikeFeed(initialFeed)}
             onToggleBookmark={() => toggleBookmark(initialFeed)}
           />
-          {initialComments.length === 0 ? (
+          {commentsData.length === 0 ? (
             <p className="py-8 text-center text-sm text-gr-300">
               아직 댓글이 없어요
               <br />
@@ -78,7 +95,7 @@ const CommunityDetailClient = ({
             </p>
           ) : (
             <CommentList
-              comments={initialComments}
+              comments={commentsData}
               onOpenBottomSheet={setEditBottomSheet}
               onSelectComment={setSelectedComment}
               onReply={handleReply}
@@ -93,12 +110,6 @@ const CommunityDetailClient = ({
       <div className="z-[60] flex-none border-t border-gr-100 bg-gr-white shadow-sm">
         {!isReplying && <WriteComment feedId={initialFeed.id} />}
       </div>
-      {showWriteModal && (
-        <FeedWriteModal
-          onClose={() => setShowWriteModal(false)}
-          feedDetail={initialFeed}
-        />
-      )}
       <MoreBtnBottomSheet
         type={selectedComment ? 'comment' : 'feed'}
         isVisible={editBottomSheet}
@@ -124,7 +135,7 @@ const CommunityDetailClient = ({
         }}
         onEdit={() => {
           if (!selectedComment) {
-            setShowWriteModal(true);
+            router.push(`/community/write?edit=${initialFeed.id}`);
           }
         }}
         onBlock={() => {
@@ -141,9 +152,6 @@ const CommunityDetailClient = ({
             reportFeed(initialFeed);
           }
         }}
-        showWriteModal={
-          selectedComment ? undefined : () => setShowWriteModal(true)
-        }
       />
     </div>
   );

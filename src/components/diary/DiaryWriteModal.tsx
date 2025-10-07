@@ -21,6 +21,7 @@ import { toast } from '../ui/hooks/useToast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { useErrorHandler } from '@/hooks/common/useErrorHandler';
 
 const diaryFormSchema = z.object({
   content: z.string().max(500, '일지는 500자 이하로 작성해주세요.'),
@@ -58,6 +59,13 @@ const DiaryWriteModal = ({
 }: DiaryWriteModalProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  const { handleError: handleRegisterError } = useErrorHandler({
+    title: '일지 등록 중 오류가 발생했습니다'
+  });
+  const { handleError: handleEditError } = useErrorHandler({
+    title: '일지 수정 중 오류가 발생했습니다'
+  });
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -248,20 +256,16 @@ const DiaryWriteModal = ({
         router.push('/diary');
       }, 350);
     },
-    onError: error => {
-      toast({
-        title: '일지 등록 중 오류가 발생했습니다.',
-        description: error.message || '일지 등록 중 오류가 발생했습니다.'
-      });
-      console.error('일지 등록 중 오류:', error);
-    }
+    onError: handleRegisterError
   });
 
   const editDiaryMutation = useMutation({
     mutationFn: (reqObj: { id: number; diary: DiaryRegisterReqObj }) =>
       editDiaryOnServer(reqObj),
-    onSuccess: async () => {
-      queryClient.invalidateQueries({ queryKey: ['diaryDetail'] });
+    onSuccess: async (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['diaryDetail', variables.id]
+      });
       queryClient.invalidateQueries({
         predicate: q => q.queryKey[0] === 'diaries'
       });
@@ -270,13 +274,7 @@ const DiaryWriteModal = ({
       });
       onClose();
     },
-    onError: error => {
-      toast({
-        title: '일지 수정 중 오류가 발생했습니다.',
-        description: error.message || '일지 수정 중 오류가 발생했습니다.'
-      });
-      console.error('일지 수정 중 오류:', error);
-    }
+    onError: handleEditError
   });
 
   const handleChipClick = (chipKey: 'food' | 'water') => {

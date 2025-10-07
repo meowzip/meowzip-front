@@ -131,7 +131,9 @@ export default function CatInfo({
         queryClient.invalidateQueries({
           predicate: query => query.queryKey[0] === 'getCats'
         });
-        queryClient.invalidateQueries({ queryKey: ['catDetail'] });
+        queryClient.invalidateQueries({
+          predicate: query => query.queryKey[0] === 'catDetail'
+        });
       }
     },
     onError: error => {

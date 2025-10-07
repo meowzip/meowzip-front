@@ -36,7 +36,7 @@ export default function InterceptedDiaryWriteModal() {
     queryKey: ['feedDetail', feedId],
     queryFn: () => getFeedDetail(feedId as number),
     enabled: !!feedId && !isNaN(feedId),
-    staleTime: 0
+    staleTime: 5 * 60 * 1000
   });
 
   if (isLoading && feedId) {

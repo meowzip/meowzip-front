@@ -10,6 +10,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { HttpError } from '@/utils/returnFetchJson';
 import { authStore, sessionExpiredModalAtom } from '@/store/authAtom';
+import AppErrorBoundary from '@/components/common/AppErrorBoundary';
 
 const Providers = ({ children }: any): React.JSX.Element => {
   const [queryClient] = useState(() => {
@@ -45,8 +46,13 @@ const Providers = ({ children }: any): React.JSX.Element => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
+      <AppErrorBoundary>
+        {children}
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          buttonPosition="bottom-left"
+        />
+      </AppErrorBoundary>
     </QueryClientProvider>
   );
 };
