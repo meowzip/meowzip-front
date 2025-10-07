@@ -16,10 +16,12 @@ export default function Comment({
 }: {
   onReply: (commentId: number) => void;
   comment: CommentType;
-  setEditBottomSheet: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedComment: React.Dispatch<
-    React.SetStateAction<CommentType | undefined>
-  >;
+  setEditBottomSheet:
+    | ((value: boolean) => void)
+    | React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedComment:
+    | ((comment: CommentType) => void)
+    | React.Dispatch<React.SetStateAction<CommentType | undefined>>;
 }) {
   const router = useRouter();
   return (
