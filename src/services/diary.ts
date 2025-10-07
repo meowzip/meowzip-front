@@ -100,16 +100,11 @@ export const registerDiaryOnServer = async (reqObj: DiaryRegisterReqObj) => {
 
   try {
     const response = await fetchAuth('/diaries', requestOptions);
-
     const data = await response.json();
     return data;
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      throw new Error('일지 등록 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('일지 등록 중 오류 발생:');
-    }
+    throw error;
   }
 };
 
@@ -155,16 +150,11 @@ export const deleteDiaryOnServer = async (id: number) => {
 
   try {
     const response = await fetchAuth(`/diaries/${id}`, requestOptions);
-
     const data = await response.json();
     return data;
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      throw new Error('일지 삭제 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('일지 삭제 중 오류 발생:');
-    }
+    throw error;
   }
 };
 
@@ -197,15 +187,10 @@ export const editDiaryOnServer = async (reqObj: {
 
   try {
     const response = await fetchAuth(`/diaries/${reqObj.id}`, requestOptions);
-
     const data = await response.json();
     return data;
   } catch (error) {
     console.error(error);
-    if (error instanceof Error) {
-      throw new Error('일지 등록 중 오류 발생:' + error.message);
-    } else {
-      throw new Error('일지 등록 중 오류 발생:');
-    }
+    throw error;
   }
 };

@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/components/ui/hooks/useToast';
+import { useErrorHandler } from '@/hooks/common/useErrorHandler';
 
 const feedSchema = z.object({
   content: z
@@ -35,6 +36,13 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const { handleError: handleRegisterError } = useErrorHandler({
+    title: '게시글 등록 중 오류가 발생했습니다'
+  });
+  const { handleError: handleEditError } = useErrorHandler({
+    title: '게시글 수정 중 오류가 발생했습니다'
+  });
 
   const {
     watch,
@@ -135,27 +143,26 @@ const FeedWriteModal = ({ onClose, feedDetail }: FeedWriteModalProps) => {
         console.error('게시글 등록 중 오류:', response.message);
       }
     },
-    onError: (error: any) => {
-      console.error('게시글 등록 중 오류:', error);
-    }
+    onError: handleRegisterError
   });
 
   const editFeedMutation = useMutation({
     mutationFn: (reqObj: { id: number; content: string; images: string[] }) =>
       editFeedOnServer(reqObj),
-    onSuccess: (response: any) => {
+    onSuccess: (response: any, variables) => {
       if (response.status === 'OK') {
         queryClient.invalidateQueries({
           predicate: query => query.queryKey[0] === 'feeds'
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['feedDetail', variables.id]
         });
         onClose();
       } else {
         console.error('게시글 수정 중 오류:', response.message);
       }
     },
-    onError: (error: any) => {
-      console.error('게시글 수정 중 오류:', error);
-    }
+    onError: handleEditError
   });
 
   useEffect(() => {
