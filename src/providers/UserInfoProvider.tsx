@@ -1,4 +1,4 @@
-'use clinet';
+'use client';
 
 import { UserProvider } from '@/contexts/EmailContext';
 
