@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState, useCallback } from 'react';
 import FeedCard from '../../components/community/FeedCard';
 import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -79,8 +79,8 @@ const CommunityContents = () => {
   return (
     <div className="mx-auto max-w-[640px] bg-gr-white pb-24">
       {feedList?.pages.map((page, pageIndex) => (
-        <React.Fragment key={pageIndex}>
-          {(page as any)?.items?.map((feed: FeedType) => (
+        <Fragment key={pageIndex}>
+          {(page as any)?.items.map((feed: FeedType) => (
             <div
               key={feed.id}
               className={`transition-all duration-500 ease-out ${
@@ -91,7 +91,9 @@ const CommunityContents = () => {
             >
               <FeedCard
                 content={feed}
-                goToDetail={() => router.push(`/community/${feed.id}`)}
+                goToDetail={() => {
+                  router.push(`/community/${feed.id}`);
+                }}
                 openBottomSheet={() => {
                   setFeed(feed);
                   setEditBottomSheet(true);
@@ -102,7 +104,7 @@ const CommunityContents = () => {
               />
             </div>
           ))}
-        </React.Fragment>
+        </Fragment>
       ))}
       <div ref={ref} className="h-20 bg-transparent" />
       {isFetchingNextPage && <CommunitySkeleton />}
@@ -115,8 +117,10 @@ const CommunityContents = () => {
         memberId={feed?.writerId}
         onDelete={() => feed && handleDeleteWithAnimation(feed)}
         onEdit={() => {
-          if (feed) {
+          if (feed && feed.id) {
             router.push(`/community/write?edit=${feed.id}`);
+          } else {
+            console.warn('피드 ID가 없어 수정할 수 없습니다:', feed);
           }
         }}
         onBlock={() => feed && blockFeed(feed)}

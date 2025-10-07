@@ -1,21 +1,59 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import ProfileDetail from '@/components/profile/ProfileDetail';
 import { getClickedUserProfile, getOtherUserFeeds } from '@/services/profile';
-import Profile from '@/components/ui/Profile';
-import Topbar from '@/components/ui/Topbar';
-import Button from '@/components/ui/Button';
-import { FeedType } from '@/types/communityType';
-import FeedCard from '@/components/community/FeedCard';
-import useFeedMutations from '@/hooks/community/useFeedMutations';
-import ProfileSkeleton from '@/components/profile/ProfileSkeleton';
-import ProfileFeedSkeleton from '@/components/profile/ProfileFeedSkeleton';
-import RightIcon from '../../../../public/images/icons/right.svg';
-import { DEFAULT_PROFILE_IMAGE_SRC } from '@/constants/general';
+import ProfileDetailClient from '@/components/profile/ProfileDetailClient';
+import { Metadata } from 'next';
 
-const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
-  const router = useRouter();
+interface PageProps {
+  params: { id: string };
+}
+
+export async function generateMetadata({
+  params
+}: PageProps): Promise<Metadata> {
+  const id = Number(params.id);
+
+  if (!params.id || isNaN(id)) {
+    return {
+      title: '프로필 | 냥집사',
+      description: '냥집사 유저 프로필'
+    };
+  }
+
+  try {
+    const profileData = await getClickedUserProfile(id);
+
+    return {
+      title: `${profileData.nickname}님의 프로필 | 냥집사`,
+      description: `고양이 ${profileData.catCount}마리, 게시물 ${profileData.postCount}개`,
+      openGraph: {
+        title: `${profileData.nickname}님의 프로필`,
+        description: `고양이 ${profileData.catCount}마리, 게시물 ${profileData.postCount}개`,
+        images: profileData.profileImageUrl
+          ? [profileData.profileImageUrl]
+          : [],
+        type: 'profile'
+      },
+      twitter: {
+        card: 'summary',
+        title: `${profileData.nickname}님의 프로필`,
+        description: `고양이 ${profileData.catCount}마리, 게시물 ${profileData.postCount}개`,
+        images: profileData.profileImageUrl ? [profileData.profileImageUrl] : []
+      }
+    };
+  } catch (error) {
+    return {
+      title: '프로필 | 냥집사',
+      description: '냥집사 유저 프로필'
+    };
+  }
+}
+
+const ProfileIdPage = async ({ params }: PageProps) => {
+  const id = Number(params.id);
+
+  // params validation
+  if (!params.id || isNaN(id)) {
+    throw new Error('유효하지 않은 사용자 ID입니다.');
+  }
 
   const feedReqObj = {
     page: 0,
@@ -23,102 +61,23 @@ const ProfileIdPage = ({ params: { id } }: { params: { id: number } }) => {
     memberId: id
   };
 
-  const {
-    data: othersProfile,
-    isLoading: otherProfileIsLoading,
-    isError: isOthersProfileError,
-    error: othersProfileError
-  } = useQuery({
-    queryKey: ['othersProfile', id],
-    queryFn: () => getClickedUserProfile(id)
-  });
+  try {
+    const [profileData, feedList] = await Promise.all([
+      getClickedUserProfile(id),
+      getOtherUserFeeds(feedReqObj)
+    ]);
 
-  const {
-    data: otherUserFeedList,
-    isLoading: otherFeedIsLoading,
-    isError: isOtherUserFeedListError,
-    error: otherUserFeedListError
-  } = useQuery({
-    queryKey: ['otherUserFeeds', id],
-    queryFn: () => getOtherUserFeeds(feedReqObj)
-  });
-
-  const { toggleLikeFeed, toggleBookmark } = useFeedMutations([
-    'otherUserFeeds'
-  ]);
-
-  if (isOthersProfileError) throw othersProfileError;
-  if (isOtherUserFeedListError) throw otherUserFeedListError;
-
-  return (
-    <>
-      <section className="h-12">
-        <Topbar type="three">
-          <Topbar.Back onClick={() => router.back()} />
-          <Topbar.Title title={othersProfile?.nickname} />
-          <Topbar.Empty />
-        </Topbar>
-      </section>
-      <section className="border-b border-gr-100 bg-gr-white py-4">
-        {otherProfileIsLoading ? (
-          <ProfileSkeleton />
-        ) : (
-          <>
-            <div className="flex justify-center pb-4">
-              <Profile
-                items={[
-                  {
-                    id: id,
-                    imageUrl:
-                      othersProfile?.profileImageUrl ||
-                      DEFAULT_PROFILE_IMAGE_SRC,
-                    style: 'w-[72px] h-[72px]'
-                  }
-                ]}
-                lastLeft="left-[100px]"
-              />
-            </div>
-            <ProfileDetail
-              catCount={othersProfile?.catCount}
-              postCount={othersProfile?.postCount}
-            />
-          </>
-        )}
-      </section>
-      <div className="w-full border-gr-100" />
-      <section className="mx-auto mt-0 max-w-[640px] bg-gr-white">
-        <article className="flex items-center justify-between px-4 py-3">
-          <div className="text-heading-4 text-gr-900">피드</div>
-          <Button
-            onClick={() => router.push(`/profile/${id}/zip`)}
-            className="h-[28px] rounded-16 bg-gr-50 py-2 pl-3 pr-[6px]"
-          >
-            <Button.Text
-              text="모음집 구경하기"
-              className="text-btn-3 text-gr-500"
-            />
-            <Button.Icon alt="right">
-              <RightIcon width={16} height={16} stroke="var(--gr-500)" />
-            </Button.Icon>
-          </Button>
-        </article>
-        <article>
-          {otherFeedIsLoading ? (
-            <ProfileFeedSkeleton />
-          ) : (
-            otherUserFeedList?.map((feed: FeedType) => (
-              <FeedCard
-                key={feed.id}
-                content={feed}
-                goToDetail={() => router.push(`/community/${feed.id}`)}
-                toggleLikeFeed={() => toggleLikeFeed(feed)}
-                toggleBookmark={() => toggleBookmark(feed)}
-              />
-            ))
-          )}
-        </article>
-      </section>
-    </>
-  );
+    return (
+      <ProfileDetailClient
+        id={id}
+        profileData={profileData}
+        feedList={feedList || []}
+      />
+    );
+  } catch (error) {
+    console.error('프로필 로딩 실패:', error);
+    throw error;
+  }
 };
+
 export default ProfileIdPage;

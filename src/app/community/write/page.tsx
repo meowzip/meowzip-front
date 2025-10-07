@@ -45,7 +45,12 @@ export default function DiaryWritePage() {
     error
   } = useQuery({
     queryKey: ['feedDetail', feedId],
-    queryFn: () => getFeedDetail(feedId as number),
+    queryFn: () => {
+      if (!feedId || isNaN(feedId)) {
+        throw new Error('유효하지 않은 피드 ID입니다.');
+      }
+      return getFeedDetail(feedId);
+    },
     enabled: isClient && typeof feedId === 'number' && !isNaN(feedId),
     staleTime: 0
   });

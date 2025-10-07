@@ -1,155 +1,65 @@
-'use client';
+import { getDiaryDetail } from '@/services/diary';
+import DiaryDetailClient from '@/components/diary/DiaryDetailClient';
+import { Metadata } from 'next';
 
-import React, { useEffect, useState } from 'react';
-import Topbar from '@/components/ui/Topbar';
-import Carousel from '@/components/ui/Carousel';
-import Label from '@/components/ui/Label';
-import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { deleteDiaryOnServer, getDiaryDetail } from '@/services/diary';
-import { useRouter } from 'next/navigation';
-import { CatType } from '@/types/cat';
-import Image from 'next/image';
+interface PageProps {
+  params: { id: string };
+}
 
-const DiaryDetailPage = ({ params: { id } }: { params: { id: number } }) => {
-  const router = useRouter();
+export async function generateMetadata({
+  params
+}: PageProps): Promise<Metadata> {
+  const id = Number(params.id);
 
-  const [editBottomSheet, setEditBottomSheet] = useState(false);
+  if (!params.id || isNaN(id)) {
+    return {
+      title: '일지 | 냥집사',
+      description: '냥집사 일지'
+    };
+  }
 
-  const {
-    data: diaryDetail,
-    isLoading,
-    isError
-  } = useQuery({
-    queryKey: ['diaryDetail', id],
-    queryFn: () => getDiaryDetail(id),
-    staleTime: 0
-  });
+  try {
+    const diaryDetail = await getDiaryDetail(id);
 
-  useEffect(() => {
-    if (!diaryDetail) return;
-  }, [diaryDetail, id]);
-
-  const deleteDidary = () => {
-    deleteDiaryMutation.mutate(id);
-  };
-  const deleteDiaryMutation = useMutation({
-    mutationFn: (id: number) => deleteDiaryOnServer(id),
-    onSuccess: (response: any) => {
-      if (response.status === 'OK') {
-        router.push('/diary');
-      } else {
-        console.error('일지 삭제 중 오류:', response.message);
+    return {
+      title: `${diaryDetail.caredDate} 일지 | 냥집사`,
+      description: diaryDetail.content.slice(0, 100) + '...',
+      openGraph: {
+        title: `${diaryDetail.caredDate} 일지`,
+        description: diaryDetail.content.slice(0, 100) + '...',
+        images: diaryDetail.images?.length > 0 ? diaryDetail.images : [],
+        type: 'article'
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${diaryDetail.caredDate} 일지`,
+        description: diaryDetail.content.slice(0, 100) + '...',
+        images: diaryDetail.images?.length > 0 ? diaryDetail.images : []
       }
-    },
-    onError: (error: any) => {
-      console.error('일지 삭제 중 오류:', error);
-    }
-  });
+    };
+  } catch (error) {
+    return {
+      title: '일지 | 냥집사',
+      description: '냥집사 일지'
+    };
+  }
+}
 
-  if (isLoading) {
-    return (
-      <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
-        <div className="flex h-full items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-pr-500 border-t-transparent" />
-        </div>
-      </div>
-    );
+const DiaryDetailPage = async ({ params }: PageProps) => {
+  const id = Number(params.id);
+
+  if (!params.id || isNaN(id)) {
+    throw new Error('유효하지 않은 일지 ID입니다.');
   }
 
-  if (isError) {
-    return (
-      <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
-        <div className="flex h-full items-center justify-center">
-          <div className="text-body-2 text-gr-500">
-            일지를 불러오는데 실패했습니다.
-          </div>
-        </div>
-      </div>
-    );
-  }
+  try {
+    const diaryDetail = await getDiaryDetail(id);
 
-  return (
-    <div className="relative mx-auto">
-      <div className="fixed left-1/2 top-0 z-50 h-screen w-screen max-w-[640px] -translate-x-1/2 overflow-y-auto bg-gr-white">
-        <Topbar type="two">
-          <Topbar.Back onClick={() => router.back()} />
-          <Topbar.Title title={diaryDetail?.caredDate} />
-          <Topbar.More onClick={() => setEditBottomSheet(true)} />
-        </Topbar>
-        <div className="m-auto max-w-[640px]">
-          <section className="flex flex-col gap-4 border-b border-gr-100 px-4 pb-8 pt-12">
-            <h5 className="text-end text-body-4 text-gr-500">
-              {diaryDetail?.memberNickname} • {diaryDetail?.caredTime}
-            </h5>
-            {diaryDetail?.images.length > 0 && (
-              <div className="flex h-[300px] w-full">
-                <Carousel images={diaryDetail?.images} style="rounded-16" />
-              </div>
-            )}
-            <h4 className="w-full whitespace-pre-line text-body-3 text-gr-black">
-              {diaryDetail?.content}
-            </h4>
-            <article className="mb-2 flex items-center justify-start gap-1">
-              {diaryDetail?.isFeed && (
-                <Label.Text
-                  content="🐟 사료"
-                  className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
-                />
-              )}
-              {diaryDetail?.isGivenWater && (
-                <Label.Text
-                  content="💧 물"
-                  className="rounded-md bg-gr-50 px-[6px] pb-1 pt-[5px]"
-                />
-              )}
-            </article>
-          </section>
-          <section className="px-4 pb-[120px] pt-4">
-            <h3 className="py-3 text-heading-5 text-gr-900">
-              태그된 고양이
-              <span className="pl-1 text-pr-500">
-                {diaryDetail?.taggedCats?.length}
-              </span>
-            </h3>
-            {diaryDetail?.taggedCats?.map((cat: CatType) => (
-              <article key={cat.id} className="flex items-center gap-4 py-2">
-                <Image
-                  src={cat.imageUrl}
-                  alt="cat-image"
-                  width={48}
-                  height={48}
-                  className="h-12 w-12 rounded-full"
-                />
-                <div className="flex items-center gap-2">
-                  <h4 className="text-body-3 text-gr-900">{cat.name}</h4>
-                  <Image
-                    src={`/images/icons/gender-${cat.sex}.svg`}
-                    alt="cat-gender"
-                    width={16}
-                    height={16}
-                    className={`rounded-full ${
-                      cat.sex === 'F' ? 'bg-[#FFF2F1]' : 'bg-[#ECF5FF]'
-                    }`}
-                  />
-                </div>
-              </article>
-            ))}
-          </section>
-        </div>
-        <MoreBtnBottomSheet
-          type="diary"
-          isVisible={editBottomSheet}
-          setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-          heightPercent={['50%', '40%']}
-          name={diaryDetail?.memberNickname}
-          memberId={diaryDetail?.memberId}
-          onDelete={deleteDidary}
-          onEdit={() => router.push(`/diary/${id}/edit`)}
-        />
-      </div>
-    </div>
-  );
+    return <DiaryDetailClient diaryDetail={diaryDetail} id={id} />;
+  } catch (error) {
+    console.error('일지 상세 로딩 실패:', error);
+    throw error;
+  }
 };
 
 export default DiaryDetailPage;
