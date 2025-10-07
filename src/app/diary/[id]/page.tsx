@@ -13,8 +13,8 @@ export async function generateMetadata({
 
   if (!params.id || isNaN(id)) {
     return {
-      title: '일지 | 냥집사',
-      description: '냥집사 일지'
+      title: '일지 | 냥.zip',
+      description: '냥.zip 일지'
     };
   }
 
@@ -22,7 +22,7 @@ export async function generateMetadata({
     const diaryDetail = await getDiaryDetail(id);
 
     return {
-      title: `${diaryDetail.caredDate} 일지 | 냥집사`,
+      title: `${diaryDetail.caredDate} 일지 | 냥.zip`,
       description: diaryDetail.content.slice(0, 100) + '...',
       openGraph: {
         title: `${diaryDetail.caredDate} 일지`,
@@ -39,8 +39,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '일지 | 냥집사',
-      description: '냥집사 일지'
+      title: '일지 | 냥.zip',
+      description: '냥.zip 일지'
     };
   }
 }

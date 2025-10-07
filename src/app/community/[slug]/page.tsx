@@ -13,8 +13,8 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   if (params.slug === 'write') {
     return {
-      title: '피드 작성 | 냥집사',
-      description: '냥집사 커뮤니티 피드 작성'
+      title: '피드 작성 | 냥.zip',
+      description: '냥.zip 커뮤니티 피드 작성'
     };
   }
 
@@ -22,8 +22,8 @@ export async function generateMetadata({
 
   if (!params.slug || isNaN(slug)) {
     return {
-      title: '피드 | 냥집사',
-      description: '냥집사 커뮤니티 피드'
+      title: '피드 | 냥.zip',
+      description: '냥.zip 커뮤니티 피드'
     };
   }
 
@@ -31,7 +31,7 @@ export async function generateMetadata({
     const feedDetail = await getFeedDetail(slug);
 
     return {
-      title: `${feedDetail.writerNickname}님의 피드 | 냥집사`,
+      title: `${feedDetail.writerNickname}님의 피드 | 냥.zip`,
       description: feedDetail.content.slice(0, 100) + '...',
       openGraph: {
         title: `${feedDetail.writerNickname}님의 피드`,
@@ -48,8 +48,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '피드 | 냥집사',
-      description: '냥집사 커뮤니티 피드'
+      title: '피드 | 냥.zip',
+      description: '냥.zip 커뮤니티 피드'
     };
   }
 }

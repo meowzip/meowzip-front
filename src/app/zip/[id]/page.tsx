@@ -13,8 +13,8 @@ export async function generateMetadata({
 
   if (!params.id || isNaN(id)) {
     return {
-      title: '고양이 | 냥집사',
-      description: '냥집사 고양이 프로필'
+      title: '고양이 | 냥.zip',
+      description: '냥.zip 고양이 프로필'
     };
   }
 
@@ -22,7 +22,7 @@ export async function generateMetadata({
     const catDetail = await getCatDetail(id);
 
     return {
-      title: `${catDetail.name} | 냥집사`,
+      title: `${catDetail.name} | 냥.zip`,
       description: `${catDetail.age}살, ${catDetail.sex === 'M' ? '남아' : catDetail.sex === 'F' ? '여아' : '성별 미상'}`,
       openGraph: {
         title: `${catDetail.name}`,
@@ -39,8 +39,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '고양이 | 냥집사',
-      description: '냥집사 고양이 프로필'
+      title: '고양이 | 냥.zip',
+      description: '냥.zip 고양이 프로필'
     };
   }
 }

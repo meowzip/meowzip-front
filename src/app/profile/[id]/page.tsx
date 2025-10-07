@@ -13,8 +13,8 @@ export async function generateMetadata({
 
   if (!params.id || isNaN(id)) {
     return {
-      title: '프로필 | 냥집사',
-      description: '냥집사 유저 프로필'
+      title: '프로필 | 냥.zip',
+      description: '냥.zip 유저 프로필'
     };
   }
 
@@ -22,7 +22,7 @@ export async function generateMetadata({
     const profileData = await getClickedUserProfile(id);
 
     return {
-      title: `${profileData.nickname}님의 프로필 | 냥집사`,
+      title: `${profileData.nickname}님의 프로필 | 냥.zip`,
       description: `고양이 ${profileData.catCount}마리, 게시물 ${profileData.postCount}개`,
       openGraph: {
         title: `${profileData.nickname}님의 프로필`,
@@ -41,8 +41,8 @@ export async function generateMetadata({
     };
   } catch (error) {
     return {
-      title: '프로필 | 냥집사',
-      description: '냥집사 유저 프로필'
+      title: '프로필 | 냥.zip',
+      description: '냥.zip 유저 프로필'
     };
   }
 }
