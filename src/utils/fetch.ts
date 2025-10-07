@@ -1,11 +1,22 @@
 import returnFetch from '@/utils/returnFetch';
 import returnFetchJson from '@/utils/returnFetchJson';
 
-const getTokenFromCookie = (): string | null => {
-  if (typeof document === 'undefined') return null;
+const getTokenFromCookie = async (): Promise<string | null> => {
+  if (typeof window === 'undefined') {
+    try {
+      const { cookies } = await import('next/headers');
+      const cookieStore = cookies();
+      const authCookie = cookieStore.get('Authorization');
+      return authCookie?.value || null;
+    } catch (error) {
+      console.warn('Failed to get cookie from server:', error);
+      return null;
+    }
+  }
 
-  const cookies = document.cookie.split(';');
-  const authCookie = cookies.find(cookie =>
+  const cookieString = document.cookie;
+  const cookieArray = cookieString.split(';');
+  const authCookie = cookieArray.find(cookie =>
     cookie.trim().startsWith('Authorization=')
   );
 
@@ -70,7 +81,7 @@ export const fetchAuth = returnFetch({
   baseUrl: process.env.NEXT_PUBLIC_MEOW_API + '/api/auth/v1.0.0',
   interceptors: {
     request: async ([url, requestInit], fetch) => {
-      let token = getTokenFromCookie();
+      let token = await getTokenFromCookie();
 
       if (!token || isTokenExpired(token)) {
         const newToken = await refreshTokenIfNeeded();
@@ -120,7 +131,7 @@ export const fetchAuthJson = returnFetchJson({
   headers: { Accept: 'application/json' },
   interceptors: {
     request: async ([url, requestInit], fetch) => {
-      let token = getTokenFromCookie();
+      let token = await getTokenFromCookie();
 
       if (!token || isTokenExpired(token)) {
         const newToken = await refreshTokenIfNeeded();

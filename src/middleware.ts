@@ -5,9 +5,11 @@ const PROTECTED_ROUTES: string[] = [
   '/diary',
   '/zip',
   '/community',
-  '/profile'
+  '/profile',
+  '/onboard',
+  '/cat-register'
 ];
-const PUBLIC_ROUTES: string[] = ['/signin', '/signup'];
+const PUBLIC_ROUTES: string[] = ['/signin', '/signup', '/reset-pwd'];
 
 export const middleware = async (
   request: NextRequest
@@ -48,7 +50,11 @@ const handlePublicAndProtectedRoutes = ({
   accessToken?: string;
   request: NextRequest;
 }): NextResponse => {
-  if (!accessToken && PROTECTED_ROUTES.includes(currentPath)) {
+  const isProtectedRoute = PROTECTED_ROUTES.some(
+    route => currentPath === route || currentPath.startsWith(route + '/')
+  );
+
+  if (!accessToken && isProtectedRoute) {
     return redirectToSignIn(request);
   }
 

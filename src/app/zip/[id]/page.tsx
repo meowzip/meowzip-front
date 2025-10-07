@@ -1,140 +1,65 @@
-'use client';
+import { getCatDetail } from '@/services/cat';
+import ZipDetailClient from '@/components/zip/ZipDetailClient';
+import { Metadata } from 'next';
 
-import React, { useState } from 'react';
-import ZipDetailDiary from '../../../components/zip/ZipDetailDiary';
-import Topbar from '@/components/ui/Topbar';
-import { useRouter } from 'next/navigation';
-import MoreBtnBottomSheet from '@/components/community/MoreBtnBottomSheet';
-import DetailCardLayout from '@/components/zip/DetailCardLayout';
-import { DiaryObj } from '@/app/diary/diaryType';
-import ZipDetailCoParents from '@/components/zip/ZipDetailCoParents';
-import { CoParent } from '@/types/cat';
-import ZipDetailCatCard from '../../../components/zip/ZipDetailCatCard';
-import CoParentsBottomSheet from '@/components/zip/CoParentsBottomSheet';
-import FindCoParentsModal from '../../../components/zip/FindCoParentsModal';
-import Link from 'next/link';
-import { deleteCat, getCatDetail } from '@/services/cat';
-import { useQuery } from '@tanstack/react-query';
-import { useToast } from '@/components/ui/hooks/useToast';
-import CatDetailSkeleton from '@/components/zip/CatDetailSkeleton';
+interface PageProps {
+  params: { id: string };
+}
 
-const ZipDiaryPage = ({ params: { id } }: { params: { id: number } }) => {
-  const router = useRouter();
+export async function generateMetadata({
+  params
+}: PageProps): Promise<Metadata> {
+  const id = Number(params.id);
 
-  const [editBottomSheet, setEditBottomSheet] = useState(false);
-  const [coParentsBottomSheet, setCoParentsBottomSheet] = useState(false);
-  const [showCoParentsModal, setShowCoParentsModal] = useState(false);
+  if (!params.id || isNaN(id)) {
+    return {
+      title: '고양이 | 냥집사',
+      description: '냥집사 고양이 프로필'
+    };
+  }
 
-  const {
-    data: catDetail,
-    isLoading,
-    isError,
-    error
-  } = useQuery({
-    queryKey: ['catDetail', id],
-    queryFn: () => getCatDetail(id)
-  });
+  try {
+    const catDetail = await getCatDetail(id);
 
-  const { toast } = useToast();
+    return {
+      title: `${catDetail.name} | 냥집사`,
+      description: `${catDetail.age}살, ${catDetail.sex === 'M' ? '남아' : catDetail.sex === 'F' ? '여아' : '성별 미상'}`,
+      openGraph: {
+        title: `${catDetail.name}`,
+        description: `${catDetail.age}살, ${catDetail.sex === 'M' ? '남아' : catDetail.sex === 'F' ? '여아' : '성별 미상'}`,
+        images: catDetail.imageUrl ? [catDetail.imageUrl] : [],
+        type: 'profile'
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${catDetail.name}`,
+        description: `${catDetail.age}살, ${catDetail.sex === 'M' ? '남아' : catDetail.sex === 'F' ? '여아' : '성별 미상'}`,
+        images: catDetail.imageUrl ? [catDetail.imageUrl] : []
+      }
+    };
+  } catch (error) {
+    return {
+      title: '고양이 | 냥집사',
+      description: '냥집사 고양이 프로필'
+    };
+  }
+}
 
-  if (isLoading) return <CatDetailSkeleton />;
-  if (isError) throw error;
+const ZipDiaryPage = async ({ params }: PageProps) => {
+  const id = Number(params.id);
 
-  return (
-    <>
-      <Topbar type="two">
-        <Topbar.Back onClick={() => router.back()} />
-        {catDetail?.isOwner ? (
-          <Topbar.More onClick={() => setEditBottomSheet(true)} />
-        ) : (
-          <Topbar.Empty />
-        )}
-      </Topbar>
-      <section className="mx-auto flex h-screen max-w-[640px] flex-col gap-4 overflow-auto bg-gr-50 px-4 pb-32 pt-[72px]">
-        <article className="rounded-16">
-          <ZipDetailCatCard {...catDetail} />
-        </article>
-        <DetailCardLayout
-          titleObj={{
-            title: '공동집사',
-            onClick: () => {
-              if (catDetail.coParents.length === 0) {
-                toast({
-                  description: '공동집사가 없습니다.',
-                  duration: 1000
-                });
-                return;
-              }
-              setCoParentsBottomSheet(true);
-            }
-          }}
-          btnObj={
-            catDetail.isOwner && {
-              text: '함께할 공동집사 찾기',
-              onClick: () => setShowCoParentsModal(true)
-            }
-          }
-        >
-          <div className="flex pt-2">
-            {catDetail.coParents?.map((coParent: CoParent) => (
-              <ZipDetailCoParents key={coParent.memberId} {...coParent} />
-            ))}
-          </div>
-        </DetailCardLayout>
-        {catDetail.isAccessibleToDiaries && (
-          <DetailCardLayout
-            titleObj={{ title: '일지' }}
-            btnObj={{
-              text: '더보기',
-              onClick: () => router.push(`/diary`)
-            }}
-          >
-            {catDetail.diaries?.slice(0, 3).map((diary: DiaryObj) => (
-              <Link href={`/diary/${diary.id}`} key={diary.id}>
-                <ZipDetailDiary {...diary} />
-              </Link>
-            ))}
-          </DetailCardLayout>
-        )}
-      </section>
-      <MoreBtnBottomSheet
-        type="zip"
-        isVisible={editBottomSheet}
-        setIsVisible={() => setEditBottomSheet(!editBottomSheet)}
-        heightPercent={['50%', '40%']}
-        name={catDetail?.name}
-        memberId={catDetail?.id}
-        onDelete={async () => {
-          try {
-            await deleteCat(catDetail?.id);
-            toast({ description: '삭제되었습니다.', duration: 1000 });
-            router.replace('/zip');
-          } catch (e) {
-            toast({
-              description: '삭제에 실패했습니다. 잠시 후 다시 시도해주세요.',
-              duration: 1500
-            });
-          }
-        }}
-        onEdit={() => {
-          router.push(`/zip/${id}/edit?catId=${catDetail?.id}`);
-          setEditBottomSheet(false);
-        }}
-      />
-      <CoParentsBottomSheet
-        isVisible={coParentsBottomSheet}
-        setIsVisible={() => setCoParentsBottomSheet(!coParentsBottomSheet)}
-        coParents={catDetail.coParents}
-      />
+  if (!params.id || isNaN(id)) {
+    throw new Error('유효하지 않은 고양이 ID입니다.');
+  }
 
-      {showCoParentsModal && (
-        <FindCoParentsModal
-          setShowCoParentsModal={setShowCoParentsModal}
-          catId={catDetail.id}
-        />
-      )}
-    </>
-  );
+  try {
+    const catDetail = await getCatDetail(id);
+
+    return <ZipDetailClient catDetail={catDetail} id={id} />;
+  } catch (error) {
+    console.error('고양이 상세 로딩 실패:', error);
+    throw error;
+  }
 };
 
 export default ZipDiaryPage;

@@ -49,6 +49,10 @@ const FeedCard = ({
 
   const clickComment = () => {
     if (variant === 'detail') return;
+    if (!content?.id) {
+      console.warn('피드 ID가 없습니다:', content);
+      return;
+    }
     router.push(`/community/${content.id}`);
   };
 
