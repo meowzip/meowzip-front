@@ -1,27 +1,38 @@
 import { NextResponse } from 'next/server';
 
+const getCookieDomain = () => {
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  if (!isProduction) {
+    return 'localhost';
+  }
+
+  return '.meowzip.com';
+};
+
 export async function POST() {
   const response = NextResponse.json({ success: true });
 
   const isProduction = process.env.NODE_ENV === 'production';
-  const isLocalhost = !isProduction;
+  const cookieDomain = getCookieDomain();
 
   const baseConfig = {
     secure: isProduction,
     path: '/',
-    ...(isLocalhost && { domain: 'localhost' })
+    domain: cookieDomain
   };
 
   const cookieConfigs = {
     Authorization: {
       ...baseConfig,
-      secure: true
+      secure: true,
+      sameSite: 'lax' as const
     },
     'Authorization-Refresh': {
       ...baseConfig,
-      secure: true
+      secure: true,
+      sameSite: 'lax' as const
     },
-
     'next-auth.session-token': {
       ...baseConfig,
       sameSite: 'lax' as const
