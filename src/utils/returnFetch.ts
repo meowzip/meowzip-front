@@ -107,13 +107,21 @@ const returnFetch =
 
     const response = await fetchProvided(...requestInterceptorAppliedArgs);
 
-    if (!response.ok) {
-      const errorText = await response.clone().text();
-      const msg = `STATUS: ${response.status} 
- ERROR_TEXT: ${errorText}`;
-      await sendDiscordErrorLog(msg, response.url);
+    const finalResponse = defaultOptions?.interceptors?.response
+      ? await defaultOptions.interceptors.response(
+          response,
+          requestInterceptorAppliedArgs,
+          fetchProvided
+        )
+      : response;
 
-      let errorMessage = `요청 실패 (상태 코드: ${response.status})`;
+    if (!finalResponse.ok) {
+      const errorText = await finalResponse.clone().text();
+      const msg = `STATUS: ${finalResponse.status} 
+ ERROR_TEXT: ${errorText}`;
+      await sendDiscordErrorLog(msg, finalResponse.url);
+
+      let errorMessage = `요청 실패 (상태 코드: ${finalResponse.status})`;
       try {
         const errorData = JSON.parse(errorText);
         if (errorData.message) {
@@ -123,13 +131,7 @@ const returnFetch =
       throw new Error(errorMessage);
     }
 
-    return (
-      defaultOptions?.interceptors?.response?.(
-        response,
-        requestInterceptorAppliedArgs,
-        fetchProvided
-      ) || response
-    );
+    return finalResponse;
   };
 
 export default returnFetch;
