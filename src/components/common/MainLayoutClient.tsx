@@ -72,7 +72,9 @@ export default function MainLayoutClient({ children }: MainLayoutClientProps) {
 
   return (
     <div className="m-auto flex h-screen max-w-[640px] flex-col bg-gr-50">
-      <main className="relative overflow-y-auto bg-gr-100">{children}</main>
+      <main className="relative h-full overflow-y-auto bg-gr-100">
+        {children}
+      </main>
       {fabHref && <FloatingActionButton href={fabHref} />}
       {showBottomNav && (
         <div
