@@ -69,7 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           variant === 'comment',
         'border-none focus:border-none': variant === 'search',
         'border-2 focus:border-sm-error-500': error,
-        'pr-12': suffix
+        'pr-12': suffix || iconEnd
       },
       sizeClass,
       className
@@ -134,7 +134,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           </span>
         )}
         {iconEnd && (
-          <span className="absolute inset-y-0 right-0 flex items-center pr-3">
+          <span className="absolute inset-y-0 right-0 flex h-12 items-center justify-center pr-3">
             {iconEnd}
           </span>
         )}

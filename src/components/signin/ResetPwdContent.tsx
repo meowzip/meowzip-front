@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import usePasswordHandler from '../../utils/usePasswordHandler';
 import Modal from '@/components/ui/Modal';
+import { Eye, EyeOff } from 'lucide-react';
 
 const ResetPwdContent = () => {
   const searchParams = useSearchParams();
@@ -16,6 +17,8 @@ const ResetPwdContent = () => {
   const [token, setToken] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordCheck, setShowPasswordCheck] = useState(false);
 
   const { password, passwordCheck, handlePwdChange, handlePwdCheckChange } =
     usePasswordHandler();
@@ -25,7 +28,7 @@ const ResetPwdContent = () => {
     if (!token) return;
 
     setToken(token);
-  }, []);
+  }, [searchParams]);
 
   /**
    * @description API - POST reset password
@@ -55,6 +58,7 @@ const ResetPwdContent = () => {
       </article>
       <article className="flex flex-col gap-2">
         <Input
+          type={showPassword ? 'text' : 'password'}
           helperText={
             password.error ? '8자 이상 / 영문, 숫자, 특수문자 가능' : ''
           }
@@ -62,13 +66,32 @@ const ResetPwdContent = () => {
           placeholder="8자 이상 / 영문, 숫자, 특수문자 가능"
           error={password.error ? true : false}
           onChange={handlePwdChange}
+          iconEnd={
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="flex cursor-pointer items-center justify-center text-gr-400 hover:text-gr-600"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          }
         />
         <Input
+          type={showPasswordCheck ? 'text' : 'password'}
           helperText={passwordCheck.error ? '비밀번호를 확인해주세요' : ''}
           value={passwordCheck.value}
           placeholder="비밀번호 확인"
           error={passwordCheck.error ? true : false}
           onChange={handlePwdCheckChange}
+          iconEnd={
+            <button
+              type="button"
+              onClick={() => setShowPasswordCheck(!showPasswordCheck)}
+              className="flex cursor-pointer items-center justify-center text-gr-400 hover:text-gr-600"
+            >
+              {showPasswordCheck ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          }
         />
       </article>
       <article className="py-4">
